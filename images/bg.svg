@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="3403" viewBox="0 0 1920 3403">
+  <defs>
+    <radialGradient id="radial-gradient" cx="0.685" cy="0.514" r="0.829" gradientTransform="matrix(-0.174, -0.985, 0.339, -0.06, 0.417, 1.022)" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#255553"/>
+      <stop offset="0.112" stop-color="#224e4f"/>
+      <stop offset="1" stop-color="#0e152c"/>
+    </radialGradient>
+    <clipPath id="clip-Web_1920_1">
+      <rect width="1920" height="5000"/>
+    </clipPath>
+  </defs>
+  <g id="Web_1920_1" data-name="Web 1920 – 1" clip-path="url(#clip-Web_1920_1)">
+    <rect width="1920" height="5000" fill="url(#radial-gradient)"/>
+  </g>
+</svg>

@@ -1,0 +1,70 @@
+{
+  "productos": {
+    "a": {
+      "plazos": {
+        "12": {
+          "interest": 62,
+          "fee": 0.075,
+          "minfee": 1
+        },
+        "18": {
+          "interest": 62,
+          "fee": 0.075,
+          "minfee": 1
+        },
+        "24": {
+          "interest": 61,
+          "fee": 0.075,
+          "minfee": 1
+        },
+        "36": {
+          "interest": 59,
+          "fee": 0.075,
+          "minfee": 1
+        },
+        "48": {
+          "interest": 59,
+          "fee": 0.075,
+          "minfee": 1
+        },
+        "60": {
+          "interest": 59,
+          "fee": 0.075,
+          "minfee": 1
+        }
+      }
+    },
+    "b": {
+      "plazos": {
+        "12": {
+          "interest": 66.9,
+          "fee": 0.08,
+          "minfee": 1
+        },
+        "24": {
+          "interest": 58.9,
+          "fee": 0.08,
+          "minfee": 1
+        },
+        "36": {
+          "interest": 56.9,
+          "fee": 0.08,
+          "minfee": 1
+        },
+        "48": {
+          "interest": 55.9,
+          "fee": 0.08,
+          "minfee": 1
+        },
+        "60": {
+          "interest": 55.9,
+          "fee": 0.08,
+          "minfee": 1
+        }
+      }
+    }
+  },
+  "minAFinanciar": {
+    "valor": 1000000
+  }
+}
