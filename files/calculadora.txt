@@ -37,28 +37,28 @@
     "b": {
       "plazos": {
         "12": {
-          "interest": 50.9,
-          "fee": 0.09,
+          "interest": 55.9,
+          "fee": 0.10,
           "minfee": 1
         },
         "24": {
-          "interest": 45.9,
-          "fee": 0.09,
+          "interest": 55.9,
+          "fee": 0.10,
           "minfee": 1
         },
         "36": {
-          "interest": 43.9,
-          "fee": 0.09,
+          "interest": 53.9,
+          "fee": 0.10,
           "minfee": 1
         },
         "48": {
-          "interest": 43.9,
-          "fee": 0.09,
+          "interest": 53.9,
+          "fee": 0.10,
           "minfee": 1
         },
         "60": {
-          "interest": 43.9,
-          "fee": 0.09,
+          "interest": 53.9,
+          "fee": 0.10,
           "minfee": 1
         }
       }
