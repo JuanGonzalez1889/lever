@@ -16,31 +16,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
             productoSelect.addEventListener('change', function() {
                 const selectedProduct = this.value;
                 const productoForm = document.getElementById('productoForm');
+                const plazosContainer = document.getElementById('plazosContainer');
                 productoForm.innerHTML = ''; // Limpiar el formulario anterior
 
                 if (selectedProduct === 'a' || selectedProduct === 'b') {
                     const productoData = data.productos[selectedProduct];
                     let formHtml = `<h2>Producto ${selectedProduct.toUpperCase()}</h2>`;
                     for (const plazo in productoData.plazos) {
-                        formHtml += `
-                            <div>
-                                <label for="${selectedProduct}${plazo}Interest">Interés ${plazo} meses:</label>
-                                <input type="number" id="${selectedProduct}${plazo}Interest" name="${selectedProduct}${plazo}Interest" value="${productoData.plazos[plazo].interest}">
-                            </div>
-                            <div>
-                                <label for="${selectedProduct}${plazo}Fee">Fee ${plazo} meses:</label>
-                                <input type="number" id="${selectedProduct}${plazo}Fee" name="${selectedProduct}${plazo}Fee" value="${productoData.plazos[plazo].fee}">
-                            </div>
-                            <div>
-                                <label for="${selectedProduct}${plazo}MinFee">Min Fee ${plazo} meses:</label>
-                                <input type="number" id="${selectedProduct}${plazo}MinFee" name="${selectedProduct}${plazo}MinFee" value="${productoData.plazos[plazo].minfee}">
-                            </div>
-                        `;
+                        formHtml += generarPlazoHtml(selectedProduct, plazo, productoData.plazos[plazo]);
                     }
                     productoForm.innerHTML = formHtml;
                     productoForm.style.display = 'block';
+                    plazosContainer.style.display = 'block';
                 } else {
                     productoForm.style.display = 'none';
+                    plazosContainer.style.display = 'none';
                 }
             });
         })
@@ -66,6 +56,44 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     }
 });
+
+function generarPlazoHtml(producto, plazo, datos) {
+    return `
+        <div id="${producto}${plazo}Form">
+            <label for="${producto}${plazo}Interest">Interés ${plazo} meses:</label>
+            <input type="number" id="${producto}${plazo}Interest" name="${producto}${plazo}Interest" value="${datos.interest}" required>
+            <label for="${producto}${plazo}Fee">Fee ${plazo} meses:</label>
+            <input type="number" id="${producto}${plazo}Fee" name="${producto}${plazo}Fee" value="${datos.fee}" required>
+            <label for="${producto}${plazo}MinFee">Min Fee ${plazo} meses:</label>
+            <input type="number" id="${producto}${plazo}MinFee" name="${producto}${plazo}MinFee" value="${datos.minfee}" required>
+            <button type="button" onclick="confirmarEliminarPlazo('${producto}', '${plazo}')">Eliminar Plazo</button>
+        </div>
+    `;
+}
+
+function agregarPlazo() {
+    const productoSelect = document.getElementById('productoSelect').value;
+    const productoForm = document.getElementById('productoForm');
+    const nuevoPlazo = prompt('Ingrese el nuevo plazo en meses:');
+    if (nuevoPlazo) {
+        const nuevoPlazoHtml = generarPlazoHtml(productoSelect, nuevoPlazo, { interest: '', fee: '', minfee: '' });
+        productoForm.insertAdjacentHTML('beforeend', nuevoPlazoHtml);
+    }
+}
+
+function confirmarEliminarPlazo(producto, plazo) {
+    const confirmacion = confirm('¿Está seguro que desea eliminar el plazo seleccionado?');
+    if (confirmacion) {
+        eliminarPlazo(producto, plazo);
+    }
+}
+
+function eliminarPlazo(producto, plazo) {
+    const plazoForm = document.getElementById(`${producto}${plazo}Form`);
+    if (plazoForm) {
+        plazoForm.remove();
+    }
+}
 
 function guardarCambios() {
     console.log('Guardando cambios'); // Mensaje de depuración
