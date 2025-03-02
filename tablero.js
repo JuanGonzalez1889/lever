@@ -1,0 +1,114 @@
+document.addEventListener('DOMContentLoaded', (event) => {
+    console.log('DOM completamente cargado y analizado'); // Mensaje de depuración
+
+    // Cargar los datos actuales del archivo calculadora.txt sin usar la caché del navegador
+    fetch('files/calculadora.txt?' + new Date().getTime())
+        .then(response => response.json())
+        .then(data => {
+            console.log('Datos cargados:', data); // Mensaje de depuración
+            // Rellenar el formulario con los datos actuales
+            const minAFinanciar = document.getElementById('minAFinanciar');
+            if (minAFinanciar) {
+                minAFinanciar.value = data.minAFinanciar.valor;
+            }
+
+            const productoSelect = document.getElementById('productoSelect');
+            productoSelect.addEventListener('change', function() {
+                const selectedProduct = this.value;
+                const productoForm = document.getElementById('productoForm');
+                productoForm.innerHTML = ''; // Limpiar el formulario anterior
+
+                if (selectedProduct === 'a' || selectedProduct === 'b') {
+                    const productoData = data.productos[selectedProduct];
+                    let formHtml = `<h2>Producto ${selectedProduct.toUpperCase()}</h2>`;
+                    for (const plazo in productoData.plazos) {
+                        formHtml += `
+                            <div>
+                                <label for="${selectedProduct}${plazo}Interest">Interés ${plazo} meses:</label>
+                                <input type="number" id="${selectedProduct}${plazo}Interest" name="${selectedProduct}${plazo}Interest" value="${productoData.plazos[plazo].interest}">
+                            </div>
+                            <div>
+                                <label for="${selectedProduct}${plazo}Fee">Fee ${plazo} meses:</label>
+                                <input type="number" id="${selectedProduct}${plazo}Fee" name="${selectedProduct}${plazo}Fee" value="${productoData.plazos[plazo].fee}">
+                            </div>
+                            <div>
+                                <label for="${selectedProduct}${plazo}MinFee">Min Fee ${plazo} meses:</label>
+                                <input type="number" id="${selectedProduct}${plazo}MinFee" name="${selectedProduct}${plazo}MinFee" value="${productoData.plazos[plazo].minfee}">
+                            </div>
+                        `;
+                    }
+                    productoForm.innerHTML = formHtml;
+                    productoForm.style.display = 'block';
+                } else {
+                    productoForm.style.display = 'none';
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar los datos:', error);
+        });
+
+    // Mostrar el popup modal
+    const modal = document.getElementById('myModal');
+    const span = document.getElementsByClassName('close')[0];
+
+    if (span) {
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+    } else {
+        console.error('Elemento con clase "close" no encontrado'); // Mensaje de depuración
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+});
+
+function guardarCambios() {
+    console.log('Guardando cambios'); // Mensaje de depuración
+
+    const minAFinanciar = document.getElementById('minAFinanciar').value;
+    const productoSelect = document.getElementById('productoSelect').value;
+    const productoForm = document.getElementById('productoForm');
+    const inputs = productoForm.querySelectorAll('input');
+
+    const data = {
+        minAFinanciar: { valor: minAFinanciar },
+        productos: {
+            [productoSelect]: {
+                plazos: {}
+            }
+        }
+    };
+
+    inputs.forEach(input => {
+        const [product, plazo, field] = input.id.split(/(\d+)/);
+        if (!data.productos[productoSelect].plazos[plazo]) {
+            data.productos[productoSelect].plazos[plazo] = {};
+        }
+        data.productos[productoSelect].plazos[plazo][field.toLowerCase()] = input.value;
+    });
+
+    fetch('guardar.php?' + new Date().getTime(), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            // Mostrar el popup modal
+            const modal = document.getElementById('myModal');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        } else {
+            alert('Error al guardar los cambios');
+        }
+    });
+}

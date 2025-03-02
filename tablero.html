@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero de Configuración</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Asegúrate de que este archivo CSS exista y contenga los estilos que ya estás usando -->
+</head>
+<body>
+    <h1>Tablero de Configuración</h1>
+    <form id="configForm">
+        <div>
+            <label for="minAFinanciar">Mínimo a Financiar:</label>
+            <input type="number" id="minAFinanciar" name="minAFinanciar">
+        </div>
+        <div>
+            <label for="productoSelect">Seleccionar Producto:</label>
+            <select id="productoSelect" name="productoSelect">
+                <option value="" disabled selected>Seleccione un producto</option>
+                <option value="a">Producto A</option>
+                <option value="b">Producto B</option>
+            </select>
+        </div>
+        <div id="productoForm" style="display: none;">
+            <!-- Aquí se cargará el formulario del producto seleccionado -->
+        </div>
+        <button type="button" onclick="guardarCambios()">Guardar</button>
+    </form>
+
+    <!-- El popup modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>¡Cambios guardados exitosamente!</p>
+        </div>
+    </div>
+
+    <script src="tablero.js"></script>
+</body>
+</html>
