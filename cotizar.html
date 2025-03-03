@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizar - LEVER</title>
+    <link rel="stylesheet" href="cotizar.css"> <!-- Asegúrate de que este archivo CSS exista y contenga los estilos que ya estás usando -->
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div itemprop="logo" class="logo-container"><a href="#"><img src="./images/logos/lever.svg" alt="Lever Technology"></a></div>
+            <div class="hamburguer-menu" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+        <nav id="menu" itemprop="mainEntityOfPage" itemscope itemtype="http://schema.org/SiteNavigationElement" class="hidden">
+            <ul>
+                <li><a href="index.html" itemprop="url" class="scroller outline" data-text="Inicio" data-url="#inicio"><span itemprop="name">Inicio</span></a></li>
+                <li><a href="index.html#nosotros" itemprop="url" class="scroller outline" data-text="Nosotros" data-url="#nosotros"><span itemprop="name">Nosotros</span></a></li>
+                <li><a href="index.html#contacto" itemprop="url" class="scroller outline" data-text="Contacto" data-url="#contacto"><span itemprop="name">Contacto</span></a></li>
+                <li><a href="cotizar.html" itemprop="url" class="scroller outline" data-text="Cotizar" data-url="#cotizar"><span itemprop="name">Cotizar</span></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="cotizar">
+            <div class="container">
+                <h2>Cotizador online</h2>
+                <h1>PASO <strong>1 DE 3</strong></h1>
+                <!-- Aquí puedes agregar más contenido y diseño según tus necesidades -->
+                <div class="switch-container">
+                    <span class="switch-label-left" onclick="toggleSwitch(false)">CUIT</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="switch-slider"></span>
+                    </label>
+                    <span class="switch-label-right" onclick="toggleSwitch(true)">DNI</span>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleSwitch(isChecked) {
+            const checkbox = document.querySelector('.toggle-switch input');
+            checkbox.checked = isChecked;
+            updateSwitchLabels();
+        }
+
+        function updateSwitchLabels() {
+            const leftLabel = document.querySelector('.switch-label-left');
+            const rightLabel = document.querySelector('.switch-label-right');
+            const checkbox = document.querySelector('.toggle-switch input');
+            if (checkbox.checked) {
+                leftLabel.style.color = '#303047';
+                rightLabel.style.color = '#FFFFFF';
+            } else {
+                leftLabel.style.color = '#FFFFFF';
+                rightLabel.style.color = '#303047';
+            }
+        }
+
+        document.querySelector('.toggle-switch input').addEventListener('change', updateSwitchLabels);
+        updateSwitchLabels(); // Inicializar los colores al cargar la página
+    </script>
+</body>
+</html>

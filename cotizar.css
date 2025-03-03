@@ -1,0 +1,245 @@
+body {
+    /* Layout Properties */
+    top: 0px;
+    left: 0px;
+    width: 375px;
+    height: 812px;
+    /* UI Properties */
+    background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
+    opacity: 1;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #2adc9f;
+    /* Color del título */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+h2 {
+    /* Layout Properties */
+    top: 136px;
+    left: 34px;
+    width: 247px;
+    height: 0rem;
+    /* UI Properties */
+    text-align: left;
+    font: normal normal bold 15px/17px Gotham;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    opacity: 1;
+}
+
+/* Estilos para el  h1 y strong */
+#cotizar h1 {
+    top: 0px;
+    left: 0px;
+
+    height: 26px;
+    text-align: left;
+    font: normal normal 300 24px/26px Gotham;
+    letter-spacing: 0px;
+    color: #2ADC9F;
+}
+
+#cotizar h1 strong {
+    top: 0px;
+    left: 93px;
+    width: 57px;
+    height: 26px;
+    text-align: left;
+    font: normal normal bold 24px/26px Gotham;
+    letter-spacing: 0px;
+    color: #2ADC9F;
+}
+
+/* Estilos para el switch */
+.switch-container {
+    position: absolute;
+    top: 297px;
+    left: 123px;
+    width: 130px;
+    height: 30px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 130px;
+    height: 30px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 2px;
+    left: 3px;
+    width: 58px;
+    height: 26px;
+    background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    transition: .4s;
+}
+
+input:checked + .switch-slider {
+    transform: translateX(66px);
+}
+
+.switch-label-left,
+.switch-label-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    z-index: 1; /* Asegura que las etiquetas estén por encima del slider */
+}
+
+.switch-label-left {
+    left: 20px;
+    color: #FFFFFF;
+}
+
+.switch-label-right {
+    right: 22px;
+    color: #303047;
+}
+
+/* Estilos para el menú hamburguesa */
+.hamburguer-menu {
+    position: absolute;
+    top: 21px;
+    left: 320px;
+    width: 25px;
+    height: 19px;
+    cursor: pointer;
+    opacity: 1;
+
+    border-radius: 100px;
+}
+
+.hamburguer-menu .bar {
+    height: 3px;
+    background-color: #ffff;
+    margin: 4px 0;
+}
+
+.hamburguer-menu .bar:nth-child(1) {
+    width: 14.44px;
+    justify-self: center;
+    height: 2.28px;
+}
+
+.hamburguer-menu .bar:nth-child(2) {
+    width: 25.08px;
+    justify-self: center;
+    height: 2.28px;
+}
+
+.hamburguer-menu .bar:nth-child(3) {
+    width: 11.4px;
+    justify-self: center;
+    height: 2.28px;
+}
+
+/* Estilos para el logo */
+.logo-container {
+    position: relative;
+    z-index: 9999;
+    width: 6.8rem;
+    height: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.logo-container img {
+    width: 86%;
+    height: auto;
+}
+
+/* Estilos para el menú */
+nav#menu {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 100px;
+    left: 320px;
+    width: 200px;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+nav#menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav#menu ul li {
+    margin-bottom: 10px;
+}
+
+nav#menu ul li a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+
+nav#menu ul li a:hover {
+    color: #2adc9f;
+}
+
+/* Estilos para el footer */
+footer {
+    background-color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid #ccc;
+}
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer .not-center {
+    display: flex;
+    align-items: center;
+}
+
+footer .social a {
+    margin: 0 10px;
+}
+
+footer .social img {
+    width: 24px;
+    height: 24px;
+}
