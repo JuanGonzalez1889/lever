@@ -42,18 +42,19 @@ h2 {
     letter-spacing: 0px;
     color: #FFFFFF;
     opacity: 1;
+    margin-left: 1rem;
 }
 
 /* Estilos para el  h1 y strong */
 #cotizar h1 {
     top: 0px;
     left: 0px;
-
     height: 26px;
     text-align: left;
     font: normal normal 300 24px/26px Gotham;
     letter-spacing: 0px;
     color: #2ADC9F;
+    margin-left: 1rem;
 }
 
 #cotizar h1 strong {
@@ -107,7 +108,7 @@ h2 {
     transition: .4s;
 }
 
-input:checked + .switch-slider {
+input:checked+.switch-slider {
     transform: translateX(66px);
 }
 
@@ -119,7 +120,8 @@ input:checked + .switch-slider {
     font-size: 12px;
     font-weight: bold;
     letter-spacing: -1px;
-    z-index: 1; /* Asegura que las etiquetas estén por encima del slider */
+    z-index: 1;
+    /* Asegura que las etiquetas estén por encima del slider */
 }
 
 .switch-label-left {
@@ -132,6 +134,121 @@ input:checked + .switch-slider {
     color: #303047;
 }
 
+/* Estilos para el campo de DNI */
+.dni-container {
+    position: absolute;
+    top: 350px;
+    left: 30px;
+    width: 298px;
+    height: 51px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 30px;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.dni-input {
+    border: none;
+    outline: none;
+    background: none;
+    width: calc(100% - 60px);
+    font: normal normal 300 14px/15px Gotham;
+    color: #15224F;
+    opacity: 0.5;
+}
+
+.dni-input::placeholder {
+    color: #15224F;
+    opacity: 0.5;
+}
+
+.search-icon-container {
+    width: 47px;
+    height: 39px;
+    background: transparent linear-gradient(180deg, #0BA290 0%, #27D79E 100%) 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+}
+
+/* Estilos para el texto de confidencialidad */
+.confidentiality-text {
+    position: absolute;
+    top: 417px;
+    left: 57px;
+    width: 270px;
+    height: 63px;
+    text-align: left;
+    font: normal normal 300 12px / 12px Gotham;
+    letter-spacing: -0.12px;
+    color: #FFFFFF;
+    opacity: 0.5;
+}
+
+.confidentiality-text strong {
+    font: normal normal bold 12px/12px Gotham;
+    letter-spacing: -0.12px;
+    color: #FFFFFF;
+}
+
+/* Estilos para el botón "Siguiente" */
+.next-button {
+    position: absolute;
+    top: 646px;
+    left: 213px;
+    width: 132px;
+    height: 40px;
+    background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    opacity: 1;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.next-button span {
+    display: flex;
+    position: absolute;
+    top: 9px;
+    left: 18px;
+    width: 64px;
+    height: 20px;
+    text-align: left;
+    font: normal normal bold 15px / 20px Gotham;
+    letter-spacing: -1px;
+    color: #FFFFFF;
+    opacity: 1;
+}
+
+.next-button .next-arrow {
+    margin-left: 92px;
+    width: 11px;
+    top: 15px;
+    opacity: 1;
+    position: absolute;
+}
+
+.next-button span::after {
+
+    font: normal normal bold 12px/20px Gotham;
+    letter-spacing: -1px;
+    color: #FFFFFF;
+    opacity: 1;
+}
+
 /* Estilos para el menú hamburguesa */
 .hamburguer-menu {
     position: absolute;
@@ -141,7 +258,6 @@ input:checked + .switch-slider {
     height: 19px;
     cursor: pointer;
     opacity: 1;
-
     border-radius: 100px;
 }
 
@@ -177,6 +293,8 @@ input:checked + .switch-slider {
     height: auto;
     display: inline-block;
     vertical-align: middle;
+    top: 3px;
+    margin-left: 14px;
 }
 
 .logo-container img {
@@ -242,4 +360,50 @@ footer .social a {
 footer .social img {
     width: 24px;
     height: 24px;
+}
+
+.footer {
+    position: absolute;
+    top: 719px;
+    left: 0px;
+    width: 375px;
+    height: 52px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    opacity: 1;
+}
+
+/* Estilos para el botón "INICIO" */
+.inicio-button {
+    /* position: absolute; */
+    top: 739px;
+    left: 23px;
+    width: 96px;
+    height: 40px;
+    background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    opacity: 1;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 18px;
+}
+
+.inicio-button .inicio-icon {
+    position: absolute;
+    left: 31px;
+    top: 29px;
+    width: 18px;
+    height: 19px;
+    opacity: 1;
+    color: #FFFFFF;
+}
+
+.inicio-button .inicio-text {
+    font: normal normal bold 12px/20px Gotham;
+    position: absolute;
+    color: #FFFFFF;
+    left: 5rem;
+
 }

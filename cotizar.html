@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cotizar - LEVER</title>
-    <link rel="stylesheet" href="cotizar.css"> <!-- Asegúrate de que este archivo CSS exista y contenga los estilos que ya estás usando -->
+    <link rel="stylesheet" href="cotizar.css?v=1.2"> <!-- Asegúrate de que este archivo CSS exista y contenga los estilos que ya estás usando -->
 </head>
 <body>
     <header>
@@ -39,9 +39,28 @@
                     </label>
                     <span class="switch-label-right" onclick="toggleSwitch(true)">DNI</span>
                 </div>
+                <div class="dni-container">
+                    <input type="text" class="dni-input" placeholder="DNI del solicitante">
+                    <div class="search-icon-container">
+                        <img src="./images/icons/search.svg" alt="search icon" class="search-icon">
+                    </div>
+                </div>
+                <div class="confidentiality-text">
+                    Los datos solicitados son confidenciales y no se van a almacenar en ninguna base de datos.<br><br>Al avanzar, el usuario acepta los <strong>Términos y Condiciones de Servicio.</strong>
+                </div>
+                <button class="next-button">
+                    <span class="next-text">Siguiente</span>
+                    <img src="./images/icons/flecha.svg" alt="flecha" class="next-arrow">
+                </button>
             </div>
         </section>
     </main>
+    <footer class="footer">
+        <button class="inicio-button">
+            <img src="./images/icons/inicio.svg" alt="inicio icon" class="inicio-icon">
+            <span class="inicio-text">Inicio</span>
+        </button>
+    </footer>
     
     <script>
         function toggleMenu() {
@@ -59,17 +78,20 @@
             const leftLabel = document.querySelector('.switch-label-left');
             const rightLabel = document.querySelector('.switch-label-right');
             const checkbox = document.querySelector('.toggle-switch input');
+            const dniInput = document.querySelector('.dni-input');
             if (checkbox.checked) {
                 leftLabel.style.color = '#303047';
                 rightLabel.style.color = '#FFFFFF';
+                dniInput.placeholder = 'DNI del solicitante';
             } else {
                 leftLabel.style.color = '#FFFFFF';
                 rightLabel.style.color = '#303047';
+                dniInput.placeholder = 'CUIT del solicitante';
             }
         }
 
         document.querySelector('.toggle-switch input').addEventListener('change', updateSwitchLabels);
-        updateSwitchLabels(); // Inicializar los colores al cargar la página
+        updateSwitchLabels(); // Inicializar los colores y el placeholder al cargar la página
     </script>
 </body>
 </html>
