@@ -1,4 +1,9 @@
 <?php
+    // Acceso CORS
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization");
+
     class InfoAuto {
 
         public $token;
@@ -254,11 +259,6 @@
             echo json_encode(['accessToken' => $access_token, 'price' => ($price * 1000)], TRUE);
         }
     }}
-
-    //Acceso Cors
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-    header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization");
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $datos = file_get_contents('php://input');
