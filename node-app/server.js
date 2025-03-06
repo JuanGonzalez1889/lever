@@ -20,9 +20,11 @@ app.use(session({
     cookie: { secure: false } // secure en false para desarrollo
 }));
 
+// Servir archivos estáticos desde la carpeta 'files'
+app.use('/files', express.static(path.join(__dirname, '../files')));
+
 const users = {
-  admin: "123",
-  admin1: "1234",
+    admin: '123'
 };
 
 app.post('/api/login', (req, res) => {
@@ -45,8 +47,13 @@ app.get('/api/data', (req, res) => {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
     const dataPath = path.join(__dirname, '../files/calculadora.txt');
-    const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-    res.json(data);
+    try {
+        const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+        res.json(data);
+    } catch (error) {
+        console.error('Error reading data:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
 });
 
 app.post('/api/data', (req, res) => {
@@ -54,15 +61,20 @@ app.post('/api/data', (req, res) => {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
     const dataPath = path.join(__dirname, '../files/calculadora.txt');
-    const existingData = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-    const newData = req.body;
+    try {
+        const existingData = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+        const newData = req.body;
 
-    existingData.minAFinanciar = newData.minAFinanciar;
-    const selectedProduct = Object.keys(newData.productos)[0];
-    existingData.productos[selectedProduct] = newData.productos[selectedProduct];
+        existingData.minAFinanciar = newData.minAFinanciar;
+        const selectedProduct = Object.keys(newData.productos)[0];
+        existingData.productos[selectedProduct] = newData.productos[selectedProduct];
 
-    fs.writeFileSync(dataPath, JSON.stringify(existingData, null, 2));
-    res.json({ success: true });
+        fs.writeFileSync(dataPath, JSON.stringify(existingData, null, 2));
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving data:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
 });
 
 app.listen(PORT, () => {
