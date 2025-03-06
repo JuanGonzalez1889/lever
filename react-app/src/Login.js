@@ -8,12 +8,16 @@ function Login({ onLogin }) {
     const navigate = useNavigate();
 
     const handleLogin = async () => {
-        const response = await axios.post('http://localhost:5000/api/login', { username, password }, { withCredentials: true });
-        if (response.data.success) {
-            onLogin();
-            navigate('/dashboard');
-        } else {
-            alert('Usuario o contraseña incorrectos');
+        try {
+            const response = await axios.post('http://localhost:5000/api/login', { username, password }, { withCredentials: true });
+            if (response.data.success) {
+                onLogin();
+                navigate('/dashboard');
+            } else {
+                alert('Usuario o contraseña incorrectos');
+            }
+        } catch (error) {
+            console.error('Error logging in:', error);
         }
     };
 

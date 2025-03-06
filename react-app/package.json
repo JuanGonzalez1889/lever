@@ -1,7 +1,13 @@
 {
   "dependencies": {
     "axios": "^1.8.1",
+    "bootstrap": "^5.3.3",
+    "react-bootstrap": "^2.10.9",
+    "react-bootstrap-icons": "^1.11.5",
+    "react-bootstrap-sidebar": "^0.0.1",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^7.2.0",
     "react-scripts": "^5.0.1"
   },
