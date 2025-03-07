@@ -1,9 +1,4 @@
 <?php
-    // Acceso CORS
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-    header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization");
-
     class InfoAuto {
 
         public $token;
@@ -224,6 +219,9 @@
 
     public function getPriceByCodia($codia, $year, $access_token)
     {
+        $ltvPath = '../files/ltv.json';
+        $ltvData = json_decode(file_get_contents($ltvPath), true);
+
         if ($year == date('Y')) {
             $url = "https://api.infoauto.com.ar/cars/pub/models/{$codia}/list_price";
         } else {
@@ -256,9 +254,23 @@
                     }
                 }
             }
-            echo json_encode(['accessToken' => $access_token, 'price' => ($price * 1000)], TRUE);
+
+            $selectedProduct = $_POST['selectedProduct'] ?? 'a';
+            $ltv = $ltvData[$selectedProduct][$year] ?? ['value' => 0, 'show' => false];
+            if (!$ltv['show']) {
+                $maxAFinanciar = "No disponible";
+            } else {
+                $maxAFinanciar = $price * $ltv['value'];
+            }
+
+            echo json_encode(['accessToken' => $access_token, 'price' => ($price * 1000), 'maxAFinanciar' => $maxAFinanciar], TRUE);
         }
     }}
+
+    //Acceso Cors
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization");
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $datos = file_get_contents('php://input');
@@ -272,34 +284,28 @@
             $access_token = $a->token;
         }
 
-        //$a->login();
-        
         if (json_last_error() === JSON_ERROR_NONE) {
-            // Acceder a los datos
             $year = $data['year'] ?? '';
             $action = $data['action'] ?? '';
             $id = $data['idMarca'] ?? '';
             $codia = $data['codia'] ?? '';
-            
+            $selectedProduct = $data['selectedProduct'] ?? 'a';
+
             switch ($action) {
-                case "getBrandsByYear" : 
+                case "getBrandsByYear":
                     $a->getBrandsByYear($year, $access_token);
                     break;
-                case "getModelsByBrand" : 
+                case "getModelsByBrand":
                     $a->getModelsByBrand($id, $year, $access_token);
                     break;
-                case "getPriceByCodia" : 
+                case "getPriceByCodia":
                     $a->getPriceByCodia($codia, $year, $access_token);
                     break;
             }
-
         } else {
-            // Manejar error de decodificación JSON
             echo "Error al decodificar los datos JSON.";
         }
 
-        //echo json_decode($_POST[""], TRUE);
         die();
     }
-    //codia activos: 630036, 630037, 630030, 630034
 ?>
