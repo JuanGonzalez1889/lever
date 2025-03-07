@@ -9,7 +9,8 @@ body {
 h1 {
     text-align: center;
     margin-top: 20px;
-    color: #2adc9f; /* Color del título */
+    color: #2adc9f;
+    /* Color del título */
 }
 
 form {
@@ -28,11 +29,13 @@ form div {
 label {
     display: block;
     margin-bottom: 5px;
-    color: #2adc9f; /* Color del texto del label */
+    color: #2adc9f;
+    /* Color del texto del label */
     font-weight: bold;
 }
 
-input[type="number"], select {
+input[type="number"],
+select {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
@@ -73,6 +76,20 @@ button {
     color: #fff;
     border-radius: 64px;
     box-shadow: 0 12px 24px -6px rgba(104, 73, 16, 0);
+}
+
+.button-cs {
+    position: relative;
+    text-align: center;
+    padding: 10px 32px;
+    font-size: var(--font-button);
+    background-color: #0e152c !important;
+    width: 250px;
+    color: #fff;
+    border-radius: 64px;
+    box-shadow: 0 12px 24px -6px rgba(104, 73, 16, 0);
+    margin-right: 2rem;
+    margin-left: 41rem;
 }
 
 button .button_outline {
