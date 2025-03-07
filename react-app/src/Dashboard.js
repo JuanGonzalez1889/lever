@@ -13,6 +13,7 @@ function Tablero() {
     const [selectedProduct, setSelectedProduct] = useState('');
     const [minAFinanciar, setMinAFinanciar] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [ltv, setLtv] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,6 +21,7 @@ function Tablero() {
                 const response = await axios.get('http://localhost:5000/api/data', { withCredentials: true });
                 setData(response.data);
                 setMinAFinanciar(response.data.minAFinanciar.valor);
+                setLtv(response.data.ltv || {});
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -32,7 +34,8 @@ function Tablero() {
             minAFinanciar: { valor: minAFinanciar },
             productos: {
                 [selectedProduct]: data.productos[selectedProduct]
-            }
+            },
+            ltv
         };
         try {
             await axios.post('http://localhost:5000/api/data', updatedData, { withCredentials: true });
@@ -47,7 +50,7 @@ function Tablero() {
     };
 
     const handleInputChange = (e, product, plazo, field) => {
-        const value = e.target.value;
+        const value = e.target.value; // Mantener los puntos como separadores decimales
         setData(prevData => ({
             ...prevData,
             productos: {
@@ -61,6 +64,20 @@ function Tablero() {
                             [field]: value
                         }
                     }
+                }
+            }
+        }));
+    };
+
+    const handleLtvChange = (e, product, year, field) => {
+        const value = field === 'show' ? e.target.checked : e.target.value; // Manejar checkbox para 'show'
+        setLtv(prevLtv => ({
+            ...prevLtv,
+            [product]: {
+                ...prevLtv[product],
+                [year]: {
+                    ...prevLtv[product][year],
+                    [field]: value
                 }
             }
         }));
@@ -92,7 +109,7 @@ function Tablero() {
                 <td>
                     <Form.Control
                         type="number"
-                        value={datos.interest}
+                        value={datos.interest} // Mantener los puntos como separadores decimales
                         onChange={(e) => handleInputChange(e, producto, plazo, 'interest')}
                         required
                     />
@@ -100,7 +117,7 @@ function Tablero() {
                 <td>
                     <Form.Control
                         type="number"
-                        value={datos.fee}
+                        value={datos.fee} // Mantener los puntos como separadores decimales
                         onChange={(e) => handleInputChange(e, producto, plazo, 'fee')}
                         required
                     />
@@ -108,7 +125,7 @@ function Tablero() {
                 <td>
                     <Form.Control
                         type="number"
-                        value={datos.minfee}
+                        value={datos.minfee} // Mantener los puntos como separadores decimales
                         onChange={(e) => handleInputChange(e, producto, plazo, 'minfee')}
                         required
                     />
@@ -158,8 +175,8 @@ function Tablero() {
                     <Form.Label>Mínimo a Financiar:</Form.Label>
                     <Form.Control
                         type="number"
-                        value={minAFinanciar}
-                        onChange={(e) => setMinAFinanciar(e.target.value)}
+                        value={minAFinanciar} // Mantener los puntos como separadores decimales
+                        onChange={(e) => setMinAFinanciar(e.target.value)} // Mantener los puntos como separadores decimales
                     />
                 </Form.Group>
                 <Form.Group controlId="selectedProduct">
@@ -190,6 +207,42 @@ function Tablero() {
                             </tbody>
                         </Table>
                         <Button variant="primary" onClick={agregarPlazo}>Agregar Plazo</Button>
+                    </div>
+                )}
+                {selectedProduct && (
+                    <div id="ltvForm">
+                        <h2>LTV por Año para Producto {selectedProduct.toUpperCase()}</h2>
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>Año</th>
+                                    <th>LTV</th>
+                                    <th>Mostrar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012].map(year => (
+                                    <tr key={`${selectedProduct}${year}Ltv`}>
+                                        <td>{year}</td>
+                                        <td>
+                                            <Form.Control
+                                                type="number"
+                                                value={ltv[selectedProduct]?.[year]?.value || ''} // Mantener los puntos como separadores decimales
+                                                onChange={(e) => handleLtvChange(e, selectedProduct, year, 'value')}
+                                                required
+                                            />
+                                        </td>
+                                        <td>
+                                            <Form.Check
+                                                type="checkbox"
+                                                checked={ltv[selectedProduct]?.[year]?.show || false}
+                                                onChange={(e) => handleLtvChange(e, selectedProduct, year, 'show')}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
                     </div>
                 )}
                 <Button variant="success" onClick={handleSave}>Guardar</Button>

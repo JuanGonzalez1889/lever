@@ -126,17 +126,21 @@ function Cotizador() {
 
         for (let i = 0; i < plazos.length; i++) {
             const cuotaMensual = calcularCuota(capital, tasas[i], plazos[i], fees[i]);
-            cuotas.push(`Cuota ${plazos[i]} meses: $${cuotaMensual.toFixed(2)}`);
+            console.log(`Plazo: ${plazos[i]} meses, Tasa: ${tasas[i]}, Fee: ${fees[i]}, Cuota Mensual: ${cuotaMensual}`);
+            cuotas.push(`Cuota ${plazos[i]} meses: $${cuotaMensual.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
         }
         return cuotas;
     };
 
     const calcularCuota = (montoPrincipal, tasaInteresAnual, plazo, fee) => {
-        const interesMensual = (tasaInteresAnual / 100) / 12;
-        const comision = montoPrincipal * fee * 1.21;
-        const saldo = montoPrincipal + comision;
-        const factor = Math.pow(1 + interesMensual, plazo);
-        const cuotaMensual = saldo * interesMensual * factor / (factor - 1);
+        const interesMensual = parseFloat(((tasaInteresAnual / 100) / 12).toFixed(7)); // Redondear a 7 decimales
+        const comision = parseFloat((montoPrincipal * fee * 1.21).toFixed(2)); // Redondear a 2 decimales
+        const saldo = parseFloat((parseFloat(montoPrincipal) + comision).toFixed(2)); // Asegurarse de que montoPrincipal sea un número y redondear a 2 decimales
+        console.log(`Monto Principal: ${montoPrincipal}, Tasa Interes Anual: ${tasaInteresAnual}, Plazo: ${plazo}, Fee: ${fee}, Interes Mensual: ${interesMensual}, Comision: ${comision}, Saldo: ${saldo}`);
+        const factor = parseFloat(Math.pow(1 + interesMensual, plazo).toFixed(6)); // Redondear a 6 decimales
+        console.log(`Interes Mensual: ${interesMensual}, Plazo: ${plazo}, Factor Calculado: ${factor}`);
+        const cuotaMensual = parseFloat((saldo * interesMensual * factor / (factor - 1)).toFixed(2)); // Redondear a 2 decimales
+        console.log(`Factor: ${factor}, Cuota Mensual: ${cuotaMensual}`);
         return cuotaMensual;
     };
 
