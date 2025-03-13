@@ -1,75 +1,65 @@
 {
-  "minAFinanciar": {
-    "valor": "1000000"
-  },
   "productos": {
     "a": {
       "plazos": {
         "12": {
-          "interest": "50.9",
-          "fee": "0.09",
-          "minfee": "1"
-        },
-        "18": {
-          "interest": "50.9",
-          "fee": "0.09",
-          "minfee": "1"
+          "interest": 55.9,
+          "fee": 0.08,
+          "minfee": 1
         },
         "24": {
-          "interest": "45.9",
-          "fee": "0.09",
-          "minfee": "1"
+          "interest": 53.9,
+          "fee": 0.08,
+          "minfee": 1
         },
         "36": {
-          "interest": "43.9",
-          "fee": "0.09",
-          "minfee": "1"
+          "interest": 52.9,
+          "fee": 0.08,
+          "minfee": 1
         },
         "48": {
-          "interest": "43.9",
-          "fee": "0.09",
-          "minfee": "1"
+          "interest": 51.9,
+          "fee": 0.08,
+          "minfee": 1
         },
         "60": {
-          "interest": "43.9",
-          "fee": "0.09",
-          "minfee": "1"
+          "interest": 50.9,
+          "fee": 0.08,
+          "minfee": 1
         }
       }
     },
     "b": {
       "plazos": {
         "12": {
-          "interest": "70",
-          "fee": "0.1",
-          "minfee": "1"
+          "interest": "48.9",
+          "fee": 0.09,
+          "minfee": 1
         },
         "24": {
-          "interest": "55.9",
-          "fee": "0.1",
-          "minfee": "1"
+          "interest": 44.9,
+          "fee": 0.09,
+          "minfee": 1
         },
         "36": {
-          "interest": "53.9",
-          "fee": "0.1",
-          "minfee": "1"
+          "interest": 42.9,
+          "fee": 0.09,
+          "minfee": 1
         },
         "48": {
-          "interest": "53.9",
-          "fee": "0.1",
-          "minfee": "1"
+          "interest": 42.9,
+          "fee": 0.09,
+          "minfee": 1
         },
         "60": {
-          "interest": "53.9",
-          "fee": "0.1",
-          "minfee": "1"
-        },
-        "64": {
-          "interest": "55",
-          "fee": "0.1",
-          "minfee": "1"
+          "interest": 42.9,
+          "fee": 0.09,
+          "minfee": 1
         }
       }
     }
+  },
+  "minAFinanciar": {
+    "valor": "1000000"
   }
 }
