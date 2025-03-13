@@ -20,7 +20,7 @@ function Tablero() {
             try {
                 const response = await axios.get('http://localhost:5000/api/data', { withCredentials: true });
                 setData(response.data);
-                setMinAFinanciar(response.data.minAFinanciar.valor);
+                setMinAFinanciar(formatNumber(response.data.minAFinanciar));
                 setLtv(response.data.ltv || {});
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -29,13 +29,28 @@ function Tablero() {
         fetchData();
     }, []);
 
+    const formatNumber = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
     const handleSave = async () => {
+        const updatedLtv = { ...ltv };
+        // Convertir los valores de LTV a números si es necesario
+        Object.keys(updatedLtv).forEach(year => {
+            if (typeof updatedLtv[year] === 'object' && updatedLtv[year].value) {
+                updatedLtv[year] = parseFloat(updatedLtv[year].value);
+            }
+        });
+
         const updatedData = {
-            minAFinanciar: { valor: minAFinanciar },
+            minAFinanciar: parseInt(minAFinanciar.replace(/\./g, '')),
             productos: {
                 [selectedProduct]: data.productos[selectedProduct]
             },
-            ltv
+            ltv: {
+                ...data.ltv,
+                [selectedProduct]: updatedLtv
+            }
         };
         try {
             await axios.post('http://localhost:5000/api/data', updatedData, { withCredentials: true });
@@ -47,6 +62,10 @@ function Tablero() {
 
     const handleProductChange = (e) => {
         setSelectedProduct(e.target.value);
+        // Cargar los LTV del producto seleccionado
+        if (data && data.ltv && data.ltv[e.target.value]) {
+            setLtv(data.ltv[e.target.value]);
+        }
     };
 
     const handleInputChange = (e, product, plazo, field) => {
@@ -69,16 +88,13 @@ function Tablero() {
         }));
     };
 
-    const handleLtvChange = (e, product, year, field) => {
+    const handleLtvChange = (e, year, field) => {
         const value = field === 'show' ? e.target.checked : e.target.value; // Manejar checkbox para 'show'
         setLtv(prevLtv => ({
             ...prevLtv,
-            [product]: {
-                ...prevLtv[product],
-                [year]: {
-                    ...prevLtv[product][year],
-                    [field]: value
-                }
+            [year]: {
+                ...prevLtv[year],
+                [field]: value
             }
         }));
     };
@@ -174,9 +190,9 @@ function Tablero() {
                 <Form.Group controlId="minAFinanciar">
                     <Form.Label>Mínimo a Financiar:</Form.Label>
                     <Form.Control
-                        type="number"
+                        type="text"
                         value={minAFinanciar} // Mantener los puntos como separadores decimales
-                        onChange={(e) => setMinAFinanciar(e.target.value)} // Mantener los puntos como separadores decimales
+                        onChange={(e) => setMinAFinanciar(formatNumber(e.target.value.replace(/\./g, '')))} // Mantener los puntos como separadores decimales
                     />
                 </Form.Group>
                 <Form.Group controlId="selectedProduct">
@@ -227,16 +243,17 @@ function Tablero() {
                                         <td>
                                             <Form.Control
                                                 type="number"
-                                                value={ltv[selectedProduct]?.[year]?.value || ''} // Mantener los puntos como separadores decimales
-                                                onChange={(e) => handleLtvChange(e, selectedProduct, year, 'value')}
+                                                value={ltv[year]?.value || ltv[year] || ''} // Mantener los puntos como separadores decimales
+                                                onChange={(e) => handleLtvChange(e, year, 'value')}
                                                 required
                                             />
                                         </td>
                                         <td>
                                             <Form.Check
                                                 type="checkbox"
-                                                checked={ltv[selectedProduct]?.[year]?.show || false}
-                                                onChange={(e) => handleLtvChange(e, selectedProduct, year, 'show')}
+                                                checked={ltv[year]?.show || false}
+                                                onChange={(e) => handleLtvChange(e, year, 'show')}
+                                                disabled // Deshabilitar el checkbox
                                             />
                                         </td>
                                     </tr>
