@@ -16,7 +16,7 @@
     <link rel="alternate" hreflang="en" href="https://lever.io">
     <link rel="alternate" hreflang="es-AR" href="https://lever.io">
     <link rel="alternate" hreflang="es" href="https://lever.io">
-    <link rel="stylesheet" type="text/css" href="./css/styles.min.css?v=1.2">
+    <link rel="stylesheet" type="text/css" href="./css/styles.min.css">
     <meta property="og:title" content="LEVER: Créditos Prendarios">
     <meta property="og:description"
         content="Calcula tu posible financiación con solo tu DNI. Créditos para Pymes. Posibilitá el financiamiento a los clientes de tu agencia por medio de nosotros.">
@@ -130,11 +130,6 @@
                                             <p class="financiacion-en-12 cuota-valor"><img class="loader-icon"
                                                     src="./images/icons/loader.svg" alt="loader"></p>
                                         </div>
-                                        <div class="card-cuota-mobile" id="card-18-mobile">
-                                            <p class="cuota"><span>18</span> CUOTAS</p>
-                                            <p class="financiacion-en-18 cuota-valor"><img class="loader-icon"
-                                                    src="./images/icons/loader.svg" alt="loader"></p>
-                                        </div>
                                         <div class="card-cuota-mobile">
                                             <p class="cuota"><span>24</span> CUOTAS</p>
                                             <p class="financiacion-en-24 cuota-valor"><img class="loader-icon"
@@ -183,11 +178,6 @@
                             <div class="card-cuota">
                                 <p class="cuota"><span>12</span><br>CUOTAS</p>
                                 <p class="financiacion-en-12 cuota-valor"><img class="loader-icon"
-                                        src="./images/icons/loader.svg" alt="loader"></p>
-                            </div>
-                            <div class="card-cuota" id="card-18-desktop">
-                                <p class="cuota"><span>18</span><br>CUOTAS</p>
-                                <p class="financiacion-en-18 cuota-valor"><img class="loader-icon"
                                         src="./images/icons/loader.svg" alt="loader"></p>
                             </div>
                             <div class="card-cuota">
@@ -367,7 +357,7 @@
         let precio = null;
         var valorIngresado = null;
         let maxAFinanciar;
-        let minAFinanciar = null;
+     
         let selectedProduct = "a"; //producto seleccionado por defecto.
         let showSecondPageMobile = false;
         let mensaje = '';
@@ -401,14 +391,28 @@
 
         let descripcionAutoContainer = document.querySelector('.descripcion-container__text');
 
-        let ltvData = {};
+        let ltvData;
+        let minAFinanciar;
 
-        const fetchLtvData = async () => {
+        // Cargar datos de LTV y mínimo a financiar desde la base de datos
+        const fetchLtvAndMinAFinanciar = async () => {
             try {
-                const response = await fetch('http://localhost:5000/files/ltv.json');
-                ltvData = await response.json();
+                const response = await fetch('php/curl.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'getLtvAndMinAFinanciar' })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                ltvData = data.ltv;
+                minAFinanciar = data.minAFinanciar;
+                console.log('LTV y mínimo a financiar cargados:', { ltvData, minAFinanciar });
             } catch (error) {
-                console.error('Error fetching LTV data:', error);
+                console.error('Error al cargar LTV y mínimo a financiar:', error);
             }
         };
 
@@ -487,8 +491,7 @@
                 headers: {
                     'Content-Type': 'application/json' // Tipo de contenido del cuerpo (JSON)
                 },
-                body: JSON.stringify(body), // Convertir datos a JSON y enviar en el cuerpo
-                cache: 'no-cache' // No usar caché del navegador
+                body: JSON.stringify(body) // Convertir datos a JSON y enviar en el cuerpo
             };
 
             marcas.innerHTML = "<option disabled selected>MARCA</option>";
@@ -528,8 +531,7 @@
                 headers: {
                     'Content-Type': 'application/json' // Tipo de contenido del cuerpo (JSON)
                 },
-                body: JSON.stringify(body),
-                cache: 'no-cache' // No usar caché del navegador
+                body: JSON.stringify(body)
             };
 
             modelos.innerHTML = "<option disabled selected>MODELO</option>";
@@ -551,8 +553,7 @@
             getLogo(idMarca);
         }
 
-        const fetchPriceCar = async (codia, year) => {
-            await fetchLtvData();
+        const fetchPriceCar = (codia, year) => {
             accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');;
 
             let body = {
@@ -567,35 +568,19 @@
                 headers: {
                     'Content-Type': 'application/json' // Tipo de contenido del cuerpo (JSON)
                 },
-                body: JSON.stringify(body), // Convertir datos a JSON y enviar en el cuerpo
-                cache: 'no-cache' // No usar caché del navegador
+                body: JSON.stringify(body) // Convertir datos a JSON y enviar en el cuerpo
             };
 
             fetch('php/curl.php', opcionesFetch)
                 .then(res => res.json())
                 .then(data => {
                     precio = data.price;
-                    updateMaxAFinanciar(year);
+                    maxAFinanciar = precio * ltvData[selectedProduct][year];
+                    console.log('LTV leído:', ltvData[selectedProduct][year]);
+                    //valorDeMercadoContainer.innerHTML = `<span>$</span>${precio.toLocaleString('es-AR')}`;
+                    valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
+                    setDeafaultFinancingValues();
                 });
-        }
-
-        const updateMaxAFinanciar = (year) => {
-            const ltv = ltvData[selectedProduct][year] || { value: 0, show: false };
-            const capitalInput = document.getElementById('monto-ingresado');
-            if (!ltv.show) {
-                maxAFinanciar = "No disponible";
-                if (capitalInput) {
-                    capitalInput.disabled = true;
-                }
-            } else {
-                maxAFinanciar = precio * ltv.value;
-                if (capitalInput) {
-                    capitalInput.disabled = false;
-                }
-            }
-
-            valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
-            setDeafaultFinancingValues();
         }
 
         //Establece el valor por defecto de las cuotas cuando se muestra el secondPage
@@ -619,70 +604,62 @@
         }
 
         const setFinancingValues = () => {
-            let datos = JSON.parse(sessionStorage.getItem('data'));
-
-            // Actualiza el valor máximo a financiar según el producto seleccionado
-            if (selectedProduct === "a") {
-                maxAFinanciar = precio * 0.7; // Valor para "Seguro en banco"
-            } else {
-                maxAFinanciar = precio * 0.8; // Valor para "Seguro liberado"
-            }
-
-            valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
-
-            if (valorIngresado === null || isNaN(valorIngresado) || valorIngresado === "" || valorIngresado >= maxAFinanciar) {
-                mensajeDeError.style = "display: none";
-                document.querySelectorAll(`.cuota-valor`).forEach((element) => {
-                    element.innerText = '--';
-                });
-            } else if (!isNaN(valorIngresado) && valorIngresado < maxAFinanciar) {
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos["12"].interest), 12, datos.plazos["12"].fee);
-                if (selectedProduct === "a") {
-                    desglosarCuotas(valorIngresado, parseFloat(datos.plazos["18"].interest), 18, datos.plazos["18"].fee);
+            try {
+                const datos = JSON.parse(sessionStorage.getItem('data'));
+                if (!datos || datos.length === 0) {
+                    console.error('No se encontraron datos válidos en sessionStorage para calcular los valores de financiación.');
+                    return;
                 }
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos["24"].interest), 24, datos.plazos["24"].fee);
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos["36"].interest), 36, datos.plazos["36"].fee);
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos["48"].interest), 48, datos.plazos["48"].fee);
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos["60"].interest), 60, datos.plazos["60"].fee);
+
+                const plazos = datos.reduce((acc, item) => {
+                    acc[item.plazo] = item;
+                    return acc;
+                }, {});
+
+                maxAFinanciar = precio * ltvData[selectedProduct][anio.value];
+                console.log('LTV leído:', ltvData[selectedProduct][anio.value]);
+
+                valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
+
+                if (valorIngresado === null || isNaN(valorIngresado) || valorIngresado === "" || valorIngresado > maxAFinanciar) {
+                    mensajeDeError.style = "display: none";
+                    document.querySelectorAll(`.cuota-valor`).forEach((element) => {
+                        element.innerText = '--';
+                    });
+                } else if (!isNaN(valorIngresado) && valorIngresado <= maxAFinanciar) {
+                    [12, 24, 36, 48, 60].forEach(plazo => {
+                        if (plazos[plazo]) {
+                            desglosarCuotas(valorIngresado, parseFloat(plazos[plazo].interest), plazo, plazos[plazo].fee);
+                        } else {
+                            console.warn(`No se encontraron datos para el plazo ${plazo}`);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error al calcular los valores de financiación:', error);
             }
         }
 
         const setProductInSessionStorage = async (selectedProduct) => {
-            sessionStorage.clear();
-
-            if (selectedProduct === "a") {
-                document.getElementById('card-18-desktop').style.display = 'flex';
-                document.getElementById('card-18-mobile').style.display = 'block';
-            } else {
-                document.getElementById('card-18-desktop').style.display = 'none';
-                document.getElementById('card-18-mobile').style.display = 'none';
-            }
-
             try {
-                const response = await fetch('./files/calculadora.txt?' + new Date().getTime());
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.text();
-
-                minAFinanciar = JSON.parse(data).minAFinanciar.valor;
-
-                let productos = JSON.parse(data);
-                sessionStorage.setItem('data', JSON.stringify(productos.productos[selectedProduct]));
-
-                // Actualiza el valor máximo a financiar según el producto seleccionado
-                if (selectedProduct === "a") {
-                    maxAFinanciar = precio * 0.7; // Valor para "Seguro en banco"
-                } else {
-                    maxAFinanciar = precio * 0.8; // Valor para "Seguro liberado"
+                const productosDB = JSON.parse(sessionStorage.getItem('productosDB'));
+                if (!productosDB) {
+                    console.error('No se encontraron productos en sessionStorage. Asegúrate de haber llamado a fetchProductsFromDB.');
+                    return;
                 }
 
-                valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
+                const productoSeleccionado = productosDB.find(producto => producto.nombre === selectedProduct);
+                if (!productoSeleccionado) {
+                    console.error(`Producto ${selectedProduct} no encontrado en la base de datos.`);
+                    return;
+                }
 
-                // Recalcula las cuotas
-                setFinancingValues();
+                // Almacenar todos los plazos del producto seleccionado
+                const productoConPlazos = productosDB.filter(producto => producto.nombre === selectedProduct);
+                sessionStorage.setItem('data', JSON.stringify(productoConPlazos));
+                console.log('Producto seleccionado almacenado en sessionStorage:', productoConPlazos);
             } catch (error) {
-                console.error('Error al leer el archivo:', error);
+                console.error('Error al procesar los datos del producto:', error);
             }
         }
 
@@ -701,27 +678,25 @@
                 btnCotizarDesktop.classList.remove('disabled');
                 btnCotizarMobile.classList.remove('disabled');
 
-                //console.log("desglosar llamado")
                 const interesMensual = (tasaInteresAnual / 100) / 12;
                 const comision = (montoPrincipal) * (feeValor * 1.21);
                 let saldo = montoPrincipal + comision;
                 const cuotaMensual = calcularCuota(saldo, tasaInteresAnual, plazo);
                 const desglose = [];
-                let basePromedio = 0
-                let cuotaPromedio = 0
+                let basePromedio = 0;
+                let cuotaPromedio = 0;
 
                 for (let i = 1; i <= plazo; i++) {
                     const interesCuota = saldo * interesMensual;
-                    const iva = interesCuota * 0.21
+                    const iva = interesCuota * 0.21;
                     const capitalCuota = cuotaMensual - interesCuota;
-                    const cuotaConIva = cuotaMensual + iva
+                    const cuotaConIva = cuotaMensual + iva;
                     saldo -= capitalCuota;
 
-                    basePromedio += cuotaConIva
+                    basePromedio += cuotaConIva;
                 }
 
-                cuotaPromedio = basePromedio / plazo
-                //formato con decimales
+                cuotaPromedio = basePromedio / plazo;
                 cuotaPromedioFormateada = parseFloat(cuotaPromedio.toFixed(0)).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
                 document.querySelectorAll(`.financiacion-en-${plazo}`).forEach((element) => {
@@ -729,7 +704,7 @@
                 });
 
             } else if (montoPrincipal < minAFinanciar) {
-                mensajeDeError.innerText = `El valor ingresado debe ser mayor a $${minAFinanciar.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+                mensajeDeError.innerText = `El valor ingresado debe ser mayor a $${minAFinanciar.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
                 mensajeDeError.style = "display: inline-block";
                 montoSolicitadoContainer.classList.add("error-active");
                 btnCotizarDesktop.classList.add('disabled');
@@ -786,34 +761,54 @@
             btnCotizarMobile.classList.remove('disabled');
             logoContainer.parentElement.style.display = 'flex';
             descripcionAutoContainer.style = 'padding-left: 0px !important';
-            document.querySelectorAll(".financiacion-en-12").forEach((element) => {
-                element.innerHTML = "<img class='loader-icon' src='./images/icons/loader.svg' alt='loader'>";
-            });
-            document.querySelectorAll(".financiacion-en-18").forEach((element) => {
-                element.innerHTML = "<img class='loader-icon' src='./images/icons/loader.svg' alt='loader'>";
-            });
-            document.querySelectorAll(".financiacion-en-24").forEach((element) => {
-                element.innerHTML = "<img class='loader-icon' src='./images/icons/loader.svg' alt='loader'>";
-            });
-            document.querySelectorAll(".financiacion-en-36").forEach((element) => {
-                element.innerHTML = "<img class='loader-icon' src='./images/icons/loader.svg' alt='loader'>";
-            });
-            document.querySelectorAll(".financiacion-en-48").forEach((element) => {
-                element.innerHTML = "<img class='loader-icon' src='./images/icons/loader.svg' alt='loader'>";
-            });
-            document.querySelectorAll(".financiacion-en-60").forEach((element) => {
+            document.querySelectorAll(".cuota-valor").forEach((element) => {
                 element.innerHTML = "<img class='loader-icon' src='./images/icons/loader.svg' alt='loader'>";
             });
             document.querySelector('input[type="checkbox"]').checked = false;
             setProductInSessionStorage("a");
             mensajeDeError.style = "display: none";
-            valorIngresado = null; // Restablece el valor ingresado
-            maxAFinanciar = null; // Restablece el valor máximo a financiar
         }
 
         //========================================================================
 
-        setProductInSessionStorage(selectedProduct);
+        const fetchProductsFromDB = async () => {
+            try {
+                const response = await fetch('php/curl.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'getProductsFromDB' })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Productos obtenidos de la base de datos:', data.productos);
+
+                // Actualizar sessionStorage con los datos obtenidos
+                sessionStorage.setItem('productosDB', JSON.stringify(data.productos));
+            } catch (error) {
+                console.error('Error al obtener productos de la base de datos:', error);
+            }
+        };
+
+        // Llamar a fetchLtvAndMinAFinanciar al cargar la página
+        window.onload = async () => {
+            try {
+                await fetchLtvAndMinAFinanciar();
+                await fetchProductsFromDB(); // Esperar a que los productos se carguen en sessionStorage
+                const productosDB = sessionStorage.getItem('productosDB');
+                if (productosDB) {
+                    await setProductInSessionStorage(selectedProduct); // Configurar el producto por defecto
+                } else {
+                    console.error('Error: No se pudieron cargar los productos en sessionStorage.');
+                }
+            } catch (error) {
+                console.error('Error durante la inicialización:', error);
+            }
+        };
+
         setTextSelectCar();
 
         //========================================================================
@@ -856,45 +851,46 @@
 
             if (checkbox.checked) {
                 selectedProduct = "b";
-                document.getElementById('card-18-desktop').style.display = 'none';
-                document.getElementById('card-18-mobile').style.display = 'none';
-                cardCuotaContainer.forEach((element) => {
-                    element.style.width = '19%';
-                });
+                await setProductInSessionStorage(selectedProduct);
             } else {
                 selectedProduct = "a";
-                document.getElementById('card-18-desktop').style.display = 'flex';
-                document.getElementById('card-18-mobile').style.display = 'block';
-                cardCuotaContainer.forEach((element) => {
-                    element.style.width = '16%';
-                });
-            }
-            try {
                 await setProductInSessionStorage(selectedProduct);
-                updateMaxAFinanciar(anio.value);
-
-                // Limpiar el campo de capital solo si el producto no tiene financiación en ese año
-                const ltv = ltvData[selectedProduct][anio.value] || { show: false };
-                if (!ltv.show) {
-                    montoSolicitadoContainer.value = '';
-                    valorIngresado = null;
-                } else {
-                    // Recalcular el valor ingresado si es necesario
-                    if (valorIngresado > maxAFinanciar) {
-                        valorIngresado = maxAFinanciar;
-                        montoSolicitadoContainer.value = '$' + valorIngresado.toLocaleString('es-AR');
-                    }
-                }
-            } catch (error) {
-                console.error("Error al guardar el producto en la sesión:", error);
             }
+
+            // Mostrar el LTV del producto seleccionado incluso si no se ha ingresado un capital
+            if (precio) {
+                maxAFinanciar = precio * ltvData[selectedProduct][anio.value];
+                valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
+            }
+
+            // Validar si el campo de "capital a financiar" está vacío antes de calcular las cuotas
+            if (montoSolicitadoContainer.value.trim() === '') {
+                document.querySelectorAll(`.cuota-valor`).forEach((element) => {
+                    element.innerText = '--';
+                });
+                return;
+            }
+
+            // Validar si el capital a financiar supera el máximo permitido
+            if (valorIngresado > maxAFinanciar) {
+                mensajeDeError.innerText = "No puede superar el máximo a financiar";
+                mensajeDeError.style = "display: inline-block";
+                document.querySelectorAll(`.cuota-valor`).forEach((element) => {
+                    element.innerText = '--';
+                });
+                return;
+            }
+
+            setFinancingValues();
         });
 
         btnSelectCar.addEventListener('click', (event) => {
             event.preventDefault();
             resetValues();
             document.querySelector(".calculadora-container").style = "height: auto; overflow-y: hidden";
-            showPageMobileWhitOutfinancing();
+
+            showPageMobileWhitOutfinancing()
+
         });
 
         btnCotizarDesktop.addEventListener('click', (event) => {
@@ -922,7 +918,6 @@
 
             // Ocultar el botón
             document.querySelector(".ver-cuotas").style = "display: none";
-            //document.querySelector(".max-financiar").style = "display: none";
             document.querySelector(".monto-a-financiar-mobile").style = "display: inline-block";
 
             // Mostrar los contenedores
@@ -938,7 +933,6 @@
                 cuotasMobileContainer.style = "display: none !important;";
                 cotizarMobileContainer.style = "display: none !important;";
                 btnVerCuotas.style = "display: none;";
-                //document.querySelector(".max-financiar").style = "display: flex";
                 document.querySelector(".monto-a-financiar-mobile").style = "display: none";
                 montoSolicitadoContainer.classList.remove("input-second-page-mobile");
                 document.querySelector(".calculadora-container").style = "height: auto; overflow-y: hidden";
@@ -946,7 +940,6 @@
             } else if (window.innerWidth <= 767 && showSecondPageMobile) {
                 cuotasMobileContainer.style = "display: inline-block;";
                 cotizarMobileContainer.style = "display: flex;";
-                //document.querySelector(".max-financiar").style = "display: none;";
                 document.querySelector(".monto-a-financiar-mobile").style = "display: inline-block";
                 montoSolicitadoContainer.classList.add("input-second-page-mobile");
                 document.querySelector(".calculadora-container").style = "height: 97dvh; overflow-y: scroll";
@@ -975,24 +968,28 @@
             }
 
             if (!isNaN(valorIngresado)) {
-                let datos = JSON.parse(sessionStorage.getItem('data'));
+                const datos = JSON.parse(sessionStorage.getItem('data'));
+                if (!datos || datos.length === 0) {
+                    console.error('No se encontraron datos válidos en sessionStorage.');
+                    return;
+                }
+
+                const plazos = datos.reduce((acc, item) => {
+                    acc[item.plazo] = item;
+                    return acc;
+                }, {});
+
                 let valorFormateado = valorIngresado.toLocaleString('es-AR');
                 this.value = '$' + valorFormateado;
 
-                //console.log("antes de llamar")
-
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos[12].interest), 12, datos.plazos[12].fee);
-                if (selectedProduct === "a") {
-                    desglosarCuotas(valorIngresado, parseFloat(datos.plazos[18].interest), 18, datos.plazos[18].fee);
-                }
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos[24].interest), 24, datos.plazos[24].fee);
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos[36].interest), 36, datos.plazos[36].fee);
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos[48].interest), 48, datos.plazos[48].fee);
-                desglosarCuotas(valorIngresado, parseFloat(datos.plazos[60].interest), 60, datos.plazos[60].fee);
-
+                [12, 24, 36, 48, 60].forEach(plazo => {
+                    if (plazos[plazo]) {
+                        desglosarCuotas(valorIngresado, parseFloat(plazos[plazo].interest), plazo, plazos[plazo].fee);
+                    } else {
+                        console.warn(`No se encontraron datos para el plazo ${plazo}`);
+                    }
+                });
             } else if (this.value === '') {
-                let datos = JSON.parse(sessionStorage.getItem('data'));
-                //console.log("antes de llamar si está vacio")
                 btnCotizarDesktop.classList.remove('disabled');
                 btnCotizarMobile.classList.remove('disabled');
                 mensajeDeError.style = "display: none";
@@ -1000,15 +997,6 @@
                 document.querySelectorAll(`.cuota-valor`).forEach((element) => {
                     element.innerText = '--';
                 });
-
-                // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[12].interest), 12, datos.plazos[12].fee);
-                // if(selectedProduct === "a") {
-                //     desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[18].interest), 18, datos.plazos[18].fee);
-                // }
-                // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[24].interest), 24, datos.plazos[24].fee);
-                // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[36].interest), 36, datos.plazos[36].fee);
-                // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[48].interest), 48, datos.plazos[48].fee);
-                // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[60].interest), 60, datos.plazos[60].fee);
             }
         });
 
@@ -1042,6 +1030,6 @@
                 return true
             }
         }</script>
-    </body>
+</body>
 
 </html>
