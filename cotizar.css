@@ -78,9 +78,18 @@ h2 {
     background: #FFFFFF 0% 0% no-repeat padding-box;
     border-radius: 20px;
     opacity: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* Comienza visible */
+    z-index: 3;
+    /* Asegurar que esté encima inicialmente */
+    transition: opacity 0.3s ease;
+    /* Transición suave para ocultar */
+}
+
+.switch-container.hidden {
+    opacity: 0;
+    /* Hacerlo invisible suavemente */
+    z-index: 1;
+    /* Moverlo detrás del rectángulo */
 }
 
 .toggle-switch {
@@ -137,32 +146,70 @@ input:checked+.switch-slider {
 /* Estilos para el campo de DNI */
 .dni-container {
     position: absolute;
+    /* Cambiar a absolute para posicionarlo correctamente */
     top: 350px;
-    left: 30px;
-    width: 298px;
-    height: 51px;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
+    /* Posición inicial */
+    left: 31px;
+    width: 290px;
+    height: 59px;
+    background: #FFFFFF;
     border-radius: 30px;
     opacity: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 15px;
+    z-index: 3;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    /* Transición para la transformación */
+}
+
+.dni-container.expanded {
+    top: 297px;
+    /* Expande hacia arriba hasta donde termina el switch */
+    height: 226px;
+    /* Ajustar altura total */
+    flex-direction: column;
+    align-items: flex-start;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: visible;
+    /* Permitir que el contenido sea visible */
 }
 
 .dni-input {
+    width: 100%;
     border: none;
     outline: none;
     background: none;
-    width: calc(100% - 60px);
     font: normal normal 300 14px/15px Gotham;
     color: #15224F;
     opacity: 0.5;
+    transition: opacity 0.5s ease;
+    /* Transición para ocultar */
 }
 
-.dni-input::placeholder {
-    color: #15224F;
-    opacity: 0.5;
+.dni-container.expanded .dni-input {
+    opacity: 0;
+    /* Ocultar el campo de entrada al expandirse */
+}
+
+.dropdown-content {
+    display: none;
+    /* Ocultar inicialmente */
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    position: relative;
+    /* Posicionar dentro del contenedor padre */
+    margin-top: 10px;
+    /* Espaciado entre el campo de entrada y el contenido desplegable */
+}
+
+.dni-container.expanded .dropdown-content {
+    display: block;
+    opacity: 1;
 }
 
 .search-icon-container {
@@ -174,12 +221,14 @@ input:checked+.switch-slider {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: opacity 0.5s ease;
 }
 
-.search-icon {
-    width: 20px;
-    height: 20px;
-    opacity: 1;
+.dni-container.expanded .search-icon-container {
+    opacity: 0;
+    /* Ocultar la lupa al expandirse */
+    pointer-events: none;
+    /* Deshabilitar interacciones */
 }
 
 /* Estilos para el texto de confidencialidad */
@@ -249,6 +298,32 @@ input:checked+.switch-slider {
     opacity: 1;
 }
 
+/* Estilos para el botón "Cambiar solicitante" */
+.change-applicant-button {
+    width: 132px;
+    height: 40px;
+    background: linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%);
+    border-radius: 20px;
+    border: none;
+    color: #FFFFFF;
+    font: bold 12px/20px Gotham;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.dni-container.expanded .change-applicant-button {
+    opacity: 1;
+    left: 73px;
+    /* position: absolute; */
+    position: relative;
+    margin-bottom: 9px;
+    top: 4px;
+}
+
 /* Estilos para el menú hamburguesa */
 .hamburguer-menu {
     position: absolute;
@@ -298,8 +373,12 @@ input:checked+.switch-slider {
 }
 
 .logo-container img {
-    width: 86%;
-    height: auto;
+    top: 69px;
+    left: 34px;
+    width: 90px;
+    height: 21px;
+    /* UI Properties */
+    opacity: 1;
 }
 
 /* Estilos para el menú */
@@ -406,4 +485,164 @@ footer .social img {
     color: #FFFFFF;
     left: 5rem;
 
+}
+
+/* Estilos para el rectángulo desplegable y la animación */
+.dropdown {
+    position: absolute;
+    top: -65px;
+    left: 0px;
+    width: 320px;
+    /* Ancho fijo */
+    height: 226px;
+    /* Altura fija */
+    background: #FFFFFF;
+    /* Fondo blanco */
+    border-radius: 30px;
+    opacity: 0;
+    /* Comienza invisible */
+    transform-origin: center;
+    /* Expande y colapsa desde el centro */
+    transform: scaleY(0);
+    /* Comienza colapsado */
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    /* Mantener la transición de apertura */
+    z-index: 2;
+    /* Asegurar que esté debajo del campo */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    /* Añadir sombra para visibilidad */
+    overflow: hidden;
+    /* Evitar que el contenido se desborde */
+    visibility: visible;
+    /* Asegurar que sea visible inicialmente */
+}
+
+.dropdown.animate-dropdown {
+    transform: scaleY(1);
+    /* Expande completamente */
+    opacity: 1;
+    /* Hacer visible al desplegar */
+    visibility: visible;
+    /* Asegurar que sea visible */
+}
+
+.dropdown.hidden {
+    transform: scaleY(0);
+    /* Colapsar nuevamente */
+    opacity: 0;
+    /* Hacer invisible al colapsar */
+    /* No cambiar visibility aquí, se maneja en JavaScript */
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    /* Asegurar que coincida con la apertura */
+}
+
+.switch-container.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.inner-box {
+    background: #F6F6F6 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    align-self: center;
+    height: 114px;
+}
+
+.dropdown.animate-dropdown .inner-box {
+    transform: translate(-50%, -50%) scale(1);
+    /* Expande completamente */
+    opacity: 1;
+    /* Hacer visible */
+}
+
+.dropdown.hidden .inner-box {
+    transform: translate(-50%, -50%) scale(0);
+    /* Colapsar nuevamente */
+    opacity: 0;
+    /* Hacer invisible */
+}
+
+.inner-box-title {
+    position: absolute;
+    top: 33px;
+    left: 13px;
+    width: 265px;
+    height: 19px;
+    text-align: left;
+    font: normal normal bold 13px / 13px Gotham;
+    letter-spacing: 0px;
+    color: #444444;
+    opacity: 1;
+}
+
+.credit-viability-bar {
+    width: 267px;
+    height: 7px;
+    background: linear-gradient(90deg, #1BBB10 0%, #FFDF00 51%, #FF0000 100%);
+    border-radius: 12px;
+    position: relative;
+    top: 35px;
+    left: 9px;
+}
+
+.credit-indicator {
+    width: 6px;
+    height: 19px;
+    background: #26BD10;
+    border: 1px solid #ECECEC;
+    border-radius: 8px;
+    position: absolute;
+    top: -6px;
+    left: 0;
+}
+
+.credit-status-title {
+    position: absolute;
+    font: bold 12px / 13px Gotham;
+    color: #06B312;
+    margin-top: 13px;
+    /* text-align: center; */
+    top: 80px;
+    left: 10px;
+}
+
+.credit-status-subtitle {
+    font: 300 12px / 13px Gotham;
+    position: absolute;
+    color: #444444;
+    margin-top: 5px;
+    text-align: center;
+    top: 100px;
+    left: 11px;
+}
+
+/* Estilos para el perfil */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Espaciado entre el ícono y el nombre */
+    margin-bottom: 10px;
+    /* Espaciado inferior */
+    position: relative;
+    /* Asegurar que se posicione correctamente */
+}
+
+.profile-icon {
+    width: 24px;
+    height: 24px;
+    opacity: 1;
+}
+
+.profile-name {
+    font: normal normal bold 14px / 15px Gotham;
+    color: #444444;
+    opacity: 1;
+    margin: 0;
 }

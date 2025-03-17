@@ -394,25 +394,30 @@
         let ltvData;
         let minAFinanciar;
 
-        // Cargar datos de LTV y mínimo a financiar desde la base de datos
-        const fetchLtvAndMinAFinanciar = async () => {
+        // Cargar datos de la calculadora desde el nuevo endpoint
+        const fetchCalculadoraData = async () => {
             try {
-                const response = await fetch('php/curl.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'getLtvAndMinAFinanciar' })
-                });
-
+                const response = await fetch('http://localhost:5000/api/calculadora');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
-                ltvData = data.ltv;
+                ltvData = data.productos;
                 minAFinanciar = data.minAFinanciar;
-                console.log('LTV y mínimo a financiar cargados:', { ltvData, minAFinanciar });
+                console.log('Datos de la calculadora cargados:', { ltvData, minAFinanciar });
             } catch (error) {
-                console.error('Error al cargar LTV y mínimo a financiar:', error);
+                console.error('Error al cargar los datos de la calculadora:', error);
+            }
+        };
+
+        // Llamar a fetchCalculadoraData al cargar la página
+        window.onload = async () => {
+            try {
+                await fetchCalculadoraData(); // Cargar los datos desde el nuevo endpoint
+                await setProductInSessionStorage(selectedProduct); // Configurar el producto por defecto
+            } catch (error) {
+                console.error('Error durante la inicialización:', error);
             }
         };
 
@@ -478,33 +483,29 @@
 
         const fetchMarcas = (year) => {
             loaderIconSelectMarcas.style = "display: block;";
-            accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');;
+            accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');
 
             let body = {
                 year,
                 accessToken,
                 "action": "getBrandsByYear"
-            }
+            };
 
             const opcionesFetch = {
-                method: 'POST', // Método HTTP POST
+                method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json' // Tipo de contenido del cuerpo (JSON)
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(body) // Convertir datos a JSON y enviar en el cuerpo
+                body: JSON.stringify(body)
             };
 
             marcas.innerHTML = "<option disabled selected>MARCA</option>";
             modelos.innerHTML = "<option disabled selected>MODELO</option>";
-            //precio.innerText = "";
 
-            fetch('php/curl.php', opcionesFetch)
+            fetch('php/curl.php', opcionesFetch) // Mantener esta llamada porque es de infoauto
                 .then(res => res.json())
                 .then(data => {
-                    //console.log(data);
-
                     accessToken = localStorage.setItem('accessToken', data.accessToken);
-
 
                     data.brands.forEach(element => {
                         loaderIconSelectMarcas.style = "display: none;";
@@ -517,31 +518,28 @@
 
         const fetchModelos = (idMarca, year) => {
             loaderIconSelectModelos.style = "display: block;";
-            accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');;
+            accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');
 
             let body = {
                 idMarca,
                 year,
                 accessToken,
                 "action": "getModelsByBrand"
-            }
+            };
 
             const opcionesFetch = {
-                method: 'POST', // Método HTTP POST
+                method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json' // Tipo de contenido del cuerpo (JSON)
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(body)
             };
 
             modelos.innerHTML = "<option disabled selected>MODELO</option>";
-            //precio.innerText = "";
 
-            fetch('php/curl.php', opcionesFetch)
+            fetch('php/curl.php', opcionesFetch) // Mantener esta llamada porque es de infoauto
                 .then(res => res.json())
                 .then(data => {
-                    //console.log(data);
-
                     accessToken = localStorage.setItem('accessToken', data.accessToken);
 
                     data.models.forEach(element => {
@@ -554,32 +552,35 @@
         }
 
         const fetchPriceCar = (codia, year) => {
-            accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');;
+            accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');
 
             let body = {
                 codia,
                 year,
                 accessToken,
                 "action": "getPriceByCodia"
-            }
-
-            const opcionesFetch = {
-                method: 'POST', // Método HTTP POST
-                headers: {
-                    'Content-Type': 'application/json' // Tipo de contenido del cuerpo (JSON)
-                },
-                body: JSON.stringify(body) // Convertir datos a JSON y enviar en el cuerpo
             };
 
-            fetch('php/curl.php', opcionesFetch)
+            const opcionesFetch = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            };
+
+            fetch('php/curl.php', opcionesFetch) // Mantener esta llamada porque es de infoauto
                 .then(res => res.json())
                 .then(data => {
                     precio = data.price;
-                    maxAFinanciar = precio * ltvData[selectedProduct][year];
-                    console.log('LTV leído:', ltvData[selectedProduct][year]);
-                    //valorDeMercadoContainer.innerHTML = `<span>$</span>${precio.toLocaleString('es-AR')}`;
-                    valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
-                    setDeafaultFinancingValues();
+                    if (ltvData[selectedProduct] && ltvData[selectedProduct].ltv[year]) {
+                        maxAFinanciar = precio * ltvData[selectedProduct].ltv[year];
+                        console.log('LTV leído:', ltvData[selectedProduct].ltv[year]);
+                        valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
+                        setDeafaultFinancingValues();
+                    } else {
+                        console.error('No se encontró LTV para el producto o año seleccionado.');
+                    }
                 });
         }
 
@@ -603,21 +604,18 @@
             });
         }
 
+        // Actualizar setFinancingValues para usar ltvData directamente
         const setFinancingValues = () => {
             try {
-                const datos = JSON.parse(sessionStorage.getItem('data'));
-                if (!datos || datos.length === 0) {
-                    console.error('No se encontraron datos válidos en sessionStorage para calcular los valores de financiación.');
+                const productoSeleccionado = ltvData[selectedProduct];
+                if (!productoSeleccionado) {
+                    console.error('No se encontraron datos válidos para el producto seleccionado.');
                     return;
                 }
 
-                const plazos = datos.reduce((acc, item) => {
-                    acc[item.plazo] = item;
-                    return acc;
-                }, {});
-
-                maxAFinanciar = precio * ltvData[selectedProduct][anio.value];
-                console.log('LTV leído:', ltvData[selectedProduct][anio.value]);
+                const plazos = productoSeleccionado.plazos;
+                maxAFinanciar = precio * productoSeleccionado.ltv[anio.value];
+                console.log('LTV leído:', productoSeleccionado.ltv[anio.value]);
 
                 valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
 
@@ -638,39 +636,9 @@
             } catch (error) {
                 console.error('Error al calcular los valores de financiación:', error);
             }
-        }
-
-        const setProductInSessionStorage = async (selectedProduct) => {
-            try {
-                const productosDB = JSON.parse(sessionStorage.getItem('productosDB'));
-                if (!productosDB) {
-                    console.error('No se encontraron productos en sessionStorage. Asegúrate de haber llamado a fetchProductsFromDB.');
-                    return;
-                }
-
-                const productoSeleccionado = productosDB.find(producto => producto.nombre === selectedProduct);
-                if (!productoSeleccionado) {
-                    console.error(`Producto ${selectedProduct} no encontrado en la base de datos.`);
-                    return;
-                }
-
-                // Almacenar todos los plazos del producto seleccionado
-                const productoConPlazos = productosDB.filter(producto => producto.nombre === selectedProduct);
-                sessionStorage.setItem('data', JSON.stringify(productoConPlazos));
-                console.log('Producto seleccionado almacenado en sessionStorage:', productoConPlazos);
-            } catch (error) {
-                console.error('Error al procesar los datos del producto:', error);
-            }
-        }
-
-        const calcularCuota = (montoPrincipal, tasaInteresAnual, plazo) => {
-            const interesMensual = (tasaInteresAnual / 100) / 12;
-            const factor = Math.pow(1 + interesMensual, plazo);
-            const cuotaMensual = montoPrincipal * interesMensual * factor / (factor - 1);
-            return cuotaMensual;
         };
 
-
+        // Corregir desglosarCuotas para manejar datos directamente
         const desglosarCuotas = (montoPrincipal, tasaInteresAnual, plazo, feeValor) => {
             if (montoPrincipal >= minAFinanciar) {
                 mensajeDeError.style = "display: none";
@@ -679,12 +647,10 @@
                 btnCotizarMobile.classList.remove('disabled');
 
                 const interesMensual = (tasaInteresAnual / 100) / 12;
-                const comision = (montoPrincipal) * (feeValor * 1.21);
+                const comision = montoPrincipal * (feeValor * 1.21);
                 let saldo = montoPrincipal + comision;
                 const cuotaMensual = calcularCuota(saldo, tasaInteresAnual, plazo);
-                const desglose = [];
                 let basePromedio = 0;
-                let cuotaPromedio = 0;
 
                 for (let i = 1; i <= plazo; i++) {
                     const interesCuota = saldo * interesMensual;
@@ -696,8 +662,8 @@
                     basePromedio += cuotaConIva;
                 }
 
-                cuotaPromedio = basePromedio / plazo;
-                cuotaPromedioFormateada = parseFloat(cuotaPromedio.toFixed(0)).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                const cuotaPromedio = basePromedio / plazo;
+                const cuotaPromedioFormateada = parseFloat(cuotaPromedio.toFixed(0)).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
                 document.querySelectorAll(`.financiacion-en-${plazo}`).forEach((element) => {
                     element.innerHTML = `<span>$</span>${cuotaPromedioFormateada}`;
@@ -715,6 +681,29 @@
                 });
             }
         };
+
+        // Actualizar setProductInSessionStorage para usar ltvData directamente
+        const setProductInSessionStorage = async (selectedProduct) => {
+            try {
+                const productoSeleccionado = ltvData[selectedProduct];
+                if (!productoSeleccionado) {
+                    console.error(`Producto ${selectedProduct} no encontrado en los datos cargados.`);
+                    return;
+                }
+
+                console.log('Producto seleccionado configurado:', productoSeleccionado);
+            } catch (error) {
+                console.error('Error al procesar los datos del producto:', error);
+            }
+        };
+
+        const calcularCuota = (montoPrincipal, tasaInteresAnual, plazo) => {
+            const interesMensual = (tasaInteresAnual / 100) / 12;
+            const factor = Math.pow(1 + interesMensual, plazo);
+            const cuotaMensual = montoPrincipal * interesMensual * factor / (factor - 1);
+            return cuotaMensual;
+        };
+
 
         const setTextSelectCar = () => {
             if (window.innerWidth > 767) {
@@ -796,14 +785,8 @@
         // Llamar a fetchLtvAndMinAFinanciar al cargar la página
         window.onload = async () => {
             try {
-                await fetchLtvAndMinAFinanciar();
-                await fetchProductsFromDB(); // Esperar a que los productos se carguen en sessionStorage
-                const productosDB = sessionStorage.getItem('productosDB');
-                if (productosDB) {
-                    await setProductInSessionStorage(selectedProduct); // Configurar el producto por defecto
-                } else {
-                    console.error('Error: No se pudieron cargar los productos en sessionStorage.');
-                }
+                await fetchCalculadoraData(); // Cargar los datos desde el nuevo endpoint
+                await setProductInSessionStorage(selectedProduct); // Configurar el producto por defecto
             } catch (error) {
                 console.error('Error durante la inicialización:', error);
             }
@@ -845,21 +828,16 @@
 
         })
 
+        // Corregir btnSwitchProductValue para manejar datos directamente
         btnSwitchProductValue.addEventListener('click', async function () {
-            var checkbox = this.querySelector('input[type="checkbox"]');
+            const checkbox = this.querySelector('input[type="checkbox"]');
             checkbox.checked = !checkbox.checked;
 
-            if (checkbox.checked) {
-                selectedProduct = "b";
-                await setProductInSessionStorage(selectedProduct);
-            } else {
-                selectedProduct = "a";
-                await setProductInSessionStorage(selectedProduct);
-            }
+            selectedProduct = checkbox.checked ? "b" : "a";
 
             // Mostrar el LTV del producto seleccionado incluso si no se ha ingresado un capital
             if (precio) {
-                maxAFinanciar = precio * ltvData[selectedProduct][anio.value];
+                maxAFinanciar = precio * ltvData[selectedProduct].ltv[anio.value];
                 valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
             }
 
@@ -968,16 +946,13 @@
             }
 
             if (!isNaN(valorIngresado)) {
-                const datos = JSON.parse(sessionStorage.getItem('data'));
-                if (!datos || datos.length === 0) {
-                    console.error('No se encontraron datos válidos en sessionStorage.');
+                const productoSeleccionado = ltvData[selectedProduct];
+                if (!productoSeleccionado) {
+                    console.error('No se encontraron datos válidos para el producto seleccionado.');
                     return;
                 }
 
-                const plazos = datos.reduce((acc, item) => {
-                    acc[item.plazo] = item;
-                    return acc;
-                }, {});
+                const plazos = productoSeleccionado.plazos;
 
                 let valorFormateado = valorIngresado.toLocaleString('es-AR');
                 this.value = '$' + valorFormateado;

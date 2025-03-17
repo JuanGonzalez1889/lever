@@ -328,28 +328,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case "getPriceByCodia":
                 $a->getPriceByCodia($codia, $year, $access_token);
                 break;
-            case "getProductsFromDB":
-                $query = "SELECT * FROM productos";
-                $productos = getDatabaseData($query);
-                echo json_encode(['productos' => $productos]);
-                error_log("Productos obtenidos desde la base de datos: " . json_encode($productos)); // Log específico
-                die();
             case "getLtvAndMinAFinanciar":
-                $queryLtv = "SELECT producto, year, value FROM ltv";
-                $queryMinAFinanciar = "SELECT minAFinanciar FROM configuracion WHERE id = 1";
-
-                $ltvData = getDatabaseData($queryLtv);
-                $minAFinanciarData = getDatabaseData($queryMinAFinanciar);
-
-                $ltv = [];
-                foreach ($ltvData as $row) {
-                    $ltv[$row['producto']][$row['year']] = $row['value'];
-                }
-
-                $minAFinanciar = $minAFinanciarData[0]['minAFinanciar'] ?? null;
-
-                echo json_encode(['ltv' => $ltv, 'minAFinanciar' => $minAFinanciar]);
-                error_log("LTV y mínimo a financiar obtenidos desde la base de datos: " . json_encode(['ltv' => $ltv, 'minAFinanciar' => $minAFinanciar])); // Log específico
+                // Estas acciones ya no son necesarias
                 die();
         }
     } else {

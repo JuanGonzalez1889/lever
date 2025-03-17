@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cotizar - LEVER</title>
-    <link rel="stylesheet" href="cotizar.css?v=1.2"> <!-- Asegúrate de que este archivo CSS exista y contenga los estilos que ya estás usando -->
+    <link rel="stylesheet" href="cotizar.css?v=1.2">
 </head>
 <body>
     <header>
@@ -30,7 +30,6 @@
             <div class="container">
                 <h2>Cotizador online</h2>
                 <h1>PASO <strong>1 DE 3</strong></h1>
-                <!-- Aquí puedes agregar más contenido y diseño según tus necesidades -->
                 <div class="switch-container">
                     <span class="switch-label-left" onclick="toggleSwitch(false)">CUIT</span>
                     <label class="toggle-switch">
@@ -41,8 +40,25 @@
                 </div>
                 <div class="dni-container">
                     <input type="text" class="dni-input" placeholder="DNI del solicitante">
-                    <div class="search-icon-container">
+                    <div class="search-icon-container" onclick="showDropdown()">
                         <img src="./images/icons/search.svg" alt="search icon" class="search-icon">
+                    </div>
+                    <div class="dropdown-content hidden">
+                        <div class="profile-header">
+                            <img src="./images/icons/profile.svg" alt="Icono de perfil" class="profile-icon">
+                            <h3 class="profile-name">Juan Gonzalez</h3>
+                        </div>
+                        <div class="inner-box">
+                            <h3 class="inner-box-title">Posibilidad de gestión del crédito</h3>
+                            <div class="credit-viability-bar">
+                                <div class="credit-indicator"></div>
+                            </div>
+                            <h4 class="credit-status-title">VIABLE</h4>
+                            <p class="credit-status-subtitle">Es posible que el crédito se apruebe</p>
+                        </div>
+                        <button class="change-applicant-button" onclick="hideDropdown()">
+                            <span>Cambiar solicitante</span>
+                        </button>
                     </div>
                 </div>
                 <div class="confidentiality-text">
@@ -71,7 +87,7 @@
         function toggleSwitch(isChecked) {
             const checkbox = document.querySelector('.toggle-switch input');
             checkbox.checked = isChecked;
-            updateSwitchLabels();
+            updateSwitchLabels();   
         }
 
         function updateSwitchLabels() {
@@ -91,7 +107,27 @@
         }
 
         document.querySelector('.toggle-switch input').addEventListener('change', updateSwitchLabels);
-        updateSwitchLabels(); // Inicializar los colores y el placeholder al cargar la página
+        updateSwitchLabels();
+
+        function showDropdown() {
+            const dniContainer = document.querySelector('.dni-container');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            const searchIcon = document.querySelector('.search-icon-container');
+
+            dniContainer.classList.add('expanded');
+            dropdownContent.classList.remove('hidden');
+            searchIcon.style.display = 'none';
+        }
+
+        function hideDropdown() {
+            const dniContainer = document.querySelector('.dni-container');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            const searchIcon = document.querySelector('.search-icon-container');
+
+            dniContainer.classList.remove('expanded');
+            dropdownContent.classList.add('hidden');
+            searchIcon.style.display = 'flex';
+        }
     </script>
 </body>
 </html>
