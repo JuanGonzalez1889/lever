@@ -28,29 +28,91 @@ app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost'],
     credentials: true
 }));
-app.use(session({
-    secret: 'secret-key',
+app.use(
+  session({
+    secret: "secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
-}));
+    cookie: {
+      secure: true, // Solo para HTTPS
+      httpOnly: true,
+      sameSite: "lax",
+    },
+  })
+);
 
-// Servir archivos estáticos desde la carpeta 'files'
-app.use('/files', express.static(path.join(__dirname, '../files')));
 
-const users = {
-    admin: '123'
-};
-
+// Endpoint para manejar el login desde la base de datos
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
-    if (users[username] && users[username] === password) {
-        req.session.username = username;
-        res.json({ success: true });
-    } else {
-        res.json({ success: false });
-    }
+
+    const query = `
+        SELECT username, password
+        FROM users
+        WHERE username = ?
+    `;
+
+    db.query(query, [username], (err, results) => {
+        if (err) {
+            console.error('Error fetching user:', err);
+            return res.status(500).json({ success: false, message: 'Internal Server Error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ success: false, message: 'Invalid username or password' });
+        }
+
+        const user = results[0];
+
+        // Verificar la contraseña (asumiendo que está encriptada con bcrypt)
+        const bcrypt = require('bcrypt');
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+                console.error('Error comparing passwords:', err);
+                return res.status(500).json({ success: false, message: 'Internal Server Error' });
+            }
+
+            if (!isMatch) {
+                return res.status(401).json({ success: false, message: 'Invalid username or password' });
+            }
+
+            // Guardar la sesión del usuario
+            req.session.username = username;
+            res.json({ success: true });
+        });
+    });
 });
+
+// Endpoint para registrar nuevos usuarios (opcional)
+/*app.post('/api/register', (req, res) => {
+    const { username, password } = req.body;
+
+    // Encriptar la contraseña antes de guardarla
+    const bcrypt = require('bcrypt');
+    const saltRounds = 10;
+
+    bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+            return res.status(500).json({ success: false, message: 'Internal Server Error' });
+        }
+
+        const query = `
+            INSERT INTO users (username, password)
+            VALUES (?, ?)
+        `;
+
+        db.query(query, [username, hashedPassword], (err, result) => {
+            if (err) {
+                console.error('Error inserting user:', err);
+                return res.status(500).json({ success: false, message: 'Internal Server Error' });
+            }
+
+            res.json({ success: true });
+        });
+    });
+});*/
+/*ESTO POR EL MOMENTO NO LO VOY A USAR YA QUE NO TENGO UNA VISTA DE REGISTRO Y POR EL MOMENTO NO LA NECESITO*/
 
 app.post('/api/logout', (req, res) => {
     req.session.destroy();
@@ -167,6 +229,73 @@ app.post('/api/data', (req, res) => {
         .then(() => res.json({ success: true }))
         .catch(err => {
             console.error('Error saving data:', err);
+            res.status(500).json({ success: false, message: 'Internal Server Error' });
+        });
+});
+
+app.get('/api/calculadora', (req, res) => {
+    const queryProductos = `
+        SELECT nombre AS producto, plazo, interest, fee, minfee
+        FROM productos
+    `;
+    const queryLtv = `
+        SELECT producto, year, value
+        FROM ltv
+    `;
+    const queryMinAFinanciar = `
+        SELECT minAFinanciar
+        FROM configuracion
+        WHERE id = 1
+    `;
+
+    Promise.all([
+        new Promise((resolve, reject) => {
+            db.query(queryProductos, (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        }),
+        new Promise((resolve, reject) => {
+            db.query(queryLtv, (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        }),
+        new Promise((resolve, reject) => {
+            db.query(queryMinAFinanciar, (err, results) => {
+                if (err) return reject(err);
+                resolve(results[0]?.minAFinanciar || null);
+            });
+        })
+    ])
+        .then(([productos, ltv, minAFinanciar]) => {
+            const data = { productos: {}, minAFinanciar };
+
+            productos.forEach(row => {
+                if (!data.productos[row.producto]) {
+                    data.productos[row.producto] = { plazos: {} };
+                }
+                data.productos[row.producto].plazos[row.plazo] = {
+                    interest: row.interest,
+                    fee: row.fee,
+                    minfee: row.minfee
+                };
+            });
+
+            ltv.forEach(row => {
+                if (!data.productos[row.producto]) {
+                    data.productos[row.producto] = {};
+                }
+                if (!data.productos[row.producto].ltv) {
+                    data.productos[row.producto].ltv = {};
+                }
+                data.productos[row.producto].ltv[row.year] = row.value;
+            });
+
+            res.json(data);
+        })
+        .catch(err => {
+            console.error('Error fetching data:', err);
             res.status(500).json({ success: false, message: 'Internal Server Error' });
         });
 });
