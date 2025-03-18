@@ -45,7 +45,7 @@ app.use(
 // Endpoint para manejar el login desde la base de datos
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
-
+console.log(username, password);
     const query = `
         SELECT username, password
         FROM users
@@ -57,22 +57,27 @@ app.post('/api/login', (req, res) => {
             console.error('Error fetching user:', err);
             return res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
+        console.log(1)
 
         if (results.length === 0) {
             return res.status(401).json({ success: false, message: 'Invalid username or password' });
         }
+        console.log(2);
 
         const user = results[0];
 
-        // Verificar la contraseña (asumiendo que está encriptada con bcrypt)
-        const bcrypt = require('bcrypt');
+        // Verificar la contraseña (asumiendo que está encriptada con bcryptjs)
+        const bcrypt = require('bcryptjs');
         bcrypt.compare(password, user.password, (err, isMatch) => {
+            console.log(3);
             if (err) {
+                console.log(4);
                 console.error('Error comparing passwords:', err);
                 return res.status(500).json({ success: false, message: 'Internal Server Error' });
             }
 
             if (!isMatch) {
+                console.log(5);
                 return res.status(401).json({ success: false, message: 'Invalid username or password' });
             }
 
