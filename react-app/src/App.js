@@ -10,7 +10,7 @@ function App() {
         const checkSession = async () => {
             try {
                 const response = await fetch(
-                  "http://149.50.147.232:5000/api/check-session",
+                  "https://api.lever.com.ar/api/check-session",
                   { credentials: "include" }
                 );
                 if (response.status === 200) {

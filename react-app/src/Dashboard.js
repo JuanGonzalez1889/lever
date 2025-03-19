@@ -19,7 +19,7 @@ function Tablero() {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                  "http://149.50.147.232:5000/api/data",
+                  "https://api.lever.com.ar/api/data",
                   { withCredentials: true }
                 );
                 setData(response.data);
@@ -57,7 +57,7 @@ function Tablero() {
         };
         try {
             await axios.post(
-              "http://149.50.147.232:5000/api/data",
+              "https://api.lever.com.ar/api/data",
               updatedData,
               { withCredentials: true }
             );
@@ -302,7 +302,7 @@ function Dashboard() {
     const handleLogout = async () => {
         try {
             await axios.post(
-              "http://149.50.147.232:5000/api/logout",
+              "https://api.lever.com.ar/api/logout",
               {},
               { withCredentials: true }
             );
