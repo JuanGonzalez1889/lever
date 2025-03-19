@@ -65,26 +65,35 @@ console.log(username, password);
         console.log(2);
 
         const user = results[0];
+        console.log(user);
 
         // Verificar la contraseña (asumiendo que está encriptada con bcryptjs)
         const bcrypt = require('bcryptjs');
         bcrypt.compare(password, user.password, (err, isMatch) => {
-            console.log(3);
-            if (err) {
-                console.log(4);
-                console.error('Error comparing passwords:', err);
-                return res.status(500).json({ success: false, message: 'Internal Server Error' });
-            }
+          console.log(3);
+          if (err) {
+            console.log(4);
+            console.error("Error comparing passwords:", err);
+            return res
+              .status(500)
+              .json({ success: false, message: "Internal Server Error" });
+          }
 
-            if (!isMatch) {
-                console.log(5);
-                return res.status(401).json({ success: false, message: 'Invalid username or password' });
-            }
+          if (!isMatch) {
+            console.log(5);
+            return res
+              .status(401)
+              .json({
+                success: false,
+                message: "Invalid username or password",
+              });
+          }
 
-            // Guardar la sesión del usuario
-            req.session.username = username;
-            res.json({ success: true });
+          // Guardar la sesión del usuario
+          req.session.username = username;
+          res.json({ success: true });
         });
+        
     });
 });
 
@@ -125,17 +134,18 @@ app.post('/api/logout', (req, res) => {
 });
 
 app.get('/api/check-session', (req, res) => {
-    if (req.session.username) {
+  /*   if (req.session.username) {
         res.json({ success: true });
     } else {
         res.status(401).json({ success: false });
-    }
+    } */
 });
 
 app.get('/api/data', (req, res) => {
-    if (!req.session.username) {
+    console.log(req.session);
+    /*if (!req.session.username) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
-    }
+    }*/
 
     const query = `
         SELECT p.nombre AS producto, p.plazo, p.interest, p.fee, p.minfee, l.year, l.value, l.show, c.minAFinanciar
@@ -180,9 +190,9 @@ app.get('/api/data', (req, res) => {
 });
 
 app.post('/api/data', (req, res) => {
-    if (!req.session.username) {
+    /* if (!req.session.username) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
-    }
+    } */
 
     const { minAFinanciar, productos, ltv } = req.body;
 
