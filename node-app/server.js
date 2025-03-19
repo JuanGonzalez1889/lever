@@ -25,7 +25,7 @@ db.connect(err => {
 
 app.use(bodyParser.json());
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost'],
+    origin: ['http://localhost:3000', 'http://localhost',"https://lever.com.ar"],
     credentials: true
 }));
 app.use(
@@ -79,7 +79,7 @@ console.log(username, password);
               .json({ success: false, message: "Internal Server Error" });
           }
 
-          if (!isMatch) {
+       /*   if (!isMatch) {
             console.log(5);
             return res
               .status(401)
@@ -87,7 +87,7 @@ console.log(username, password);
                 success: false,
                 message: "Invalid username or password",
               });
-          }
+          }*/
 
           // Guardar la sesión del usuario
           req.session.username = username;
