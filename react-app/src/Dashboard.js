@@ -18,7 +18,10 @@ function Tablero() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/data', { withCredentials: true });
+                const response = await axios.get(
+                  "http://149.50.147.232:5000/api/data",
+                  { withCredentials: true }
+                );
                 setData(response.data);
                 setMinAFinanciar(formatNumber(response.data.minAFinanciar));
                 setLtv(response.data.ltv || {});
@@ -53,7 +56,11 @@ function Tablero() {
             }
         };
         try {
-            await axios.post('http://localhost:5000/api/data', updatedData, { withCredentials: true });
+            await axios.post(
+              "http://149.50.147.232:5000/api/data",
+              updatedData,
+              { withCredentials: true }
+            );
             setShowModal(true);
         } catch (error) {
             console.error('Error saving data:', error);
@@ -294,7 +301,11 @@ function Instructivos() {
 function Dashboard() {
     const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:5000/api/logout', {}, { withCredentials: true });
+            await axios.post(
+              "http://149.50.147.232:5000/api/logout",
+              {},
+              { withCredentials: true }
+            );
             window.location.reload();
         } catch (error) {
             console.error('Error logging out:', error);

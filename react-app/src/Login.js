@@ -10,7 +10,7 @@ function Login({ onLogin }) {
     const handleLogin = async () => {
         try {
             const response = await axios.post(
-              "http://localhost:5000/api/login",
+              "http://149.50.147.232:5000/api/login",
               { username, password },
               { withCredentials: true }
             );

@@ -9,7 +9,10 @@ function App() {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/check-session', { credentials: 'include' });
+                const response = await fetch(
+                  "http://149.50.147.232:5000/api/check-session",
+                  { credentials: "include" }
+                );
                 if (response.status === 200) {
                     setIsAuthenticated(true);
                 } else {
