@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL; // Leer la URL desde .env
+console.log('API_URL (Login):', API_URL); // Verificar que se está utilizando el .env
+
 function Login({ onLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -10,9 +13,9 @@ function Login({ onLogin }) {
     const handleLogin = async () => {
         try {
             const response = await axios.post(
-              "https://api.lever.com.ar/api/login",
-              { username, password },
-              { withCredentials: true }
+                `${API_URL}/api/login`, // Usar la URL global
+                { username, password },
+                { withCredentials: true }
             );
             if (response.data.success) {
                 onLogin();

@@ -8,6 +8,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Dashboard.css'; // Importar el archivo CSS personalizado
 import Cotizador from './Cotizador'; // Importar el nuevo componente Cotizador
 
+const API_URL = process.env.REACT_APP_API_URL; // Leer la URL desde .env
+console.log('API_URL (Dashboard):', API_URL); // Verificar que se está utilizando el .env
+
 function Tablero() {
     const [data, setData] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState('');
@@ -15,12 +18,14 @@ function Tablero() {
     const [showModal, setShowModal] = useState(false);
     const [ltv, setLtv] = useState({});
 
+    console.log('API_URL (Tablero):', API_URL); // Verificar la URL
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                  "https://api.lever.com.ar/api/data",
-                  { withCredentials: true }
+                    `${API_URL}/api/data`, // Usar la URL global
+                    { withCredentials: true }
                 );
                 setData(response.data);
                 setMinAFinanciar(formatNumber(response.data.minAFinanciar));
@@ -57,9 +62,9 @@ function Tablero() {
         };
         try {
             await axios.post(
-              "https://api.lever.com.ar/api/data",
-              updatedData,
-              { withCredentials: true }
+                `${API_URL}/api/data`, // Usa la URL dinámica
+                updatedData,
+                { withCredentials: true }
             );
             setShowModal(true);
         } catch (error) {
@@ -302,9 +307,9 @@ function Dashboard() {
     const handleLogout = async () => {
         try {
             await axios.post(
-              "https://api.lever.com.ar/api/logout",
-              {},
-              { withCredentials: true }
+                `${API_URL}/api/logout`, // Usar la URL global
+                {},
+                { withCredentials: true }
             );
             window.location.reload();
         } catch (error) {

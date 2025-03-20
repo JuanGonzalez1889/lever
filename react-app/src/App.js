@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Login from './Login';
 import Dashboard from './Dashboard';
 
+const API_URL = process.env.REACT_APP_API_URL; // Leer la URL desde .env
+console.log('API_URL (App):', API_URL); // Verificar que se está utilizando el .env
+
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -10,8 +13,8 @@ function App() {
         const checkSession = async () => {
             try {
                 const response = await fetch(
-                  "https://api.lever.com.ar/api/check-session",
-                  { credentials: "include" }
+                    `${API_URL}/api/check-session`, // Usar la URL global
+                    { credentials: "include" }
                 );
                 if (response.status === 200) {
                     setIsAuthenticated(true);
