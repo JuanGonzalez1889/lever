@@ -1,3 +1,4 @@
+require('dotenv').config(); // Cargar variables de entorno desde .env
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -6,13 +7,17 @@ const mysql = require('mysql');
 const path = require('path');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+
+console.log('NODE_ENV:', process.env.NODE_ENV); // Verificar que se está utilizando el .env
+console.log('DB_HOST:', process.env.DB_HOST); // Verificar que se está utilizando el .env
+console.log('CLIENT_URL:', process.env.CLIENT_URL); // Verificar que se está utilizando el .env
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'leverSRL'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
 db.connect(err => {
@@ -24,10 +29,22 @@ db.connect(err => {
 });
 
 app.use(bodyParser.json());
+
+const allowedOrigins = [process.env.CLIENT_URL, 'http://localhost']; // Agregar http://localhost como origen permitido
+
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost',"https://lever.com.ar"],
+    origin: (origin, callback) => {
+        // Permitir solicitudes desde los orígenes especificados o solicitudes sin origen (como Postman)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.error(`CORS error: Origin ${origin} not allowed`);
+            callback(new Error(`Not allowed by CORS`));
+        }
+    },
     credentials: true
 }));
+
 app.use(
   session({
     secret: "secret-key",
