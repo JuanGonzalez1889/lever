@@ -1,3 +1,5 @@
 node_modules/
 *.log
 *.pack
+node-app/.env
+react-app/.env
