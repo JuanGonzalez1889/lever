@@ -69,6 +69,8 @@
                                 <option value="2014">2014</option>
                                 <option value="2013">2013</option>
                                 <option value="2012">2012</option>
+                                <option value="2011">2011</option>
+                                <option value="2010">2010</option>
                             </select></div>
                         <div class="select-container"><img class="loader-icon loader-icon-select"
                                 id="loader-icon-select-marcas" src="./images/icons/loader.svg" alt="loader"> <select
@@ -577,11 +579,26 @@
                 .then(res => res.json())
                 .then(data => {
                     precio = data.price;
-                    if (ltvData[selectedProduct] && ltvData[selectedProduct].ltv[year]) {
+
+                    if (year === "2011" || year === "2010") {
+                        valorMaxAFinanciarContainer.innerHTML = "Consultanos";
+                        montoSolicitadoContainer.value = '';
+                        montoSolicitadoContainer.disabled = true; // Bloquear el campo de capital a financiar
+                        btnCotizarDesktop.classList.add('disabled');
+                        btnCotizarMobile.classList.add('disabled');
+                        document.querySelectorAll(`.cuota-valor`).forEach((element) => {
+                            element.innerText = '--';
+                        });
+                        btnSwitchProductValue.classList.add('disabled'); // Bloquear el switch
+                        document.querySelector('#switch-input').disabled = true; // Deshabilitar el checkbox
+                    } else if (ltvData[selectedProduct] && ltvData[selectedProduct].ltv[year]) {
                         maxAFinanciar = precio * ltvData[selectedProduct].ltv[year];
                         console.log('LTV leído:', ltvData[selectedProduct].ltv[year]);
                         valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
                         setDeafaultFinancingValues();
+                        montoSolicitadoContainer.disabled = false; // Habilitar el campo de capital a financiar
+                        btnSwitchProductValue.classList.remove('disabled'); // Habilitar el switch
+                        document.querySelector('#switch-input').disabled = false; // Habilitar el checkbox
                     } else {
                         console.error('No se encontró LTV para el producto o año seleccionado.');
                     }
@@ -611,6 +628,18 @@
         // Actualizar setFinancingValues para usar ltvData directamente
         const setFinancingValues = () => {
             try {
+                if (anio.value === "2011" || anio.value === "2010") {
+                    valorMaxAFinanciarContainer.innerHTML = "Consultar";
+                    montoSolicitadoContainer.value = '';
+                    montoSolicitadoContainer.disabled = true; // Bloquear el campo de capital a financiar
+                    btnCotizarDesktop.classList.add('disabled');
+                    btnCotizarMobile.classList.add('disabled');
+                    document.querySelectorAll(`.cuota-valor`).forEach((element) => {
+                        element.innerText = '--';
+                    });
+                    return;
+                }
+
                 const productoSeleccionado = ltvData[selectedProduct];
                 if (!productoSeleccionado) {
                     console.error('No se encontraron datos válidos para el producto seleccionado.');
@@ -834,6 +863,10 @@
 
         // Corregir btnSwitchProductValue para manejar datos directamente
         btnSwitchProductValue.addEventListener('click', async function () {
+            if (anio.value === "2011" || anio.value === "2010") {
+                return; // Bloquear el cambio de producto en los años 2010 y 2011
+            }
+
             const checkbox = this.querySelector('input[type="checkbox"]');
             checkbox.checked = !checkbox.checked;
 
