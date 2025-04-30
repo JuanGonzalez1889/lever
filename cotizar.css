@@ -7,7 +7,7 @@ body {
     /* UI Properties */
     background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
     opacity: 1;
-    font-family: Arial, sans-serif;
+    font-family: Montserrat, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
@@ -38,11 +38,11 @@ h2 {
     height: 0rem;
     /* UI Properties */
     text-align: left;
-    font: normal normal bold 15px/17px Gotham;
+    font: normal normal bold 15px/17px Montserrat;
     letter-spacing: 0px;
     color: #FFFFFF;
     opacity: 1;
-    margin-left: 1rem;
+    margin-left: 13px;
 }
 
 /* Estilos para el  h1 y strong */
@@ -51,10 +51,10 @@ h2 {
     left: 0px;
     height: 26px;
     text-align: left;
-    font: normal normal 300 24px/26px Gotham;
+    font: normal normal 300 24px/26px Montserrat;
     letter-spacing: 0px;
     color: #2ADC9F;
-    margin-left: 1rem;
+    margin-left: 11px;
 }
 
 #cotizar h1 strong {
@@ -63,7 +63,7 @@ h2 {
     width: 57px;
     height: 26px;
     text-align: left;
-    font: normal normal bold 24px/26px Gotham;
+    font: normal normal bold 24px/26px Montserrat;
     letter-spacing: 0px;
     color: #2ADC9F;
 }
@@ -183,7 +183,7 @@ input:checked+.switch-slider {
     border: none;
     outline: none;
     background: none;
-    font: normal normal 300 14px/15px Gotham;
+    font: normal normal 300 14px/15px Montserrat;
     color: #15224F;
     opacity: 0.5;
     transition: opacity 0.5s ease;
@@ -239,14 +239,14 @@ input:checked+.switch-slider {
     width: 270px;
     height: 63px;
     text-align: left;
-    font: normal normal 300 12px / 12px Gotham;
+    font: normal normal 300 12px / 12px montserrat;
     letter-spacing: -0.12px;
     color: #FFFFFF;
     opacity: 0.5;
 }
 
 .confidentiality-text strong {
-    font: normal normal bold 12px/12px Gotham;
+    font: normal normal bold 12px/12px Montserrat;
     letter-spacing: -0.12px;
     color: #FFFFFF;
 }
@@ -255,7 +255,7 @@ input:checked+.switch-slider {
 .next-button {
     position: absolute;
     top: 646px;
-    left: 213px;
+    left: 166px;
     width: 132px;
     height: 40px;
     background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
@@ -276,7 +276,7 @@ input:checked+.switch-slider {
     width: 64px;
     height: 20px;
     text-align: left;
-    font: normal normal bold 15px / 20px Gotham;
+    font: normal normal bold 15px / 20px Montserrat;
     letter-spacing: -1px;
     color: #FFFFFF;
     opacity: 1;
@@ -292,7 +292,7 @@ input:checked+.switch-slider {
 
 .next-button span::after {
 
-    font: normal normal bold 12px/20px Gotham;
+    font: normal normal bold 12px/20px Montserrat;
     letter-spacing: -1px;
     color: #FFFFFF;
     opacity: 1;
@@ -306,7 +306,7 @@ input:checked+.switch-slider {
     border-radius: 20px;
     border: none;
     color: #FFFFFF;
-    font: bold 12px/20px Gotham;
+    font: bold 12px/20px Montserrat;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -321,6 +321,8 @@ input:checked+.switch-slider {
     /* position: absolute; */
     position: relative;
     margin-bottom: 9px;
+    font-size: 11px;
+    padding: 9px;
     top: 4px;
 }
 
@@ -480,7 +482,7 @@ footer .social img {
 }
 
 .inicio-button .inicio-text {
-    font: normal normal bold 12px/20px Gotham;
+    font: normal normal bold 12px/20px Montserrat;
     position: absolute;
     color: #FFFFFF;
     left: 5rem;
@@ -575,7 +577,7 @@ footer .social img {
     width: 265px;
     height: 19px;
     text-align: left;
-    font: normal normal bold 13px / 13px Gotham;
+    font: normal normal bold 13px / 13px Montserrat;
     letter-spacing: 0px;
     color: #444444;
     opacity: 1;
@@ -604,7 +606,7 @@ footer .social img {
 
 .credit-status-title {
     position: absolute;
-    font: bold 12px / 13px Gotham;
+    font: bold 12px / 13px Montserrat;
     color: #06B312;
     margin-top: 13px;
     /* text-align: center; */
@@ -613,7 +615,7 @@ footer .social img {
 }
 
 .credit-status-subtitle {
-    font: 300 12px / 13px Gotham;
+    font: 300 12px / 13px Montserrat;
     position: absolute;
     color: #444444;
     margin-top: 5px;
@@ -641,8 +643,749 @@ footer .social img {
 }
 
 .profile-name {
-    font: normal normal bold 14px / 15px Gotham;
+    font: normal normal bold 14px / 15px Montserrat;
     color: #444444;
     opacity: 1;
     margin: 0;
+}
+
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
+
+/* Estilos para los botones de navegación */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.back-button {
+    position: absolute;
+    top: 645px;
+    left: 109px;
+    width: 40px;
+    height: 40px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.back-button.hidden {
+    visibility: hidden;
+}
+
+/* Estilos para el select personalizado */
+.custom-select {
+
+    left: 23px;
+    width: 300px;
+    height: 59px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 30px;
+
+    /* border: none; */
+    /* margin-bottom: 1rem; */
+    margin-top: 10px;
+    outline: none;
+    padding: 0px 15px;
+    font: normal normal 283 15px / 15px Montserrat;
+    color: #15224F;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    z-index: 2;
+    /* Asegurar que esté encima */
+    opacity: 1;
+    /* Mantener opacidad fija */
+}
+
+/* Evitar cambios de color al seleccionar */
+.custom-select:focus,
+.custom-select:hover {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    /* Mantener fondo blanco */
+    border-radius: 30px;
+    opacity: 1;
+}
+
+/* Opciones del select */
+.custom-select option {
+    font: normal normal 300 14px / 15px Montserrat;
+    color: #15224F;
+}
+
+.custom-select::placeholder {
+    color: #15224F;
+    opacity: 0.5;
+    /* Aseguramos la opacidad */
+
+}
+
+.custom-select::-webkit-input-placeholder {
+    color: #15224F;
+    opacity: 0.5;
+    /* Compatibilidad con navegadores basados en WebKit */
+}
+
+.custom-select::-moz-placeholder {
+    color: #15224F;
+    opacity: 0.5;
+    /* Compatibilidad con Firefox */
+}
+
+.custom-select:-ms-input-placeholder {
+    color: #15224F;
+    opacity: 0.5;
+    /* Compatibilidad con Internet Explorer */
+}
+
+.custom-select:-moz-placeholder {
+    color: #15224F;
+    opacity: 0.5;
+    /* Compatibilidad adicional con Firefox */
+}
+
+.custom-select::placeholder,
+.custom-select option[value=""][disabled] {
+    color: #15224F;
+    opacity: 0.5;
+    font: normal normal 300 14px/15px Montserrat;
+}
+
+.custom-select::-webkit-input-placeholder {
+    color: #15224F;
+    opacity: 0.5;
+}
+
+.custom-select::-moz-placeholder {
+    color: #15224F;
+    opacity: 0.5;
+}
+
+.custom-select:-ms-input-placeholder {
+    color: #15224F;
+    opacity: 0.5;
+}
+
+.custom-select:-moz-placeholder {
+    color: #15224F;
+    opacity: 0.5;
+}
+
+.custom-select option[value=""],
+.custom-select option[disabled] {
+    color: #15224F;
+    opacity: 0.5;
+    font: normal normal 300 14px/15px Montserrat;
+}
+
+/* Evitar cambios visuales en el estado :focus y :active */
+.custom-select:focus,
+.custom-select:active {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    /* Mantener fondo blanco */
+    border-radius: 30px;
+    opacity: 1;
+    outline: none;
+    /* Eliminar el borde azul predeterminado */
+    box-shadow: none;
+    /* Eliminar cualquier sombra predeterminada */
+}
+
+/* Evitar cambios visuales en el estado :focus, :active y :hover */
+.custom-select:focus,
+.custom-select:active,
+.custom-select:hover {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    /* Mantener fondo blanco */
+    border-radius: 30px;
+    opacity: 1;
+    outline: none;
+    /* Eliminar el borde azul predeterminado */
+    box-shadow: none;
+    /* Eliminar cualquier sombra predeterminada */
+    -webkit-box-shadow: none;
+    /* Compatibilidad con navegadores basados en WebKit */
+    -moz-box-shadow: none;
+    /* Compatibilidad con navegadores basados en Mozilla */
+}
+
+/* Eliminar el color de fondo gris predeterminado en navegadores móviles */
+.custom-select:focus-visible {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    /* Mantener fondo blanco */
+    outline: none;
+}
+
+/* Estilos para el contenedor del select personalizado */
+.custom-select-container {
+    position: relative;
+    width: 263px;
+    height: 59px;
+    background: #FFFFFF;
+    border-radius: 30px;
+    padding: 0 15px;
+    font: normal normal 300 14px / 15px Montserrat;
+    color: #15224F;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    transition: border-radius 0.3s ease;
+    overflow: hidden;
+    /* Ocultar cualquier contenido que sobresalga */
+}
+
+.custom-select-container.expanded {
+    border-radius: 39px 39px 3px 3px;
+    /* Ajuste del border-radius al expandirse */
+}
+
+.custom-select-placeholder {
+    color: #15224F;
+    opacity: 0.5;
+    font: normal normal 300 14px / 15px Montserrat;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 100%;
+    margin-left: 15px;
+    padding-right: 40px;
+    /* Espacio para la flecha */
+}
+
+.custom-select-arrow {
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+    opacity: 1;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: url('./images/icons/flechaDerecha.svg') no-repeat center center;
+    background-size: contain;
+}
+
+.custom-select-options {
+    position: absolute;
+    top: 32px;
+    left: 0;
+    height: 14rem;
+    width: 100%;
+    background: #F6F6F6 0% 0% no-repeat padding-box;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: -1;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.custom-select-options.active {
+    display: block;
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.custom-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Espaciado entre la imagen y el texto */
+    padding: 10px 15px;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    font: normal normal bold 14px / 15px Montserrat;
+    color: #444444;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.custom-option img.option-icon {
+    width: 40px;
+    height: 37px;
+    object-fit: contain;
+}
+
+.custom-option:hover {
+    background: #f4f4f4;
+}
+
+/* Estilos para los selects personalizados */
+.custom-select-container {
+    position: relative;
+    width: 100%;
+    max-width: 263px;
+    height: 59px;
+    background: #FFFFFF;
+    border-radius: 30px;
+    padding: 0 15px;
+    font: normal normal 300 14px / 15px Montserrat;
+    color: #15224F;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-select {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    /* Fondo blanco fijo */
+    border-radius: 30px;
+    font: normal normal 300 14px / 15px Montserrat;
+    color: #15224F;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 0 10px;
+    cursor: pointer;
+    z-index: 2;
+    /* Asegurar que esté encima */
+    position: relative;
+    opacity: 1;
+    /* Mantener opacidad fija */
+}
+
+/* Evitar cambios de color al seleccionar */
+.custom-select:focus,
+.custom-select:hover {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    /* Mantener fondo blanco */
+    border-radius: 30px;
+    opacity: 1;
+}
+
+
+/* Opciones del select */
+.custom-select option {
+    font: normal normal 300 14px / 15px Montserrat;
+    color: #15224F;
+}
+
+.custom-select-container::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background: url('./images/icons/flechaDer.svg') no-repeat center center;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 3;
+    /* Asegurar que esté encima del select */
+}
+
+/* Estilos para el nuevo contenedor de opciones */
+.custom-options-container {
+    position: relative;
+    width: 300px;
+    height: 59px;
+    background: #FFFFFF;
+    border-radius: 30px;
+    padding: 0 15px;
+    font: normal normal 300 14px / 15px Montserrat;
+    color: #15224F;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    display: block;
+    margin-top: 15px;
+    /* Margen inicial */
+    transition: margin-top 0.3s ease;
+    /* Transición suave */
+}
+
+.custom-options-placeholder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 82%;
+    color: #15224F;
+    opacity: 0.5;
+    margin-left: 15px;
+    padding-right: 40px;
+    top: 20px;
+    /* Espacio para la flecha */
+}
+
+.custom-options-placeholder::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    /* Posición original */
+    width: 16px;
+    height: 16px;
+    background: url('./images/icons/flechaDer.svg') no-repeat center center;
+    background-size: contain;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+    /* Transición suave */
+}
+
+.custom-options-placeholder.active::after {
+    transform: translateY(-50%) rotate(90deg);
+    /* Rotar hacia abajo */
+}
+
+.custom-options {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    height: 182px;
+    background: #F6F6F6 0% 0% no-repeat padding-box;
+    width: 100%;
+    /* background: #FFFFFF; */
+    border-radius: 0 0 30px 30px;
+    /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); */
+
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    display: flex !important;
+    /* Forzar que se muestren */
+    flex-direction: column;
+    opacity: 1;
+    visibility: visible;
+    transform: scaleY(1);
+    transform-origin: top;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.custom-options.hidden {
+    display: none !important;
+    /* Forzar que no se muestren */
+    opacity: 0;
+    visibility: hidden;
+    transform: scaleY(0);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.custom-option:hover {
+    background: #f4f4f4;
+}
+
+/* Estilos para el nuevo div que se despliega junto con las opciones del select */
+.custom-options-extra {
+    width: 330px;
+    height: 61px;
+    background: #F6F6F6;
+    border-radius: 30px 30px 0px 0px;
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    z-index: -1;
+}
+
+.custom-options-extra.active {
+    display: block;
+    /* Mostrar cuando se despliega */
+}
+
+/* Estilos para el nuevo buscador */
+.custom-search-container {
+    display: flex;
+    align-items: center;
+    background-color: #D3D3D3;
+    border-radius: 0 0 30px 30px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    gap: 10px;
+    width: 78%;
+    margin-left: 18px;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.custom-search-container.active {
+    opacity: 1;
+    /* Visible al activarse */
+    transform: scaleY(1);
+    /* Expandido al activarse */
+}
+
+.custom-search-container img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.custom-search-container input {
+    border: none;
+    outline: none;
+    background: none;
+    font: normal normal 300 14px/15px Montserrat;
+    color: #15224F;
+    width: 100%;
+}
+
+/* Estilos para el recuadro transparente y los elementos dentro de él */
+.vehicle-summary {
+    top: 183px;
+    width: 302px;
+    position: absolute;
+    height: 61px;
+    border: 1px solid #FFFFFF;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-left: 1px;
+    margin-left: 10px;
+    margin-left: 8px;
+    border-radius: 32px 32px 32px 32px;
+}
+
+.vehicle-summary img#vehicle-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-right: 15px;
+}
+
+.vehicle-summary .vehicle-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.vehicle-summary .vehicle-details h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #FFFFFF;
+    margin: 0;
+    width: 134px;
+    height: 19px;
+}
+
+.vehicle-summary .vehicle-details p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #FFFFFF;
+    margin: 2px 0;
+}
+
+.vehicle-summary .vehicle-details p:nth-child(2) {
+    font-weight: bold;
+}
+
+.vehicle-summary .vehicle-details p:nth-child(3) {
+    font-size: 12px;
+    font-weight: 300;
+}
+
+/* Aseguramos que las opciones sean visibles cuando no tienen la clase 'hidden' */
+.custom-options {
+    display: flex;
+    /* Aseguramos que las opciones sean visibles */
+    flex-direction: column;
+    opacity: 1;
+    visibility: visible;
+    /* Aseguramos que sean visibles */
+    transform: scaleY(1);
+    /* Aseguramos que estén completamente expandidas */
+    transform-origin: top;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Ocultar las opciones cuando tienen la clase 'hidden' */
+.custom-options.hidden {
+    opacity: 0;
+    visibility: hidden;
+    /* Aseguramos que estén ocultas */
+    transform: scaleY(0);
+    /* Colapsar visualmente */
+    pointer-events: none;
+    /* Evitar interacciones mientras están ocultas */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Controlar el display con una clase adicional */
+.custom-options.display-none {
+    display: none;
+    /* Aseguramos que estén completamente ocultas */
+}
+
+/* Asegurar que las opciones ocultas no interfieran */
+.custom-options.hidden {
+    display: none !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: scaleY(0);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Asegurar que las opciones visibles se comporten correctamente */
+.custom-options {
+    display: flex !important;
+    flex-direction: column;
+    opacity: 1;
+    visibility: visible;
+    transform: scaleY(1);
+    transform-origin: top;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Asegurar que el margen de los contenedores sea consistente */
+.custom-options-container {
+    margin-top: 15px;
+    transition: margin-top 0.3s ease;
+}
+
+/* Rotación de la flecha */
+.custom-options-placeholder.active::after {
+    transform: translateY(-50%) rotate(90deg);
+}
+
+/* Asegurar que el margen de los contenedores sea consistente */
+.custom-options-container {
+    margin-top: 15px;
+    /* Margen inicial */
+    transition: margin-top 0.3s ease;
+}
+
+.custom-options-container-2 {
+    position: relative;
+    width: 300px;
+    height: 59px;
+    background: #FFFFFF;
+    border-radius: 30px;
+    padding: 0 15px;
+    font: normal normal 300 14px / 15px Montserrat;
+    color: #15224F;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 132px;
+    /* Diferencia solicitada */
+    margin-left: 2px;
+    /* Diferencia solicitada */
+    display: block;
+    transition: margin-top 0.3s ease;
+}
+
+.product-select {
+    margin-top: 137px !important;
+    margin-left: 5px !important;
+    width: 300px !important;
+}
+
+.custom-summary {
+    top: 353px;
+    width: 302px;
+    position: absolute;
+    height: 86px;
+    border: 1px solid #FFFFFF;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-left: 8px;
+    border-radius: 32px;
+    z-index: -1;
+}
+
+.custom-summary-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #FFFFFF;
+    margin: 0;
+    margin-bottom: 28px;
+    margin-left: 11px;
+    z-index: -1;
+}
+
+.custom-summary-currency {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: #FFFFFF;
+    display: block;
+    margin-left: -140px;
+    /* Alineado con la primera letra del título */
+    margin-top: 33px;
+    /* Ajuste para colocarlo debajo del título */
+    z-index: -1;
+}
+
+.custom-summary-amount {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    color: #28D89E;
+    margin-left: 5px;
+    /* Espaciado entre el signo $ y el texto */
+    margin-top: 28px;
+    display: inline-block;
+    z-index: -1;
+}
+
+.net-finance-input {
+    position: relative;
+    width: 287px;
+    margin-left: 5px;
+    top: 124px;
+    height: 59px;
+    background: #FFFFFF;
+    border-radius: 30px;
+    padding: 0 15px;
+    font: normal normal 300 14px / 15px Montserrat;
+    color: #15224F;
+    outline: none;
+    border: none;
+    padding-left: 29px;
+    /* Ajusta el espacio interno del texto */
+}
+
+.net-finance-input::placeholder {
+    font: normal normal 300 14px / 15px Montserrat;
+    color: #15224F;
+    opacity: 0.5;
+    width: 185px;
+}
+
+.min-amount-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    /* Medium */
+    color: #FF594B;
+    text-align: center;
+    margin-top: 130px;
 }
