@@ -1,21 +1,31 @@
 <?php
 class InfoAuto
 {
-
     public $token;
     public $dataInput;
+    public $apiType = 'cars'; // 'cars' o 'motorcycles'
+    public $username;
+    public $password;
+
+    public function setApiType($categoria) {
+        if (strtolower($categoria) === 'motos' || strtolower($categoria) === 'moto') {
+            $this->apiType = 'motorcycles';
+            $this->username = 'alejandro.amado@lever.com.ar';
+            $this->password = 'a2tyKwLEGUaucurp';
+        } else {
+            $this->apiType = 'cars';
+            $this->username = 'alejandro.amado@lever.com.ar';
+            $this->password = 'tFz2SRHrrSkNAzBZ';
+        }
+    }
 
     public function login()
     {
+        $username = $this->username;
+        $password = $this->password;
+        $apiType = $this->apiType;
 
-        // Credenciales de autenticación básica
-        $username = 'alejandro.amado@lever.com.ar';
-        $password = 'tFz2SRHrrSkNAzBZ';
-
-        // Iniciar una sesión cURL
-        $ch = curl_init();
-
-        $url = "https://api.infoauto.com.ar/cars/auth/login";
+        $url = "https://api.infoauto.com.ar/{$apiType}/auth/login";
         $headers = array(
             "Content-Length: 0",
             "Content-type: application/json",
@@ -35,9 +45,7 @@ class InfoAuto
         } else {
             $tokens = json_decode($response, true);
             $access_token = $tokens['access_token'];
-            $refresh_token = $tokens['refresh_token'];
             $this->token = $access_token;
-            //echo $this->token;
         }
 
         curl_close($ch);
@@ -134,11 +142,11 @@ class InfoAuto
 
     public function getBrandsByYear($year, $access_token)
     {
-
+        $apiType = $this->apiType;
         if ($year == date('Y')) {
-            $url = "https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&list_price=true&page=1&page_size=100";
+            $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/?query_mode=matching&list_price=true&page=1&page_size=100";
         } else {
-            $url = "https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&price_at=$year&page=1&page_size=100";
+            $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/?query_mode=matching&price_at=$year&page=1&page_size=100";
         }
 
         // Access token obtenido en el paso anterior
@@ -161,10 +169,14 @@ class InfoAuto
             $brandsByYear = json_decode($response, true);
             $brandsList = [];
             for ($i = 0; $i < count($brandsByYear); $i++) {
+                // Para motos, el campo puede ser 'logo_url' o puede venir vacío/null
+                $logo = isset($brandsByYear[$i]['logo_url']) && $brandsByYear[$i]['logo_url']
+                    ? $brandsByYear[$i]['logo_url']
+                    : null;
                 $brandsList[] = [
                     'id' => $brandsByYear[$i]['id'],
                     'name' => $brandsByYear[$i]['name'],
-                    'logo' => $brandsByYear[$i]['logo_url']
+                    'logo' => $logo
                 ];
             }
             echo json_encode(['accessToken' => $access_token, 'brands' => $brandsList], TRUE);
@@ -173,6 +185,7 @@ class InfoAuto
 
     public function getModelsByBrand($id, $anio, $access_token)
     {
+        $apiType = $this->apiType;
         $carsDescriptionList = [];
         $page = 1;
         $page_size = 100; // Tamaño máximo por página
@@ -180,9 +193,9 @@ class InfoAuto
 
         while (true) {
             if ($anio == date('Y')) {
-                $url = "https://api.infoauto.com.ar/cars/pub/brands/$id/models/?query_mode=matching&list_price=true&page=$page&page_size=$page_size";
+                $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/$id/models/?query_mode=matching&list_price=true&page=$page&page_size=$page_size";
             } else {
-                $url = "https://api.infoauto.com.ar/cars/pub/brands/$id/models/?query_mode=matching&price_at=$anio&page=$page&page_size=$page_size";
+                $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/$id/models/?query_mode=matching&price_at=$anio&page=$page&page_size=$page_size";
             }
 
             // Iniciar una sesión cURL
@@ -226,10 +239,11 @@ class InfoAuto
 
     public function getPriceByCodia($codia, $year, $access_token)
     {
+        $apiType = $this->apiType;
         if ($year == date('Y')) {
-            $url = "https://api.infoauto.com.ar/cars/pub/models/{$codia}/list_price";
+            $url = "https://api.infoauto.com.ar/{$apiType}/pub/models/{$codia}/list_price";
         } else {
-            $url = "https://api.infoauto.com.ar/cars/pub/models/{$codia}/prices/";
+            $url = "https://api.infoauto.com.ar/{$apiType}/pub/models/{$codia}/prices/";
         }
 
         // Iniciar una sesión cURL
@@ -262,6 +276,78 @@ class InfoAuto
         }
     }
 }
+
+// --- INICIO: Clase para InfoExperto ---
+class InfoExperto
+{
+    private $apiKey = '886aab32-9050-4453-ba91-30540cf6084a';
+    private $baseUrl = 'https://servicio.infoexperto.com.ar/api/informeApi/';
+
+    public function obtenerInformeCuit($cuit, $tipo = 'normal')
+    {
+        $url = $this->baseUrl . 'obtenerInforme';
+        $fields = [
+            'apiKey' => $this->apiKey,
+            'cuit' => $cuit,
+            'tipo' => $tipo
+        ];
+        return $this->doCurl($url, $fields);
+    }
+
+    public function obtenerInformeDni($dni, $tipo = 'normal')
+    {
+        $url = $this->baseUrl . 'obtenerInformeDni';
+        $fields = [
+            'apiKey' => $this->apiKey,
+            'dni' => $dni,
+            'tipo' => $tipo
+        ];
+        return $this->doCurl($url, $fields);
+    }
+
+    private function doCurl($url, $fields)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 8); // Reducido de 20 a 8 segundos
+
+        // IMPORTANTE: Para depuración, mostrar la respuesta completa de InfoExperto
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            return json_encode(['status' => 'error', 'message' => $error]);
+        }
+        curl_close($ch);
+
+        // Si la respuesta es "acceso denegado" o similar, devolver el mensaje tal cual
+        $json = json_decode($response, true);
+        if (isset($json['status']) && strtolower($json['status']) === 'error') {
+            return json_encode([
+                'status' => 'error',
+                'message' => $json['message'] ?? 'Acceso denegado o error de InfoExperto',
+                'raw' => $json
+            ]);
+        }
+
+        // Si el HTTP code es 403 o 401, devolver acceso denegado
+        if ($httpCode === 401 || $httpCode === 403) {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Acceso denegado por InfoExperto (HTTP ' . $httpCode . ')',
+                'raw' => $response
+            ]);
+        }
+
+        return $response;
+    }
+}
+// --- FIN: Clase para InfoExperto ---
 
 //Acceso Cors
 header("Access-Control-Allow-Origin: *");
@@ -301,8 +387,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $datos = file_get_contents('php://input');
     $data = json_decode($datos, TRUE);
     $access_token = $data['accessToken'] ?? null;
+    $categoria = $data['categoria'] ?? 'autos'; // autos, utilitarios, motos
+
+    // --- INICIO: Integración InfoExperto ---
+    if (isset($data['infoexperto'])) {
+        $infoexperto = new InfoExperto();
+        if (isset($data['cuit'])) {
+            // Consulta por CUIT
+            $cuit = $data['cuit'];
+            $tipo = $data['tipo'] ?? 'normal';
+            $result = $infoexperto->obtenerInformeCuit($cuit, $tipo);
+            header('Content-Type: application/json');
+            echo $result;
+            die();
+        } elseif (isset($data['dni'])) {
+            // Consulta por DNI (sin sexo)
+            $dni = $data['dni'];
+            $tipo = $data['tipo'] ?? 'normal';
+            $result = $infoexperto->obtenerInformeDni($dni, $tipo);
+            header('Content-Type: application/json');
+            echo $result;
+            die();
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Faltan parámetros para InfoExperto']);
+            die();
+        }
+    }
+    // --- FIN: Integración InfoExperto ---
 
     $a = new InfoAuto();
+    $a->setApiType($categoria);
 
     if ($access_token == null) {
         $a->login();

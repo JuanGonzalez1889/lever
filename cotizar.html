@@ -14,15 +14,37 @@
     <header>
       <div class="container header-container">
         <div itemprop="logo" class="logo-container">
-          <a href="#"
+          <a href="" onclick="goToStep(1)"
             ><img src="./images/logos/lever.svg" alt="Lever Technology"
           /></a>
         </div>
-        <div class="hamburguer-menu" onclick="toggleMenu()">
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
+        <!-- Agrupa los botones en un contenedor para stacking y posición -->
+        <div class="desktop-header-buttons">
+          <button type="button" class="desktop-inicio-btn" onclick="goToStep(1)">
+            <span class="desktop-inicio-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16">
+                <path id="Vector" d="M16.648,7.869,8.924.175a.6.6,0,0,0-.848,0L.353,7.869A1.2,1.2,0,0,0,1.2,9.912h.814V15.4a.6.6,0,0,0,.6.6H7.3V11.813H9.4V16h4.986a.6.6,0,0,0,.6-.6V9.912H15.8a1.2,1.2,0,0,0,.848-2.043Z" fill="#fff"/>
+              </svg>
+            </span>
+            <span class="desktop-inicio-btn-text">Inicio</span>
+          </button>
+          <button type="button" class="desktop-nosotros-btn" onclick="mostrarNosotrosCotizar()">
+            <span class="desktop-nosotros-btn-icon">
+              <svg id="Grupo_2625" data-name="Grupo 2625" xmlns="http://www.w3.org/2000/svg" width="22.767" height="22.767" viewBox="0 0 22.767 22.767">
+                <g clip-path="url(#clip-path)">
+                  <defs>
+                    <clipPath id="clip-path">
+                      <rect width="22.767" height="22.767" fill="#15224f"/>
+                    </clipPath>
+                  </defs>
+                  <path d="M11.384,0A11.384,11.384,0,1,0,22.767,11.384,11.384,11.384,0,0,0,11.384,0m3.037,6.83A1.517,1.517,0,1,1,12.9,8.347,1.517,1.517,0,0,1,14.421,6.83m-6.072,0A1.517,1.517,0,1,1,6.832,8.347,1.517,1.517,0,0,1,8.349,6.83m9.015,7.852a6.808,6.808,0,0,1-11.338.945c-.362-.457-.977-1.209-.459-1.761a.818.818,0,0,1,.35-.2c.753-.142.905.508,1.274.981a5.327,5.327,0,0,0,8.366.026c.22-.281.524-.908.854-1a.756.756,0,0,1,.953,1" fill="#15224f"/>
+                </g>
+              </svg>
+            </span>
+            <span class="desktop-nosotros-btn-text">Nosotros</span>
+          </button>
         </div>
+        <a href="#" class="hamburguer" id="hamburguer-menu"><span>Menu</span></a>
       </div>
       <nav
         id="menu"
@@ -34,7 +56,7 @@
         <ul>
           <li>
             <a
-              href="index.html"
+              href="cotizar.html"
               itemprop="url"
               class="scroller outline"
               data-text="Inicio"
@@ -54,7 +76,7 @@
           </li>
           <li>
             <a
-              href="index.html#contacto"
+              href="#"
               itemprop="url"
               class="scroller outline"
               data-text="Contacto"
@@ -62,37 +84,29 @@
               ><span itemprop="name">Contacto</span></a
             >
           </li>
-          <li>
-            <a
-              href="cotizar.html"
-              itemprop="url"
-              class="scroller outline"
-              data-text="Cotizar"
-              data-url="#cotizar"
-              ><span itemprop="name">Cotizar</span></a
-            >
-          </li>
+          
         </ul>
+        <!-- Botón de cerrar menú hamburguesa (cruz) -->
+        <a href="#" class="close-menu" id="close-menu" aria-label="Cerrar menú">
+          <img src="./images/icons/close.svg" alt="Cerrar menú" width="32" height="29"/>
+        </a>
       </nav>
+      <div class="menu-overlay" id="menu-overlay"></div>
     </header>
     <main>
-      <section id="cotizar">
+      <section id="cotizar" class="cotizar-section">
         <div class="container">
           <!-- Paso 1 -->
           <div id="step-1" class="step active">
             <h2>Cotizador online</h2>
             <h1>PASO <strong>1 DE 3</strong></h1>
             <div class="switch-container">
-              <span class="switch-label-left" onclick="toggleSwitch(false)"
-                >CUIT</span
-              >
+              <span class="switch-label-left" onclick="toggleSwitch(false)">PERSONA</span>
               <label class="toggle-switch">
                 <input type="checkbox" />
                 <span class="switch-slider"></span>
               </label>
-              <span class="switch-label-right" onclick="toggleSwitch(true)"
-                >DNI</span
-              >
+              <span class="switch-label-right" onclick="toggleSwitch(true)">EMPRESA</span>
             </div>
             <div class="dni-container">
               <input
@@ -101,11 +115,9 @@
                 placeholder="DNI del solicitante"
               />
               <div class="search-icon-container" onclick="showDropdown()">
-                <img
-                  src="./images/icons/search.svg"
-                  alt="search icon"
-                  class="search-icon"
-                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
+                    <path id="Vector" d="M13.77,12.666,11.126,10.03A6.158,6.158,0,0,0,12.44,6.22a6.22,6.22,0,1,0-6.22,6.22,6.158,6.158,0,0,0,3.81-1.314l2.636,2.644a.781.781,0,1,0,1.1-1.1ZM1.555,6.22a4.665,4.665,0,1,1,1.366,3.3A4.665,4.665,0,0,1,1.555,6.22Z" fill="#fff"/>
+                </svg>
               </div>
               <div class="dropdown-content hidden">
                 <div class="profile-header">
@@ -169,39 +181,41 @@
                 </div>
                 <div class="custom-options-extra hidden"></div>
                 <!-- Nuevo div -->
-                <div id="categoria-options" class="custom-options hidden">
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('Autos y Pickups', 'categoria-options')"
-                  >
-                    <img
-                      src="./images/icons/auto.svg"
-                      alt="Autos y Pickups"
-                      class="option-icon"
-                    />
-                    Autos y Pickups
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('Motos', 'categoria-options')"
-                  >
-                    <img
-                      src="./images/icons/moto.svg"
-                      alt="Motos"
-                      class="option-icon"
-                    />
-                    Motos
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('Utilitarios', 'categoria-options')"
-                  >
-                    <img
-                      src="./images/icons/pickup1.svg"
-                      alt="Utilitarios"
-                      class="option-icon"
-                    />
-                    Utilitarios
+                <div class="custom-options-wrapper">
+                  <div id="categoria-options" class="custom-options hidden">
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Autos y Pickups', 'categoria-options')"
+                    >
+                      <img
+                        src="./images/icons/auto.svg"
+                        alt="Autos y Pickups"
+                        class="option-icon"
+                      />
+                      Autos y Pickups
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Motos', 'categoria-options')"
+                    >
+                      <img
+                        src="./images/icons/moto.svg"
+                        alt="Motos"
+                        class="option-icon"
+                      />
+                      Motos
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Utilitarios', 'categoria-options')"
+                    >
+                      <img
+                        src="./images/icons/pickup1.svg"
+                        alt="Utilitarios"
+                        class="option-icon"
+                      />
+                      Utilitarios
+                    </div>
                   </div>
                 </div>
               </div>
@@ -216,78 +230,92 @@
                 </div>
                 <div class="custom-options-extra hidden"></div>
                 <!-- Nuevo div -->
-                <div id="anio-options" class="custom-options hidden">
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2023', 'anio-options')"
-                  >
-                    2023
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2022', 'anio-options')"
-                  >
-                    2022
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2021
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2020
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2019
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2018
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2017
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2016
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2015
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2014
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2013
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('2021', 'anio-options')"
-                  >
-                    2012
+                <div class="custom-options-wrapper">
+                  <div id="anio-options" class="custom-options hidden">
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2023', 'anio-options')"
+                    >
+                      2025
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2023', 'anio-options')"
+                    >
+                      2024
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2023', 'anio-options')"
+                    >
+                      2023
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2022', 'anio-options')"
+                    >
+                      2022
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2021
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2020
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2019
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2018
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2017
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2016
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2015
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2014
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2013
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('2021', 'anio-options')"
+                    >
+                      2012
+                    </div>
                   </div>
                 </div>
               </div>
@@ -302,15 +330,17 @@
                 </div>
                 <div class="custom-options-extra hidden"></div>
                 <!-- Nuevo div -->
-                <div id="marca-options" class="custom-options hidden">
-                  <div class="custom-search-container hidden">
-                    <!-- Nuevo buscador -->
-                    <img src="./images/icons/lupita.svg" alt="Buscar" />
-                    <input
-                      type="text"
-                      placeholder="Buscar marca..."
-                      oninput="filterOptions('marca-options', this.value)"
-                    />
+                <div class="custom-options-wrapper">
+                  <div id="marca-options" class="custom-options hidden">
+                    <div class="custom-search-container hidden">
+                      <!-- Nuevo buscador -->
+                      <img src="./images/icons/lupita.svg" alt="Buscar" />
+                      <input
+                        type="text"
+                        placeholder="Buscar marca..."
+                        oninput="filterOptions('marca-options', this.value)"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -325,15 +355,17 @@
                 </div>
                 <div class="custom-options-extra hidden"></div>
                 <!-- Nuevo div -->
-                <div id="modelo-options" class="custom-options hidden">
-                  <div class="custom-search-container hidden">
-                    <!-- Nuevo buscador -->
-                    <img src="./images/icons/lupita.svg" alt="Buscar" />
-                    <input
-                      type="text"
-                      placeholder="Buscar modelo..."
-                      oninput="filterOptions('modelo-options', this.value)"
-                    />
+                <div class="custom-options-wrapper">
+                  <div id="modelo-options" class="custom-options hidden">
+                    <div class="custom-search-container hidden">
+                      <!-- Nuevo buscador -->
+                      <img src="./images/icons/lupita.svg" alt="Buscar" />
+                      <input
+                        type="text"
+                        placeholder="Buscar modelo..."
+                        oninput="filterOptions('modelo-options', this.value)"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -382,25 +414,27 @@
                   Seleccionar Producto
                 </div>
                 <div class="custom-options-extra hidden"></div>
-                <div id="product-options" class="custom-options hidden">
-                  <!-- Opciones dinámicas o estáticas -->
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('Producto 1', 'product-options')"
-                  >
-                    Producto 1
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('Producto 2', 'product-options')"
-                  >
-                    Producto 2
-                  </div>
-                  <div
-                    class="custom-option"
-                    onclick="selectCustomOption('Producto 3', 'product-options')"
-                  >
-                    Producto 3
+                <div class="custom-options-wrapper">
+                  <div id="product-options" class="custom-options hidden">
+                    <!-- Opciones dinámicas o estáticas -->
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Producto 1', 'product-options')"
+                    >
+                      Seguro en Banco
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Producto 2', 'product-options')"
+                    >
+                      Seguro Liberado
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Producto 3', 'product-options')"
+                    >
+                      Producto UVA
+                    </div>
                   </div>
                 </div>
               </div>
@@ -418,6 +452,7 @@
                 />
               <p class="min-amount-text">Monto mínimo: $1.000.000</p> </div>
             </div>
+            
             <div class="navigation-buttons">
               <button class="back-button" onclick="goToStep(1)">
                 <img
@@ -443,23 +478,254 @@
             <h1>
               <span style="font-size: 24px; font-family: Montserrat; font-weight: bold; color: #2ADC9F; ">COTIZACIÓN</span>
               <span style="font-size: 24px; font-family: Montserrat; font-weight: 300; color: #2ADC9F; letter-spacing: -3px;">ESTIMADA</span>
+            </h1> 
+            <div class="container-step4-desktop">
+              <div>
+                <div class="vehicle-summary">
+                  <img id="vehicle-logo-step4" src="" alt="Logo de la marca" />
+                  <div class="vehicle-details">
+                    <h3 id="vehicle-brand-step4">Marca</h3>
+                    <p id="vehicle-model-step4">Modelo</p>
+                    <p id="vehicle-year-step4">Año</p>
+                  </div>
+                </div>
+                <div class="custom-summary custom-summary-step4">
+                  <h3 class="custom-summary-title">Monto neto a financiar</h3>
+                  <span class="custom-summary-currency">$</span>
+                  <span id="custom-summary-amount-step4" class="custom-summary-amount">0</span>
+                  <div id="selected-product-step4" class="selected-product"></div>
+                </div>
+              </div>
+              <div>
+                <div class="scrollable-container">
+                  <div class="scrollable-item" onclick="selectCuota(this)">
+                    <span class="scrollable-text">12 CUOTAS</span>
+                    <span class="scrollable-value">$1.455.555</span>
+                  </div>
+                  <div class="scrollable-item" onclick="selectCuota(this)">
+                    <span class="scrollable-text">18 CUOTAS</span>
+                    <span class="scrollable-value">$754.589</span>
+                  </div>
+                  <div class="scrollable-item" onclick="selectCuota(this)">
+                    <span class="scrollable-text">24 CUOTAS</span>
+                    <span class="scrollable-value">$452.245</span>
+                  </div>
+                  <!-- SOLO para la opción de 36 cuotas: layout especial en 2 columnas -->
+                  <div class="scrollable-item scrollable-item-36" onclick="selectCuota(this)">
+                    <div class="scrollable-item-36-left">
+                      <div class="cuota-label-mas-elegida-inside">
+                        <svg id="Grupo_2619" data-name="Grupo 2619" xmlns="http://www.w3.org/2000/svg" width="7.748" height="7.42" viewBox="0 0 7.748 7.42" style="vertical-align:middle;">
+                          <g id="Grupo_2618" data-name="Grupo 2618">
+                            <path id="Trazado_780" data-name="Trazado 780" d="M5.136,2.323l2.278.2a.417.417,0,0,1,.221.694l-1.7,1.5a.648.648,0,0,0,.032.249c.116.6.392,1.373.445,1.951a.41.41,0,0,1-.567.47L3.92,6.237l-.057-.013L1.918,7.38a.411.411,0,0,1-.584-.463c.06-.653.4-1.43.475-2.091a.228.228,0,0,0,0-.109l-1.7-1.5a.417.417,0,0,1,.242-.7l2.257-.2L3.49.261A.411.411,0,0,1,4.24.229Z" fill="#fec008"/>
+                          </g>
+                        </svg>
+                        <span class="cuota-label-text-inside">MÁS ELEGIDA</span>
+                      </div>
+                      <span class="scrollable-text">36 CUOTAS</span>
+                    </div>
+                    <span class="scrollable-value">$254.784</span>
+                  </div>
+                  <div class="scrollable-item" onclick="selectCuota(this)">
+                    <span class="scrollable-text">48 CUOTAS</span>
+                    <span class="scrollable-value">$125.500</span>
+                  </div>
+                </div>
+                <p id="select-cuota-message" class="hidden">Seleccioná una opción para poder cotizar</p>
+                <div class="navigation-buttons">
+                  <button class="back-button" onclick="goToStep(3)">
+                    <img src="./images/icons/FlechaNegra.svg" alt="flecha" class="next-arrow" />
+                    <span class="back-text">Modificar</span>
+                  </button>
+                  <button class="share-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
+                      <g id="Grupo_2606" data-name="Grupo 2606" transform="translate(-161.74 -654.288)">
+                        <circle id="Elipse_9" data-name="Elipse 9" cx="3" cy="3" r="3" transform="translate(161.74 660.288)" fill="#25d39d"/>
+                        <circle id="Elipse_10" data-name="Elipse 10" cx="3" cy="3" r="3" transform="translate(171.74 654.288)" fill="#25d39d"/>
+                        <circle id="Elipse_11" data-name="Elipse 11" cx="3" cy="3" r="3" transform="translate(171.74 666.288)" fill="#25d39d"/>
+                        <line id="Línea_14" data-name="Línea 14" y1="6.966" x2="9.288" transform="translate(165.483 656.709)" fill="none" stroke="#25d39d" stroke-width="2"/>
+                        <line id="Línea_15" data-name="Línea 15" x2="9.288" y2="6.966" transform="translate(165.483 663.288)" fill="none" stroke="#25d39d" stroke-width="2"/>
+                      </g>
+                    </svg>
+                  </button>
+                  <button class="next-button" onclick="finalizeCotizacion()">
+                    <span class="next-text">Cotizar ahora</span>
+                    <img src="./images/icons/flecha.svg" alt="flecha" class="next-arrow" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 4 - Nueva pantalla para cotización estimada -->
+          <div id="step-4" class="step hidden">
+            <h2>Cotizador online</h2>
+            <h1>
+              <span style="font-size: 24px; font-family: Montserrat; font-weight: bold; color: #2ADC9F; ">COTIZACIÓN</span>
+              <span style="font-size: 24px; font-family: Montserrat; font-weight: 300; color: #2ADC9F; letter-spacing: -3px;">ESTIMADA</span>
             </h1>
-            
+
+            <div class="vehicle-summary">
+              <img id="vehicle-logo-step4" src="" alt="Logo de la marca" />
+              <div class="vehicle-details">
+                <h3 id="vehicle-brand-step4">Marca</h3>
+                <p id="vehicle-model-step4">Modelo</p>
+                <p id="vehicle-year-step4">Año</p>
+              </div>
+            </div>
+
+            <!-- Nuevo div replicado de custom-summary con datos diferentes -->
+            <div class="custom-summary custom-summary-step4">
+              <h3 class="custom-summary-title">Monto neto a financiar</h3>
+              <span class="custom-summary-currency">$</span>
+              <span id="custom-summary-amount-step4" class="custom-summary-amount">0</span>
+              <div id="selected-product-step4" class="selected-product"></div>
+            </div>
+
+            <!-- Nuevo contenedor con 5 divs internos -->
+            <div class="scrollable-container">
+              <div class="scrollable-item" onclick="selectCuota(this)">
+                <span class="scrollable-text">12 CUOTAS</span>
+                <span class="scrollable-value">$1.455.555</span>
+              </div>
+              <div class="scrollable-item" onclick="selectCuota(this)">
+                <span class="scrollable-text">18 CUOTAS</span>
+                <span class="scrollable-value">$754.589</span>
+              </div>
+              <div class="scrollable-item" onclick="selectCuota(this)">
+                <span class="scrollable-text">24 CUOTAS</span>
+                <span class="scrollable-value">$452.245</span>
+              </div>
+              <!-- SOLO para la opción de 36 cuotas: layout especial en 2 columnas -->
+              <div class="scrollable-item scrollable-item-36" onclick="selectCuota(this)">
+                <div class="scrollable-item-36-left">
+                  <div class="cuota-label-mas-elegida-inside">
+                    <svg id="Grupo_2619" data-name="Grupo 2619" xmlns="http://www.w3.org/2000/svg" width="7.748" height="7.42" viewBox="0 0 7.748 7.42" style="vertical-align:middle;">
+                      <g id="Grupo_2618" data-name="Grupo 2618">
+                        <path id="Trazado_780" data-name="Trazado 780" d="M5.136,2.323l2.278.2a.417.417,0,0,1,.221.694l-1.7,1.5a.648.648,0,0,0,.032.249c.116.6.392,1.373.445,1.951a.41.41,0,0,1-.567.47L3.92,6.237l-.057-.013L1.918,7.38a.411.411,0,0,1-.584-.463c.06-.653.4-1.43.475-2.091a.228.228,0,0,0,0-.109l-1.7-1.5a.417.417,0,0,1,.242-.7l2.257-.2L3.49.261A.411.411,0,0,1,4.24.229Z" fill="#fec008"/>
+                      </g>
+                    </svg>
+                    <span class="cuota-label-text-inside">MÁS ELEGIDA</span>
+                  </div>
+                  <span class="scrollable-text">36 CUOTAS</span>
+                </div>
+                <span class="scrollable-value">$254.784</span>
+              </div>
+              <div class="scrollable-item" onclick="selectCuota(this)">
+                <span class="scrollable-text">48 CUOTAS</span>
+                <span class="scrollable-value">$125.500</span>
+              </div>
+            </div>
+            <p id="select-cuota-message" class="hidden" >Seleccioná una opción para poder cotizar</p>
             <div class="navigation-buttons">
               <button class="back-button" onclick="goToStep(3)">
                 <img src="./images/icons/FlechaNegra.svg" alt="flecha" class="next-arrow" />
+                <span class="back-text">modificar</span>
+              </button>
+              <button class="share-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
+                  <g id="Grupo_2606" data-name="Grupo 2606" transform="translate(-161.74 -654.288)">
+                    <circle id="Elipse_9" data-name="Elipse 9" cx="3" cy="3" r="3" transform="translate(161.74 660.288)" fill="#25d39d"/>
+                    <circle id="Elipse_10" data-name="Elipse 10" cx="3" cy="3" r="3" transform="translate(171.74 654.288)" fill="#25d39d"/>
+                    <circle id="Elipse_11" data-name="Elipse 11" cx="3" cy="3" r="3" transform="translate(171.74 666.288)" fill="#25d39d"/>
+                    <line id="Línea_14" data-name="Línea 14" y1="6.966" x2="9.288" transform="translate(165.483 656.709)" fill="none" stroke="#25d39d" stroke-width="2"/>
+                    <line id="Línea_15" data-name="Línea 15" x2="9.288" y2="6.966" transform="translate(165.483 663.288)" fill="none" stroke="#25d39d" stroke-width="2"/>
+                  </g>
+                </svg>
               </button>
               <button class="next-button" onclick="finalizeCotizacion()">
-                <span class="next-text">Finalizar</span>
+                <span class="next-text">Cotizar ahora</span>
                 <img src="./images/icons/flecha.svg" alt="flecha" class="next-arrow" />
               </button>
             </div>
           </div>
         </div>
       </section>
+
+      <!-- NUEVA SECCIÓN: NOSOTROS -->
+      <section id="nosotros" class="hidden custom-section">
+        <div class="container">
+          <h2 class="custom-title">NOSOTROS</h2>
+          <div class="custom-nosotros-content">
+            <!-- Copia aquí el contenido relevante de la sección #nosotros de index.html,
+                 adaptando clases y estructura para que coincida con el diseño de cotizar.html -->
+            <!-- ...contenido de burbujas, videos, etc... -->
+          </div>
+        </div>
+      </section>
+
+      <!-- NUEVA SECCIÓN: CONTACTO -->
+      <section id="contacto" class="hidden custom-section">
+        <div class="container wrap center">
+          <h2 class="custom-title">CONTACTANOS <strong>AHORA</strong></h2>
+          <a
+            href="https://wa.me/+5493417049138?text=Buenas%20tardes%2C%20busco%20informaci%C3%B3n%20para%20obtener%20financiaci%C3%B3n%20con%20Lever"
+            class="btn custom-btn"
+            target="_blank"
+          >Enviar Mensaje</a>
+        </div>
+      </section>
+
+      <!-- NUEVA SECCIÓN: NOSOTROS (replica exacta de index.html) -->
+      <section id="nosotros-cotizar" class="hidden">
+        <div class="container">
+          <div class="bubbles">
+            <div class="bubble bubble01">
+              <div>
+                <mark class="odometer odometer-theme-default" data-value="1474"></mark>
+                <p><strong>CRÉDITOS</strong></p>
+                <p>OTORGADOS EN<br>DOS AÑOS</p>
+              </div>
+            </div>
+            <div class="bubble bubble02">
+              <div>
+                <mark class="odometer odometer-theme-default" data-value="28"></mark>
+                <p><strong>AÑOS</strong></p>
+                <p>DE EXPERIENCIA<br>EN EL SECTOR</p>
+              </div>
+            </div>
+            <div class="bubble bubble03">
+              <div>
+                <p>OPERAMOS EN</p>
+                <mark class="odometer odometer-theme-default" data-value="3"></mark>
+                <p><strong>PROVINCIAS</strong></p>
+              </div>
+            </div>
+            <div class="bubble bubble04">
+              <div>
+                <mark class="odometer odometer-theme-default" data-value="76"></mark>
+                <p><strong>AGENCIAS</strong></p>
+                <p>OPERAN CON<br>NOSOTROS</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container wrapped">
+          <div class="videos-container">
+            <button id="prev-video-cotizar" class="videocontrol"></button>
+            <button id="next-video-cotizar" class="videocontrol"></button>
+          </div>
+          <div class="videos">
+            <div>
+              <a href="#" class="video_thumb" data-video="1"><img src="./images/videos/01.svg" alt=""></a>
+            </div>
+            <div>
+              <a href="#" class="video_thumb" data-video="2"><img src="./images/videos/02.svg" alt=""></a>
+            </div>
+            <div>
+              <a href="#" class="video_thumb" data-video="3"><img src="./images/videos/03.svg" alt=""></a>
+            </div>
+          </div>
+        </div>
+        <div class="videowrap" id="videowrap-cotizar">
+          <label class="closebox"><img src="./images/icons/close.svg" alt="close btn"></label>
+          <div class="video-container">
+            <iframe id="video-cotizar" frameborder="0" allowfullscreen autoplay muted="muted"></iframe>
+          </div>
+        </div>
+      </section>
     </main>
     <footer class="footer">
-      <button class="inicio-button">
+      <button class="inicio-button" onclick="goToStep(1)">
         <img
           src="./images/icons/inicio1.svg"
           alt="inicio icon"
@@ -467,7 +733,49 @@
         />
         <span class="inicio-text">Inicio</span>
       </button>
+      <button class="new-button" onclick="goToStep(1)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">
+          <g id="Grupo_2" data-name="Grupo 2" transform="translate(-150 -733.5)">
+            <line id="Línea_1" data-name="Línea 1" y2="17" transform="translate(159.5 734.5)" fill="none" stroke="#15224f" stroke-linecap="round" stroke-width="2"/>
+            <line id="Línea_2" data-name="Línea 2" y2="17" transform="translate(168 743) rotate(90)" fill="none" stroke="#15224f" stroke-linecap="round" stroke-width="2"/>
+          </g>
+        </svg>
+      </button>
+      <button class="another-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26">
+          <g id="Grupo_2608" data-name="Grupo 2608" transform="translate(-201 -28.221)">
+            <rect id="Rectángulo_794" data-name="Rectángulo 794" width="8" height="18" transform="translate(202 32.221)" fill="none" stroke="#A0A0A0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            <rect id="Rectángulo_795" data-name="Rectángulo 795" width="8" height="18" transform="translate(217 32.221)" fill="none" stroke="#A0A0A0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            <line id="Línea_16" data-name="Línea 16" y2="24" transform="translate(213.5 29.221)" fill="none" stroke="#A0A0A0" stroke-linecap="round" stroke-width="2"/>
+          </g>
+        </svg>
+      </button>
+      <!-- Nuevo botón agregado -->
+      <button class="message-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24.249" height="21.59" viewBox="0 0 19.249 16.59">
+          <g id="Grupo_6" data-name="Grupo 6" transform="translate(-318.376 -734.981)">
+            <path id="Trazado_6" data-name="Trazado 6" d="M245.5,735.981v11.1h13.764l3.485,3.485v-14.59Z" transform="translate(73.876)" fill="none" stroke="#A0A0A0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            <g id="Grupo_5" data-name="Grupo 5" transform="translate(0 0.775)">
+              <line id="Línea_6" data-name="Línea 6" x2="9" transform="translate(323.5 739.5)" fill="none" stroke="#A0A0A0" stroke-linecap="round" stroke-width="1"/>
+              <line id="Línea_7" data-name="Línea 7" x2="5" transform="translate(323.5 742.5)" fill="none" stroke="#A0A0A0" stroke-linecap="round" stroke-width="1"/>
+            </g>
+          </g>
+        </svg>
+      </button>
     </footer>
+
+    <!-- Botón flotante inferior derecho -->
+    <button class="floating-action-btn" aria-label="Acción rápida">
+      <svg xmlns="http://www.w3.org/2000/svg" width="29.255" height="25.053" viewBox="0 0 29.255 25.053">
+        <g id="Grupo_6" data-name="Grupo 6" transform="translate(1 1)">
+          <path id="Trazado_6" data-name="Trazado 6" d="M245.5,735.98v17.547h21.749l5.506,5.506V735.98Z" transform="translate(-245.5 -735.98)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+          <g id="Grupo_5" data-name="Grupo 5" transform="translate(6.517 6.786)">
+            <line id="Línea_6" data-name="Línea 6" x2="14.221" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1"/>
+            <line id="Línea_7" data-name="Línea 7" x2="7.901" transform="translate(0 4.74)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1"/>
+          </g>
+        </g>
+      </svg>
+    </button>
 
     <script>
       function toggleMenu() {
@@ -477,8 +785,10 @@
 
       function toggleSwitch(isChecked) {
         const checkbox = document.querySelector(".toggle-switch input");
-        checkbox.checked = isChecked;
-        updateSwitchLabels();
+        if (checkbox.checked !== isChecked) {
+          checkbox.checked = isChecked;
+          updateSwitchLabels();
+        }
       }
 
       function updateSwitchLabels() {
@@ -489,11 +799,20 @@
         if (checkbox.checked) {
           leftLabel.style.color = "#303047";
           rightLabel.style.color = "#FFFFFF";
-          dniInput.placeholder = "DNI del solicitante";
+          dniInput.placeholder = "CUIT del solicitante";
         } else {
           leftLabel.style.color = "#FFFFFF";
           rightLabel.style.color = "#303047";
-          dniInput.placeholder = "CUIT del solicitante";
+          dniInput.placeholder = "DNI del solicitante";
+        }
+        // Limpiar el campo al cambiar el switch
+        dniInput.value = "";
+        // Bloquear el botón de buscar al limpiar el campo
+        const searchIcon = document.querySelector(".search-icon-container");
+        if (searchIcon) {
+          searchIcon.classList.add("disabled");
+          searchIcon.style.pointerEvents = "none";
+          searchIcon.style.opacity = "0.5";
         }
       }
 
@@ -523,11 +842,33 @@
       }
 
       function goToStep(step) {
+        console.log("goToStep llamada con step:", step);
+
         const steps = document.querySelectorAll(".step");
         steps.forEach((stepElement, index) => {
           if (index + 1 === step) {
             stepElement.classList.remove("hidden");
             stepElement.classList.add("active");
+           
+
+            // Mostrar el mensaje en la pantalla 4
+            if (step === 4) {
+              const message = document.getElementById('select-cuota-message');
+              const selectedCuota = document.querySelector('.scrollable-item.selected');
+              if (message) {
+                if (!selectedCuota) {
+                  message.classList.remove('hidden'); // Mostrar el mensaje si no hay cuota seleccionada
+                  message.style.display = 'block';
+                  
+                } else {
+                  message.classList.add('hidden'); // Ocultar el mensaje si ya hay una cuota seleccionada
+                  message.style.display = 'none';
+                  
+                }
+              } else {
+                console.error("No se encontró el elemento con ID 'select-cuota-message' en la pantalla 4.");
+              }
+            }
           } else {
             stepElement.classList.add("hidden");
             stepElement.classList.remove("active");
@@ -536,11 +877,131 @@
       }
 
       function finalizeCotizacion() {
-        alert("Gracias por usar nuestro cotizador.");
-        // Aquí puedes agregar lógica adicional para finalizar el proceso.
+        // --- NUEVO: Enviar cotización por WhatsApp
+      
+        const solicitante = sessionStorage.getItem('solicitante_nombre') || '';
+        const solicitanteDoc = sessionStorage.getItem('solicitante_dni') || '';
+        const producto = document.getElementById('selected-product-step4')?.textContent?.trim() || '';
+        const monto = document.getElementById('custom-summary-amount-step4')?.textContent?.trim() || '';
+        const cuotaSeleccionada = document.querySelector("#step-4 .scrollable-item.selected");
+        const cuotas = cuotaSeleccionada
+          ? cuotaSeleccionada.querySelector('.scrollable-text')?.textContent?.trim() || ''
+          : '';
+        const valorCuota = cuotaSeleccionada
+          ? cuotaSeleccionada.querySelector('.scrollable-value')?.textContent?.trim() || ''
+          : '';
+        const marca = document.getElementById('vehicle-brand-step4')?.textContent?.trim() || '';
+        const modelo = document.getElementById('vehicle-model-step4')?.textContent?.trim() || '';
+        const anio = document.getElementById('vehicle-year-step4')?.textContent?.trim() || '';
+
+       
+        let mensaje = `¡Hola! Quiero avanzar con la cotización:\n\n`;
+        if (solicitante) mensaje += `Solicitante: ${solicitante}\n`;
+        if (solicitanteDoc) mensaje += `DNI/CUIT: ${solicitanteDoc}\n`;
+        if (marca) mensaje += `Marca: ${marca}\n`;
+        if (modelo) mensaje += `Modelo: ${modelo}\n`;
+        if (anio) mensaje += `Año: ${anio}\n`;
+        if (producto) mensaje += `Producto: ${producto}\n`;
+        if (monto) mensaje += `Monto a financiar: $${monto}\n`;
+        if (cuotas && valorCuota) mensaje += `Cuotas: ${cuotas} de ${valorCuota}\n`;
+
+        const numero = "+5493417049138"; 
+
+       
+        const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+
+       
+        window.open(url, "_blank");
       }
-    </script>
-    <script>
+
+      function selectCuota(element) {
+        
+
+        // Remover la clase 'selected' de todos los elementos
+        document.querySelectorAll('.scrollable-item').forEach(item => {
+          item.classList.remove('selected');
+        });
+
+        // Agregar la clase 'selected' al elemento clickeado
+        element.classList.add('selected');
+        
+
+        // Ocultar el mensaje de selección
+        const message = document.getElementById('select-cuota-message');
+        if (message) {
+          message.classList.add('hidden'); // Asegurar que se oculte con la clase
+          message.style.removeProperty('display'); // Eliminar el estilo display:block
+          
+        } else {
+          console.error("No se encontró el elemento con ID 'select-cuota-message'.");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+       
+
+        // Asegurar que el mensaje sea visible al cargar la pantalla 4
+        const message = document.getElementById('select-cuota-message');
+        if (message) {
+          message.classList.remove('hidden'); // Mostrar el mensaje al inicio
+          message.style.display = 'block'; // Asegurar que sea visible
+          
+        } else {
+          console.error("No se encontró el elemento con ID 'select-cuota-message' al cargar la página.");
+        }
+
+        // Asignar el evento 'click' a cada elemento de cuota
+        const cuotaItems = document.querySelectorAll('.scrollable-item');
+        if (cuotaItems.length > 0) {
+          cuotaItems.forEach(item => {
+            item.addEventListener('click', function () {
+              selectCuota(this); // Llamar a selectCuota con el elemento clickeado
+            });
+          });
+        } else {
+          console.error("No se encontraron elementos con la clase 'scrollable-item'.");
+        }
+      });
+
+      // Asegurar que el mensaje no se muestre al avanzar al paso 4 si ya se seleccionó una cuota
+      function goToStep(step) {
+        
+
+        const steps = document.querySelectorAll(".step");
+        steps.forEach((stepElement, index) => {
+          if (index + 1 === step) {
+            stepElement.classList.remove("hidden");
+            stepElement.classList.add("active");
+           
+            // Mostrar el mensaje en la pantalla 4 si corresponde
+            if (step === 4) {
+              const message = document.getElementById('select-cuota-message');
+              const selectedCuota = document.querySelector('.scrollable-item.selected');
+              if (message) {
+                if (!selectedCuota) {
+                  message.classList.remove('hidden'); // Mostrar el mensaje si no hay cuota seleccionada
+                  message.style.display = 'block';
+                 
+                } else {
+                  message.classList.add('hidden'); // Ocultar el mensaje si ya hay una cuota seleccionada
+                  message.style.display = 'none';
+                  console.log("Mensaje ocultado porque ya hay una cuota seleccionada.");
+                }
+              } else {
+                console.error("No se encontró el elemento con ID 'select-cuota-message' en la pantalla 4.");
+              }
+            }
+          } else {
+            stepElement.classList.add("hidden");
+            stepElement.classList.remove("active");
+          }
+        });
+      }
+
+      
+     
+
+    
       document.addEventListener("DOMContentLoaded", () => {
         document
           .querySelectorAll(".custom-options-container")
@@ -575,6 +1036,7 @@
               const allPlaceholders = document.querySelectorAll(
                 ".custom-options-placeholder"
               );
+              
               const allExtras = document.querySelectorAll(
                 ".custom-options-extra"
               ); // Todos los extras
@@ -652,6 +1114,7 @@
                 options.classList.add("hidden"); // Cerrar el menú desplegable
                 placeholder.classList.remove("active"); // Quitar clase para rotar la flecha
                 extraDiv.classList.remove("active"); // Ocultar el extra
+               
                 if (searchContainer) {
                   searchContainer.classList.remove("active"); // Ocultar el buscador
                   searchInput.value = ""; // Limpiar el texto del buscador
@@ -683,14 +1146,16 @@
                     options.classList.add("hidden");
                     placeholder.classList.remove("active"); // Quitar clase para rotar la flecha
                     extraDiv.classList.remove("active"); // Ocultar el extra
+                    
                     if (searchContainer)
                       searchContainer.classList.remove("active"); // Ocultar el buscador
                     container.style.marginTop = "15px"; // Resetear margen
                   }
                 });
             });
-          });
-      });
+                });
+            });
+         
 
       document.addEventListener("DOMContentLoaded", () => {
         let dataWithLogo = []; // Array para almacenar marcas y sus logos
@@ -790,7 +1255,7 @@
 
       // Definir la función toggleCustomOptions en el ámbito global
       function toggleCustomOptions(id) {
-        console.log(`toggleCustomOptions llamada con id: ${id}`);
+        
         const options = document.getElementById(id);
         const placeholder = document.querySelector(
           `[onclick="toggleCustomOptions('${id}')"]`
@@ -803,27 +1268,26 @@
           return;
         }
 
-        console.log("Elemento options:", options);
-        console.log("Elemento placeholder:", placeholder);
+        
 
         // Alternar el estado del select actual
         const isHidden = options.classList.contains("hidden");
-        console.log(`Estado inicial de options.hidden: ${isHidden}`);
+      
 
         document.querySelectorAll(".custom-options").forEach((opt) => {
           if (opt !== options) {
             opt.classList.add("hidden");
             setTimeout(() => opt.classList.add("display-none"), 300); // Retrasar el display: none
-            console.log("Cerrando otro select:", opt);
+            
           }
         });
 
         document
           .querySelectorAll(".custom-options-placeholder")
           .forEach((ph) => {
-            if (ph !== placeholder) {
+          if (ph !== placeholder) {
               ph.classList.remove("active"); // Quitar rotación de flecha
-              console.log("Desactivando otro placeholder:", ph);
+             
             }
           });
 
@@ -832,30 +1296,25 @@
           setTimeout(() => {
             options.classList.remove("hidden");
             placeholder.classList.add("active"); // Rotar la flecha del placeholder
-            console.log("Abriendo select actual.");
+            
           }, 10); // Pequeño retraso para permitir la transición
         } else {
           options.classList.add("hidden");
           placeholder.classList.remove("active"); // Quitar rotación de flecha
           setTimeout(() => options.classList.add("display-none"), 300); // Retrasar el display: none
-          console.log("Cerrando select actual.");
+          
         }
 
         // Verificar estilos aplicados
         const computedStyles = window.getComputedStyle(options);
-        console.log("Estilos aplicados a options:", {
-          display: computedStyles.display,
-          opacity: computedStyles.opacity,
-          visibility: computedStyles.visibility,
-          transform: computedStyles.transform,
-        });
+        
       }
 
       window.toggleCustomOptions = toggleCustomOptions;
 
       // Cerrar las opciones si se hace clic fuera del contenedor
       document.addEventListener("click", (event) => {
-        console.log("Click detectado fuera de los selects.");
+        
         document
           .querySelectorAll(".custom-options-container")
           .forEach((container) => {
@@ -866,18 +1325,13 @@
               );
               options.classList.add("hidden");
               placeholder.classList.remove("active"); // Quitar rotación de flecha
-              console.log(
-                "Cerrando select por clic fuera del contenedor:",
-                container
-              );
+              
             }
           });
       });
 
       function selectCustomOption(value, id, extraData = null) {
-        console.log(
-          `selectCustomOption llamada con valor: ${value}, id: ${id}, extraData: ${extraData}`
-        );
+        
         const options = document.getElementById(id);
         const placeholder = document.querySelector(
           `[onclick="toggleCustomOptions('${id}')"]`
@@ -927,7 +1381,7 @@
               ? searchContainer.querySelector("input")
               : null;
 
-            console.log(`Inicializando select en contenedor ${index}`);
+            
 
             // Función para reiniciar y mostrar el buscador
             const resetSearch = () => {
@@ -945,7 +1399,7 @@
             // Abrir o cerrar las opciones al hacer clic en el placeholder
             placeholder.addEventListener("click", (event) => {
               event.stopPropagation();
-              console.log(`Placeholder clickeado en contenedor ${index}`);
+              
               const allOptions = document.querySelectorAll(".custom-options");
               const allPlaceholders = document.querySelectorAll(
                 ".custom-options-placeholder"
@@ -954,28 +1408,26 @@
               // Cerrar todos los selects abiertos excepto el actual
               allOptions.forEach((opt, optIndex) => {
                 if (opt !== options) {
-                  console.log(`Cerrando select en contenedor ${optIndex}`);
+                  
                   opt.classList.add("hidden");
                 }
               });
 
               allPlaceholders.forEach((ph, phIndex) => {
                 if (ph !== placeholder) {
-                  console.log(
-                    `Desactivando placeholder en contenedor ${phIndex}`
-                  );
+                  
                   ph.classList.remove("active");
                 }
               });
 
               // Alternar el estado del select actual
               if (options.classList.contains("hidden")) {
-                console.log(`Abriendo select en contenedor ${index}`);
+                
                 options.classList.remove("hidden");
                 placeholder.classList.add("active");
                 resetSearch(); // Reiniciar y mostrar el buscador
               } else {
-                console.log(`Cerrando select en contenedor ${index}`);
+              
                 options.classList.add("hidden");
                 placeholder.classList.remove("active");
               }
@@ -985,15 +1437,13 @@
             if (searchContainer) {
               searchContainer.addEventListener("click", (event) => {
                 event.stopPropagation(); // Evitar que el evento cierre el select
-                console.log(`Buscador clickeado en contenedor ${index}`);
+              
               });
 
               // Filtrar opciones en tiempo real
               searchInput.addEventListener("input", (event) => {
                 const filterText = event.target.value.toLowerCase();
-                console.log(
-                  `Filtrando opciones en contenedor ${index} con texto: ${filterText}`
-                );
+                
                 const allOptions = options.querySelectorAll(".custom-option");
                 allOptions.forEach((option) => {
                   const optionText = option.textContent.toLowerCase();
@@ -1007,9 +1457,7 @@
             // Seleccionar una opción
             options.addEventListener("click", (event) => {
               if (event.target.classList.contains("custom-option")) {
-                console.log(
-                  `Opción seleccionada en contenedor ${index}: ${event.target.textContent}`
-                );
+                
                 placeholder.textContent = event.target.textContent;
                 placeholder.dataset.value = event.target.textContent;
                 options.classList.add("hidden");
@@ -1030,9 +1478,7 @@
                     ".custom-search-container"
                   );
                   if (!container.contains(event.target)) {
-                    console.log(
-                      `Cerrando select por clic fuera en contenedor ${containerIndex}`
-                    );
+                    
                     options.classList.add("hidden");
                     placeholder.classList.remove("active");
                     if (searchContainer) {
@@ -1087,31 +1533,113 @@
         document
           .querySelector('.next-button[onclick="goToStep(3)"]')
           .addEventListener("click", () => {
-            console.log(
-              "Botón 'Siguiente' clickeado. Actualizando datos del paso 3..."
-            );
+            
             updateVehicleSummary();
           });
+      });
+
+      // Copiar los datos del vehículo de la pantalla 3 a la pantalla 4
+      document.addEventListener("DOMContentLoaded", () => {
+        const updateVehicleSummaryStep4 = () => {
+          const logo = document.getElementById("vehicle-logo").src;
+          const brand = document.getElementById("vehicle-brand").textContent;
+          const model = document.getElementById("vehicle-model").textContent;
+          const year = document.getElementById("vehicle-year").textContent;
+
+          document.getElementById("vehicle-logo-step4").src = logo;
+          document.getElementById("vehicle-brand-step4").textContent = brand;
+          document.getElementById("vehicle-model-step4").textContent = model;
+          document.getElementById("vehicle-year-step4").textContent = year;
+        };
+
+        // Actualizar los datos al cambiar a la pantalla 4
+        document.querySelector(".next-button[onclick='goToStep(4)']").addEventListener("click", updateVehicleSummaryStep4);
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const updateCustomSummaryStep4 = () => {
+          
+          const inputElement = document.querySelector(".net-finance-input");
+          if (!inputElement) {
+            console.error("No se encontró el elemento .net-finance-input");
+            return;
+          }
+
+          let inputAmount = inputElement.value || "0";
+          console.log("Valor del input en pantalla 3 (net-finance-input):", inputAmount);
+
+          // Validar y limpiar el valor ingresado
+          inputAmount = inputAmount.replace(/[^0-9]/g, ""); // Eliminar caracteres no numéricos
+          if (inputAmount.length > 12) {
+            inputAmount = inputAmount.slice(0, 12); // Limitar a 12 dígitos
+            console.warn("El valor ingresado excede el límite permitido. Se truncó a 12 dígitos.");
+          }
+
+          const formattedAmount = inputAmount.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          document.getElementById("custom-summary-amount-step4").textContent = formattedAmount || "0";
+
+          console.log("Valor formateado para pantalla 4:", formattedAmount);
+        };
+
+        const nextButtonStep4 = document.querySelector(".next-button[onclick='goToStep(4)']");
+        if (!nextButtonStep4) {
+          console.error("No se encontró el botón para avanzar a la pantalla 4");
+          return;
+        }
+
+        nextButtonStep4.addEventListener("click", () => {
+         
+          updateCustomSummaryStep4();
+        });
       });
 
       document.addEventListener("DOMContentLoaded", () => {
         const financeInput = document.querySelector(".net-finance-input");
 
+        if (!financeInput) {
+          console.error("No se encontró el elemento .net-finance-input en pantalla 3");
+          return;
+        }
+
         financeInput.addEventListener("input", (event) => {
-          let value = event.target.value.replace(/[^0-9,]/g, ""); // Permitir solo números y comas
-          value = value.replace(/,/g, "."); // Reemplazar comas por puntos
-          const parts = value.split(".");
-          parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Agregar puntos como separadores de miles
-          event.target.value = parts.join(",");
+          console.log("Evento input detectado en .net-finance-input");
+          let value = event.target.value.replace(/[^0-9]/g, ""); // Permitir solo números
+          if (value.length > 12) {
+            value = value.slice(0, 12); // Limitar a 12 dígitos
+            console.warn("El valor ingresado excede el límite permitido. Se truncó a 12 dígitos.");
+          }
+          const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear con puntos
+          event.target.value = formattedValue;
         });
 
         financeInput.addEventListener("blur", (event) => {
-          if (event.target.value.endsWith(",")) {
-            event.target.value = event.target.value.slice(0, -1); // Eliminar coma final si existe
+          
+          if (event.target.value.endsWith(".")) {
+            event.target.value = event.target.value.slice(0, -1); // Eliminar punto final si existe
           }
         });
       });
     </script>
+    <script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  const nextBtnStep1 = document.querySelector('#step-1 .next-button');
+  if (nextBtnStep1) {
+    nextBtnStep1.addEventListener('click', () => {
+      const dniValue = document.querySelector('.dni-input')?.value?.trim() || '';
+      const nombreCompleto = document.querySelector('.profile-name')?.textContent?.trim() || '';
+      if (dniValue && nombreCompleto) {
+        // Guardar en sessionStorage
+        sessionStorage.setItem('solicitante_dni', dniValue);
+        sessionStorage.setItem('solicitante_nombre', nombreCompleto);
+        // Mostrar por consola
+        console.log('Solicitante guardado:', { dni: dniValue, nombreCompleto });
+      }
+    });
+  }
+});
+
+</script>
     <script>
       async function fetchModelosFromInfoauto(marcaId, year) {
         try {
@@ -1173,5 +1701,822 @@
         }
       }
     </script>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const containers = document.querySelectorAll(".custom-options-container");
+  containers.forEach((container, idx, arr) => {
+    const placeholder = container.querySelector(".custom-options-placeholder");
+    const options = container.querySelector(".custom-options");
+    const extra = container.querySelector(".custom-options-extra");
+    let open = false;
+
+    function closeSelect() {
+      options.classList.add("hidden");
+      placeholder.classList.remove("active");
+      if (extra) extra.classList.remove("active");
+      if (arr[idx + 1]) arr[idx + 1].style.marginTop = "15px";
+      open = false;
+    }
+
+    placeholder.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (open) {
+        closeSelect();
+        return;
+      }
+      arr.forEach((c, i) => {
+        if (i !== idx) {
+          const o = c.querySelector(".custom-options");
+          const p = c.querySelector(".custom-options-placeholder");
+          const ex = c.querySelector(".custom-options-extra");
+          o.classList.add("hidden");
+          p.classList.remove("active");
+          if (ex) ex.classList.remove("active");
+          if (arr[i + 1]) arr[i + 1].style.marginTop = "15px";
+        }
+      });
+      options.classList.remove("hidden");
+      placeholder.classList.add("active");
+      if (extra) extra.classList.add("active");
+      if (arr[idx + 1]) arr[idx + 1].style.marginTop = "197px";
+      open = true;
+    });
+
+    options.addEventListener("click", (e) => {
+      if (e.target.classList.contains("custom-option")) {
+        placeholder.textContent = e.target.textContent;
+        placeholder.dataset.value = e.target.textContent;
+        closeSelect();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!container.contains(e.target)) {
+        closeSelect();
+      }
+    });
+  });
+});
+</script>
   </body>
 </html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const updateSelectedProductStep4 = () => {
+      const selectedProduct = document.querySelector(
+        `[onclick="toggleCustomOptions('product-options')"]`
+      ).dataset.value || "Producto no seleccionado";
+      document.getElementById("selected-product-step4").textContent = selectedProduct;
+    };
+
+    // Actualizar el producto seleccionado al cambiar a la pantalla 4
+    document.querySelector(".next-button[onclick='goToStep(4)']").addEventListener("click", updateSelectedProductStep4);
+  });
+</script>
+<script>
+  // Mostrar nombres personalizados para los productos A y B (sin modificar base ni backend)
+  document.addEventListener("DOMContentLoaded", () => {
+    const API_URL = location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://api.lever.com.ar';
+
+    // Mapeo de nombres internos a nombres visibles
+    const PRODUCT_DISPLAY_NAMES = {
+      "A": "Seguro en Banco",
+      "B": "Seguro Liberado"
+      // Agrega más si sumás productos
+    };
+
+    fetch(`${API_URL}/api/calculadora`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        const productos = data.productos || {};
+        const productOptions = document.getElementById('product-options');
+        productOptions.innerHTML = "";
+
+        if (Object.keys(productos).length === 0) {
+          productOptions.innerHTML = '<div class="custom-option">No hay productos disponibles</div>';
+          return;
+        }
+
+        Object.keys(productos).forEach(nombre => {
+          // Usar el nombre personalizado si existe, sino el nombre original
+          const displayName = PRODUCT_DISPLAY_NAMES[nombre.toUpperCase()] || nombre;
+          const option = document.createElement('div');
+          option.className = 'custom-option';
+          option.textContent = displayName;
+          option.onclick = function() {
+            selectCustomOption(displayName, 'product-options', nombre);
+          };
+          productOptions.appendChild(option);
+        });
+      })
+      .catch(err => {
+        const productOptions = document.getElementById('product-options');
+        productOptions.innerHTML = '<div class="custom-option">No se pudo conectar al servidor. Verificá que el backend esté iniciado en <b>http://localhost:5000</b></div>';
+        console.error('Error al cargar productos:', err);
+      });
+  });
+</script>
+<!-- Agregar html2canvas desde CDN antes del cierre de </body> -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const shareBtn = document.querySelector(".share-button");
+  if (!shareBtn) return;
+
+  shareBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    // Seleccionar los elementos a compartir
+    const vehicleSummary = document.querySelector("#step-4 .vehicle-summary");
+    const customSummary = document.querySelector("#step-4 .custom-summary-step4");
+    const cuotaSeleccionada = document.querySelector("#step-4 .scrollable-item.selected");
+
+    // Crear un contenedor temporal para la imagen
+    const tempDiv = document.createElement("div");
+    tempDiv.style.background = "#fff";
+    tempDiv.style.padding = "32px 0 24px 0";
+    tempDiv.style.borderRadius = "24px";
+    tempDiv.style.display = "flex";
+    tempDiv.style.flexDirection = "column";
+    tempDiv.style.alignItems = "center";
+    tempDiv.style.fontFamily = "Montserrat, sans-serif";
+    tempDiv.style.color = "#222";
+    tempDiv.style.width = "370px";
+    tempDiv.style.boxSizing = "border-box";
+    tempDiv.style.textAlign = "center";
+    tempDiv.style.position = "relative";
+    tempDiv.style.fontSize = "15px";
+    tempDiv.style.gap = "0";
+
+    // Logo Lever arriba, centrado
+    const logo = document.createElement("img");
+    logo.src = "./images/logos/lever.svg";
+    logo.alt = "Lever";
+    logo.style.width = "80px";
+    logo.style.height = "auto";
+    logo.style.display = "block";
+    logo.style.margin = "0 auto 18px auto";
+    tempDiv.appendChild(logo);
+
+    // --- TÍTULO "COTIZACIÓN ESTIMADA" entre logo y solicitante ---
+    const tituloDiv = document.createElement("div");
+    tituloDiv.style.display = "flex";
+    tituloDiv.style.flexDirection = "row";
+    tituloDiv.style.justifyContent = "center";
+    tituloDiv.style.alignItems = "center";
+    tituloDiv.style.margin = "0 0 18px 0";
+    tituloDiv.style.gap = "6px";
+    const span1 = document.createElement("span");
+    span1.textContent = "COTIZACIÓN";
+    span1.style.fontSize = "24px";
+    span1.style.fontFamily = "Montserrat";
+    span1.style.fontWeight = "bold";
+    span1.style.color = "#222";
+    const span2 = document.createElement("span");
+    span2.textContent = "ESTIMADA";
+    span2.style.fontSize = "24px";
+    span2.style.fontFamily = "Montserrat";
+    span2.style.fontWeight = "300";
+    span2.style.color = "#222";
+    span2.style.letterSpacing = "-3px";
+    tituloDiv.appendChild(span1);
+    tituloDiv.appendChild(span2);
+    tempDiv.appendChild(tituloDiv);
+
+    // --- DATOS DEL SOLICITANTE entre logo y vehículo ---
+    const solicitanteDni = sessionStorage.getItem('solicitante_dni');
+    const solicitanteNombre = sessionStorage.getItem('solicitante_nombre');
+    if (solicitanteDni && solicitanteNombre) {
+      const solicitanteDiv = document.createElement("div");
+      solicitanteDiv.style.background = "#e8fff6";
+      solicitanteDiv.style.borderRadius = "18px";
+      solicitanteDiv.style.padding = "10px 24px";
+      solicitanteDiv.style.margin = "0 0 18px 0";
+      solicitanteDiv.style.fontWeight = "bold";
+      solicitanteDiv.style.fontSize = "15px";
+      solicitanteDiv.style.color = "#222";
+      solicitanteDiv.style.display = "flex";
+      solicitanteDiv.style.flexDirection = "column";
+      solicitanteDiv.style.alignItems = "flex-start";
+      solicitanteDiv.innerHTML = `
+        <span style="font-size:13px;color:#28D89E;">Solicitante</span>
+        <span>${solicitanteNombre}</span>
+        <span style="font-weight:400;font-size:13px;">DNI/CUIT: ${solicitanteDni}</span>
+      `;
+      tempDiv.appendChild(solicitanteDiv);
+    }
+
+    // Helper para clonar y mantener estilos visuales y alineación
+    function cloneStyled(node, extraStyles = {}) {
+      const clone = node.cloneNode(true);
+      clone.className = "";
+      clone.style.background = "#fff";
+      clone.style.border = "none";
+      clone.style.margin = "0 0 18px 0";
+      clone.style.padding = "0";
+      clone.style.width = "320px";
+      clone.style.boxSizing = "border-box";
+      clone.style.display = "flex";
+      clone.style.alignItems = "center";
+      clone.style.justifyContent = "flex-start";
+      clone.style.borderRadius = "28px";
+      clone.style.minHeight = "90px";
+      clone.style.position = "relative";
+      clone.style.boxShadow = "0 2px 12px 0 rgba(40,216,158,0.07)";
+      Object.assign(clone.style, extraStyles);
+
+      // Usar el logo local siempre para la imagen compartida
+      let logoMarca = document.createElement("img");
+      logoMarca.src = "./images/car.svg"; // Usa ruta relativa con ./ inicial
+      logoMarca.alt = "Logo auto";
+      logoMarca.style.width = "54px";
+      logoMarca.style.height = "54px";
+      logoMarca.style.objectFit = "contain";
+      logoMarca.style.marginRight = "18px";
+      logoMarca.style.marginLeft = "18px";
+
+      // Clonar y limpiar los textos
+      const details = clone.querySelector(".vehicle-details");
+      let detailsClone = null;
+      if (details) {
+        detailsClone = details.cloneNode(true);
+        detailsClone.style.display = "flex";
+        detailsClone.style.flexDirection = "column";
+        detailsClone.style.alignItems = "flex-start";
+        detailsClone.style.justifyContent = "center";
+        detailsClone.style.gap = "0";
+        detailsClone.querySelectorAll("h3, p").forEach(el => {
+          el.style.margin = "0";
+          el.style.padding = "0";
+          el.style.textAlign = "left";
+          el.style.color = "#222";
+        });
+        const h3 = detailsClone.querySelector("h3");
+        if (h3) {
+          h3.style.fontSize = "16px";
+          h3.style.fontWeight = "bold";
+          h3.style.letterSpacing = "0.5px";
+        }
+        const ps = detailsClone.querySelectorAll("p");
+        if (ps[0]) {
+          ps[0].style.fontSize = "15px";
+          ps[0].style.fontWeight = "bold";
+        }
+        if (ps[1]) {
+          ps[1].style.fontSize = "13px";
+          ps[1].style.fontWeight = "400";
+        }
+      }
+
+      // Limpiar el contenido y agregar logo y detalles alineados
+      clone.innerHTML = "";
+      clone.appendChild(logoMarca);
+      if (detailsClone) clone.appendChild(detailsClone);
+
+      return clone;
+    }
+
+    function cloneSummaryStyled(node) {
+      const clone = node.cloneNode(true);
+      clone.className = "";
+      clone.style.background = "#fff";
+      clone.style.border = "none";
+      clone.style.margin = "0 0 18px 0";
+      clone.style.padding = "0";
+      clone.style.width = "320px";
+      clone.style.boxSizing = "border-box";
+      clone.style.display = "flex";
+      clone.style.flexDirection = "column";
+      clone.style.alignItems = "flex-start";
+      clone.style.justifyContent = "center";
+      clone.style.borderRadius = "28px";
+      clone.style.minHeight = "90px";
+      clone.style.position = "relative";
+      clone.style.boxShadow = "0 2px 12px 0 rgba(40,216,158,0.07)";
+
+      // Título
+      const title = clone.querySelector(".custom-summary-title");
+      if (title) {
+        title.style.fontSize = "14px";
+        title.style.fontWeight = "bold";
+        title.style.color = "#222";
+        title.style.margin = "18px 0 0 24px";
+        title.style.textAlign = "left";
+      }
+      // Monto
+      const amount = clone.querySelector(".custom-summary-amount");
+      if (amount) {
+        amount.style.fontSize = "15px";
+        amount.style.fontWeight = "bold";
+        amount.style.color = "#28D89E";
+        amount.style.margin = "12px 0 0 24px";
+        amount.style.textAlign = "left";
+        amount.style.display = "inline-block";
+        amount.style.marginTop = "-24px";
+        amount.style.marginLeft = "31px";
+      }
+      // $ símbolo
+      const currency = clone.querySelector(".custom-summary-currency");
+      if (currency) {
+        currency.style.fontSize = "15px";
+        currency.style.fontWeight = "bold";
+        currency.style.color = "#28D89E";
+        currency.style.margin = "12px 0 0 18px";
+        currency.style.display = "inline-block";
+      }
+      // Producto
+      const prod = clone.querySelector(".selected-product");
+      if (prod) {
+        prod.style.position = "absolute";
+        prod.style.right = "18px";
+        prod.style.top = "24px";
+        prod.style.background = "#e8fff6";
+        prod.style.color = "#28D89E";
+        prod.style.border = "1.5px solid #28D89E";
+        prod.style.borderRadius = "12px";
+        prod.style.fontWeight = "bold";
+        prod.style.fontSize = "8px";
+        prod.style.padding = "2px 12px";
+        prod.style.margin = "0";
+        prod.style.display = "inline-block";
+        prod.style.boxShadow = "none";
+        prod.style.height = "35px";
+      }
+      return clone;
+    }
+
+    // Clonar los elementos con estilos fieles al diseño original y alineados
+    if (vehicleSummary) tempDiv.appendChild(cloneStyled(vehicleSummary));
+    if (customSummary) tempDiv.appendChild(cloneSummaryStyled(customSummary));
+
+    // Agregar la cuota seleccionada (ya estaba bien)
+    if (cuotaSeleccionada) {
+      const cuotaDiv = cuotaSeleccionada.cloneNode(true);
+      cuotaDiv.style.margin = "16px auto 0 auto";
+      cuotaDiv.style.background = "#e8fff6";
+      cuotaDiv.style.border = "2px solid #28D89E";
+      cuotaDiv.style.borderRadius = "16px";
+      cuotaDiv.style.width = "90%";
+      cuotaDiv.style.display = "flex";
+      cuotaDiv.style.justifyContent = "space-between";
+      cuotaDiv.style.alignItems = "center";
+      cuotaDiv.style.padding = "10px 18px";
+      cuotaDiv.style.fontWeight = "bold";
+      cuotaDiv.style.fontSize = "18px";
+      tempDiv.appendChild(cuotaDiv);
+    }
+
+    // Insertar el contenedor temporal en el body (fuera de pantalla)
+    tempDiv.style.position = "fixed";
+    tempDiv.style.left = "-9999px";
+    document.body.appendChild(tempDiv);
+
+    try {
+      // Renderizar a imagen con html2canvas
+      const canvas = await html2canvas(tempDiv, { backgroundColor: "#fff", scale: 2 });
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+
+      // Web Share API con imagen
+      if (navigator.canShare && navigator.canShare({ files: [new File([blob], "cotizacion.png", { type: "image/png" })] })) {
+        const file = new File([blob], "cotizacion.png", { type: "image/png" });
+        await navigator.share({
+          title: "Cotización Lever",
+          text: "Te comparto mi cotización de Lever.",
+          files: [file]
+        });
+      } else {
+        // Fallback: descargar la imagen
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "cotizacion-lever.png";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        alert("Tu navegador no soporta compartir imágenes. Se descargó la imagen.");
+      }
+    } catch (err) {
+      alert("No se pudo compartir la imagen.");
+      console.error(err);
+    } finally {
+      // Limpiar el DOM
+      tempDiv.remove();
+    }
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // --- NUEVO: Vincular InfoExperto en pantalla 1 ---
+  const switchInput = document.querySelector(".toggle-switch input");
+  const dniInput = document.querySelector(".dni-input");
+  const profileName = document.querySelector(".profile-name");
+  const dropdownContent = document.querySelector(".dropdown-content");
+  const searchIcon = document.querySelector(".search-icon-container");
+
+  // Helper para saber si está en modo CUIT o DNI
+  function isCuitMode() {
+    return switchInput.checked;
+  }
+
+  // Lógica para consultar InfoExperto al hacer click en la lupa o presionar Enter
+  async function consultarInfoExperto() {
+    const valor = dniInput.value.trim();
+    if (!valor) return;
+
+    profileName.textContent = "Buscando...";
+
+    let body = { infoexperto: true };
+    if (isCuitMode()) {
+      body.cuit = valor;
+      body.tipo = "normal";
+    } else {
+      body.dni = valor;
+      body.tipo = "normal";
+    }
+
+    try {
+      const res = await fetch("php/curl.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+
+      // El nombre completo puede estar en:
+      // data.data.informe.identidad.nombre_completo
+      // o en data.data.informe.identidad.nombreCompleto
+      // o en data.data.informe.identidad.nombre
+      // o en data.data.informe.identidad.razonSocial (si es empresa)
+      // o en data.data.informe.identidad.razon_social
+
+      let nombre = null;
+      if (
+        data &&
+        data.data &&
+        data.data.informe &&
+        data.data.informe.identidad
+      ) {
+        const identidad = data.data.informe.identidad;
+        nombre =
+          identidad.nombre_completo ||
+          identidad.nombreCompleto ||
+          identidad.nombre ||
+          identidad.razonSocial ||
+          identidad.razon_social ||
+          null;
+      }
+
+      // Si no hay nombre, buscar en data.data.informe.razon_social (algunos casos)
+      if (!nombre && data.data && data.data.informe) {
+        nombre =
+          data.data.informe.razon_social ||
+          data.data.informe.razonSocial ||
+          null;
+      }
+
+      // Si sigue sin haber nombre, buscar en data.data.razon_social
+      if (!nombre && data.data) {
+        nombre =
+          data.data.razon_social ||
+          data.data.razonSocial ||
+          null;
+      }
+
+      // Si sigue sin haber nombre, buscar en data.message (algunos errores)
+      if (!nombre && data.message) {
+        nombre = data.message;
+      }
+
+      // Mostrar el resultado
+      if (nombre && typeof nombre === "string" && nombre.trim() !== "") {
+        profileName.textContent = nombre;
+      } else {
+        profileName.textContent = "No encontrado";
+      }
+    } catch (err) {
+      profileName.textContent = "Error";
+      console.error("Error consultando InfoExperto:", err);
+    }
+  }
+
+  // Al hacer click en la lupa, mostrar popup y consultar InfoExperto
+  searchIcon.addEventListener("click", () => {
+    showDropdown();
+    consultarInfoExperto();
+  });
+
+  // Al presionar Enter en el input, consultar InfoExperto y mostrar popup
+  dniInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      showDropdown();
+      consultarInfoExperto();
+    }
+  });
+
+  // Si cambia el switch, limpiar el campo y el nombre
+  switchInput.addEventListener("change", () => {
+    dniInput.value = "";
+    profileName.textContent = "";
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  
+  const searchIcon = document.querySelector(".search-icon-container");
+
+  // --- NUEVO: Validación para habilitar/deshabilitar el botón de buscar ---
+  function updateSearchIconState() {
+    if (dniInput.value.trim() === "") {
+      searchIcon.classList.add("disabled");
+      searchIcon.style.pointerEvents = "none";
+      searchIcon.style.opacity = "0.5";
+    } else {
+      searchIcon.classList.remove("disabled");
+      searchIcon.style.pointerEvents = "auto";
+      searchIcon.style.opacity = "1";
+    }
+  }
+  updateSearchIconState();
+  dniInput.addEventListener("input", updateSearchIconState);
+  
+});
+</script>
+<style>
+
+.search-icon-container.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Menú hamburguesa estilo index.html
+  const hamburguer = document.getElementById("hamburguer-menu");
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("menu-overlay");
+
+  function openMenu() {
+    menu.classList.remove("hidden");
+    menu.classList.add("mobile-active");
+    overlay.classList.add("active");
+    document.body.classList.add("menu-open");
+  }
+  function closeMenu() {
+    menu.classList.add("hidden");
+    menu.classList.remove("mobile-active");
+    overlay.classList.remove("active");
+    document.body.classList.remove("menu-open");
+  }
+  hamburguer.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (menu.classList.contains("mobile-active")) closeMenu();
+    else openMenu();
+  });
+  overlay.addEventListener("click", closeMenu);
+  menu.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", closeMenu);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+});
+</script>
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const closeBtn = document.getElementById("close-menu");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      // Llama a closeMenu solo si está en mobile
+      if (window.innerWidth <= 1024) {
+        const menu = document.getElementById("menu");
+        const overlay = document.getElementById("menu-overlay");
+        menu.classList.add("hidden");
+        menu.classList.remove("mobile-active");
+        overlay.classList.remove("active");
+        document.body.classList.remove("menu-open");
+      }
+    });
+  }
+ 
+});
+</script>
+
+<!-- Scripts para odómetro y videos SOLO para la sección nosotros-cotizar -->
+<link rel="stylesheet" href="https://github.hubspot.com/odometer/themes/odometer-theme-default.css">
+<script src="https://github.hubspot.com/odometer/odometer.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // ODOMETER para #nosotros-cotizar
+  setTimeout(function() {
+    document.querySelectorAll('#nosotros-cotizar .odometer').forEach(function(el) {
+      // El valor inicial debe ser distinto al final para que anime
+      el.innerHTML = "0";
+      setTimeout(function() {
+        el.innerHTML = el.getAttribute('data-value');
+      }, 300);
+    });
+  }, 200);
+
+  // VIDEO MODAL para #nosotros-cotizar
+  const videos = [
+    "https://www.youtube.com/embed/VIDEO_ID_1",
+    "https://www.youtube.com/embed/VIDEO_ID_2",
+    "https://www.youtube.com/embed/VIDEO_ID_3"
+  ];
+  // Reemplaza VIDEO_ID_X por los IDs reales si los tienes
+
+  let currentVideo = 0;
+  const videoThumbs = document.querySelectorAll('#nosotros-cotizar .video_thumb');
+  const videoWrap = document.getElementById('videowrap-cotizar');
+  const videoIframe = document.getElementById('video-cotizar');
+  const prevBtn = document.getElementById('prev-video-cotizar');
+  const nextBtn = document.getElementById('next-video-cotizar');
+  function showVideo(idx) {
+    videoIframe.src = videos[idx] + "?autoplay=1";
+    videoWrap.classList.add('playing');
+    currentVideo = idx;
+  }
+  videoThumbs.forEach(function(thumb, idx) {
+    thumb.addEventListener('click', function(e) {
+      e.preventDefault();
+      showVideo(idx);
+    });
+  });
+  prevBtn.addEventListener('click', function() {
+    if (currentVideo > 0) showVideo(currentVideo - 1);
+  });
+  nextBtn.addEventListener('click', function() {
+    if (currentVideo < videos.length - 1) showVideo(currentVideo + 1);
+  });
+  videoWrap.querySelector('.closebox').addEventListener('click', function() {
+    videoWrap.classList.remove('playing');
+    videoIframe.src = "";
+  });
+});
+</script>
+<!-- Mostrar la sección nosotros-cotizar al clickear en el menú -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Cambia el selector según corresponda a tu menú
+  document.querySelectorAll('a[data-url="#nosotros"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Oculta todas las secciones principales
+      document.querySelectorAll('main > section').forEach(function(sec) {
+        sec.classList.add('hidden');
+      });
+      // Muestra la sección nosotros-cotizar
+      document.getElementById('nosotros-cotizar').classList.remove('hidden');
+      // Opcional: scroll al top
+      window.scrollTo(0, 0);
+    });
+  });
+});
+</script>
+<!-- Agrega/quita la clase auxiliar en el body según la visibilidad de #nosotros-cotizar -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Mostrar la sección nosotros-cotizar al clickear en el menú
+  document.querySelectorAll('a[data-url="#nosotros"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Oculta todas las secciones principales
+      document.querySelectorAll('main > section').forEach(function(sec) {
+        sec.classList.add('hidden');
+      });
+      // Muestra la sección nosotros-cotizar
+      document.getElementById('nosotros-cotizar').classList.remove('hidden');
+      document.body.classList.add('nosotros-cotizar-activo');
+      window.scrollTo(0, 0);
+    });
+  });
+
+  document.querySelectorAll('a[data-url="#inicio"], a[data-url="#contacto"]').forEach(function(link) {
+    link.addEventListener("click", function() {
+      document.body.classList.remove("nosotros-cotizar-activo");
+    });
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+ 
+  const dniInput = document.querySelector(".dni-input");
+  const searchIcon = document.querySelector(".search-icon-container");
+
+  // --- Validación para habilitar/deshabilitar el botón de buscar 
+  function updateSearchIconState() {
+    const dni = dniInput || document.querySelector(".dni-input");
+    const search = searchIcon || document.querySelector(".search-icon-container");
+    if (!dni || !search) return;
+    if (dni.value.trim() === "") {
+      search.classList.add("disabled");
+      search.style.pointerEvents = "none";
+      search.style.opacity = "0.5";
+    } else {
+      search.classList.remove("disabled");
+      search.style.pointerEvents = "auto";
+      search.style.opacity = "1";
+    }
+  }
+
+  // Inicializa correctamente el estado al cargar
+  updateSearchIconState();
+
+  // Habilita/deshabilita en cada cambio de input
+  if (dniInput) {
+    dniInput.addEventListener("input", updateSearchIconState);
+  }
+
+  // Si el campo se limpia por cambio de switch, también deshabilita el botón
+  const switchInput = document.querySelector(".toggle-switch input");
+  if (switchInput) {
+    switchInput.addEventListener("change", () => {
+      if (dniInput) dniInput.value = "";
+      updateSearchIconState();
+    });
+  }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Función para mostrar/ocultar el switch-container en desktop
+  function updateSwitchVisibility() {
+    const dniContainer = document.querySelector("#step-1 .dni-container");
+    const switchContainer = document.querySelector("#step-1 .switch-container");
+    if (!dniContainer || !switchContainer) return;
+    if (window.innerWidth >= 1025) {
+      if (dniContainer.classList.contains("expanded")) {
+        switchContainer.style.display = "none";
+      } else {
+        switchContainer.style.display = "flex";
+      }
+    } else {
+      // En mobile, siempre visible (o según tu lógica)
+      switchContainer.style.display = "";
+    }
+  }
+
+  // Llama a la función al expandir/cerrar el popup
+  const dniContainer = document.querySelector("#step-1 .dni-container");
+  const searchIcon = document.querySelector("#step-1 .search-icon-container");
+  const changeApplicantBtn = document.querySelector("#step-1 .change-applicant-button");
+  if (searchIcon) {
+    searchIcon.addEventListener("click", () => {
+      setTimeout(updateSwitchVisibility, 700); // Cambia aquí el delay
+    });
+  }
+  if (changeApplicantBtn) {
+    changeApplicantBtn.addEventListener("click", () => {
+      setTimeout(updateSwitchVisibility, 700); // Cambia aquí el delay
+    });
+  }
+
+  // También al cambiar el tamaño de la ventana
+  window.addEventListener("resize", updateSwitchVisibility);
+
+  // Y al cargar la página
+  updateSwitchVisibility();
+
+  // Si tu showDropdown/hideDropdown cambian la clase 'expanded', puedes enganchar aquí:
+  const originalShowDropdown = window.showDropdown;
+  window.showDropdown = function() {
+    if (typeof originalShowDropdown === "function") originalShowDropdown();
+    updateSwitchVisibility();
+  };
+  const originalHideDropdown = window.hideDropdown;
+  window.hideDropdown = function() {
+    if (typeof originalHideDropdown === "function") originalHideDropdown();
+    updateSwitchVisibility();
+  };
+});
+</script>
+<script>
+// Función global para mostrar la sección nosotros-cotizar desde el botón
+function mostrarNosotrosCotizar() {
+  // Oculta todas las secciones principales
+  document.querySelectorAll('main > section').forEach(function(sec) {
+    sec.classList.add('hidden');
+  });
+  // Muestra la sección nosotros-cotizar
+  document.getElementById('nosotros-cotizar').classList.remove('hidden');
+  document.body.classList.add('nosotros-cotizar-activo');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
+
