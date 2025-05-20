@@ -2,8 +2,8 @@ body {
     /* Layout Properties */
     top: 0px;
     left: 0px;
-    width: 375px;
-    height: 812px;
+    width: auto;
+    height: 824px;
     /* UI Properties */
     background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
     opacity: 1;
@@ -166,7 +166,7 @@ input:checked+.switch-slider {
     /* Cambiar a absolute para posicionarlo correctamente */
     top: 350px;
     /* Posición inicial */
-    left: 31px;
+    left: 31px !important;
     width: 290px;
     height: 59px;
     background: #FFFFFF;
@@ -269,8 +269,8 @@ input:checked+.switch-slider {
 /* Estilos para el botón "Siguiente" */
 .next-button {
     position: absolute;
-    top: 645px;
-    left: 43%;
+    top: 650px;
+    left: 46%;
     width: 132px;
     height: 40px;
     background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
@@ -687,8 +687,8 @@ body.nosotros-cotizar-activo .footer {
 
 .back-button {
     position: absolute;
-    top: 645px;
-    left: 109px;
+    top: 650px;
+    left: 116px;
     width: 40px;
     height: 40px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -1050,8 +1050,9 @@ body.nosotros-cotizar-activo .footer {
     cursor: pointer;
     width: 100%;
     margin-left: 15px;
-    top: 22px
-        /* Espacio para la flecha */
+    top: 2px;
+    height: 100%;
+    /* Espacio para la flecha */
 }
 
 .custom-options-placeholder::after {
@@ -1780,8 +1781,8 @@ body.nosotros-cotizar-activo .footer {
 .close-menu {
     display: none;
     position: absolute;
-    top: 24px;
-    right: 24px;
+    top: 25px;
+    right: 65px;
     z-index: 1300;
     background: none;
     border: none;
@@ -2252,12 +2253,7 @@ body.nosotros-cotizar-activo .footer {
 /* 1. Layout Flex para sticky footer */
 
 
-body {
-    display: flex;
-    flex-direction: column;
-    height: 812px;
-    /* ...existing code... */
-}
+
 
 /* Aplica height:1120px solo cuando la clase auxiliar está presente */
 body.nosotros-cotizar-activo {
@@ -2278,22 +2274,6 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     height: 1120px !important;
 }
 
-.close-menu {
-    display: none;
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    z-index: 1300;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.close-menu img {
-    width: 32px;
-    height: 32px;
-    display: block;
-}
 
 @media (max-width: 1024px) {
     .close-menu {
@@ -2334,8 +2314,8 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     /* Centrar el contenedor principal del paso 1 */
     #step-1 {
         position: absolute !important;
-        top: -35px;
-        left: 0;
+        top: -102px !important;
+        left: 12px !important;
         width: 100vw !important;
         height: 100vh !important;
         min-width: 1440px !important;
@@ -2346,6 +2326,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         justify-content: center;
         background: transparent;
         z-index: 2;
+        margin-left: 0px !important;
     }
 
     /* Centrar el logo y darle tamaño desktop */
@@ -2355,7 +2336,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         align-items: center;
         justify-content: center;
         top: unset !important;
-        left: -44px;
+        left: -15px;
         z-index: 10;
     }
 
@@ -2385,26 +2366,26 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     #step-1 .switch-container {
         margin-bottom: 40px !important;
         margin-top: 0 !important;
-        width: 13.3%;
-        height: 3.8%;
+        width: 14.3% !important;
+        height: 3.8% !important;
         display: flex;
         justify-content: center;
     }
 
     #step-1 .dni-container {
         margin-bottom: 40px !important;
-        width: 315px;
-        height: 59px;
+        width: 315px !important;
+        height: 59px !important;
         left: unset !important;
         top: unset !important;
         box-shadow: 0 2px 16px 0 rgba(40, 40, 80, 0.10);
     }
 
     #step-1 .search-icon-container {
-        width: 53px;
-        height: 48px;
+        width: 53px !important;
+        height: 48px !important;
         border-radius: 28px !important;
-        right: 39.3%;
+        right: 39.3% !important;
         position: absolute;
         margin-left: 12px !important;
     }
@@ -2435,10 +2416,12 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     }
 
     #step-1 .next-button {
-        position: static !important;
-        width: 180px !important;
+        position: relative !important;
+        width: 163px !important;
         height: 48px !important;
         margin: 0 auto !important;
+        top: 5.5rem !important;
+        left: 0 !important;
         display: flex !important;
         align-items: center;
         justify-content: center;
@@ -2470,8 +2453,8 @@ body:has(#nosotros-cotizar:not(.hidden)) {
 
     #step-2 .back-button {
         position: absolute;
-        top: 645px;
-        left: 800px;
+        top: 593px !important;
+        left: 715px !important;
         width: 40px;
         height: 40px;
         background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -2487,8 +2470,8 @@ body:has(#nosotros-cotizar:not(.hidden)) {
 
     .next-button {
         position: absolute;
-        top: 645px;
-        left: 50%;
+        top: 593px !important;
+        left: 50% !important;
         width: 132px;
         height: 40px;
         background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
@@ -2529,6 +2512,42 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         margin-left: -18px;
     }
 
+    #step-1 .dropdown-content {
+        display: none !important;
+        /* Ocultar inicialmente */
+        width: 100%;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        position: relative;
+        /* Posicionar dentro del contenedor padre */
+        margin-top: 10px;
+        /* Espaciado entre el campo de entrada y el contenido desplegable */
+    }
+
+    #step-1 .dni-container.expanded .dropdown-content {
+        display: block !important;
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+        pointer-events: auto;
+        visibility: visible;
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.38s;
+    }
+
+    #step-1 .dni-input {
+        width: 100% !important;
+        border: none;
+        outline: none;
+        background: none;
+        font: normal normal 300 14px / 15px Montserrat;
+        color: #15224F;
+        opacity: 0.5;
+        transition: opacity 0.5s ease;
+    }
+
+    #step-1 .dni-container.expanded .dni-input {
+        opacity: 0;
+    }
+
     #step-1 .profile-header {
         display: flex;
         align-items: center;
@@ -2558,7 +2577,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         position: absolute;
         cursor: pointer;
         top: -1px;
-        left: -42px;
+        left: -40px;
         width: 105px;
         height: 32px;
         background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
@@ -2570,7 +2589,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     .switch-label-right {
         position: absolute;
         top: 35.8%;
-        right: 44.7%;
+        right: 44.4%;
         transform: translateY(-50%);
         font-size: 15px;
         font-weight: bold;
@@ -2579,7 +2598,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     }
 
     #step-1 .switch-label-left {
-        left: 44.5%;
+        left: 44.2%;
         top: 35.8%;
         color: #FFFFFF;
     }
@@ -2589,8 +2608,8 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         position: absolute;
         cursor: pointer;
         top: -1px;
-        left: -9px;
-        width: 105px;
+        left: -13px;
+        width: 107px;
         height: 32px;
         background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
         border-radius: 20px;
@@ -2779,7 +2798,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
 
     /* --- ANIMACIÓN POPUP DESKTOP (dropdown-content) --- */
     #step-1 .dropdown-content {
-        display: block !important;
+
         opacity: 0;
         transform: scaleY(0.7) translateY(-18%);
         transform-origin: 50% 50%;
@@ -2816,10 +2835,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     }
 
     /* Elimina cualquier regla anterior/conflictiva de animación para .dropdown-content aquí */
-    #step-1 .dni-input {
-        width: auto !important;
-        /* Elimina el width forzado en desktop */
-    }
+
 
     #step-1 .dni-container.expanded {
         top: 297px !important;
@@ -2973,12 +2989,9 @@ body:has(#nosotros-cotizar:not(.hidden)) {
 
 }
 
-/* ...existing code... */
 @media (min-width: 1025px) {
-    /* ...existing code... */
 
     .desktop-inicio-btn {
-        /* ...existing code... */
         margin-right: 16px;
     }
 
@@ -3039,9 +3052,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     }
 }
 
-/* ...existing code... */
 @media (min-width: 1025px) {
-    /* ...existing code... */
 
     .header-container {
         position: relative;
@@ -3063,7 +3074,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         display: flex;
         align-items: center;
         position: absolute;
-        left: 92%;
+        left: 86%;
         top: 50%;
         transform: translateY(-50%);
         z-index: 200;
@@ -3147,12 +3158,11 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     }
 }
 
-/* ...existing code... */
 
 /* Botón flotante inferior derecho */
 .floating-action-btn {
     position: fixed;
-    left: 91.1%;
+    left: 90.1%;
     bottom: 32px;
     width: 69.72px;
     height: 69.72px;
@@ -3249,7 +3259,8 @@ body:has(#nosotros-cotizar:not(.hidden)) {
 
     #nosotros-cotizar {
 
-        left: 21%;
+        left: 25%;
+        width: 48%;
         position: absolute;
     }
 
@@ -3265,7 +3276,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         max-width: 1200px;
         min-width: 900px;
         position: relative;
-        top: 235px;
+        margin-top: 11rem !important;
     }
 
     #step-2 .custom-options-container {
@@ -3519,6 +3530,17 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         background: transparent;
         pointer-events: auto;
     }
+
+    #step-1 .dni-container.expanded .change-applicant-button {
+        opacity: 1;
+        left: 112px !important;
+        /* position: absolute; */
+        position: relative;
+        margin-bottom: 9px;
+        font-size: 11px;
+        padding: 9px;
+        top: 4px;
+    }
 }
 
 @media (max-width: 1024px) {
@@ -3581,15 +3603,10 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     }
 }
 
-/* ...existing code... */
-
-/* ...existing code... */
 
 /* SOLO DESKTOP: Layout especial para step 3 (manteniendo el diseño original de cada contenedor) */
 @media (min-width: 1025px) {
-    /* Ocultar títulos y pasos 1 y 2 en step 3 */
 
-    /* Centrar el step 3 y lo hace visible */
     #step-3 {
         display: flex !important;
         flex-direction: column;
@@ -3609,16 +3626,15 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         display: grid !important;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
-        gap: 32px 48px;
+        gap: 23px 46px;
         align-items: center;
         justify-items: center;
         width: 700px;
         margin: 0 auto;
         position: relative;
-        top: 0;
+        top: 10px;
         left: 0;
         background: transparent;
-        z-index: 11;
         min-height: 420px;
     }
 
@@ -3686,8 +3702,8 @@ body:has(#nosotros-cotizar:not(.hidden)) {
 
     #step-3 .back-button {
         position: absolute;
-        top: 645px;
-        left: 800px;
+        top: 593px !important;
+        left: 715px !important;
         width: 40px;
         height: 40px;
         background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -3700,7 +3716,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     #step-3 .next-button {
         position: absolute;
         top: 645px;
-        left: 50%;
+        left: 50% !important;
         width: 132px;
         height: 40px;
         background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
@@ -3729,7 +3745,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     .floating-action-btn {
         position: fixed !important;
         right: 48px !important;
-        bottom: 48px !important;
+        bottom: 20px !important;
         z-index: 3000 !important;
         display: flex !important;
     }
@@ -3749,7 +3765,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
 
 .desktop-header-buttons {
     position: absolute !important;
-    top: 32px !important;
+    top: 57px !important;
     right: 48px !important;
     z-index: 100;
 }
@@ -3762,6 +3778,10 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     #step-4 h2,
     #step-4 h1 {
         display: none !important;
+    }
+
+    #step-4 {
+        margin-top: -4rem !important;
     }
 
 
@@ -3790,7 +3810,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         grid-column: 1 / 2;
         position: relative;
         margin: 0 0 24px 0 !important;
-        top: 0;
+        top: 0 !important;
         left: 0;
         /* Mantener estilos visuales */
     }
@@ -3846,7 +3866,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     }
 
     #step-4 .scrollable-item {
-        width: 100%;
+        width: 300px;
         min-width: 0;
         max-width: 100%;
         margin: 0 0 8px 0;
@@ -3872,7 +3892,7 @@ body:has(#nosotros-cotizar:not(.hidden)) {
         position: static !important;
         width: 48px !important;
         height: 48px !important;
-        margin: 0 16px !important;
+        margin: 0 9px !important;
         border-radius: 24px !important;
         box-shadow: 0 2px 16px 0 rgba(40, 216, 158, 0.10);
         font-size: 16px;
@@ -3943,7 +3963,8 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     /* Mensaje de selección de cuota: centrar debajo de las cuotas */
     #step-4 #select-cuota-message {
         position: absolute;
-        left: 50%;
+        left: 75%;
+        top: 361px;
         transform: translateX(-50%);
         bottom: 60px;
         width: 320px;
@@ -4143,4 +4164,1799 @@ body:has(#nosotros-cotizar:not(.hidden)) {
     }
 }
 
-/* ...existing code... */
+/*VERSION PARA PANTALLAS MAS GRANDES!!*/
+/*////////////////////////////////////////////////////////////////////*/
+/*////////////////////////////////////////////////////////////////////*/
+@media (width: 1920px) and (height: 1065px) {
+    body {
+        width: 1485px !important;
+        height: 124% !important;
+        min-width: 1440px !important;
+        min-height: 1188px !important;
+        max-width: 1440px !important;
+        max-height: 1024px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        overflow: hidden;
+        background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .desktop-header-buttons {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 93%;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 200;
+        gap: 12px;
+    }
+
+    #step-1 .switch-container {
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 40px auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        position: static !important;
+        float: none !important;
+        width: 11% !important;
+        height: 40px !important;
+    }
+
+    #step-1 .switch-label-left {
+        left: 45.7% !important;
+        top: 36.4% !important;
+        color: #FFFFFF;
+    }
+
+    #step-1 .switch-label-left,
+    .switch-label-right {
+        position: absolute;
+        top: 36.2% !important;
+        right: 45.8% !important;
+        transform: translateY(-50%);
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        z-index: 1;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 118px !important;
+        height: 30px !important;
+    }
+
+    #step-1 .toggle-switch input:checked+.switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -18px;
+        width: 103px !important;
+        height: 32px !important;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .search-icon-container {
+        width: 53px;
+        height: 48px;
+        border-radius: 28px !important;
+        right: 41.5% !important;
+        position: absolute;
+        margin-left: 12px !important;
+    }
+
+    .desktop-header-buttons {
+        position: absolute !important;
+        top: 58px !important;
+        right: 48px !important;
+        z-index: 100;
+    }
+
+    .floating-action-btn {
+        position: fixed;
+        left: 82.5%;
+        bottom: 32px;
+        width: 69.72px;
+        height: 69.72px;
+        background: #2ADC9F;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 4px 16px 0 rgba(40, 216, 158, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+        cursor: pointer;
+        transition: background 0.2s, box-shadow 0.2s;
+        padding: 0;
+    }
+
+    #step-1 .dni-input {
+        width: 100% !important;
+        border: none;
+        outline: none;
+        background: none;
+        font: normal normal 300 14px / 15px Montserrat;
+        color: #15224F;
+        opacity: 0.5;
+        transition: opacity 0.5s ease;
+    }
+
+    #step-1 .dropdown-content {
+        display: none !important;
+        opacity: 0;
+        transform: scaleY(0.7) translateY(-18%);
+        transform-origin: 50% 50%;
+        pointer-events: none;
+        visibility: hidden;
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.38s;
+        z-index: 10;
+    }
+
+    #step-1 .dni-container.expanded .dropdown-content {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+        pointer-events: auto;
+        visibility: visible !important;
+        display: block !important;
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.38s;
+    }
+
+    #step-1 .dni-container.expanded .dni-input {
+        opacity: 0;
+    }
+
+    /*step 2 */
+    #step-2 .options-container {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 24px;
+        margin: 0 auto 32px auto;
+        width: 100%;
+        max-width: 1200px;
+        min-width: 900px;
+        position: relative;
+        top: 197px;
+        margin-left: 292px !important;
+    }
+
+    #step-2 .back-button {
+        position: absolute;
+        top: 679px !important;
+        left: 910px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    #step-2 .next-button {
+        position: absolute;
+        top: 679px !important;
+        left: 974px !important;
+        width: 132px;
+        height: 40px;
+        background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    /*step 3 */
+    .container-step3 {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 32px 48px;
+        align-items: center;
+        justify-items: center;
+        width: 700px;
+        margin: 0 auto;
+        position: relative;
+        top: 14rem;
+        left: 49rem;
+        background: transparent;
+        margin-left: 47rem;
+        /* z-index: 11; */
+        height: 406px;
+        /* min-height: 420px; */
+    }
+
+    .container-step3 .product-select {
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+        position: relative;
+        bottom: 84px !important;
+        margin: 0 !important;
+    }
+
+    #step-3 .custom-summary {
+        top: 2.3rem !important;
+    }
+
+    #step-3 .custom-summary-input {
+        grid-row: 2 / 3;
+        grid-column: 2 / 3;
+        position: relative;
+        bottom: 131px !important;
+        margin: 0 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    #step-3 .back-button {
+        position: absolute;
+        top: 679px !important;
+        left: 879px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+        z-index: 20;
+    }
+
+    #step-3 .next-button {
+        position: absolute;
+        top: 679px !important;
+        left: 943px !important;
+        width: 132px;
+        height: 40px;
+        background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 20;
+    }
+
+    /*step 4 */
+
+    #step-4 .container-step4-desktop {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 0 48px;
+        align-items: flex-start;
+        justify-items: center;
+        width: 700px;
+        margin: 0 auto;
+        position: relative;
+        top: 132px;
+        left: 77px;
+        background: transparent;
+        z-index: 11;
+        min-height: 320px;
+    }
+
+    #step-4 .navigation-buttons {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 468px;
+        margin: 0 auto;
+        display: flex !important;
+        justify-content: center !important;
+        z-index: 20;
+    }
+}
+
+@media (width: 1422.22px) and (height: 650.37px) {
+    .logo-container {
+        position: absolute;
+        top: 21px;
+        z-index: 100;
+        margin-left: 71px;
+    }
+
+    .desktop-header-buttons {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 81.7%;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 200;
+        gap: 12px;
+    }
+
+    #step-1 {
+        position: absolute !important;
+        top: -175px !important;
+        left: 12px !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        min-width: 1440px !important;
+        min-height: 1024px !important;
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        z-index: 2;
+        margin-left: 0px !important;
+    }
+
+    #step-1 .switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -33px;
+        width: 103px;
+        height: 32px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .toggle-switch input:checked+.switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -13px;
+        width: 102px;
+        height: 32px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-2 .options-container {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 24px;
+        margin: 0 auto 32px auto;
+        width: 100%;
+        max-width: 1200px;
+        min-width: 900px;
+        position: relative;
+        margin-top: 9rem !important;
+    }
+
+    #step-2 .back-button {
+        position: absolute;
+        top: 542px !important;
+        left: 656px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    .next-button {
+        position: absolute;
+        top: 542px !important;
+        left: 50% !important;
+        width: 132px;
+        height: 40px;
+        background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #step-3 .back-button {
+        position: absolute;
+        top: 542px !important;
+        left: 656px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    #step-4 .navigation-buttons {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 417px;
+        margin: 0 auto;
+        display: flex !important;
+        justify-content: center !important;
+        z-index: 20;
+    }
+
+    #step-4 {
+        margin-top: -6rem !important;
+    }
+}
+
+@media (width: 1920px) and (height: 912px) {
+    .desktop-header-buttons {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 99%;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 200;
+        gap: 12px;
+    }
+
+    .floating-action-btn {
+        position: fixed;
+        left: 86.6%;
+        bottom: 32px;
+        width: 69.72px;
+        height: 69.72px;
+        background: #2ADC9F;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 4px 16px 0 rgba(40, 216, 158, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+        cursor: pointer;
+        transition: background 0.2s, box-shadow 0.2s;
+        padding: 0;
+    }
+
+    #step-1 .switch-container {
+        margin-bottom: 40px !important;
+        margin-top: 0 !important;
+        width: 12.3% !important;
+        height: 3.8% !important;
+        display: flex;
+        justify-content: center;
+    }
+
+    #step-1 .switch-label-left {
+        left: 45.1%;
+        top: 35.8%;
+        color: #FFFFFF;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        /* left: 1rem; */
+        width: 141px;
+        height: 30px;
+    }
+
+    #step-1 .toggle-switch input:checked+.switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -7px;
+        width: 114px;
+        height: 32px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .switch-label-left,
+    .switch-label-right {
+        position: absolute;
+        top: 35.8%;
+        right: 45.4%;
+        transform: translateY(-50%);
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        z-index: 1;
+    }
+
+    #step-1 .search-icon-container {
+        width: 53px;
+        height: 48px;
+        border-radius: 28px !important;
+        right: 41.5% !important;
+        position: absolute;
+        margin-left: 12px !important;
+    }
+
+    #step-2 .back-button {
+        position: absolute;
+        top: 593px !important;
+        left: 891px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    #step-2 .options-container {
+        margin-left: 58px !important;
+        margin-top: 13rem !important;
+    }
+
+    #step-3 .back-button {
+        position: absolute;
+        top: 593px !important;
+        left: 891px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    #step-4 {
+        margin-top: 0rem !important;
+        margin-left: 8rem;
+    }
+}
+
+@media (width: 1706.67px) and (height: 810.67px) {
+    body {
+        width: 1485px !important;
+        height: 124% !important;
+        min-width: 1440px !important;
+        min-height: 1188px !important;
+        max-width: 1440px !important;
+        max-height: 1024px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        overflow: hidden;
+        background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .desktop-header-buttons {
+        left: 97.1%;
+    }
+
+    .floating-action-btn {
+        left: 90%;
+    }
+
+    #step-1 .switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -51px;
+        width: 116px;
+        height: 32px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .toggle-switch input:checked+.switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -11px;
+        width: 115px;
+        height: 32px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-2 .options-container {
+        margin-left: 70px !important;
+    }
+
+    #step-2 .back-button {
+        position: absolute;
+        top: 593px !important;
+        left: 793px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    #step-3 .back-button {
+        position: absolute;
+        top: 593px !important;
+        left: 793px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    #step-3 .next-button {
+        left: 50% !important;
+    }
+
+    #step-4 .container-step4-desktop {
+        left: 50px;
+    }
+
+    #nosotros-cotizar {
+        left: 22%;
+        position: absolute;
+        width: 55%;
+    }
+
+}
+
+@media (width: 360px) and (height: 740px) {
+    .body {
+        width: 359px !important;
+        top: 0px;
+        left: 0px;
+        width: 375px;
+        height: 900px;
+        background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
+        opacity: 1;
+        font-family: Montserrat, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+
+    }
+
+    .switch-container {
+        left: 105px;
+    }
+
+    .dni-container {
+        left: 23px !important;
+    }
+
+    .confidentiality-text {
+        left: 53px;
+    }
+
+
+    .footer {
+        bottom: -22%;
+    }
+
+
+}
+
+@media (min-width: 390px) and (min-height: 844px) {
+    .switch-container {
+        left: 114px;
+    }
+
+    .dni-container {
+        left: 31px;
+    }
+
+    .confidentiality-text {
+        left: 57px;
+    }
+}
+
+@media (min-width: 375px) and (min-height: 667px) {
+    .body {
+        height: 667px !important;
+    }
+
+    .footer {
+        bottom: -35% !important;
+    }
+}
+
+@media (min-width: 375px) and (min-height: 812px) {
+
+    .footer {
+        bottom: -4% !important;
+    }
+}
+
+@media (min-width: 414px) and (min-height: 736px) {
+    .body {
+        height: 736px !important;
+    }
+
+    .footer {
+        bottom: -12.2% !important;
+    }
+
+    .container {
+        margin-left: 2rem;
+    }
+
+    .switch-container {
+        left: 133px !important;
+    }
+
+    .dni-container {
+        left: 56px !important;
+    }
+
+    .confidentiality-text {
+        left: 83px !important;
+    }
+
+    #step-2 .options-container {
+        margin-left: 6px;
+    }
+}
+
+@media (min-width: 414px) and (min-height: 896px) {
+
+    .footer {
+        bottom: 0% !important;
+    }
+
+}
+
+@media (width: 412px) and (height: 914px) {
+    .footer {
+        bottom: 1% !important;
+    }
+}
+
+@media (min-width: 412px) and (min-height: 915px) {
+    .footer {
+        bottom: 1% !important;
+    }
+
+    #step-1 {
+        display: block;
+        left: 20px !important;
+        position: absolute !important;
+    }
+
+    #step-1 .next-button {
+        left: 80%;
+    }
+
+    #step-2 .options-container {
+        position: absolute;
+        left: 39px;
+        top: 164px;
+    }
+
+    .container-step3 {
+        position: absolute;
+        top: 14rem;
+        left: 3rem;
+    }
+
+    #step-3 .vehicle-summary {
+        top: 20px;
+    }
+
+    #step-3 .custom-summary {
+        top: 193px;
+    }
+
+    #step-4 {
+        position: absolute;
+        top: 5rem;
+        left: 3rem;
+    }
+
+    #step-4 .vehicle-summary {
+        top: 90px;
+    }
+
+    .custom-summary-step4 {
+        top: 185px;
+    }
+
+    #select-cuota-message {
+        top: 579px;
+        left: 73px;
+    }
+
+
+
+    #step-4 .back-button {
+        left: 66px;
+    }
+
+    #step-4 .share-button {
+        left: 126px;
+    }
+
+    #step-4 .next-button {
+        left: 182px;
+    }
+}
+
+
+
+
+@media (min-width: 390px) {
+    .footer {
+        bottom: 0;
+    }
+
+
+}
+
+@media (width: 2400px) and (height: 1331.25px) {
+
+    #step-1 .switch-label-left,
+    .switch-label-right {
+        position: absolute;
+        top: 38.8% !important;
+        right: 45.8% !important;
+        transform: translateY(-50%);
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        z-index: 1;
+        margin-top: 1.5rem
+    }
+
+    #step-1 .switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -58px;
+        width: 126px;
+        height: 32px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .toggle-switch input:checked+.switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -3px;
+        width: 122px !important;
+        height: 32px !important;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .search-icon-container {
+
+        left: 108rem;
+
+    }
+
+    #step-1 .toggle-switch input:checked+.switch-slider {
+        margin-left: 12px
+    }
+
+    #step-2 .next-button {
+        left: 104rem !important;
+    }
+
+}
+
+@media (width: 2048px) and (height:972.80px) {
+    .desktop-header-buttons {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 98%;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 200;
+        gap: 12px;
+    }
+
+    .floating-action-btn {
+        position: fixed;
+        left: 83.7%;
+        bottom: 32px;
+        width: 69.72px;
+        height: 69.72px;
+        background: #2ADC9F;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 4px 16px 0 rgba(40, 216, 158, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+        cursor: pointer;
+        transition: background 0.2s, box-shadow 0.2s;
+        padding: 0;
+    }
+
+    #step-1 .switch-container {
+        margin-bottom: 40px !important;
+        margin-top: 0 !important;
+        width: 10.3% !important;
+        height: 3.8% !important;
+        display: flex;
+        justify-content: center;
+    }
+
+    #step-1 .switch-label-left {
+        left: 45.7%;
+        top: 35.8%;
+        color: #FFFFFF;
+    }
+
+    #step-1 .switch-label-left,
+    .switch-label-right {
+        position: absolute;
+        top: 35.8%;
+        right: 45.8%;
+        transform: translateY(-50%);
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        z-index: 1;
+    }
+
+    #step-1 .switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -36px;
+        width: 103px;
+        height: 32px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .toggle-switch input:checked+.switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -15px;
+        width: 107px;
+        height: 32px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .search-icon-container {
+        width: 53px;
+        height: 48px;
+        border-radius: 28px !important;
+        right: 42.2% !important;
+        position: absolute;
+        margin-left: 12px !important;
+    }
+
+    #step-2 .options-container {
+        margin-left: 325px;
+    }
+
+    #step-2 .back-button {
+        position: absolute;
+        top: 593px !important;
+        left: 916px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    .next-button {
+        position: absolute;
+        top: 593px !important;
+        left: 48% !important;
+        width: 132px;
+        height: 40px;
+        background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .container-step3 {
+        position: absolute;
+        top: 15rem;
+        left: 56rem;
+    }
+
+    #step-3 .custom-summary {
+        top: 26px;
+    }
+
+    .container-step3 .custom-summary-input {
+        grid-row: 2 / 3;
+        grid-column: 2 / 3;
+        position: relative;
+        bottom: 155px;
+        margin: 0 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .container-step3 .product-select {
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+        position: relative;
+        bottom: 107px;
+        margin: 0 !important;
+    }
+
+    #step-3 .back-button {
+        position: absolute;
+        top: 593px !important;
+        left: 76.3rem !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    #step-3 .next-button {
+        position: absolute;
+        top: 645px;
+        left: 48.1% !important;
+    }
+
+    #step-4 .container-step4-desktop {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 0 48px;
+        align-items: flex-start;
+        justify-items: center;
+        width: 700px;
+        margin: 0 auto;
+        position: relative;
+        top: 154px;
+        left: 73px;
+        background: transparent;
+        z-index: 11;
+        min-height: 320px;
+    }
+}
+
+@media (min-width: 2133px) {
+    body {
+        width: 1485px !important;
+        height: 124% !important;
+        min-width: 1440px !important;
+        min-height: 1435px !important;
+        max-width: 1440px !important;
+        max-height: 1024px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        overflow: hidden;
+        background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    #step-1 .switch-container {
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 40px auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        position: static !important;
+        float: none !important;
+        width: 11% !important;
+        height: 40px !important;
+    }
+
+    #step-1 .switch-label-left {
+        left: 45.7% !important;
+        top: 36.4% !important;
+        color: #FFFFFF;
+    }
+
+    #step-1 .switch-label-left,
+    .switch-label-right {
+        position: absolute;
+        top: 37.6% !important;
+        right: 45.8% !important;
+        transform: translateY(-50%);
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        z-index: 1;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 137px !important;
+        height: 30px !important;
+    }
+
+    #step-1 .toggle-switch input:checked+.switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: -1px;
+        left: -10px;
+        width: 115px !important;
+        height: 32px !important;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .search-icon-container {
+        width: 53px;
+        height: 48px;
+        border-radius: 28px !important;
+        right: 42.5% !important;
+        position: absolute;
+        margin-left: 12px !important;
+    }
+
+    .desktop-header-buttons {
+        position: absolute !important;
+        top: 58px !important;
+        right: 48px !important;
+        z-index: 100;
+    }
+
+    .floating-action-btn {
+        position: fixed;
+        left: 82.5%;
+        bottom: 32px;
+        width: 69.72px;
+        height: 69.72px;
+        background: #2ADC9F;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 4px 16px 0 rgba(40, 216, 158, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+        cursor: pointer;
+        transition: background 0.2s, box-shadow 0.2s;
+        padding: 0;
+    }
+
+    #step-1 .dni-input {
+        width: 100% !important;
+        border: none;
+        outline: none;
+        background: none;
+        font: normal normal 300 14px / 15px Montserrat;
+        color: #15224F;
+        opacity: 0.5;
+        transition: opacity 0.5s ease;
+    }
+
+    #step-1 .dropdown-content {
+        display: none !important;
+        opacity: 0;
+        transform: scaleY(0.7) translateY(-18%);
+        transform-origin: 50% 50%;
+        pointer-events: none;
+        visibility: hidden;
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.38s;
+        z-index: 10;
+    }
+
+    #step-1 .dni-container.expanded .dropdown-content {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+        pointer-events: auto;
+        visibility: visible !important;
+        display: block !important;
+        transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.38s;
+    }
+
+    #step-1 .dni-container.expanded .dni-input {
+        opacity: 0;
+    }
+
+    /*step 2 */
+    #step-2 .options-container {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 24px;
+        margin: 0 auto 32px auto;
+        width: 100%;
+        max-width: 1200px;
+        min-width: 900px;
+        position: relative;
+        top: 96px;
+        left: 8rem;
+    }
+
+    #step-2 .back-button {
+        position: absolute;
+        top: 679px !important;
+        left: 1015px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    #step-2 .next-button {
+        position: absolute;
+        top: 679px !important;
+        left: 1075px !important;
+        width: 132px;
+        height: 40px;
+        background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    /*step 3 */
+    .container-step3 {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 32px 48px;
+        align-items: center;
+        justify-items: center;
+        width: 700px;
+        margin: 0 auto;
+        position: relative;
+        top: -71px;
+        left: 0;
+        background: transparent;
+        /* z-index: 11; */
+        height: 406px;
+        /* min-height: 420px; */
+    }
+
+    #step-3 .vehicle-summary {
+        top: 20px;
+    }
+
+    #step-3 .product-select {
+        margin-top: 52px !important;
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+        position: relative;
+        bottom: 133px;
+
+    }
+
+    #step-3 .custom-summary-input {
+        grid-row: 2 / 3;
+        grid-column: 2 / 3;
+        position: relative;
+        bottom: 156px;
+        margin: 0 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    #step-3 .custom-summary {
+        top: 25px;
+    }
+
+
+    #step-3 .back-button {
+        position: absolute;
+        top: 679px !important;
+        left: 985px !important;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+        z-index: 20;
+    }
+
+    #step-3 .next-button {
+        position: absolute;
+        top: 679px !important;
+        left: 1045px !important;
+        width: 132px;
+        height: 40px;
+        background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 20;
+    }
+
+    /*step 4 */
+
+    #step-4 .container-step4-desktop {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 0 48px;
+        align-items: flex-start;
+        justify-items: center;
+        width: 700px;
+        margin: 0 auto;
+        position: relative;
+        top: 171px;
+        left: 75px;
+        background: transparent;
+        z-index: 11;
+        min-height: 320px;
+    }
+
+    #step-4 .navigation-buttons {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 468px;
+        margin: 0 auto;
+        display: flex !important;
+        justify-content: center !important;
+        z-index: 20;
+    }
+}
+
+/*desktop mas chico*/
+
+@media (width: 1280px) and (height: 585.33px) {
+    .logo-container {
+        margin-left: 85px;
+        margin-right: 0;
+        top: 19px !important;
+    }
+
+    .desktop-header-buttons {
+        position: absolute !important;
+        top: 46px !important;
+        right: 49px !important;
+        z-index: 100;
+        left: 72%;
+    }
+
+    .floating-action-btn {
+        left: 92.5%;
+        width: 59.72px;
+        height: 55.72px;
+    }
+
+    #step-1 {
+        position: absolute !important;
+        top: -212px !important;
+        left: -48px !important;
+        width: 79vw !important;
+        height: 100vh !important;
+        min-width: 1440px !important;
+        min-height: 1024px !important;
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        z-index: 2;
+        margin-left: 0px !important;
+    }
+
+    #step-1 .switch-container {
+        width: 12.3% !important;
+        height: 3.5% !important;
+    }
+
+    #step-1 .switch-label-left,
+    .switch-label-right {
+        right: 44.9%;
+        font-size: 14px;
+    }
+
+    #step-1 .switch-label-left {
+        left: 44.6%;
+    }
+
+    #step-1 .switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0px;
+        left: -42px;
+        width: 85px;
+        height: 30px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    #step-1 .toggle-switch input:checked+.switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0px;
+        left: -34px;
+        width: 87px;
+        height: 30px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        transition: .4s;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 85px;
+        height: 30px;
+    }
+
+    #step-2 .options-container {
+        margin-left: -5rem;
+    }
+
+    #step-2 .custom-options-container {
+        min-width: 233px;
+        max-width: 300px;
+        width: 300px;
+        flex: 1 1 0;
+        margin-top: -50px !important;
+        margin-bottom: 0 !important;
+        margin-left: 0rem;
+    }
+
+    #step-2 .custom-options-extra {
+        width: 282px;
+    }
+
+    #step-2 .next-button {
+        position: absolute;
+        top: 479px !important;
+        left: 50% !important;
+    }
+
+    #step-2 .back-button {
+        position: absolute;
+        top: 479px !important;
+        left: 586px !important;
+    }
+
+    #step-3 .next-button {
+        position: absolute;
+        top: 479px !important;
+        left: 50% !important;
+    }
+
+    #step-3 .back-button {
+        position: absolute;
+        top: 479px !important;
+        left: 586px !important;
+    }
+
+    .container-step3 {
+        top: 27px;
+        left: 12px;
+    }
+
+    #step-3 .custom-options-wrapper {
+        height: 145px;
+    }
+
+    #step-4 .container-step4-desktop {
+        top: 14px;
+        left: -72px;
+    }
+
+    #step-4 .navigation-buttons {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 420px;
+        margin: 0 auto;
+        display: flex !important;
+        justify-content: center !important;
+        z-index: 20;
+    }
+
+}
+
+
+
+@media (min-width: 430px) and (min-height: 932px) {
+    body {
+        width: 430px !important;
+        height: 932px !important;
+        background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
+        opacity: 1;
+        font-family: Montserrat, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    .footer {
+        position: absolute;
+        width: 100%;
+        bottom: 0% !important;
+        height: auto;
+        margin-top: auto;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        opacity: 1;
+    }
+
+    #step-1 h1 {
+        margin-left: 52px !important;
+    }
+
+    #step-1 h2 {
+        margin-left: 54px;
+    }
+
+
+    #step-1 {
+        margin-left: -17px;
+        ;
+    }
+
+    #step-4 {
+        position: static;
+    }
+
+
+
+    .hamburguer {
+        display: none;
+        position: absolute;
+        right: 51px !important;
+        top: 25.2px !important;
+        z-index: 1201;
+        background: none;
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0;
+        cursor: pointer;
+    }
+
+    #step-1 .switch-container {
+        position: absolute;
+        top: 297px;
+        left: 142px;
+        width: 157px;
+        height: 30px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        z-index: 3;
+        transition: opacity 0.3s ease;
+    }
+
+    #step-1 .dni-container {
+        position: absolute;
+        top: 350px;
+        left: 60px !important;
+        width: 290px;
+        height: 59px;
+        background: #FFFFFF;
+        border-radius: 30px;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        z-index: 3;
+        overflow: hidden;
+        transition: all 0.5s ease;
+    }
+
+    #step-1 .confidentiality-text {
+        position: absolute;
+        top: 428px;
+        left: 86px !important;
+        width: 270px;
+        height: 63px;
+        text-align: left;
+        font: normal normal 300 12px / 12px montserrat;
+        letter-spacing: -0.12px;
+        color: #FFFFFF;
+        opacity: 0.5;
+    }
+
+    #step-1 .dni-container.expanded {
+        top: 297px;
+        height: 226px;
+        flex-direction: column;
+        align-items: flex-start;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: visible;
+    }
+
+    #step-1 .dni-container {
+        position: absolute;
+        top: 350px;
+        left: 31px;
+        width: 290px;
+        height: 59px;
+        background: #FFFFFF;
+        border-radius: 30px;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        z-index: 3;
+        overflow: hidden;
+        transition: all 0.5s ease;
+    }
+
+    #step-1 .dni-container.expanded .change-applicant-button {
+        opacity: 1;
+        left: 77px;
+        /* position: absolute; */
+        position: relative;
+        margin-bottom: 9px;
+        font-size: 11px;
+        padding: 9px;
+        top: 4px;
+    }
+
+    #step-1 .next-button {
+        position: absolute;
+        top: 615px;
+        left: 56%;
+        width: 132px;
+        height: 40px;
+        background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    /*step 2 */
+
+    #step-2 .next-button {
+        position: absolute;
+        top: 675px;
+        left: 47%;
+        width: 132px;
+        height: 40px;
+        background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #step-2 .back-button {
+        position: absolute;
+        top: 675px;
+        left: 145px;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+
+    }
+
+    #step-2 .options-container {
+        margin-top: 3rem;
+    }
+
+    #step-3 .next-button {
+        position: absolute;
+        top: 675px;
+        left: 47%;
+        width: 132px;
+        height: 40px;
+        background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #step-3 .back-button {
+        position: absolute;
+        top: 675px;
+        left: 145px;
+        width: 40px;
+        height: 40px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        opacity: 1;
+
+    }
+
+    #step-4 {
+        margin-top: 4rem;
+    }
+
+    #step-4 .vehicle-summary {
+        top: 171px;
+    }
+
+    .custom-summary-step4 {
+        top: 267px;
+    }
+
+    #select-cuota-message {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 500;
+        color: #FF594B;
+        text-align: center;
+        position: absolute;
+        top: 663px;
+        left: 125px;
+    }
+
+    #step-4 .back-button {
+        left: 110px !important;
+        top: 720px !important;
+    }
+
+    #step-4 .share-button {
+        top: 720px !important;
+        left: 166px !important;
+    }
+
+    #step-4 .next-button {
+        left: 219px !important;
+        top: 720px !important;
+    }
+}
