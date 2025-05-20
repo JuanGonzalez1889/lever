@@ -1,0 +1,2202 @@
+{
+    "status": "success",
+    "message": "Informe pedido",
+    "data": {
+        "id": 46351508,
+        "fecha": "2025-05-20",
+        "informe": {
+            "cheques": false,
+            "telefonos": false,
+            "domicilios": [
+                {
+                    "calle": "OCAMPO 6476",
+                    "altura": null,
+                    "extra": null,
+                    "barrio": "ROSARIO SEC 19A GODOY",
+                    "localidad": "ROSARIO",
+                    "provincia": "SANTA FE",
+                    "cp": "2000",
+                    "tipo": "PERSONAL",
+                    "fecha": "2023-01-01"
+                },
+                {
+                    "calle": "OCAMPO",
+                    "altura": "6476",
+                    "extra": "",
+                    "barrio": null,
+                    "localidad": "ROSARIO SUD",
+                    "provincia": "SANTA FE",
+                    "cp": "2000",
+                    "tipo": "FISCAL",
+                    "fecha": "2025-05-07"
+                },
+                {
+                    "calle": "ESTEBAN DE LUCA",
+                    "altura": "2263",
+                    "extra": "",
+                    "barrio": null,
+                    "localidad": "ROSARIO",
+                    "provincia": "SANTA FE",
+                    "cp": "2000",
+                    "tipo": "PERSONAL",
+                    "fecha": "2020-10-01"
+                }
+            ],
+            "prestadoresCnc": false,
+            "afectaciones": false,
+            "identidad": {
+                "cuit": "20375770696",
+                "numero_documento": "37577069",
+                "tipo_documento": "DNI-EA",
+                "nombre_completo": "GONZALEZ JUAN PABLO",
+                "sexo": "M",
+                "fecha_nacimiento": "23\/11\/1994",
+                "clase": "1994",
+                "localidad": "ROSARIO<BR>ROSARIO SUD",
+                "provincia": "SANTA FE",
+                "tipo_entidad": "F",
+                "fecha_inscripcion": "22\/01\/2014",
+                "fecha_fallecimiento": "",
+                "fallecido": "NO",
+                "cuit_baja": "NO",
+                "codigo_actividad": "702092",
+                "actividad": "SERVICIOS DE ASESORAMIENTO, DIRECCI\u00d3N Y GESTI\u00d3N EMPRESARIAL REALIZADOS POR INTEGRANTES DE CUERPOS DE DIRECCI\u00d3N EN SOCIEDADES EXCEPTO LAS AN\u00d3NIMAS",
+                "anios": "30",
+                "anios_inscripcion": "11",
+                "jubilado": "SIN DATOS",
+                "pensionado": "SIN DATOS",
+                "localidad_array": [
+                    "ROSARIO",
+                    "ROSARIO SUD"
+                ],
+                "provincia_array": [
+                    "SANTA FE"
+                ]
+            },
+            "telefonosDeclarados": [
+                {
+                    "numero": "3413365206"
+                }
+            ],
+            "mails": [
+                {
+                    "mail": "victorhugo_negro@hotmail.com"
+                }
+            ],
+            "personasRelacionadas": [
+                {
+                    "cuit": "20146840400",
+                    "nombre_completo": "GONZALEZ JOSE LUIS",
+                    "clase": "1961",
+                    "anios": "63"
+                },
+                {
+                    "cuit": "20313398642",
+                    "nombre_completo": "GONZALEZ JOSE ANTONIO",
+                    "clase": "1985",
+                    "anios": "40"
+                },
+                {
+                    "cuit": "23579327219",
+                    "nombre_completo": "GONZALEZ JUAN ANDRES",
+                    "clase": "2019",
+                    "anios": "5"
+                },
+                {
+                    "cuit": "27182153775",
+                    "nombre_completo": "PASCUALE NORMA FABIANA",
+                    "clase": "1967",
+                    "anios": "58"
+                },
+                {
+                    "cuit": "27203546772",
+                    "nombre_completo": "CURBELO OLGA NANCI",
+                    "clase": "1968",
+                    "anios": "56"
+                },
+                {
+                    "cuit": "27332591326",
+                    "nombre_completo": "GONZALEZ JOANA EDITH",
+                    "clase": "1987",
+                    "anios": "37"
+                },
+                {
+                    "cuit": "27341660063",
+                    "nombre_completo": "GONZALEZ ESTEFANIA JAQUELINA",
+                    "clase": "1988",
+                    "anios": "36"
+                },
+                {
+                    "cuit": "27366598591",
+                    "nombre_completo": "GONZALEZ AGUSTINA MABEL",
+                    "clase": "1993",
+                    "anios": "31"
+                },
+                {
+                    "cuit": "27377150681",
+                    "nombre_completo": "ISOARDI MELANI DAFNE",
+                    "clase": "1994",
+                    "anios": "31"
+                }
+            ],
+            "inmuebles": false,
+            "notasRectificacion": false,
+            "rodados": [
+                {
+                    "dominio": "AB559PL",
+                    "origen": "P",
+                    "marca": "PEUGEOT",
+                    "version": "2008 ALLURE 1.6 TIPTRONIC",
+                    "modelo": "2017",
+                    "porcentaje": "100",
+                    "fecha_transaccion": "26\/07\/2024"
+                }
+            ],
+            "personasRelacionadasEmpresas": false,
+            "empleados": false,
+            "personasRelacionadasSocios": false,
+            "personasRelacionadasRelacionRodados": false,
+            "personasRelacionadasRelacionDependencia": [
+                {
+                    "cuit": "30708320893",
+                    "nombre": "TRACTOAGRO SRL",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "30717394735",
+                    "nombre": "LEVER S. R. L.",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "30658588318",
+                    "nombre": "VIDEO CUATRO S. R. L.",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "30707874259",
+                    "nombre": "DECREDITOS SA",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "30568307255",
+                    "nombre": "RECORDVISION SOCIEDAD ANONIMA",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "30710450818",
+                    "nombre": "GRUPO EVENTOS TELEVISION S.A.",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "30647216575",
+                    "nombre": "CENTRO PRODUCCIONES AVANZADAS S A",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "23170988809",
+                    "nombre": "ISOARDI VICTOR HUGO",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "30648152732",
+                    "nombre": "PROM TV SOCIEDAD ANONIMA UNIPERSONAL",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "30715107305",
+                    "nombre": "FIDEICOMISO MEGAGROUP",
+                    "relacion": "EMPLEADO"
+                },
+                {
+                    "cuit": "30711153434",
+                    "nombre": "TV TRUCK SERVICIOS TELEVISIVOS S.R.L.",
+                    "relacion": "EMPLEADO"
+                }
+            ],
+            "boletinesCaba": false,
+            "ultimoBcra": {
+                "bcra": [
+                    {
+                        "entidad": "INDUSTRIAL AND COMMERCIAL BANK OF CHINA (ARGENTINA) S.A.U.",
+                        "situacion": "1",
+                        "monto": "6959000",
+                        "observaciones": "",
+                        "dias_atraso": "0",
+                        "periodo": "03\/2025",
+                        "cd": "202503"
+                    },
+                    {
+                        "entidad": "Banco GGAL SA",
+                        "situacion": "1",
+                        "monto": "5152000",
+                        "observaciones": "",
+                        "dias_atraso": "0",
+                        "periodo": "03\/2025",
+                        "cd": "202503"
+                    },
+                    {
+                        "entidad": "NARANJA DIGITAL COMPA??A FINANCIERA S.A.U.",
+                        "situacion": "1",
+                        "monto": "952000",
+                        "observaciones": "",
+                        "dias_atraso": "0",
+                        "periodo": "03\/2025",
+                        "cd": "202503"
+                    },
+                    {
+                        "entidad": "TARJETA NARANJA S.A.",
+                        "situacion": "1",
+                        "monto": "52000",
+                        "observaciones": "",
+                        "dias_atraso": "0",
+                        "periodo": "03\/2025",
+                        "cd": "202503"
+                    },
+                    {
+                        "entidad": "MERCADOLIBRE S.R.L.",
+                        "situacion": "1",
+                        "monto": "82000",
+                        "observaciones": "",
+                        "dias_atraso": "0",
+                        "periodo": "03\/2025",
+                        "cd": "202503"
+                    }
+                ]
+            },
+            "bcra": {
+                "datos": [
+                    {
+                        "nombre": "Banco GGAL SA",
+                        "deudas": [
+                            {
+                                "periodo": "03\/2025",
+                                "situacion": "1",
+                                "monto": "5152000.00"
+                            },
+                            {
+                                "periodo": "02\/2025",
+                                "situacion": "1",
+                                "monto": "5553000.00"
+                            },
+                            {
+                                "periodo": "01\/2025",
+                                "situacion": "1",
+                                "monto": "5961000.00"
+                            },
+                            {
+                                "periodo": "12\/2024",
+                                "situacion": "1",
+                                "monto": "6328000.00"
+                            },
+                            {
+                                "periodo": "11\/2024",
+                                "situacion": "1",
+                                "monto": "6681000.00"
+                            },
+                            {
+                                "periodo": "10\/2024",
+                                "situacion": "1",
+                                "monto": "7026000.00"
+                            },
+                            {
+                                "periodo": "09\/2024",
+                                "situacion": "1",
+                                "monto": "7352000.00"
+                            },
+                            {
+                                "periodo": "08\/2024",
+                                "situacion": "1",
+                                "monto": "7671000.00"
+                            },
+                            {
+                                "periodo": "07\/2024",
+                                "situacion": "1",
+                                "monto": "7964000.00"
+                            }
+                        ]
+                    },
+                    {
+                        "nombre": "INDUSTRIAL AND COMMERCIAL BANK OF CHINA (ARGENTINA) S.A.U.",
+                        "deudas": [
+                            {
+                                "periodo": "03\/2025",
+                                "situacion": "1",
+                                "monto": "6959000.00"
+                            },
+                            {
+                                "periodo": "02\/2025",
+                                "situacion": "1",
+                                "monto": "7178000.00"
+                            },
+                            {
+                                "periodo": "01\/2025",
+                                "situacion": "1",
+                                "monto": "6827000.00"
+                            },
+                            {
+                                "periodo": "12\/2024",
+                                "situacion": "1",
+                                "monto": "6264000.00"
+                            },
+                            {
+                                "periodo": "11\/2024",
+                                "situacion": "1",
+                                "monto": "5669000.00"
+                            },
+                            {
+                                "periodo": "10\/2024",
+                                "situacion": "1",
+                                "monto": "3044000.00"
+                            },
+                            {
+                                "periodo": "09\/2024",
+                                "situacion": "1",
+                                "monto": "496000.00"
+                            },
+                            {
+                                "periodo": "08\/2024",
+                                "situacion": "1",
+                                "monto": "2245000.00"
+                            },
+                            {
+                                "periodo": "07\/2024",
+                                "situacion": "1",
+                                "monto": "3360000.00"
+                            },
+                            {
+                                "periodo": "06\/2024",
+                                "situacion": "1",
+                                "monto": "3146000.00"
+                            },
+                            {
+                                "periodo": "05\/2024",
+                                "situacion": "1",
+                                "monto": "2807000.00"
+                            },
+                            {
+                                "periodo": "04\/2024",
+                                "situacion": "1",
+                                "monto": "2530000.00"
+                            },
+                            {
+                                "periodo": "03\/2024",
+                                "situacion": "1",
+                                "monto": "2534000.00"
+                            },
+                            {
+                                "periodo": "02\/2024",
+                                "situacion": "1",
+                                "monto": "2498000.00"
+                            },
+                            {
+                                "periodo": "01\/2024",
+                                "situacion": "1",
+                                "monto": "2023000.00"
+                            },
+                            {
+                                "periodo": "12\/2023",
+                                "situacion": "1",
+                                "monto": "2005000.00"
+                            },
+                            {
+                                "periodo": "11\/2023",
+                                "situacion": "1",
+                                "monto": "1922000.00"
+                            },
+                            {
+                                "periodo": "10\/2023",
+                                "situacion": "1",
+                                "monto": "1609000.00"
+                            },
+                            {
+                                "periodo": "09\/2023",
+                                "situacion": "1",
+                                "monto": "1739000.00"
+                            },
+                            {
+                                "periodo": "08\/2023",
+                                "situacion": "1",
+                                "monto": "1612000.00"
+                            },
+                            {
+                                "periodo": "07\/2023",
+                                "situacion": "1",
+                                "monto": "1313000.00"
+                            },
+                            {
+                                "periodo": "06\/2023",
+                                "situacion": "1",
+                                "monto": "1722000.00"
+                            },
+                            {
+                                "periodo": "05\/2023",
+                                "situacion": "1",
+                                "monto": "1313000.00"
+                            },
+                            {
+                                "periodo": "04\/2023",
+                                "situacion": "1",
+                                "monto": "1060000.00"
+                            },
+                            {
+                                "periodo": "03\/2023",
+                                "situacion": "1",
+                                "monto": "1553000.00"
+                            },
+                            {
+                                "periodo": "02\/2023",
+                                "situacion": "1",
+                                "monto": "1432000.00"
+                            },
+                            {
+                                "periodo": "01\/2023",
+                                "situacion": "1",
+                                "monto": "1378000.00"
+                            },
+                            {
+                                "periodo": "12\/2022",
+                                "situacion": "1",
+                                "monto": "1167000.00"
+                            },
+                            {
+                                "periodo": "11\/2022",
+                                "situacion": "1",
+                                "monto": "1059000.00"
+                            },
+                            {
+                                "periodo": "10\/2022",
+                                "situacion": "1",
+                                "monto": "723000.00"
+                            },
+                            {
+                                "periodo": "09\/2022",
+                                "situacion": "1",
+                                "monto": "512000.00"
+                            },
+                            {
+                                "periodo": "08\/2022",
+                                "situacion": "1",
+                                "monto": "532000.00"
+                            },
+                            {
+                                "periodo": "07\/2022",
+                                "situacion": "1",
+                                "monto": "495000.00"
+                            },
+                            {
+                                "periodo": "06\/2022",
+                                "situacion": "1",
+                                "monto": "511000.00"
+                            },
+                            {
+                                "periodo": "05\/2022",
+                                "situacion": "1",
+                                "monto": "538000.00"
+                            },
+                            {
+                                "periodo": "04\/2022",
+                                "situacion": "1",
+                                "monto": "391000.00"
+                            },
+                            {
+                                "periodo": "03\/2022",
+                                "situacion": "1",
+                                "monto": "251000.00"
+                            },
+                            {
+                                "periodo": "02\/2022",
+                                "situacion": "1",
+                                "monto": "195000.00"
+                            },
+                            {
+                                "periodo": "01\/2022",
+                                "situacion": "1",
+                                "monto": "207000.00"
+                            },
+                            {
+                                "periodo": "12\/2021",
+                                "situacion": "1",
+                                "monto": "225000.00"
+                            },
+                            {
+                                "periodo": "11\/2021",
+                                "situacion": "1",
+                                "monto": "234000.00"
+                            },
+                            {
+                                "periodo": "10\/2021",
+                                "situacion": "1",
+                                "monto": "234000.00"
+                            },
+                            {
+                                "periodo": "09\/2021",
+                                "situacion": "1",
+                                "monto": "209000.00"
+                            },
+                            {
+                                "periodo": "08\/2021",
+                                "situacion": "1",
+                                "monto": "205000.00"
+                            },
+                            {
+                                "periodo": "07\/2021",
+                                "situacion": "1",
+                                "monto": "195000.00"
+                            },
+                            {
+                                "periodo": "06\/2021",
+                                "situacion": "1",
+                                "monto": "203000.00"
+                            },
+                            {
+                                "periodo": "05\/2021",
+                                "situacion": "1",
+                                "monto": "210000.00"
+                            },
+                            {
+                                "periodo": "04\/2021",
+                                "situacion": "1",
+                                "monto": "201000.00"
+                            },
+                            {
+                                "periodo": "03\/2021",
+                                "situacion": "1",
+                                "monto": "157000.00"
+                            },
+                            {
+                                "periodo": "02\/2021",
+                                "situacion": "1",
+                                "monto": "163000.00"
+                            },
+                            {
+                                "periodo": "01\/2021",
+                                "situacion": "1",
+                                "monto": "147000.00"
+                            }
+                        ]
+                    },
+                    {
+                        "nombre": "MERCADOLIBRE S.R.L.",
+                        "deudas": [
+                            {
+                                "periodo": "03\/2025",
+                                "situacion": "1",
+                                "monto": "82000.00"
+                            },
+                            {
+                                "periodo": "02\/2025",
+                                "situacion": "1",
+                                "monto": "51000.00"
+                            },
+                            {
+                                "periodo": "01\/2025",
+                                "situacion": "1",
+                                "monto": "56000.00"
+                            },
+                            {
+                                "periodo": "05\/2024",
+                                "situacion": "1",
+                                "monto": "27000.00"
+                            },
+                            {
+                                "periodo": "04\/2024",
+                                "situacion": "1",
+                                "monto": "32000.00"
+                            },
+                            {
+                                "periodo": "03\/2024",
+                                "situacion": "1",
+                                "monto": "35000.00"
+                            },
+                            {
+                                "periodo": "02\/2024",
+                                "situacion": "1",
+                                "monto": "16000.00"
+                            }
+                        ]
+                    },
+                    {
+                        "nombre": "NARANJA DIGITAL COMPA??A FINANCIERA S.A.U.",
+                        "deudas": [
+                            {
+                                "periodo": "03\/2025",
+                                "situacion": "1",
+                                "monto": "952000.00"
+                            },
+                            {
+                                "periodo": "02\/2025",
+                                "situacion": "1",
+                                "monto": "1006000.00"
+                            },
+                            {
+                                "periodo": "01\/2025",
+                                "situacion": "1",
+                                "monto": "1089000.00"
+                            },
+                            {
+                                "periodo": "12\/2024",
+                                "situacion": "1",
+                                "monto": "1006000.00"
+                            }
+                        ]
+                    },
+                    {
+                        "nombre": "TARJETA NARANJA S.A.",
+                        "deudas": [
+                            {
+                                "periodo": "03\/2025",
+                                "situacion": "1",
+                                "monto": "52000.00"
+                            },
+                            {
+                                "periodo": "09\/2024",
+                                "situacion": "1",
+                                "monto": "31000.00"
+                            },
+                            {
+                                "periodo": "06\/2024",
+                                "situacion": "1",
+                                "monto": "583000.00"
+                            },
+                            {
+                                "periodo": "05\/2024",
+                                "situacion": "1",
+                                "monto": "692000.00"
+                            },
+                            {
+                                "periodo": "04\/2024",
+                                "situacion": "1",
+                                "monto": "782000.00"
+                            },
+                            {
+                                "periodo": "03\/2024",
+                                "situacion": "1",
+                                "monto": "868000.00"
+                            },
+                            {
+                                "periodo": "02\/2024",
+                                "situacion": "1",
+                                "monto": "926000.00"
+                            },
+                            {
+                                "periodo": "01\/2024",
+                                "situacion": "1",
+                                "monto": "928000.00"
+                            },
+                            {
+                                "periodo": "12\/2023",
+                                "situacion": "1",
+                                "monto": "879000.00"
+                            },
+                            {
+                                "periodo": "11\/2023",
+                                "situacion": "1",
+                                "monto": "791000.00"
+                            },
+                            {
+                                "periodo": "10\/2023",
+                                "situacion": "1",
+                                "monto": "358000.00"
+                            },
+                            {
+                                "periodo": "09\/2023",
+                                "situacion": "1",
+                                "monto": "377000.00"
+                            },
+                            {
+                                "periodo": "08\/2023",
+                                "situacion": "1",
+                                "monto": "291000.00"
+                            },
+                            {
+                                "periodo": "07\/2023",
+                                "situacion": "1",
+                                "monto": "291000.00"
+                            },
+                            {
+                                "periodo": "06\/2023",
+                                "situacion": "1",
+                                "monto": "291000.00"
+                            },
+                            {
+                                "periodo": "05\/2023",
+                                "situacion": "1",
+                                "monto": "300000.00"
+                            },
+                            {
+                                "periodo": "04\/2023",
+                                "situacion": "1",
+                                "monto": "304000.00"
+                            },
+                            {
+                                "periodo": "03\/2023",
+                                "situacion": "1",
+                                "monto": "213000.00"
+                            },
+                            {
+                                "periodo": "02\/2023",
+                                "situacion": "1",
+                                "monto": "203000.00"
+                            },
+                            {
+                                "periodo": "01\/2023",
+                                "situacion": "1",
+                                "monto": "121000.00"
+                            },
+                            {
+                                "periodo": "12\/2022",
+                                "situacion": "1",
+                                "monto": "124000.00"
+                            },
+                            {
+                                "periodo": "11\/2022",
+                                "situacion": "1",
+                                "monto": "124000.00"
+                            },
+                            {
+                                "periodo": "10\/2022",
+                                "situacion": "1",
+                                "monto": "152000.00"
+                            },
+                            {
+                                "periodo": "09\/2022",
+                                "situacion": "1",
+                                "monto": "151000.00"
+                            },
+                            {
+                                "periodo": "08\/2022",
+                                "situacion": "1",
+                                "monto": "130000.00"
+                            },
+                            {
+                                "periodo": "07\/2022",
+                                "situacion": "1",
+                                "monto": "127000.00"
+                            },
+                            {
+                                "periodo": "06\/2022",
+                                "situacion": "1",
+                                "monto": "127000.00"
+                            },
+                            {
+                                "periodo": "05\/2022",
+                                "situacion": "1",
+                                "monto": "63000.00"
+                            },
+                            {
+                                "periodo": "04\/2022",
+                                "situacion": "1",
+                                "monto": "72000.00"
+                            },
+                            {
+                                "periodo": "03\/2022",
+                                "situacion": "1",
+                                "monto": "83000.00"
+                            },
+                            {
+                                "periodo": "02\/2022",
+                                "situacion": "1",
+                                "monto": "104000.00"
+                            },
+                            {
+                                "periodo": "01\/2022",
+                                "situacion": "1",
+                                "monto": "92000.00"
+                            },
+                            {
+                                "periodo": "12\/2021",
+                                "situacion": "1",
+                                "monto": "79000.00"
+                            },
+                            {
+                                "periodo": "11\/2021",
+                                "situacion": "1",
+                                "monto": "70000.00"
+                            },
+                            {
+                                "periodo": "10\/2021",
+                                "situacion": "1",
+                                "monto": "79000.00"
+                            },
+                            {
+                                "periodo": "09\/2021",
+                                "situacion": "1",
+                                "monto": "83000.00"
+                            },
+                            {
+                                "periodo": "08\/2021",
+                                "situacion": "1",
+                                "monto": "80000.00"
+                            },
+                            {
+                                "periodo": "07\/2021",
+                                "situacion": "1",
+                                "monto": "77000.00"
+                            },
+                            {
+                                "periodo": "06\/2021",
+                                "situacion": "1",
+                                "monto": "74000.00"
+                            },
+                            {
+                                "periodo": "05\/2021",
+                                "situacion": "1",
+                                "monto": "78000.00"
+                            },
+                            {
+                                "periodo": "04\/2021",
+                                "situacion": "1",
+                                "monto": "75000.00"
+                            },
+                            {
+                                "periodo": "03\/2021",
+                                "situacion": "1",
+                                "monto": "66000.00"
+                            },
+                            {
+                                "periodo": "01\/2021",
+                                "situacion": "1",
+                                "monto": "56000.00"
+                            }
+                        ]
+                    }
+                ],
+                "resumen_historico": {
+                    "202503": {
+                        "peor_situacion": "1",
+                        "periodo": "03\/2025",
+                        "deuda_total": "13197000.00",
+                        "cantidad_entidades": 5
+                    },
+                    "202502": {
+                        "peor_situacion": "1",
+                        "periodo": "02\/2025",
+                        "deuda_total": "13788000.00",
+                        "cantidad_entidades": 4
+                    },
+                    "202501": {
+                        "peor_situacion": "1",
+                        "periodo": "01\/2025",
+                        "deuda_total": "13933000.00",
+                        "cantidad_entidades": 4
+                    },
+                    "202412": {
+                        "peor_situacion": "1",
+                        "periodo": "12\/2024",
+                        "deuda_total": "13598000.00",
+                        "cantidad_entidades": 3
+                    },
+                    "202411": {
+                        "peor_situacion": "1",
+                        "periodo": "11\/2024",
+                        "deuda_total": "12350000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202410": {
+                        "peor_situacion": "1",
+                        "periodo": "10\/2024",
+                        "deuda_total": "10070000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202409": {
+                        "peor_situacion": "1",
+                        "periodo": "09\/2024",
+                        "deuda_total": "7879000.00",
+                        "cantidad_entidades": 3
+                    },
+                    "202408": {
+                        "peor_situacion": "1",
+                        "periodo": "08\/2024",
+                        "deuda_total": "9916000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202407": {
+                        "peor_situacion": "1",
+                        "periodo": "07\/2024",
+                        "deuda_total": "11324000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202406": {
+                        "peor_situacion": "1",
+                        "periodo": "06\/2024",
+                        "deuda_total": "3729000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202405": {
+                        "peor_situacion": "1",
+                        "periodo": "05\/2024",
+                        "deuda_total": "3526000.00",
+                        "cantidad_entidades": 3
+                    },
+                    "202404": {
+                        "peor_situacion": "1",
+                        "periodo": "04\/2024",
+                        "deuda_total": "3344000.00",
+                        "cantidad_entidades": 3
+                    },
+                    "202403": {
+                        "peor_situacion": "1",
+                        "periodo": "03\/2024",
+                        "deuda_total": "3437000.00",
+                        "cantidad_entidades": 3
+                    },
+                    "202402": {
+                        "peor_situacion": "1",
+                        "periodo": "02\/2024",
+                        "deuda_total": "3440000.00",
+                        "cantidad_entidades": 3
+                    },
+                    "202401": {
+                        "peor_situacion": "1",
+                        "periodo": "01\/2024",
+                        "deuda_total": "2951000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202312": {
+                        "peor_situacion": "1",
+                        "periodo": "12\/2023",
+                        "deuda_total": "2884000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202311": {
+                        "peor_situacion": "1",
+                        "periodo": "11\/2023",
+                        "deuda_total": "2713000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202310": {
+                        "peor_situacion": "1",
+                        "periodo": "10\/2023",
+                        "deuda_total": "1967000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202309": {
+                        "peor_situacion": "1",
+                        "periodo": "09\/2023",
+                        "deuda_total": "2116000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202308": {
+                        "peor_situacion": "1",
+                        "periodo": "08\/2023",
+                        "deuda_total": "1903000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202307": {
+                        "peor_situacion": "1",
+                        "periodo": "07\/2023",
+                        "deuda_total": "1604000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202306": {
+                        "peor_situacion": "1",
+                        "periodo": "06\/2023",
+                        "deuda_total": "2013000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202305": {
+                        "peor_situacion": "1",
+                        "periodo": "05\/2023",
+                        "deuda_total": "1613000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202304": {
+                        "peor_situacion": "1",
+                        "periodo": "04\/2023",
+                        "deuda_total": "1364000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202303": {
+                        "peor_situacion": "1",
+                        "periodo": "03\/2023",
+                        "deuda_total": "1766000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202302": {
+                        "peor_situacion": "1",
+                        "periodo": "02\/2023",
+                        "deuda_total": "1635000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202301": {
+                        "peor_situacion": "1",
+                        "periodo": "01\/2023",
+                        "deuda_total": "1499000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202212": {
+                        "peor_situacion": "1",
+                        "periodo": "12\/2022",
+                        "deuda_total": "1291000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202211": {
+                        "peor_situacion": "1",
+                        "periodo": "11\/2022",
+                        "deuda_total": "1183000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202210": {
+                        "peor_situacion": "1",
+                        "periodo": "10\/2022",
+                        "deuda_total": "875000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202209": {
+                        "peor_situacion": "1",
+                        "periodo": "09\/2022",
+                        "deuda_total": "663000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202208": {
+                        "peor_situacion": "1",
+                        "periodo": "08\/2022",
+                        "deuda_total": "662000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202207": {
+                        "peor_situacion": "1",
+                        "periodo": "07\/2022",
+                        "deuda_total": "622000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202206": {
+                        "peor_situacion": "1",
+                        "periodo": "06\/2022",
+                        "deuda_total": "638000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202205": {
+                        "peor_situacion": "1",
+                        "periodo": "05\/2022",
+                        "deuda_total": "601000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202204": {
+                        "peor_situacion": "1",
+                        "periodo": "04\/2022",
+                        "deuda_total": "463000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202203": {
+                        "peor_situacion": "1",
+                        "periodo": "03\/2022",
+                        "deuda_total": "334000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202202": {
+                        "peor_situacion": "1",
+                        "periodo": "02\/2022",
+                        "deuda_total": "299000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202201": {
+                        "peor_situacion": "1",
+                        "periodo": "01\/2022",
+                        "deuda_total": "299000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202112": {
+                        "peor_situacion": "1",
+                        "periodo": "12\/2021",
+                        "deuda_total": "304000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202111": {
+                        "peor_situacion": "1",
+                        "periodo": "11\/2021",
+                        "deuda_total": "304000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202110": {
+                        "peor_situacion": "1",
+                        "periodo": "10\/2021",
+                        "deuda_total": "313000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202109": {
+                        "peor_situacion": "1",
+                        "periodo": "09\/2021",
+                        "deuda_total": "292000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202108": {
+                        "peor_situacion": "1",
+                        "periodo": "08\/2021",
+                        "deuda_total": "285000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202107": {
+                        "peor_situacion": "1",
+                        "periodo": "07\/2021",
+                        "deuda_total": "272000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202106": {
+                        "peor_situacion": "1",
+                        "periodo": "06\/2021",
+                        "deuda_total": "277000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202105": {
+                        "peor_situacion": "1",
+                        "periodo": "05\/2021",
+                        "deuda_total": "288000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202104": {
+                        "peor_situacion": "1",
+                        "periodo": "04\/2021",
+                        "deuda_total": "276000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202103": {
+                        "peor_situacion": "1",
+                        "periodo": "03\/2021",
+                        "deuda_total": "223000.00",
+                        "cantidad_entidades": 2
+                    },
+                    "202102": {
+                        "peor_situacion": "1",
+                        "periodo": "02\/2021",
+                        "deuda_total": "163000.00",
+                        "cantidad_entidades": 1
+                    },
+                    "202101": {
+                        "peor_situacion": "1",
+                        "periodo": "01\/2021",
+                        "deuda_total": "203000.00",
+                        "cantidad_entidades": 2
+                    }
+                }
+            },
+            "dominios": false,
+            "marcas": false,
+            "telefonosDeclaradosValidados": [
+                {
+                    "telefono": "3413365206",
+                    "whatsapp": "no",
+                    "infoexperto": "no",
+                    "enacom": "no"
+                }
+            ],
+            "soaAfipA4Online": {
+                "sexo": "MASCULINO",
+                "clase": "1994",
+                "email": [
+                    {
+                        "estado": "Confirmado",
+                        "direccion": "victorhugo_negro@hotmail.com",
+                        "tipoEmail": "OTROS"
+                    }
+                ],
+                "nombre": "JUAN PABLO",
+                "regimen": "",
+                "apellido": "GONZALEZ",
+                "impuesto": [
+                    {
+                        "estado": "ACTIVO",
+                        "periodo": 201801,
+                        "diaPeriodo": 1,
+                        "idImpuesto": 20,
+                        "ffInscripcion": "2014-02-01",
+                        "descripcionImpuesto": "MONOTRIBUTO",
+                        "ffInscripcionFormato": "01\/02\/2014"
+                    },
+                    {
+                        "estado": "NO APORTANTE",
+                        "periodo": 201801,
+                        "diaPeriodo": 1,
+                        "idImpuesto": 21,
+                        "ffInscripcion": "2014-02-01",
+                        "descripcionImpuesto": "MONOTRIBUTO AUTONOMO",
+                        "ffInscripcionFormato": "01\/02\/2014"
+                    }
+                ],
+                "relacion": [
+                    {
+                        "nombre": "COOPERATIVA DE TRABAJO 22 DE",
+                        "idPersona": 20375770696,
+                        "ffRelacion": "2017-01-01",
+                        "tipoRelacion": "ASOCIADO A COOPERATIVA",
+                        "ffRelacionFormato": "01\/01\/2017",
+                        "idPersonaAsociada": 30715203908
+                    }
+                ],
+                "telefono": [
+                    {
+                        "numero": 6491084,
+                        "tipoLinea": "MOVIL",
+                        "tipoTelefono": "PARTICULAR"
+                    }
+                ],
+                "actividad": [
+                    {
+                        "orden": 1,
+                        "periodo": 201701,
+                        "idActividad": 702092,
+                        "nomenclador": 883,
+                        "descripcionActividad": "SERVICIOS DE ASESORAMIENTO, DIRECCI\u00d3N Y GESTI\u00d3N EMPRESARIAL REALIZADOS POR INTEGRANTES DE CUERPOS DE DIRECCI\u00d3N EN SOCIEDADES EXCEPTO LAS AN\u00d3NIMAS"
+                    },
+                    {
+                        "orden": 2,
+                        "periodo": 201701,
+                        "idActividad": 813000,
+                        "nomenclador": 883,
+                        "descripcionActividad": "SERVICIOS DE JARDINER\u00cdA Y MANTENIMIENTO DE ESPACIOS VERDES"
+                    }
+                ],
+                "categoria": [
+                    {
+                        "estado": "ACTIVO",
+                        "periodo": 201801,
+                        "idImpuesto": 20,
+                        "idCategoria": 98,
+                        "descripcionCategoria": "B ASOCIADO COOPERATIVA"
+                    },
+                    {
+                        "estado": "ACTIVO",
+                        "periodo": 201801,
+                        "idImpuesto": 21,
+                        "idCategoria": 11,
+                        "descripcionCategoria": "NO APORTANTE AL REGIMEN"
+                    }
+                ],
+                "domicilio": [
+                    {
+                        "codPostal": "2000",
+                        "direccion": "OCAMPO 6476",
+                        "localidad": "ROSARIO SUD",
+                        "idProvincia": 12,
+                        "tipoDomicilio": "FISCAL",
+                        "descripcionProvincia": "SANTA FE"
+                    },
+                    {
+                        "codPostal": "2000",
+                        "direccion": "OCAMPO 6476",
+                        "localidad": "ROSARIO SUD",
+                        "idProvincia": 12,
+                        "tipoDomicilio": "LEGAL\/REAL",
+                        "descripcionProvincia": "SANTA FE"
+                    }
+                ],
+                "idPersona": 20375770696,
+                "mesCierre": 12,
+                "tipoClave": "CUIT",
+                "dependencia": "",
+                "estadoClave": "ACTIVO",
+                "razonSocial": "",
+                "sexoFormato": "M",
+                "tipoPersona": "FISICA",
+                "fechaJubilado": "",
+                "formaJuridica": "",
+                "leyJubilacion": "",
+                "tipoDocumento": "DNI",
+                "nombreCompleto": "GONZALEZ JUAN PABLO",
+                "tipoResidencia": "",
+                "fechaNacimiento": "1994-11-23",
+                "numeroDocumento": "37577069",
+                "fechaInscripcion": "2014-01-22",
+                "numeroInscripcion": "",
+                "fechaFallecimiento": "",
+                "fechaContratoSocial": "",
+                "organismoOriginante": "",
+                "fechaJubiladoFormato": "",
+                "localidadInscripcion": "",
+                "organismoInscripcion": "",
+                "provinciaInscripcion": "",
+                "claveInactivaAsociada": "",
+                "fechaNacimientoFormato": "23\/11\/1994",
+                "fechaInscripcionFormato": "22\/01\/2014",
+                "tipoOrganismoOriginante": "",
+                "cantidadSociosEmpresaMono": "",
+                "fechaFallecimientoFormato": "",
+                "fechaVencimientoMigracion": "",
+                "porcentajeCapitalNacional": "",
+                "fechaContratoSocialFormato": "",
+                "fechaVencimientoMigracionFormato": ""
+            },
+            "cantidadEmpleados": false,
+            "estadisticasInforme": {
+                "historial": [
+                    {
+                        "fecha": "202505",
+                        "cantidad": 1
+                    },
+                    {
+                        "fecha": "202504",
+                        "cantidad": 0
+                    },
+                    {
+                        "fecha": "202503",
+                        "cantidad": 0
+                    },
+                    {
+                        "fecha": "202502",
+                        "cantidad": 1
+                    },
+                    {
+                        "fecha": "202501",
+                        "cantidad": 0
+                    },
+                    {
+                        "fecha": "202412",
+                        "cantidad": 0
+                    },
+                    {
+                        "fecha": "202411",
+                        "cantidad": 0
+                    },
+                    {
+                        "fecha": "202410",
+                        "cantidad": 0
+                    },
+                    {
+                        "fecha": "202409",
+                        "cantidad": 0
+                    },
+                    {
+                        "fecha": "202408",
+                        "cantidad": 0
+                    },
+                    {
+                        "fecha": "202407",
+                        "cantidad": 0
+                    },
+                    {
+                        "fecha": "202406",
+                        "cantidad": 0
+                    }
+                ],
+                "cantidad_total": 1,
+                "fecha_ultimo": "2025-05-20",
+                "ultimo_anio": 1
+            },
+            "operadoresGranos": false,
+            "boletinesSalta": false,
+            "boletinesTucuman": false,
+            "condicionTributaria": {
+                "fecha": "03\/05\/2025",
+                "cuit": "20375770696",
+                "nombre": "GONZALEZ JUAN PABLO",
+                "impuestos_ganancias": "NO INSCRIPTO",
+                "impuestos_iva": "NO INSCRIPTO",
+                "categoria": "SIN CATEGORIA",
+                "categoria_monotributo": "AC",
+                "integrante_social": "NO",
+                "empleador": "NO",
+                "actividad": "LOCACIONES DE SERVICIO",
+                "monto_anual": 0
+            },
+            "laboral": [
+                {
+                    "cuit": "30717394735",
+                    "nombre": "LEVER S. R. L.",
+                    "direccion": "RUTA 34S 4444 - FUNES - SANTA FE CP:2132",
+                    "fecha_desde": 202503,
+                    "fecha_hasta": 202503
+                },
+                {
+                    "cuit": "30708320893",
+                    "nombre": "TRACTOAGRO SRL",
+                    "direccion": "PAUNERO 3154  - ROSARIO NORTE - SANTA FE CP:2000",
+                    "fecha_desde": 202310,
+                    "fecha_hasta": 202503
+                },
+                {
+                    "cuit": "30707874259",
+                    "nombre": "DECREDITOS SA",
+                    "direccion": "DE LOS INCAS AV. 5150 - CIUDAD AUTONOMA BUENOS AIRES CP:1427",
+                    "fecha_desde": 201802,
+                    "fecha_hasta": 202310
+                },
+                {
+                    "cuit": "30658588318",
+                    "nombre": "VIDEO CUATRO S. R. L.",
+                    "direccion": "RIVADAVIA AV. 4704 01 A - CAPITAL FEDERAL - CIUDAD AUTONOMA DE BUENOS AIRES CP:1424",
+                    "fecha_desde": 202307,
+                    "fecha_hasta": 202310
+                },
+                {
+                    "cuit": "30568307255",
+                    "nombre": "RECORDVISION SOCIEDAD ANONIMA",
+                    "direccion": "11 DE SEPT. DE 1888 2761 2 - CIUDAD AUTONOMA BUENOS AIRES CP:1428",
+                    "fecha_desde": 202305,
+                    "fecha_hasta": 202305
+                },
+                {
+                    "cuit": "30710450818",
+                    "nombre": "GRUPO EVENTOS TELEVISION S.A.",
+                    "direccion": "AV FRANCIA 2382 - ROSARIO SUD - SANTA FE CP:2000",
+                    "fecha_desde": 202111,
+                    "fecha_hasta": 202111
+                },
+                {
+                    "cuit": "30647216575",
+                    "nombre": "CENTRO PRODUCCIONES AVANZADAS S A",
+                    "direccion": "ROCA 3637 - FLORIDA - BUENOS AIRES CP:1602",
+                    "fecha_desde": 201905,
+                    "fecha_hasta": 202003
+                },
+                {
+                    "cuit": "30710450818",
+                    "nombre": "GRUPO EVENTOS TELEVISION S.A.",
+                    "direccion": "AV FRANCIA 2382 - ROSARIO SUD - SANTA FE CP:2000",
+                    "fecha_desde": 201906,
+                    "fecha_hasta": 201906
+                },
+                {
+                    "cuit": "30710450818",
+                    "nombre": "GRUPO EVENTOS TELEVISION S.A.",
+                    "direccion": "AV FRANCIA 2382 - ROSARIO SUD - SANTA FE CP:2000",
+                    "fecha_desde": 201811,
+                    "fecha_hasta": 201811
+                },
+                {
+                    "cuit": "23170988809",
+                    "nombre": "ISOARDI VICTOR HUGO",
+                    "direccion": "ESTEBAN DE LUCA 2263 - ROSARIO - SANTA FE CP:2000",
+                    "fecha_desde": 201801,
+                    "fecha_hasta": 201802
+                },
+                {
+                    "cuit": "30710450818",
+                    "nombre": "GRUPO EVENTOS TELEVISION S.A.",
+                    "direccion": "AV FRANCIA 2382 - ROSARIO SUD - SANTA FE CP:2000",
+                    "fecha_desde": 201708,
+                    "fecha_hasta": 201708
+                },
+                {
+                    "cuit": "30648152732",
+                    "nombre": "PROM TV SOCIEDAD ANONIMA UNIPERSONAL",
+                    "direccion": "CARRANZA ANGEL J. 2341 PB - CIUDAD AUTONOMA BUENOS AIRES CP:1425",
+                    "fecha_desde": 201707,
+                    "fecha_hasta": 201707
+                },
+                {
+                    "cuit": "30715107305",
+                    "nombre": "FIDEICOMISO MEGAGROUP",
+                    "direccion": "BESARES 840  - CHACRAS DE CORIA - MENDOZA CP:5505",
+                    "fecha_desde": 201706,
+                    "fecha_hasta": 201706
+                },
+                {
+                    "cuit": "30711153434",
+                    "nombre": "TV TRUCK SERVICIOS TELEVISIVOS S.R.L.",
+                    "direccion": "CRAIG 124  - SARANDI - BUENOS AIRES CP:1872",
+                    "fecha_desde": 201704,
+                    "fecha_hasta": 201704
+                },
+                {
+                    "cuit": "30647216575",
+                    "nombre": "CENTRO PRODUCCIONES AVANZADAS S A",
+                    "direccion": "ROCA 3637 - FLORIDA - BUENOS AIRES CP:1602",
+                    "fecha_desde": 201701,
+                    "fecha_hasta": 201702
+                },
+                {
+                    "cuit": "30658588318",
+                    "nombre": "VIDEO CUATRO S. R. L.",
+                    "direccion": "RIVADAVIA AV. 4704 01 A - CAPITAL FEDERAL - CIUDAD AUTONOMA DE BUENOS AIRES CP:1424",
+                    "fecha_desde": 201510,
+                    "fecha_hasta": 201607
+                }
+            ],
+            "condicionTributariaHistorial": [
+                {
+                    "cuit": "20375770696",
+                    "nombre": "GONZALEZ JUAN PABLO",
+                    "impuestos_ganancias": "NO INSCRIPTO",
+                    "impuestos_iva": "NO INSCRIPTO",
+                    "categoria": "AC",
+                    "integrante_social": "NO",
+                    "empleador": "NO",
+                    "actividad": "LOCACIONES DE SERVICIO",
+                    "fecha_desde": "16\/10\/2021",
+                    "fecha_hasta": "03\/05\/2025"
+                },
+                {
+                    "cuit": "20375770696",
+                    "nombre": "GONZALEZ JUAN PABLO",
+                    "impuestos_ganancias": "NO INSCRIPTO",
+                    "impuestos_iva": "NO INSCRIPTO",
+                    "categoria": "BC",
+                    "integrante_social": "NO",
+                    "empleador": "NO",
+                    "actividad": "LOCACIONES DE SERVICIO",
+                    "fecha_desde": "14\/01\/2017",
+                    "fecha_hasta": "09\/10\/2021"
+                },
+                {
+                    "cuit": "20375770696",
+                    "nombre": "GONZALEZ JUAN PABLO",
+                    "impuestos_ganancias": "NO INSCRIPTO",
+                    "impuestos_iva": "NO INSCRIPTO",
+                    "categoria": "B",
+                    "integrante_social": "NO",
+                    "empleador": "NO",
+                    "actividad": "LOCACIONES DE SERVICIO",
+                    "fecha_desde": "08\/02\/2014",
+                    "fecha_hasta": "07\/01\/2017"
+                }
+            ],
+            "boletinesChaco": false,
+            "boletinesSantaFe": [
+                {
+                    "id": 371,
+                    "id_boletin": 2727594,
+                    "fecha": "2023-08-09",
+                    "seccion": "Edictos",
+                    "contexto": "Por disposici\u00f3n del Tribunal Colegiado de Instancia \u00danica Civil de Familia de la 7\u00b0\nNominaci\u00f3n de Rosario, a cargo de la Dra. Andrea Mariel Brunetti (Jueza), se ha or-\ndenado citar al demandado Juan Pablo Gonz\u00e1lez (D.N.I. N\u00b0 47.896.864), con do-\nmicilio desconocido, por tres d\u00edas seguidos para que comparezca a estar a derecho\npor el t\u00e9rmino de ley y bajo apercibimiento de ley. Autos caratulados: \u201cGAMARRA,\nANDREA LORENA c\/ GONZALEZ, JUAN PABLO Y OTROS s\/Alimentos\u201d (CUIJ N\u00b0\n21-11400139-9) Dra. Andrea Mariel Brunetti (Jueza), Dra. Mar\u00eda Silvia Zamanillo\n(Secretaria)\u201c. Rosario, 06 de Julio de 2023.\n504225\nAgo. 8 Ago. 11\n$ 50"
+                },
+                {
+                    "id": 211,
+                    "id_boletin": 2718132,
+                    "fecha": "2022-12-12",
+                    "seccion": "Contratos estatutos balances etc",
+                    "contexto": "$ 60\nLA ALMUNIA S.A.\nDESIGNACION DE AUTORIDADES\nPor as\u00ed estar dispuesto, en los autos caratulados LA ALMUNIA S.A. s\/\nDesignaci\u00f3n de autoridades (Expte. N\u00ba 2283\/2022) de tr\u00e1mite por ante el\nRegistro P\u00fablico, se hace saber que por Asamblea General Ordinaria N\u00ba\n63 del d\u00eda 02\/08\/2021, con qu\u00f3rum del 100% y unanimidad, se designa-\ntitular: Gonz\u00e1lez, Juan Pablo, DNI N\u00ba\nron autoridades. Director\n30.344.074; soltero, domiciliado en Pinto 1179 Piso lero. ciudad de Per-\ngamino (Buenos Aires); director suplente: Leandro Gonzalo Alterno, DNI\nN\u00ba 31.542.260, soltero, domiciliado en Pascual Raimundo 2408 1 ciudad\nde Pergamino (Buenos Aires). Por reuni\u00f3n de Directorio de fecha\n00\/08\/2021, los electos aceptaron los cargos y constituyeron domicilio es-\npecial en Pinto 1179 Piso 1ro. de Pergamino, Provincia Buenos Aires.\nSanta Fe, 24 de Noviembre de 2022. Dr. Freyre, Secretario.\n$ 45\n490558\nDic. 12"
+                }
+            ],
+            "boletinesMisiones": false,
+            "boletinesEntreRios": false,
+            "nivelSocioeconomico": {
+                "nse_detalle": {
+                    "A": "A: Mayor o igual a $4.681.637.",
+                    "B": "B: Entre $2.915.268 y $4.681.636.",
+                    "C1": "C1: Entre $1.493.894 y $2.915.267.",
+                    "C2": "C2: Entre $1.043.726 y $1.493.893.",
+                    "C3": "C3: Entre $736.753 y $1.043.725.",
+                    "D1": "D1: Entre $471.657 y $736.752.",
+                    "D2": "D2: Menor o igual a $471.656."
+                },
+                "nse_personal": "C2"
+            },
+            "boletinesBuenosAires": [
+                {
+                    "id": 10767,
+                    "id_boletin": 170881,
+                    "fecha": "2025-04-03",
+                    "seccion": "Sociedades",
+                    "contexto": "PAGIMA S.R.L.\n \nPOR 1 D\u00cdA - Inst. Privado del 13\/12\/24. Firmas certificadas el 30\/01\/25 - Cesi\u00f3n cuotas soc y designaci\u00f3n autoridades.\nH\u00e9ctor Hugo Aneiros, arg, nacido el 20\/06\/1948, DNI 4.976.060, CUIT 20-04976060-5, empresario, dom en Mariano Moreno\n339, Arribe\u00f1os, pdo de Gral. Arenales, pcia de Bs As, casado en primeras nupcias con Susana Matilde Gonz\u00e1lez; Juan\nPablo Aneiros, arg, nacido el 18\/12\/1972, DNI 22.802.023, CUIT 20-22802023-1, empresario, con dom en Mariano Moreno\n339, Arribe\u00f1os, pdo de Gral. Arenales, pcia de Bs As, soltero hijo de H\u00e9ctor H. Aneiros y Susana M. Gonz\u00e1lez; y Mar\u00eda\nGeorgina Aneiros, arg, nacida el 8\/05\/1975, DNI 24.541.135, CUIT 27-24541135-4, Dise\u00f1adora de indumentaria y textil,\nConesa N\u00ba 425 piso 3 depto G, CABA, soltera hija de H\u00e9ctor H. Aneiros y Susana M. Gonz\u00e1lez. Expresan: H\u00e9ctor Hugo\nAneiros cede el total de sus cuotas soc es decir 30 cuotas de V.N $10 c\/u a favor de Juan Pablo Aneiros y Mar\u00eda Georgina\nAneiros en la misma proporci\u00f3n. Capital Social luego de la cesi\u00f3n: Juan Pablo Aneiros 15 cuotas; Mar\u00eda Georgina Aneiros\n15 cuotas; Luis Ignacio Aneiros Fratondi 15 cuotas y Susana Mabel Fratondi 15 cuotas todas estas de $10.- V.N. c\/u.\nAdministraci\u00f3n y Representaci\u00f3n: H\u00e9ctor Hugo Aneiros renuncia al cargo de Gerente luego de la Cesi\u00f3n, la misma es\naceptada. Se designa a Juan Pablo Aneiros DNI 22.802.023 y a Susana Mabel Fratondi DNI 11.199.767, para que\ncontin\u00faen en el cargo de Gerente ejecutando la Administraci\u00f3n y el uso de la firma social de manera indistinta. Durar\u00e1n en\nsus cargos dos ejercicios. Presentes en \u00e9ste acto Juan Pablo Aneiros y Susana Mabel Fratondi aceptan el cargo que le\nfuera conferido. Juan Pablo Aneiros, DNI 22.802.023, Socio Gerente."
+                },
+                {
+                    "id": 10713,
+                    "id_boletin": 168947,
+                    "fecha": "2025-02-19",
+                    "seccion": "Sociedades",
+                    "contexto": "GRUPO EDUINVEST S.A.\n \nPOR 1 D\u00cdA - Constituci\u00f3n por instrumento p\u00fablico de fecha 04\/02\/2025. 1) Socios: Gonzalez Juan Pablo, argentino, DNI N\u00ba\n30.344.074, nacido el 02\/05\/1983, comerciante, soltero, domicilio: calle Somoza N\u00b0 1308, ciudad de Pergamino, partido de\nPergamino, Provincia de Buenos Aires; y el se\u00f1or Alterino Leandro Gonzalo, argentino, DNI N\u00ba 31.542.260, nacido el\n17\/05\/1985, comerciante, soltero, domicilio: calle Pascual Raimundo N\u00ba 2408 ciudad de Pergamino, partido de Pergamino,\nprovincia de Buenos Aires. 2) Sede Social: calle Pinto N\u00ba 1179, ciudad de Pergamino, partido de Pergamino, provincia de\nBuenos Aires. 3) Duraci\u00f3n: 99 a\u00f1os. 4) Objeto: realizar por cuenta propia, de terceros o asociada a terceros, en cualquier\nparte del pa\u00eds o del extranjero, a la creaci\u00f3n, producci\u00f3n, intercambio, fabricaci\u00f3n, transformaci\u00f3n, industrializaci\u00f3n,\ncomercializaci\u00f3n, intermediaci\u00f3n, representaci\u00f3n, importaci\u00f3n y exportaci\u00f3n de toda clase de bienes materiales, incluso\nrecursos naturales, e inmateriales y la prestaci\u00f3n de toda clase de servicios, relacionados directa o indirectamente con las\nsiguientes actividades: 1) Comunicaciones, Marketing, eventos, editoriales y gr\u00e1ficas en cualquier soporte; 2) Culturales y\neducativas en todos sus niveles; 3) Desarrollo de tecnolog\u00edas, investigaci\u00f3n e innovaci\u00f3n y software para el aprendizaje; 4)\nInmobiliarias; 5) Inversoras, financieras y fideicomisos. 5) Capital: $30.000.000. 6) Administraci\u00f3n: Directorio de 1 titular y\nde 1 suplente; duraci\u00f3n de funciones 3 ejercicios, reelegibles. 7) Representaci\u00f3n legal: Presidente. 8) Presidente: Gonzalez\nJuan Pablo; Suplente: Alterino Leandro Gonzalo. 9) Fiscalizaci\u00f3n: art\u00edculo 55 y 284 de la Ley 19.550. 10) Cierre ejercicio:\n30\/06 de cada a\u00f1o. Bruno Pellicciotta, Contador P\u00fablico, T\u00ba 163 F\u00ba 102 LEG. 42371\/8, C.P.C.E. Pcia. Bs. As., CUIT 23-\n36003151-9."
+                },
+                {
+                    "id": 4804,
+                    "id_boletin": 83170,
+                    "fecha": "2011-05-02",
+                    "seccion": "Sociedades",
+                    "contexto": "VERTIENTES DEL OESTE S.R.L.\t\nPOR \u2013f D\u00cdA \u2013\u00cd Cesi\u00f3n de Cuotas Sociales \u2013\nModificaci\u00f3n de Estatuto. Cedentes: \u2013f) Juan Carlos Trejo,\narg., comerc., nacido \u2013f4\/04\/\u2013f957, casado, domicilio\nFerry 262, Merlo, Bs. As., DNI \u2013f3.\u2013f\u2013f0.\u2013f89 y CUIT 23\u2013\u00cd\n\u2013f3\u2013f\u2013f0\u2013f89\u2013\u00cd9. 2) Jorge Antonio Aparicio, arg., comerc.,\n05\/04\/\u2013f960, casado, domicilio Gallo \u2013f065, Merlo, Bs. As.,\nDNI \u2013f7.467.383 y CUIT 20\u2013\u00cd\u2013f7467383\u2013\u00cd8. 3) Rub\u00e9n\nAlejandro Aparicio, arg., comerc., casado, nacido\n\u2013f2\/06\/\u2013f962, domicilio Carrasco \u2013f\u2013f64 Pontevedra, Merlo,\nBs. As., DNI \u2013f4.996.977 y CUIT N\u00ba 20\u2013\u00cd\u2013f4996977\u2013\u00cd3., Mirta\nRosa Casucelli, arg., comerc., nacida 24\/03\/\u2013f949, viuda\nde Norberto Oscar Marchese, domicilio A. del Valle 2073\nde Merlo, Bs As., DNI 6.063.898 y CUIT N\u00ba 27\u2013\u00cd06063898\u2013\u00cd\n0; Daniel V\u00edctor Marchese, arg., empleado, nacido\n28\/\u2013f2\/\u2013f975, hijo de Norberto Oscar Marchese y Mirta\nRosa Casucelli, domicilio A. del Valle 2073 Merlo, Bs. As.,\nDNI 23.948.454 y CUIL N\u00ba 23\u2013\u00cd23948454\u2013\u00cd9 y Nancy Rosa\nMarchese, arg., empleada, nacida 26\/02\/\u2013f973, hija de\nNorberto Oscar Marchese y Mirta Rosa Casucelli, soltera,\ndomicilio A. del Valle 2073 de Merlo, Bs. As., DNI.\n23.253.928 y CUIL N\u00ba 27\u2013\u00cd23253928\u2013\u00cd9; 2) Cesionarios:\nJuan Carlos Gonz\u00e1lez, arg., comerc., nacido \u2013f4\/0\u2013f\/\u2013f948,\ncasado, domicilio Albeniz \u2013f45 Merlo, Bs. As, DNI\n8.063.948 y CUIT N\u00ba 20\u2013\u00cd0863948\u2013\u00cd2; Juan Pablo Navarro,\narg., comerciante, nacido 22\/\u2013f2\/\u2013f988, soltero, domicilio\nVictoriano Loza 568 Merlo, Bs. As., DNI 34.\u2013f53.862 y\nCUIL N\u00ba 20\u2013\u00cd34\u2013f53862\u2013\u00cd9; Federico Victor Roberto\nCannavo, arg., comerc., nacido 04\/\u2013f\u2013f\/\u2013f990, soltero,\ndomicilio Los Aromos 390 San Antonio de Padua, Pdo.\nMerlo, Bs. As., DNI 35.34\u2013f.\u2013f4\u2013f y CUIL N\u00ba 20\u2013\u00cd3534\u2013f\u2013f4\u2013f\u2013\u00cd\n2; Antonio Eduardo Cannavo, arg., casado, contador\np\u00fablico, nacido \u2013f3\/0\u2013f\/\u2013f959, domicilio Los Aromos 390\nSan A. de Padua, Pdo. Merlo, Bs. As., DNI \u2013f2.645.949 y\nCUIT N\u00ba 20\u2013\u00cd\u2013f2645949\u2013\u00cd2. 3) Instr. Privado de \u2013f8\/03\/20\u2013f\u2013f.\n4) Modif. cl\u00e1usula 4\u00ba Cap. Soc. contin\u00faa fijado en $ 6.000\ndividido en seis mil cuotas de un peso valor nominal c\/u\ny de un voto por cuota, totalmente suscriptas e integra\u2013\u00cd\ndas antes de ahora de la sig. forma: Juan Carlos\nGonz\u00e1lez; Juan Pablo Navarro; Federico V\u00edctor Roberto\nCannavo y Antonio Eduardo Cannavo un mil quinientas\ncuotas de un peso valor nominal c\/u y de un voto por\ncuota. 5) Modif. cl\u00e1usula 5\u00ba, Adm. y Representac. legal y\nuso de la firma social estar\u00e1 a cargo de uno o m\u00e1s geren\u2013\u00cd\ntes en forma individual e indistinta socios o no. 5) Modif.\ncl\u00e1usula 2\u00aa durac. de sociedad 99 "
+                }
+            ],
+            "celulares": [
+                {
+                    "numero": "3412158019",
+                    "orden": "1"
+                },
+                {
+                    "numero": "3413038047",
+                    "orden": "2"
+                }
+            ],
+            "domiciliosPersonasRelacionadas": [
+                {
+                    "datos_persona": {
+                        "cuit": "20146840400",
+                        "nombre_completo": "GONZALEZ JOSE LUIS",
+                        "clase": "1961",
+                        "anios": "63"
+                    },
+                    "domicilios": [
+                        {
+                            "calle": "OCAMPO 6476",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": "ROSARIO SEC 19A GODOY",
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "PERSONAL",
+                            "fecha": "2023-01-01"
+                        },
+                        {
+                            "calle": "AV ALTE BROWN",
+                            "altura": "4751",
+                            "extra": " ",
+                            "barrio": null,
+                            "localidad": "SANTA FE",
+                            "provincia": "SANTA FE",
+                            "cp": "3000",
+                            "tipo": "LABORAL",
+                            "fecha": "2014-06-01"
+                        }
+                    ]
+                },
+                {
+                    "datos_persona": {
+                        "cuit": "20313398642",
+                        "nombre_completo": "GONZALEZ JOSE ANTONIO",
+                        "clase": "1985",
+                        "anios": "40"
+                    },
+                    "domicilios": [
+                        {
+                            "calle": "OCAMPO 6476",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": "ROSARIO SEC 19A GODOY",
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "PERSONAL",
+                            "fecha": "2023-01-01"
+                        },
+                        {
+                            "calle": "OCAMPO 6476",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": null,
+                            "localidad": "ROSARIO SUD",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "FISCAL",
+                            "fecha": "2016-09-30"
+                        },
+                        {
+                            "calle": "27 DE FEBRERO",
+                            "altura": "786",
+                            "extra": " ",
+                            "barrio": null,
+                            "localidad": "ROSARIO SUD",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "LABORAL",
+                            "fecha": "2014-06-01"
+                        }
+                    ]
+                },
+                {
+                    "datos_persona": {
+                        "cuit": "23579327219",
+                        "nombre_completo": "GONZALEZ JUAN ANDRES",
+                        "clase": "2019",
+                        "anios": "5"
+                    },
+                    "domicilios": [
+                        {
+                            "calle": "ESTEBAN DE LUCA",
+                            "altura": "2263",
+                            "extra": "",
+                            "barrio": null,
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "0",
+                            "tipo": "LEGAL",
+                            "fecha": "2020-06-05"
+                        }
+                    ]
+                },
+                {
+                    "datos_persona": {
+                        "cuit": "27182153775",
+                        "nombre_completo": "PASCUALE NORMA FABIANA",
+                        "clase": "1967",
+                        "anios": "58"
+                    },
+                    "domicilios": [
+                        {
+                            "calle": "OCAMPO 6476",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": "ROSARIO SEC 19A GODOY",
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "PERSONAL",
+                            "fecha": "2023-01-01"
+                        }
+                    ]
+                },
+                {
+                    "datos_persona": {
+                        "cuit": "27203546772",
+                        "nombre_completo": "CURBELO OLGA NANCI",
+                        "clase": "1968",
+                        "anios": "56"
+                    },
+                    "domicilios": [
+                        {
+                            "calle": "E.DE LUCA 2263 DPTO\/CASA:PA.",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": "ROSARIO SEC 21A M S MART",
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "PERSONAL",
+                            "fecha": "2023-01-01"
+                        },
+                        {
+                            "calle": "ESTEBAN DE LUCAS",
+                            "altura": "2263",
+                            "extra": "",
+                            "barrio": null,
+                            "localidad": "ROSARIO SUD",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "FISCAL",
+                            "fecha": "2020-12-18"
+                        }
+                    ]
+                },
+                {
+                    "datos_persona": {
+                        "cuit": "27332591326",
+                        "nombre_completo": "GONZALEZ JOANA EDITH",
+                        "clase": "1987",
+                        "anios": "37"
+                    },
+                    "domicilios": [
+                        {
+                            "calle": "PJE. DORADO 2226",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": "ROSARIO SEC 15A TIRO SUIZO",
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "PERSONAL",
+                            "fecha": "2023-01-01"
+                        },
+                        {
+                            "calle": "OCAMPO 6476",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": null,
+                            "localidad": "ROSARIO SUD",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "FISCAL",
+                            "fecha": "2016-11-15"
+                        },
+                        {
+                            "calle": "AV ALTE BROWN",
+                            "altura": "4751",
+                            "extra": " ",
+                            "barrio": null,
+                            "localidad": "SANTA FE",
+                            "provincia": "SANTA FE",
+                            "cp": "3000",
+                            "tipo": "LABORAL",
+                            "fecha": "2014-06-01"
+                        }
+                    ]
+                },
+                {
+                    "datos_persona": {
+                        "cuit": "27341660063",
+                        "nombre_completo": "GONZALEZ ESTEFANIA JAQUELINA",
+                        "clase": "1988",
+                        "anios": "36"
+                    },
+                    "domicilios": [
+                        {
+                            "calle": "OCAMPO 6476",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": "ROSARIO SEC 19A GODOY",
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "PERSONAL",
+                            "fecha": "2023-01-01"
+                        }
+                    ]
+                },
+                {
+                    "datos_persona": {
+                        "cuit": "27366598591",
+                        "nombre_completo": "GONZALEZ AGUSTINA MABEL",
+                        "clase": "1993",
+                        "anios": "31"
+                    },
+                    "domicilios": [
+                        {
+                            "calle": "OCAMPO 6476",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": "ROSARIO SEC 19A GODOY",
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "PERSONAL",
+                            "fecha": "2023-01-01"
+                        },
+                        {
+                            "calle": "OCAMPO",
+                            "altura": "6476",
+                            "extra": "",
+                            "barrio": null,
+                            "localidad": "ROSARIO SUD",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "FISCAL",
+                            "fecha": "2025-02-13"
+                        },
+                        {
+                            "calle": "CERES",
+                            "altura": "3278",
+                            "extra": "01CASA",
+                            "barrio": null,
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "PERSONAL",
+                            "fecha": "2020-10-01"
+                        }
+                    ]
+                },
+                {
+                    "datos_persona": {
+                        "cuit": "27377150681",
+                        "nombre_completo": "ISOARDI MELANI DAFNE",
+                        "clase": "1994",
+                        "anios": "31"
+                    },
+                    "domicilios": [
+                        {
+                            "calle": "E.DE LUCA 2263",
+                            "altura": null,
+                            "extra": null,
+                            "barrio": "ROSARIO SEC 21A M S MART",
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "PERSONAL",
+                            "fecha": "2023-01-01"
+                        },
+                        {
+                            "calle": "ESTEBAN DE LUCA",
+                            "altura": "2263",
+                            "extra": "",
+                            "barrio": null,
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "LEGAL",
+                            "fecha": "2025-05-07"
+                        },
+                        {
+                            "calle": "3 DE FEBRERO",
+                            "altura": "131",
+                            "extra": " ",
+                            "barrio": null,
+                            "localidad": "ROSARIO SUD",
+                            "provincia": "SANTA FE",
+                            "cp": "2000",
+                            "tipo": "LABORAL",
+                            "fecha": "2014-06-01"
+                        }
+                    ]
+                }
+            ],
+            "boletinesMendoza": [
+                {
+                    "id": 2004,
+                    "id_boletin": 414277,
+                    "fecha": "2025-03-12",
+                    "seccion": "Contratos sociales",
+                    "contexto": "transformaci\u00f3n, \nindustrializaci\u00f3n,  comercializaci\u00f3n, \n(*)\nCONSTITUCI\u00d3N:  CONEXAR  TELECOMUNICACIONES  S.A.S.  Sociedad  por  Acciones  Simplificada\nsuscripto por instrumento privado con fecha 10\/03\/2025. 1. GONZALEZ JUAN PABLO BENJAMIN, DNI\nN\u00ba  34.747.259,  CUIT  N\u00ba  20-34747259-0,  de  nacionalidad  argentina,  nacido  el  07  de  Octubre  del  1989,\nprofesi\u00f3n t\u00e9cnico en instalaciones industriales y mantenimiento, estado civil casado, con domicilio real en\ncalle  Alta  Gracia  N\u00ba  1263,  Distrito,  Las  Ca\u00f1as,  Guaymallen,  Provincia  de  Mendoza.  2.-  \"CONEXAR\nTELECOMUNICACIONES S.A.S.\". 3.- Sede social: Alta Gracia N\u00ba 1263, Distrito, Las Ca\u00f1as, Guaymallen,\nProvincia  de  Mendoza.  4.-  Objeto  social:  La  sociedad  tiene  por  objeto  dedicarse,  por  cuenta  propia  o\najena,  o  asociada  con  terceros,  ya  sea  dentro  o  fuera  del  pa\u00eds,  a  la  creaci\u00f3n,  producci\u00f3n,  intercambio,\nfabricaci\u00f3n, \nrepresentaci\u00f3n,\nimportaci\u00f3n y exportaci\u00f3n de toda clase de bienes materiales, incluso recursos naturales, e inmateriales y\nla  prestaci\u00f3n  de  toda  clase  de  servicios,  relacionados  directa  o  indirectamente  con  las  siguientes\ntamberas  y  vitivin\u00edcolas;  (b)\nactividades:  (a)  Agropecuarias,  av\u00edcolas,  ganaderas,  pesqueras, \nComunicaciones, espect\u00e1culos, editoriales y gr\u00e1ficas en cualquier soporte; (c) Industrias manufactureras\nde  todo  tipo;  (d)  Culturales  y  educativas;  (e)  Desarrollo  de  tecnolog\u00edas,  investigaci\u00f3n  e  innovaci\u00f3n  y\nsoftware;  (f)  Gastron\u00f3micas,  hoteleras  y  tur\u00edsticas;  (g)  Inmobiliarias  y  constructoras;  (h)  Inversoras,\nfinancieras  y  fideicomisos,  (i)  Petroleras,  gas\u00edferas,  forestales,  mineras  y  energ\u00e9ticas  en  todas  sus\nformas; (j) Salud, y (k) Transporte privado. 5.- Duraci\u00f3n 99 a\u00f1os. 6.- Capital de $ 1.000.000, representado\npor  1.000.000  acciones  ordinarias,  nominativas  no  endosables  de  $  1  v\/n  c\/u  y  de  un  voto,  100%\nsuscriptas  y  25%  de  integraci\u00f3n.  7.-  Administradores  y  representantes  legales  en  forma  indistinta.\nAdministrador titular: FERNANDEZ MUJICA BRAIDI EUGENIA, con domicilio especial en la sede social;\nadministrador suplente: GONZALEZ JUAN PABLO BENJAMIN, con domicilio especial en la sede social;\ntodos por plazo indeterminado. 8.- Prescinde del \u00f3rgano de fiscalizaci\u00f3n. 9.- Fecha de cierre de ejercicio\nintermediaci\u00f3n, \nBolet\u00edn Oficial - Gobierno de Mendoza - Mi\u00e9rcoles 12 de Marzo de 2025\nMinisterio de Gobierno, Infraestructura y Desarrollo Territorial\nSubsecr"
+                },
+                {
+                    "id": 1920,
+                    "id_boletin": 399574,
+                    "fecha": "2024-11-07",
+                    "seccion": "Notificaciones",
+                    "contexto": "(*)\nGEJUAF GUAYMALLEN PODER JUDICIAL DE MENDOZA GAVOSTO, VIOLETA ELIZABETH CONTRA\n\"CAMPOS GONZALEZ, JUAN PABLO SOBRE DIVORCIO UNILATERAL\" ESP J-13-07335430-1\/2023-0\nNro.  de  expediente:  24113\/  2023  Nro.  de  actuaci\u00f3n:  2781607  Mendoza;  14  de  Octubre  de  2024.  Y\nVISTOS:\u2026 RESULTA\u2026 CONSIDERANDO:\u2026 RESUELVO: I.- Declarar a VIOLETA ELIZABETH GAVOSTO\ny JUAN PABLO CAMPOS GONZALEZ, divorciados. II.- Declarar la extinci\u00f3n de la comunidad de bienes,\na  partir  del  d\u00eda  20  de  marzo  de  2000,  fecha  de  separaci\u00f3n  de  hecho  -art.  480  CCyC-.  III.-  Imponer  las\ncostas  en  el  orden  causado  (art.  35  y  36  del  CPC)  IV.-  NOTIFICAR  a  la  actora  y  a  la  Defensor\u00eda\ninterviniente  en  forma  electr\u00f3nica  y  al  Ministerio  P\u00fablico  Fiscal  con  remisi\u00f3n  de  autos.  Asimismo,\nnotif\u00edquese al demandado mediante una (1) publicaci\u00f3n edictal en el Bolet\u00edn Oficial. C\u00daMPLASE. PASE A\nBolet\u00edn Oficial - Gobierno de Mendoza - Jueves 7 de Noviembre de 2024\nMinisterio de Gobierno, Infraestructura y Desarrollo Territorial\nSubsecretaria Legal y T\u00e9cnica\n \n \n\nRECEPTOR\u00cdA. V.- Firme la presente, of\u00edciese al Registro del Estado Civil y Capacidad de las Personas, a\nfin de que se tome nota marginal en el acta N\u00b0 239, Libro Registro N\u00b0 6613 inscripto en la Oficina del\nRegistro Civil \u201cLas Heras\u201d, departamento del mismo nombre, provincia de Mendoza, en fecha 28 de abril\nde 1992. OPORTUNAMENTE OF\u00cdCIESE a cargo de parte interesada quien deber\u00e1 acompa\u00f1ar el oficio\nen formato editable y adjuntar la tasa correspondiente, debiendo consignar en esta \u00faltima de pu\u00f1o y letra\nel  n\u00famero  de  las  presentes  actuaciones.  VI.-  Atento  lo  ordenado  por  el  art.  175  C\u00f3digo  Procesal  de\nFamilia,  disponer  que  las  cuestiones  pendientes  relativas  a  los  efectos  del  divorcio  contin\u00faen  su\ntramitaci\u00f3n  por  la  v\u00eda  correspondiente,  debiendo  en  consecuencia  los  interesados  formalizar  las\ncorrespondientes  demandas  que  tramitar\u00e1n  por  pieza  separada.  REGISTRESE.  NOTIFIQUESE.\nOportunamente  OF\u00cdCIESE.  cn  Dra.  Gabriela  Cecilia  Nievas  JUEZA  DE  FAMILIA  Y  VIOLENCIA\nFAMILIAR GeJuAF Guaymall\u00e9n\nBoleto N\u00b0: ATM_8476741  Importe: $ 1620\n07\/11\/2024   (1 Pub.)"
+                },
+                {
+                    "id": 1781,
+                    "id_boletin": 371315,
+                    "fecha": "2024-04-17",
+                    "seccion": "Notificaciones",
+                    "contexto": "GEJUAF  GUAYMALLEN  PODER  JUDICIAL  DE  MENDOZA.  GAVOSTO,  VIOLETA  ELIZABETH\nCONTRA \n\"CAMPOS  GONZALEZ,  JUAN  PABLO  SOBRE  DIVORCIO  UNILATERAL\"  ESP\nJ-13-07335430-1\/2023-0 Nro. de expediente: 24113\/ 2023 Nro. de actuaci\u00f3n: 2253495 Mendoza, 26 de\nMarzo de 2024 AUTOS, VISTOS Y CONSIDERANDO: Que se presenta la Sra. Gavosto con patrocinio de\nla  Dra.  Oro  Gavosto  (mn  12264),  promoviendo  informaci\u00f3n  sumaria  a  fin  de  acreditar  el  ignorado\nparadero dl Sr. JUAN PABLO CAMPOS GONZALEZ (CI 14.427.485-1 \u2013 DNI 14.427.485), todo ello a los\nfines  de  tramitar  en  la  etapa  oportuna,  proceso  por  DIVORCIO  UNILATERAL.  A  tal  fin  para  acreditar\ndicha circunstancia se rindi\u00f3 la siguiente prueba: Informativa a la Junta Electoral y Polic\u00eda de Mendoza,\ncuyos informes obran en autos con resultado negativo a fs. 23\/24. Que la parte actora presta juramento\nde desconocer el domicilio de la parte demandada, conforme las previsiones del art\u00edculo 69 del CPCCyT\nen  actuaci\u00f3n  #455790.  Por  lo  expuesto,  dictamen  del  Ministerio  Fiscal  de  fecha  02\/02\/24  (fs.  35)  y  de\nconformidad  con  lo  dispuesto  por  los  arts.  69  y  72  del  C.P.C.C.  y  T.  RESUELVO:  I.-  Aprobar  la\ninformaci\u00f3n  sumaria  rendida  en  autos,  en  consecuencia  declarar  que  JUAN  PABLO  CAMPOS\nGONZALEZ (CI 14.427.485-1 \/ DNI 14.427.485), es persona de ignorado domicilio, debiendo notificarse\nen adelante mediante publicaci\u00f3n edictal (art. 69 y 72 del C.P.C.C. y T.). II.- Notif\u00edquese el traslado de la\ndemanda ordenado en fecha 20 de Septiembre de 2023 a que JUAN PABLO CAMPOS GONZALEZ (CI\n14.427.485-1  \/  DNI  14.427.485),  en  forma  edictal  por  tres  veces  en  el  Bolet\u00edn  Oficial,  con  dos  d\u00edas  de\nintervalo. C\u00daMPLASE. III.- Agregados que se encuentren los edictos ordenados y vencido el plazo para\ncontestar, dese intervenci\u00f3n a la Defensor\u00eda Oficial que por turno corresponda. C\u00daMPLASE. COPIESE.\nREG\u00cdSTRESE. NOTIF\u00cdQUESE. Pase a receptor\u00eda. Mr Dra. Gabriela Cecilia Nievas JUEZA DE FAMILIA Y\nVIOLENCIA FAMILIAR GEJUAF GUAYMALL\u00c9N\nBoleto N\u00b0: ATM_8039101  Importe: $ 5130\n09-12-17\/04\/2024   (3 Pub.)"
+                },
+                {
+                    "id": 1778,
+                    "id_boletin": 370608,
+                    "fecha": "2024-04-12",
+                    "seccion": "Notificaciones",
+                    "contexto": "GEJUAF  GUAYMALLEN  PODER  JUDICIAL  DE  MENDOZA.  GAVOSTO,  VIOLETA  ELIZABETH\nCONTRA \n\"CAMPOS  GONZALEZ,  JUAN  PABLO  SOBRE  DIVORCIO  UNILATERAL\"  ESP\nJ-13-07335430-1\/2023-0 Nro. de expediente: 24113\/ 2023 Nro. de actuaci\u00f3n: 2253495 Mendoza, 26 de\nMarzo de 2024 AUTOS, VISTOS Y CONSIDERANDO: Que se presenta la Sra. Gavosto con patrocinio de\nla  Dra.  Oro  Gavosto  (mn  12264),  promoviendo  informaci\u00f3n  sumaria  a  fin  de  acreditar  el  ignorado\nparadero dl Sr. JUAN PABLO CAMPOS GONZALEZ (CI 14.427.485-1 \u2013 DNI 14.427.485), todo ello a los\nfines  de  tramitar  en  la  etapa  oportuna,  proceso  por  DIVORCIO  UNILATERAL.  A  tal  fin  para  acreditar\ndicha circunstancia se rindi\u00f3 la siguiente prueba: Informativa a la Junta Electoral y Polic\u00eda de Mendoza,\ncuyos informes obran en autos con resultado negativo a fs. 23\/24. Que la parte actora presta juramento\nde desconocer el domicilio de la parte demandada, conforme las previsiones del art\u00edculo 69 del CPCCyT\nen  actuaci\u00f3n  #455790.  Por  lo  expuesto,  dictamen  del  Ministerio  Fiscal  de  fecha  02\/02\/24  (fs.  35)  y  de\nconformidad  con  lo  dispuesto  por  los  arts.  69  y  72  del  C.P.C.C.  y  T.  RESUELVO:  I.-  Aprobar  la\ninformaci\u00f3n  sumaria  rendida  en  autos,  en  consecuencia  declarar  que  JUAN  PABLO  CAMPOS\nGONZALEZ (CI 14.427.485-1 \/ DNI 14.427.485), es persona de ignorado domicilio, debiendo notificarse\nen adelante mediante publicaci\u00f3n edictal (art. 69 y 72 del C.P.C.C. y T.). II.- Notif\u00edquese el traslado de la\ndemanda ordenado en fecha 20 de Septiembre de 2023 a que JUAN PABLO CAMPOS GONZALEZ (CI\n14.427.485-1  \/  DNI  14.427.485),  en  forma  edictal  por  tres  veces  en  el  Bolet\u00edn  Oficial,  con  dos  d\u00edas  de\nintervalo. C\u00daMPLASE. III.- Agregados que se encuentren los edictos ordenados y vencido el plazo para\ncontestar, dese intervenci\u00f3n a la Defensor\u00eda Oficial que por turno corresponda. C\u00daMPLASE. COPIESE.\nREG\u00cdSTRESE. NOTIF\u00cdQUESE. Pase a receptor\u00eda. Mr Dra. Gabriela Cecilia Nievas JUEZA DE FAMILIA Y\nVIOLENCIA FAMILIAR GEJUAF GUAYMALL\u00c9N\nBoleto N\u00b0: ATM_8039101  Importe: $ 5130\n09-12-17\/04\/2024   (3 Pub.)"
+                },
+                {
+                    "id": 1775,
+                    "id_boletin": 369910,
+                    "fecha": "2024-04-09",
+                    "seccion": "Notificaciones",
+                    "contexto": "(*)\nGEJUAF  GUAYMALLEN  PODER  JUDICIAL  DE  MENDOZA.  GAVOSTO,  VIOLETA  ELIZABETH\nCONTRA \n\"CAMPOS  GONZALEZ,  JUAN  PABLO  SOBRE  DIVORCIO  UNILATERAL\"  ESP\nJ-13-07335430-1\/2023-0 Nro. de expediente: 24113\/ 2023 Nro. de actuaci\u00f3n: 2253495 Mendoza, 26 de\nMarzo de 2024 AUTOS, VISTOS Y CONSIDERANDO: Que se presenta la Sra. Gavosto con patrocinio de\nla  Dra.  Oro  Gavosto  (mn  12264),  promoviendo  informaci\u00f3n  sumaria  a  fin  de  acreditar  el  ignorado\nparadero dl Sr. JUAN PABLO CAMPOS GONZALEZ (CI 14.427.485-1 \u2013 DNI 14.427.485), todo ello a los\nfines  de  tramitar  en  la  etapa  oportuna,  proceso  por  DIVORCIO  UNILATERAL.  A  tal  fin  para  acreditar\ndicha circunstancia se rindi\u00f3 la siguiente prueba: Informativa a la Junta Electoral y Polic\u00eda de Mendoza,\ncuyos informes obran en autos con resultado negativo a fs. 23\/24. Que la parte actora presta juramento\nde desconocer el domicilio de la parte demandada, conforme las previsiones del art\u00edculo 69 del CPCCyT\nen  actuaci\u00f3n  #455790.  Por  lo  expuesto,  dictamen  del  Ministerio  Fiscal  de  fecha  02\/02\/24  (fs.  35)  y  de\nconformidad  con  lo  dispuesto  por  los  arts.  69  y  72  del  C.P.C.C.  y  T.  RESUELVO:  I.-  Aprobar  la\ninformaci\u00f3n  sumaria  rendida  en  autos,  en  consecuencia  declarar  que  JUAN  PABLO  CAMPOS\nGONZALEZ (CI 14.427.485-1 \/ DNI 14.427.485), es persona de ignorado domicilio, debiendo notificarse\nen adelante mediante publicaci\u00f3n edictal (art. 69 y 72 del C.P.C.C. y T.). II.- Notif\u00edquese el traslado de la\ndemanda ordenado en fecha 20 de Septiembre de 2023 a que JUAN PABLO CAMPOS GONZALEZ (CI\n14.427.485-1  \/  DNI  14.427.485),  en  forma  edictal  por  tres  veces  en  el  Bolet\u00edn  Oficial,  con  dos  d\u00edas  de\nintervalo. C\u00daMPLASE. III.- Agregados que se encuentren los edictos ordenados y vencido el plazo para\ncontestar, dese intervenci\u00f3n a la Defensor\u00eda Oficial que por turno corresponda. C\u00daMPLASE. COPIESE.\nREG\u00cdSTRESE. NOTIF\u00cdQUESE. Pase a receptor\u00eda. Mr Dra. Gabriela Cecilia Nievas JUEZA DE FAMILIA Y\nVIOLENCIA FAMILIAR GEJUAF GUAYMALL\u00c9N\nBoleto N\u00b0: ATM_8039101  Importe: $ 5130\n09-12-17\/04\/2024   (3 Pub.)"
+                },
+                {
+                    "id": 1557,
+                    "id_boletin": 325872,
+                    "fecha": "2023-05-16",
+                    "seccion": "Licitaciones",
+                    "contexto": "Decreto N\u00b0: 887\nMENDOZA, 04 DE MAYO DE 2023\nVisto el Expediente Electr\u00f3nico EX-2022-08805903-GDEMZA-MESAENTGENERAL#MSEG; y\nCONSIDERANDO:\nQue en las citadas actuaciones se tramita la confirmaci\u00f3n de diverso personal policial en las jerarqu\u00edas de\nOficial Subayudante y Auxiliar de las Polic\u00edas de la Provincia de Mendoza, designados mediante Decretos\nNros. 2359\/21, 2350\/21, 2347\/21, 2346\/21, 2340\/21, 2341\/21, 2339\/21 y 2338\/21;\nQue el art. 47 de la Ley N\u00ba 6722 y sus modificatorias, dispone que \u201cToda designaci\u00f3n o incorporaci\u00f3n a\ncualquiera de los escalafones de la presente ley, se efectuar\u00e1 interinamente por el t\u00e9rmino de doce (12)\nmeses, al cabo del cual deber\u00e1 confirmarse o no expresamente en el cargo. Esta confirmaci\u00f3n se realizar\u00e1\nsobre la base del desempe\u00f1o del personal, en las funciones asignadas por la superioridad y que hayan\nsido  cumplidas  dentro  del  marco  reglamentario,  siempre  que  haya  demostrado;  idoneidad,  adaptaci\u00f3n,\nsubordinaci\u00f3n y aptitud, la que ser\u00e1 evaluada por un equipo t\u00e9cnico conforme a lo que se establezca en la\nreglamentaci\u00f3n...\u201d;\nQue en orden 19, obra Acta del Equipo T\u00e9cnico y N\u00f3mina de Personal con la conclusi\u00f3n calificatoria de\ncada uno de ellos;\nPor  ello,  y  atento  a  lo  dictaminado  por  la  Direcci\u00f3n  de  Asesor\u00eda  Letrada  del  Ministerio  de  Seguridad  en\norden 22,\nEL\nGOBERNADOR DE LA PROVINCIA\nDECRETA:\nArt\u00edculo 1: T\u00e9nganse por confirmados, en los t\u00e9rminos del art. 47 de la Ley N\u00ba 6722 y sus modificatorias,\nen el cargo Car\u00e1cter 001 \u2013 Jurisdicci\u00f3n 016 \u2013 Unidad Organizativa 006 \u2013 Clase 028 -R\u00e9gimen Salarial 012\nBolet\u00edn Oficial - Gobierno de Mendoza - Martes 16 de Mayo de 2023\nMinisterio de Gobierno, Trabajo y Justicia\nSubsecretaria Legal y T\u00e9cnica\n \n \n\n\u2013  Agrupamiento  002  \u2013  Tramo  001  \u2013  Subtramo028  \u2013  U.G.E.  J00098  \u2013  Oficial  Subayudante  -  Personal\nPolicial de la Provincia de Mendoza, al personal que se detalla a continuaci\u00f3n:\nJERARQUIA\nOF. SUBAYUDANTE\nP.P.\nOF. SUBAYUDANTE\nP.P.\nAPELLIDOS Y NOMBRES\nJURADO FLORES, MELISA\nGISEL\nMARTINEZ MOLINA, MARIA\nLUCIANA\nC.U.I.L.\n27-39604856-1\nDEC.\n2350-21\n27-40919286-1\n2350-21\nArticulo 2\u00b0- T\u00e9nganse por confirmados, en los t\u00e9rminos del art. 47 de la Ley N\u00ba 6722 y sus modificatorias,\nen el cargo Car\u00e1cter 001 \u2013 Jurisdicci\u00f3n 016 \u2013 Unidad Organizativa 006 \u2013 Clase 001 -R\u00e9gimen Salarial 012\n\u2013  Agrupamiento  001  \u2013  Tramo  001  \u2013  Subtramo  001  \u2013  U.G.E.  J00098  \u2013  Auxiliar  -  Personal  Policial  de  la\nProvincia de Mendoza, al personal que se detalla a continuaci\u00f3n:\nJERARQ"
+                },
+                {
+                    "id": 1254,
+                    "id_boletin": 258223,
+                    "fecha": "2022-02-16",
+                    "seccion": "Contratos sociales",
+                    "contexto": "(*)\nWINEBOUT  SOCIEDAD  POR  ACCIONES  SIMPLIFICADA.  Comun\u00edquese  la  constituci\u00f3n  de  una\nSOCIEDAD  POR  ACCIONES  SIMPLIFICADA,  conforme  a  las  siguientes  previsiones:  1)  Socios:  Juan\nPablo  GONZALEZ,  argentino,  DNI  29.649.696,  C.U.I.T  20-29649696-1,  nacido  el  05  de  Diciembre  de\nBolet\u00edn Oficial - Gobierno de Mendoza - Mi\u00e9rcoles 16 de Febrero de 2022\nMinisterio de Gobierno, Trabajo y Justicia\nSubsecretaria Legal y T\u00e9cnica\n \n \n\n1982, casado en primeras nupcias, Licenciado en Comercio Exterior, con domicilio real en Saavedra 353,\nSan  Jos\u00e9,  Guaymall\u00e9n,  Mendoza;  Juli\u00e1n  GUERRA  SALAS,  argentino,  DNI  38.756.605,  C.U.I.T\n20-38756605-9, nacido el 09 de Enero de 1995, soltero, comerciante, con domicilio real en Turin 3259,\nPortal Benegas, Godoy Cruz, Mendoza 2) Denominaci\u00f3n: WINEBOUT S.A.S. 3) Domicilio social, legal y\nfiscal:  Tur\u00edn  3259,  Portal  Benegas,  Godoy  Cruz,  Mendoza.  4)  Fecha  del  instrumento  constitutivo:  Por\ninstrumento privado de fecha 09\/02\/2022. 5) Objeto social: La sociedad tiene por objeto dedicarse, por\ncuenta  propia  o  ajena,  o  asociada  a  terceros,  o  vinculada  mediante  contratos  asociativos  o  de\ncolaboraci\u00f3n  empresaria  celebrados  con  terceros,  dentro  o  fuera  del  pa\u00eds,  a  la  realizaci\u00f3n  de  las\nsiguientes actividades: 1) COMERCIAL: compra, venta, almacenaje, comercializaci\u00f3n, y\/o distribuci\u00f3n al\npor menor y mayor de toda clase de bebidas alcoh\u00f3licas, vinos, destilados, vermut, cristaler\u00eda y art\u00edculos\npara el servicio de bebidas. 2) Comercializar y\/o distribuir otros productos similares o complementarios a\nsu objeto social 3) IMPORTACI\u00d3N Y EXPORTACI\u00d3N: La sociedad podr\u00e1 importar y exportar por cuenta\npropia, por cuenta de terceros o asociados a terceros vinos. 4) EVENTOS: La realizaci\u00f3n de eventos de\nmaridaje,  integrando  la  gastronom\u00eda  con  la  degustaci\u00f3n  de  vinos,  quesos,  aceite  de  olivos,  y  dem\u00e1s\nproductos regionales. Llevar a cabo la organizaci\u00f3n de eventos de maridaje, contrataci\u00f3n de proveedores,\nlog\u00edstica,  etc  5)  FIDUCIARIA  Y  MANDATARIA:  Mediante  el  ejercicio  de  representaciones  o  mandatos\nfiduciarios de todo tipo, ya sea de conformidad a lo normado por el C\u00f3digo Civil y Comercial de la Naci\u00f3n\no  en  cualquier  otra  norma  que  la  reemplace,  sustituya,  modifique  o  complemente;  la  constituci\u00f3n  de\nfideicomisos  con  cualquier  tipo  de  objeto  y  la  actuaci\u00f3n  como  fiduciario  en  cualquier  fideicomiso  que\npuede legalmente constituirse, siemp"
+                },
+                {
+                    "id": 1240,
+                    "id_boletin": 255709,
+                    "fecha": "2022-01-27",
+                    "seccion": "Licitaciones",
+                    "contexto": "Decreto N\u00b0: 2341\nVisto el Expediente Electr\u00f3nico EX-2021\u201307090386\u2013GDEMZA-MESAENTGENERAL#MSEG, y\nMENDOZA, 30 DE DICIEMBRE DE 2021\nCONSIDERANDO:\nBolet\u00edn Oficial - Gobierno de Mendoza - Jueves 27 de Enero de 2022\nMinisterio de Gobierno, Trabajo y Justicia\nSubsecretaria Legal y T\u00e9cnica\n \n \n\nQue en las citadas actuaciones el Ministerio de Seguridad solicita el nombramiento de diverso personal, en\nel  cargo  Car\u00e1cter  1  \u2013  Jurisdicci\u00f3n  16  \u2013  Unidad  Organizativa  06  -  Clase  001  \u2013  R\u00e9gimen  Salarial  12  \u2013\nAgrupamiento 1 \u2013 Tramo 01 \u2013 Subtramo 01 \u2013 U.G.E. J00098 -AUXILIAR\u2013 de las Polic\u00edas de la Provincia de\nMendoza;\nQue  la  Direcci\u00f3n  de  Capital  Humano  y  Capacitaci\u00f3n  del  Ministerio  de  Seguridad  ha  verificado  que  se\nencuentren  cumplidos  los  requisitos,  de  acuerdo  a  la  normativa  vigente,  para  proceder  a  designar  a  los\naspirantes;\nQue en orden 24 obra Visto Bueno de la Contadur\u00eda General de la Provincia, a los c\u00e1lculos de orden 12 y a\nla planilla de creaci\u00f3n de cargos de orden 18;\nQue en orden 26 obra Decreto N\u00b0 2194\/21 por el cual se tramit\u00f3 el refuerzo presupuestario a la Cuenta\nGeneral J20072 ECO 41101 FIN 000 para llevar a cabo las designaciones mencionadas, en el marco del\nart\u00edculo 36 de la Ley N\u00b0 9278;\nQue obra en las citadas actuaciones Visto Bueno a la excepci\u00f3n prevista en el art\u00edculo 35 de la Ley N\u00b0\n9278, como as\u00ed tambi\u00e9n la aprobaci\u00f3n del Sr. Ministro de Hacienda y Finanzas;\nQue en orden 32 obra Subvolante de Imputaci\u00f3n Preventiva, Comprobante N\u00b0 617\/2021 por la suma de\nPESOS  UN  MILL\u00d3N  CIENTO  TREINTA  Y  NUEVE  MIL  CUARENTA  Y  TRES  CON  36\/100  ($\n1.139.043,36);\nPor ello y de conformidad a lo dispuesto por los art\u00edculos 27 inciso a), 35 y 36 de la Ley N\u00b0 9278 y art\u00edculos\n17 y 27 del Decreto-Acuerdo N\u00b0 150\/21,\nEL\nGOBERNADOR DE LA PROVINCIA\nDECRETA:\nArt\u00edculo 1\u00ba - Modif\u00edquese la Planta de Personal prevista en el Presupuesto General vigente a\u00f1o 2021, de la\nAdministraci\u00f3n P\u00fablica Provincial y cr\u00e9ense en el Car\u00e1cter, Jurisdicci\u00f3n, Unidad Organizativa, Clasificaci\u00f3n\nPresupuestaria,  Ubicaci\u00f3n  Escalafonaria,  Clase  y  Unidad  de  Gesti\u00f3n  los  cargos  que  se  indican  en  la\nPlanilla Anexa I que forma parte del presente decreto.\nArt\u00edculo 2\u00ba - Des\u00edgnense a partir de la fecha del presente decreto, en el cargo Car\u00e1cter 1 \u2013 Jurisdicci\u00f3n 16\nUnidad Organizativa 06 - Clase 001 \u2013 R\u00e9gimen Salarial 12 \u2013 Agrupamiento 1 \u2013 Tramo 01 \u2013 Subtramo 01 \u2013\nU.G.E.  J00098  -AUXILIAR\u2013  de  las  Polic\u00edas  de  la  Provincia  de  Mendoza,  confor"
+                }
+            ],
+            "boletinesNacion": [
+                {
+                    "id": 2318,
+                    "id_boletin": 479029,
+                    "fecha": "2019-05-07",
+                    "seccion": "Avisos comerciales",
+                    "contexto": "BOLET\u00cdN OFICIAL N\u00ba 34.108 - Segunda Secci\u00f3n \n39 \nMartes 7 de mayo de 2019\nBANCO DE\u00a0SAN JUAN\u00a0S.A.\nConforme lo establecen los art\u00edculos 1614, 1620 y concordantes del C\u00f3digo Civil y Comercial de la Naci\u00f3n, se \nnotifica a todos los acreedores, terceros interesados y beneficiarios de las asistencias crediticias otorgadas por \nCREDISHOPP\u00a0S.A., con domicilio en calle Sarmiento 530 5\u00b0 Piso, Ciudad Aut\u00f3noma de Buenos Aires, cuyo cobro \nse efect\u00faa mediante aplicaci\u00f3n de d\u00e9bito autom\u00e1tico en cuenta corriente o caja de ahorro de titularidad de los \nmismos abiertas en el Banco Industrial\u00a0S.A., que por el Contrato de Cesi\u00f3n de Cartera de Cr\u00e9ditos de fecha 29 \nde ABRIL de 2019, suscripto entre CREDISHOPP\u00a0S.A. y el BANCO DE SAN JUAN\u00a0S.A. (BANCO), con domicilio en \ncalle Maip\u00fa 99 de la Ciudad Aut\u00f3noma de Buenos Aires, CREDISHOPP SA ha cedido en propiedad al BANCO, una \ncartera de cr\u00e9ditos determinada, conforme el detalle de beneficiarios y operaciones crediticias que seguidamente \nse individualiza:\nAPELLIDO Y NOMBRE DEL BENEFICIARIO\nNIEVA CLAUDIA DANIELA\nMAMANI RITA OFELIA\nLEIVA JOSE RAMON\nMUGA GERMAN ANTONIO\nGOMEZ JULIO CESAR\nMENDOZA ALEJANDRO HIJINIO\nVILLARREAL MARIANA SOLEDAD\nCARDOZO CARLOS ALBERTO\nVILLANUEVA IVAN MARIO\nPENAYO ULISES DAVID\nDOMINGUEZ BLANCA AZUCENA DEL\nLUNAZ VICTORIA\nFLORES DAVID EMMANUEL\nENCINAS TOMASA FELISA\nPELOZO JUANA ELISA\nROMERO YANINA\nSALOME RAMON ANTONIO\nDOS SANTOS MARIA MAGDALENA\nGODOY HIPOLITO\nARANDA ANGELA ESTER\nESCALANTE VIRGINIA ISABEL\nSOSA MARIA LUCIA\nSOSA PAULO SEBASTIAN\nMONTERO MATIAS\nVELAZQUEZ ERNESTO ANDRES\nAGUERO ESTELVINA\nJURAO JOEL SALOMON\nBARRIOS JUAN PEDRO\nBRIZUELA NEMESIA JUANA\nJUAREZ RAFAEL ALEJANDRO\nQUINTANA ALFREDO ARMANDO\nBUBANS ALEJANDRO\nTABORDA MICAELA YAMILA\nROMERO RUBEN REINALDO\nDIAZ ROSA ALICIA\nHERRERA MARIA DEL CARMEN\nESCOBAR MARTIN\nLOPEZ MARIA ALICIA\nMEDINA ANA MARGARITA\nMEDINA SUSANA MARTINA\nLOPEZ ROSALINO ROSARIO\nMUNOZ HECTOR ANTONIO\nVALLEJOS MIRTA AIDE\nZALAZAR JORGE\nRIOS MARIO RAFAEL\nANTUA OSVALDO SEBASTIAN\nVARGAS MANUEL ISMAEL\nDNI NRO\n32409722\n32414396\n10141362\n21722123\n26431898\n23792197\n29308764\n25884024\n33253520\n34030938\n06247257\n04765842\n37166195\n18022973\n18023063\n35884235\n23088927\n16471415\n14170962\n20490967\n20678281\n31809122\n27654257\n27657788\n21525543\n12383306\n35062570\n35063733\n11850211\n29451035\n29457137\n28555875\n36400792\n29980596\n18093303\n11751427\n07921009\n14141621\n16548863\n31691816\n12307264\n12307582\n16074740\n22834782\n27809460\n26022529\n08175019\nNRO. \nOPERACI\u00d3N\n2016209\n1709682\n1716987\n1767919\n170183"
+                },
+                {
+                    "id": 2239,
+                    "id_boletin": 459223,
+                    "fecha": "2019-01-08",
+                    "seccion": "Avisos comerciales",
+                    "contexto": "BANCO DE\u00a0SAN JUAN\u00a0S.A.\nBuenos Aires, 27 de diciembre de 2018\nConforme  lo  establecen  los  art\u00edculos  1614,  1620,  siguientes  y  concordantes  del  C\u00f3digo  Civil  y  Comercial,  se \nnotifica a todos los acreedores, terceros interesados y beneficiarios de las asistencias crediticias otorgadas por \nCAJA  DE  CREDITO  CUENCA  COOPERATIVA  LTDA.  (LA  COOPERATIVA)  con  domicilio  en  Sarmiento  670  de  la \nCiudad  Aut\u00f3noma  de  Buenos  Aires,  cuyo  cobro  se  efect\u00faa  mediante  pago  voluntario  que  por  el  Contrato  de \nCesi\u00f3n de Cartera de Cr\u00e9ditos de fecha 27 de DICIEMBRE de 2018 suscripto entre LA COOPERATIVA y el BANCO \nDE SAN JUAN\u00a0S.A. (EL BANCO), con domicilio en calle Cerrito 702 de la Ciudad Aut\u00f3noma de Buenos Aires, LA \nCOOPERATIVA ha cedido en propiedad al BANCO, una cartera de cr\u00e9ditos determinada, conforme el detalle de \nbeneficiarios y operaciones crediticias que seguidamente se individualiza:\nNOMBRE Y APELLIDO BENEFICIARIO\nFUNES LUISA AMERICA\nSCI MARIA JOSEFA\nCASCO ANDREA\nMEZA VICTOR WALTER\nFERNANDEZ ANTONIA RAQUEL\nCEJAS MANUEL YGNACIO\nDNI NRO.\n01961858\n04139826\n03562339\n13863475\n13742569\n07188611\nNRO OPERACI\u00d3N\n1055695\n1056282\n1056159\n1055309\n1056190\n1055945\nFECHA OTORGAMIENTO\n18\/12\/2018\n21\/12\/2018\n21\/12\/2018\n14\/12\/2018\n21\/12\/2018\n20\/12\/2018\n\n  BOLET\u00cdN OFICIAL N\u00ba 34.029 - Segunda Secci\u00f3n \n34 \nMartes 8 de enero de 2019\nNOMBRE Y APELLIDO BENEFICIARIO\nCRUCCI MARIA LIDIA\nFERNANDEZ GENOVEBA\nCABRERA MARIANO FLORENTINO\nCASATTI LIDIA MARINA\nCARRIZO PAUL OSCAR\nTRAMONTTES CELIA ELIZABETH\nLEMOS ALEGRE DELIA ORFILIA\nMENDEZ JORGE LUIS\nAREVALO BLANCA ARGENTINA\nROJAS MARIA SARA\nFILARTIGA VICENTE\nINOCENTI JOSEFA NAZARENA\nPEDRAZA DANIEL OSCAR\nBAZAN ROSA BEATRIZ\nQUIROGA GUILLERMINA\nOLIVERA STELLA AIDA\nCARRIZO JUAN FLORENCIO\nARCE GLADY SEFERINA\nESTRADA JOSEFINA\nGALVALIZ LEANDRO GUSTAVO\nCARRIZO NATALIA VANESA DEL VALLE\nGALLARDO ROSA ESTELA\nHEREDIA GABRIEL PRIMITIVO\nHERNANDEZ JULIAN OSCAR\nRIVERA MARTA SILVIA\nCASTRO ESTEVAN\nPE\u00d1ALOZA SILVERIO ARGENTINO\nJOFRE ESTER BEATRIZ\nCEBALLOS ROSA\nPANERO ESTELA MARIA\nCENTENO DANIEL ROBERTO\nPAREDES RAUL HERNANDO\nSORIA JOSEFA\nVELAZQUEZ ENRIQUE ALBANO\nORGAZ DE LA FUENTE ANTONIA\nCORNEJO ROSA\nLLANES RAMONA BEATRIZ\nMI\u00d1O ISABEL\nCORONEL NORMA SUSANA\nALAGONA ROSA LIDIA\nGRANDO JUAN BAUTISTA\nCORTES JORGE ENRIQUE\nVIVAS CELIA DE LUJAN\nCALDERON MARIA ELVA\nATANASIO JAIME\nBORDA RAMON CEFERINO\nPAEZ HILDA ESTELA\nECHENIQUE FRANCISCA INES\nARCE SUSANA DEL VALLE\nSEGOVIA DELIA MODESTA\nMERCADO JUAN ALFREDO\nFLORES RITO MIGUEL\nSOLSONE "
+                },
+                {
+                    "id": 2209,
+                    "id_boletin": 450756,
+                    "fecha": "2018-11-20",
+                    "seccion": "Avisos comerciales",
+                    "contexto": "BANCO DE\u00a0SAN JUAN\u00a0S.A.\nBuenos Aires, 14 de noviembre de 2018\nConforme lo establecen los art\u00edculos 1614, 1620, siguientes y concordantes del C\u00f3digo Civil y Comercial, se notifica \na todos los acreedores, terceros interesados y beneficiarios de las asistencias crediticias otorgadas por CAJA DE \nCREDITO CUENCA COOPERATIVA LTDA. (LA COOPERATIVA) con domicilio en calle Sarmiento 670 de la Ciudad \nAut\u00f3noma de Buenos Aires, cuyo cobro se efect\u00faa mediante aplicaci\u00f3n de d\u00e9bito autom\u00e1tico en cuenta corriente \no caja de ahorro de titularidad de los mismos y\/o pago voluntario, que por el Contrato de Cesi\u00f3n de Cartera de \nCr\u00e9ditos de fecha 14 de NOVIEMBRE 2018, suscripto entre LA COOPERATIVA y el BANCO DE SAN JUAN\u00a0S.A. (EL \nBANCO), con domicilio en calle Cerrito 702 de la Ciudad Aut\u00f3noma de Buenos Aires, LA COOPERATIVA ha cedido \nen propiedad al BANCO, una cartera de cr\u00e9ditos determinada, conforme el detalle de beneficiarios y operaciones \ncrediticias que seguidamente se individualiza:\nAPELLIDO Y NOMBRE DEL BENEFICIARIO\nJARA DELIA\nPASTRANA JUAN FELIX\nPEDAL PAOLA ELIZABETH\nGIMENEZ EUSEBIA\nDORADO RAFAELA MERCEDES\nCARBONE SILVIA MABEL\nFERREYRA ZULMA RAMONA\nNEIRA JOSE MARCELO\nPE\u00d1I\u00d1OREY TERESA MARTA\nRODRIGUEZ JOSE DE LA CRUZ\nDURAZNO YOLANDA\nMARANI CATALINA PALMIRA\nVACA VICTORIANA\nLUCERO GLADYS ALICIA\nGUEMAN DORA ISABEL\nOSESS VERONICA DEL CARMEN\nGUZMAN SILVINA PAOLA\nGODOY ANA MARIA\nZODZEIKO MARIA ELVIRA\nCA\u00d1ADAS AGUSTIN DOMINGO\nRAMIREZ FRANCISCO DANIEL\nCUITI\u00d1O FRANCISCA NORMA\nVILLEGAS NELIDA DEL CARMEN\nVISCIGLIO MARIA DEL CARMEN\nMEDINA MABEL LILIANA\nCONDORI EDUBIGES NOLBERTO\nCHAYLE CARMEN RAMONA\nACIAR ROSA\nCORREA ARGENTINA\nIZQUIERDO EUGENIO ANGEL\nBRUN ANTONIA\nPERALTA REYES LUCIA DEL ROSARIO\nDNI NRO\n04140023\n08166187\n25121337\n16092921\n16092997\n16775444\n16471544\n23832939\n10945492\n10441392\n04797437\n03721319\n05782309\n18051920\n13755856\n23482965\n26295325\n22290624\n05399640\n08151874\n21377718\n02760325\n21382513\n10846669\n17780450\n08175025\n18098243\n05709325\n06360163\n08213545\n12513930\n12878494\nNRO. \nOPERACI\u00d3N\n1050860\n1050950\n1051312\n1051667\n1051940\n1051584\n1050406\n1051825\n1050578\n1051211\n1051920\n1051509\n1051504\n1051727\n1050651\n1051367\n1051918\n1050694\n1051764\n1051889\n1050884\n1051582\n1051884\n1051800\n1051399\n1051286\n1051678\n1050513\n1050636\n1051732\n1051406\n1051374\nFECHA \nOTORGAMIENTO\n01\/11\/2018\n02\/11\/2018\n07\/11\/2018\n09\/11\/2018\n12\/11\/2018\n09\/11\/2018\n29\/10\/2018\n12\/11\/2018\n30\/10\/2018\n07\/11\/2018\n12\/11\/2018\n08\/11\/2018\n08\/11\/2018\n09\/11\/2018\n31\/10\/2018\n08\/11\/2018\n12\/11\/2018\n31\/10\/2018\n09"
+                },
+                {
+                    "id": 2101,
+                    "id_boletin": 420195,
+                    "fecha": "2018-06-14",
+                    "seccion": "Avisos comerciales",
+                    "contexto": "BANCO DE\u00a0SAN JUAN S.A.\nBuenos Aires, 9 de mayo de 2018\nConforme  lo  establecen  los  art\u00edculos  1614,  1620,  siguientes  y  concordantes  del  C\u00f3digo  Civil  y  Comercial,  se \nnotifica a todos los acreedores, terceros interesados y beneficiarios de las asistencias crediticias otorgadas por \nCOOPERATIVA DE VIVIENDA, CREDITO Y CONSUMO PALMARES LTDA. (LA COOPERATIVA) con domicilio en \ncalle 25 de Mayo 460 Piso 2\u00b0, Ciudad Aut\u00f3noma de Buenos Aires, cuyo cobro se efect\u00faa mediante la utilizaci\u00f3n \ndel sistema nacional de pagos, que por el Contrato de Cesi\u00f3n de Cartera de Cr\u00e9ditos de fecha 09 de MAYO de \n2018,  suscripto  entre  LA  COOPERATIVA  y  el  BANCO  DE  SAN  JUAN  S.A.  (EL  BANCO),  con  domicilio  en  calle \nCerrito 702 de la Ciudad Aut\u00f3noma de Buenos Aires, LA COOPERATIVA ha cedido en propiedad al BANCO, una \ncartera de cr\u00e9ditos determinada, conforme el detalle de beneficiarios y operaciones crediticias que seguidamente \nse individualiza\nCREDITO N\u00b0\nAPELLIDO Y NOMBRE\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n1013838\n1014125\n1014379\n1014460\n1014484\n1014489\n1014493\n1014499\n1014514\n1014516\n1014524\n1014526\n1014530\n1014533\n1014541\n1014547\n1014549\n1014551\n1014555\n1014565\n1014566\n1014568\n1014569\nSotelo, Faustino Eduardo\nSaldivia, Jose Albertico\nLeguizamon, Rita Susana\nMaydana, Miguel Angel\nOjeda, Nelida Ester\nIbarrola, Claudia Noemi\nAcosta, Omar Alfredo\nEnriques, Elias Daniel\nCastro, Leandro Emiliano\nZapata, Marciano\nLima, Noemi Elena\nAyala, Carlos Alberto Ramon\nLopez, Elena Beatriz\nFrezzia, Gabriela Isabel\nAmaro, Maria Rosa Beatriz\nRamirez, Salvador Daniel\nArmoa, Fabian Matias\nPi\u00f1eyro, Ricardo Alexis\nArtaza, Flora Ester\nGarramone, Ricardo Roberto\nGauna, Marta Esther\nColman, Ramon Humberto\nCapillera, Juan Leonardo\nCUIL\n20058329100\n20140373363\n27143423323\n20224024925\n27162813760\n23324109854\n20275074455\n20336846030\n20357139644\n20104877924\n27113528414\n20236633439\n27124573241\n27183232822\n27121266755\n20163606322\n20338635541\n20385447982\n27054787338\n20084213145\n27048359480\n20058260372\n20220159745\nFECHA DE \nORIGINACI\u00d3N\n09\/05\/2017\n06\/09\/2017\n05\/12\/2017\n06\/01\/2018\n11\/01\/2018\n12\/01\/2018\n15\/01\/2018\n17\/01\/2018\n22\/01\/2018\n22\/01\/2018\n23\/01\/2018\n23\/01\/2018\n24\/01\/2018\n24\/01\/2018\n25\/01\/2018\n26\/01\/2018\n27\/01\/2018\n30\/01\/2018\n31\/01\/2018\n02\/02\/2018\n03\/02\/2018\n03\/02\/2018\n05\/02\/2018\n\n  BOLET\u00cdN OFICIAL N\u00ba 33.891 - Segunda Secci\u00f3n \n121 \nJueves 14 de junio de 2018\nCREDITO N\u00b0\nAPELLIDO Y NOMBRE\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44"
+                }
+            ],
+            "scoringInforme": {
+                "detalle": "MUY BUENO",
+                "deuda": "316368.06",
+                "credito": "2826265.08",
+                "scoring": 4,
+                "actividad": {
+                    "empleado": "SI",
+                    "monotributista": "NO",
+                    "autonomo": "SI",
+                    "empleador": "NO"
+                },
+                "codem": "SI",
+                "detalle_scoring": {
+                    "bcraOnline": 4,
+                    "sinActividad": 5,
+                    "bcra12Meses": 6,
+                    "bcra12a24Meses": 6,
+                    "chequesRechazadosOnline": 6,
+                    "chequesRechazados24meses": 6,
+                    "ingresos": 6,
+                    "legal": 6,
+                    "edad": 6,
+                    "fallecido": 6
+                }
+            },
+            "boletinesCordoba": [
+                {
+                    "id": 18172,
+                    "id_boletin": 1500542,
+                    "fecha": "2007-07-23",
+                    "seccion": "Sentencias",
+                    "contexto": ".-\nSe hace saber que en los autos \"Gonz\u00e1lez,\nJuan Pablo - Quiebra Propia Simple\" (Expte. N\u00ba\n1258434\/36), que se tramitan por ante el\nJuzgado de 1\u00aa Instancia y 26\u00aa Nominaci\u00f3n en lo\nCivil y Comercial - Concursos y Sociedades N\u00ba\n2, Secretar\u00eda \u00danica, se han dictado las siguientes\nresoluciones: Sentencia N\u00famero: doscientos\nsesenta y ocho. C\u00f3rdoba, doce de junio de dos\nmil siete. Y Vistos:... Y Considerando:...\nResuelvo: 1\u00ba) Declarar la quiebra de Juan Pablo\nGonzalez, D.N.I. N\u00ba 26.815.549, domiciliado encalle Bermejo N\u00ba 5523 de esta ciudad... 6\u00ba)\nOrdenar al deudor y terceros que posean bienes\ndel fallido que dentro del plazo de veinticuatro\nhoras de interpelados, hagan entrega de los\nmismos al S\u00edndico. 7\u00ba) Intimar al fallido para que\ndentro del t\u00e9rmino de cuarenta y ocho horas d\u00e9\nacabado cumplimiento a las disposiciones del\nart\u00edculo 86 de la Ley N\u00ba 24.522 y para que dentro\ndel t\u00e9rmino de veinticuatro horas ponga a\ndisposici\u00f3n del S\u00edndico los bienes y\ndocumentaci\u00f3n relacionada con su actividad en\nforma apta para que dicho funcionario pueda\ntomar inmediata y segura posesi\u00f3n de los\nmismos, bajo apercibimiento. 8\u00ba) Prohibir al fallido\nhacer pagos de cualquier naturaleza, y hacer\nsaber a los terceros que los perciban, que los\nmismos ser\u00e1n ineficaces y prohibir a los\nterceros efectuar pagos al fallido, los que\ndeber\u00e1n realizarse por consignaci\u00f3n judicial en\nlos presentes obrados... 13\u00ba) Fijar como plazo\npara que los acreedores presenten las\npeticiones de verificaci\u00f3n de sus cr\u00e9ditos ante\nel S\u00edndico hasta el d\u00eda trece de agosto de dos mil\nsiete inclusive. 14\u00ba) Fijar como fecha para que\nel s\u00edndico presente el Informe Individual el d\u00eda\nveintiocho de setiembre de dos mil siete. Hacer\nsaber que la resoluci\u00f3n prevista por el art. 36\nde la L.C.Q. se dictar\u00e1 el d\u00eda quince de febrero\nde dos mil ocho. 15\u00ba) Fijar como fecha para que\nel s\u00edndico presente el Informe General el d\u00eda\ndieciocho de marzo de dos mil ocho... Nota: se\nhace saber que ha resultado sorteado S\u00edndico\nen los presentes autos el Cr. Fernando Leopoldo\nGarc\u00eda, quien fij\u00f3 domicilio en calle Dr. Jos\u00e9 Pati\u00f1o\n3111, B\u00ba Jard\u00edn de esta ciudad. Tel.: 4647843 -\n156316289. Fdo.: Ernesto Abril, Juez. Oficina,\n26 de junio de 2007. Moreno Espeja, Prosec.."
+                }
+            ],
+            "telefonosPersonasRelacionadas": {
+                "20146840400": {
+                    "datos_persona": {
+                        "cuit": "20146840400",
+                        "nombre_completo": "GONZALEZ JOSE LUIS"
+                    },
+                    "telefonos": [
+                        {
+                            "nombre": "GONZALEZ JOSE L",
+                            "telefono": "(0341) 458-4701",
+                            "domicilio": "OCAMPO 6476",
+                            "cp": "2000",
+                            "localidad": "ROSARIO",
+                            "provincia": "SANTA FE",
+                            "guia": "2014"
+                        }
+                    ],
+                    "declarados": [
+                        {
+                            "numero": "3413345209"
+                        },
+                        {
+                            "numero": "3414584701"
+                        }
+                    ],
+                    "celulares": [
+                        {
+                            "numero": "3413345209",
+                            "orden": "1"
+                        },
+                        {
+                            "numero": "3415321346",
+                            "orden": "5"
+                        },
+                        {
+                            "numero": "3416757267",
+                            "orden": "5"
+                        }
+                    ]
+                },
+                "20313398642": {
+                    "datos_persona": {
+                        "cuit": "20313398642",
+                        "nombre_completo": "GONZALEZ JOSE ANTONIO"
+                    },
+                    "telefonos": false,
+                    "declarados": [
+                        {
+                            "numero": "3416807229"
+                        }
+                    ],
+                    "celulares": [
+                        {
+                            "numero": "3416807244",
+                            "orden": "1"
+                        }
+                    ]
+                },
+                "27182153775": {
+                    "datos_persona": {
+                        "cuit": "27182153775",
+                        "nombre_completo": "PASCUALE NORMA FABIANA"
+                    },
+                    "telefonos": false,
+                    "declarados": false,
+                    "celulares": [
+                        {
+                            "numero": "3413128020",
+                            "orden": "2"
+                        },
+                        {
+                            "numero": "3413025441",
+                            "orden": "5"
+                        }
+                    ]
+                },
+                "27203546772": {
+                    "datos_persona": {
+                        "cuit": "27203546772",
+                        "nombre_completo": "CURBELO OLGA NANCI"
+                    },
+                    "telefonos": false,
+                    "declarados": [
+                        {
+                            "numero": "3416491084"
+                        }
+                    ],
+                    "celulares": [
+                        {
+                            "numero": "3416478986",
+                            "orden": "1"
+                        },
+                        {
+                            "numero": "3413258451",
+                            "orden": "1"
+                        },
+                        {
+                            "numero": "3416470981",
+                            "orden": "1"
+                        },
+                        {
+                            "numero": "3413444720",
+                            "orden": "1"
+                        },
+                        {
+                            "numero": "3415828132",
+                            "orden": "1"
+                        }
+                    ]
+                },
+                "27332591326": {
+                    "datos_persona": {
+                        "cuit": "27332591326",
+                        "nombre_completo": "GONZALEZ JOANA EDITH"
+                    },
+                    "telefonos": false,
+                    "declarados": false,
+                    "celulares": [
+                        {
+                            "numero": "3413775247",
+                            "orden": "2"
+                        },
+                        {
+                            "numero": "3413715446",
+                            "orden": "5"
+                        }
+                    ]
+                },
+                "27366598591": {
+                    "datos_persona": {
+                        "cuit": "27366598591",
+                        "nombre_completo": "GONZALEZ AGUSTINA MABEL"
+                    },
+                    "telefonos": false,
+                    "declarados": [
+                        {
+                            "numero": "3413128020"
+                        }
+                    ],
+                    "celulares": false
+                },
+                "27377150681": {
+                    "datos_persona": {
+                        "cuit": "27377150681",
+                        "nombre_completo": "ISOARDI MELANI DAFNE"
+                    },
+                    "telefonos": false,
+                    "declarados": [
+                        {
+                            "numero": "3413258451"
+                        }
+                    ],
+                    "celulares": false
+                }
+            },
+            "resumen": {
+                "mensajes": {
+                    "verde": [
+                        "posee 134 meses de antig\u00fcedad como monotributista",
+                        "con movimientos en el BCRA los ultimos 12 meses",
+                        "solo situacion\/es 1 declarada\/s en el BCRA en los dos \u00faltimos a\u00f1os",
+                        "muy buen nivel de contactaci\u00f3n"
+                    ],
+                    "amarillo": [
+                        "existen 5 movimientos en entidades financieras"
+                    ],
+                    "rojo": []
+                }
+            }
+        }
+    },
+    "metadata": []
+}
