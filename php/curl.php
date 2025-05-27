@@ -275,6 +275,28 @@ class InfoAuto
             echo json_encode(['accessToken' => $access_token, 'price' => ($price * 1000)], TRUE);
         }
     }
+
+    public function getMotorcyclePriceByVehicleId($codia, $access_token)
+    {
+        $url = "https://api.infoauto.com.ar/motorcycles/pub/vehicles/{$codia}/prices/";
+
+        // Iniciar una sesión cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . $access_token
+        ));
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        } else {
+            $price_info = json_decode($response, true);
+            echo json_encode(['accessToken' => $access_token, 'prices' => $price_info], TRUE);
+        }
+    }
 }
 
 // --- INICIO: Clase para InfoExperto ---
@@ -454,6 +476,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //echo json_decode($_POST[""], TRUE);
     die();
 }
+
+// Manejar solicitudes GET para obtener precios usados
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['endpoint'])) {
+    $endpoint = $_GET['endpoint'];
+    $url = "https://api.infoauto.com.ar/" . $endpoint;
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $accessToken,
+    ]);
+ 
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    // Validar si la respuesta es JSON válida
+    $data = json_decode($response, true);
+    if (!is_array($data)) {
+        echo json_encode([
+            'accessToken' => $accessToken,
+            'error' => 'Respuesta no válida del servidor InfoAuto',
+            'raw' => $response
+        ]);
+        file_put_contents('log_response_infoauto.txt', $response); // Log para depuración
+        exit;
+    }
+
+    if ($httpCode === 200) {
+        // Validar si es una solicitud de motos
+        if (str_contains($endpoint, 'motorcycles')) {
+            echo json_encode([
+                'accessToken' => $accessToken,
+                'prices' => $data, // Array de precios por año
+            ]);
+        } else {
+            // Manejar respuesta para autos
+            if (isset($data['list_price'])) {
+                echo json_encode([
+                    'accessToken' => $accessToken,
+                    'price' => $data['list_price'], // Usar el campo 'list_price' para autos
+                ]);
+            } else {
+                echo json_encode([
+                    'accessToken' => $accessToken,
+                    'price' => 0, // Precio no encontrado
+                ]);
+            }
+        }
+    } else {
+        echo json_encode(['error' => 'Error al consultar el servicio de Infoauto.']);
+    }
+    exit;
+}
+
 //codia activos: 630036, 630037, 630030, 630034
 
 $conn->close();
