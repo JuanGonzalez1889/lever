@@ -8,7 +8,9 @@ class InfoAuto
     public $password;
 
     public function setApiType($categoria) {
-        if (strtolower($categoria) === 'motos' || strtolower($categoria) === 'moto') {
+        $cat = strtolower(trim($categoria));
+        // Si contiene "moto" en cualquier parte, es moto
+        if (strpos($cat, 'moto') !== false) {
             $this->apiType = 'motorcycles';
             $this->username = 'alejandro.amado@lever.com.ar';
             $this->password = 'a2tyKwLEGUaucurp';
@@ -240,6 +242,9 @@ class InfoAuto
     public function getPriceByCodia($codia, $year, $access_token)
     {
         $apiType = $this->apiType;
+        $logFile = __DIR__ . '/log_infoauto_backend.txt';
+        $logPrefix = "[" . date('Y-m-d H:i:s') . "] codia: $codia | year: $year | apiType: $apiType\n";
+
         if ($year == date('Y')) {
             $url = "https://api.infoauto.com.ar/{$apiType}/pub/models/{$codia}/list_price";
         } else {
@@ -256,24 +261,34 @@ class InfoAuto
 
         $response = curl_exec($ch);
 
+        // --- LOG: Guardar request y response ---
+        file_put_contents($logFile, $logPrefix . "URL: $url\nRESPONSE: $response\n", FILE_APPEND);
+
         if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
+            $error = 'Error:' . curl_error($ch);
+            file_put_contents($logFile, $logPrefix . "CURL ERROR: $error\n", FILE_APPEND);
+            echo $error;
         } else {
             $price_info = json_decode($response, true);
+            file_put_contents($logFile, $logPrefix . "PARSED: " . print_r($price_info, true) . "\n", FILE_APPEND);
             $price = null;
 
             if ($year == date('Y')) {
                 $price = $price_info['list_price'];
             } else {
-                foreach ($price_info as $item) {
-                    if ($item['year'] == $year) {
-                        $price = $item['price'];
-                        break;
+                if (is_array($price_info)) {
+                    foreach ($price_info as $item) {
+                        if (is_array($item) && isset($item['year']) && $item['year'] == $year) {
+                            $price = $item['price'];
+                            break;
+                        }
                     }
                 }
             }
-            echo json_encode(['accessToken' => $access_token, 'price' => ($price * 1000)], TRUE);
+            file_put_contents($logFile, $logPrefix . "PRICE FOUND: " . ($price ? $price * 1000 : 0) . "\n", FILE_APPEND);
+            echo json_encode(['accessToken' => $access_token, 'price' => ($price ? $price * 1000 : 0)], TRUE);
         }
+        curl_close($ch);
     }
 
     public function getMotorcyclePriceByVehicleId($codia, $access_token)

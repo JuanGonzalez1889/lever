@@ -1,0 +1,78 @@
+Marcas de AUTOS sin logo:
+[AUTO] AGRALE (ID: 63) listo
+[AUTO] BAIC (ID: 118) listo
+[AUTO] CITROEN (ID: 11) listo
+[AUTO] CORADIR (ID: 129)
+[AUTO] DFM (ID: 112) listo
+[AUTO] DFSK (ID: 119) listo
+[AUTO] DS AUTOMOBILES (ID: 117) listo
+[AUTO] KIA CAMION (ID: 74)
+[AUTO] MERCEDES BENZ (ID: 28) listo 
+[AUTO] MERCEDES BENZ C (ID: 75) listo
+[AUTO] MINI COOPER (ID: 106) listo 
+[AUTO] ROVER-LAND ROV. (ID: 37) listo
+[AUTO] SERO ELECTRIC (ID: 126) listo
+[AUTO] SHACMAN (ID: 133) listo
+[AUTO] SHINERAY (ID: 120) listo
+[AUTO] VOLKSWAGEN CAM. (ID: 66) listo
+[AUTO] VOLT (ID: 130)
+[AUTO] VOLVO CAMION (ID: 88) usar misma que auto
+[AUTO] ZANELLA (ID: 125) listo 
+
+Marcas de MOTOS sin logo:
+[MOTO] APRILIA (ID: 942) listo
+[MOTO] BAJAJ (ID: 884) listo
+[MOTO] BENELLI (ID: 890) listo
+[MOTO] BETA (ID: 913) listo
+[MOTO] BMW (ID: 914) listo
+[MOTO] BRAVA (ID: 928) listo
+[MOTO] CAN AM (ID: 946) listo
+[MOTO] CF MOTO (ID: 995) listo
+[MOTO] CORVEN (ID: 939) listo
+[MOTO] DUCATI (ID: 935) listo
+[MOTO] ECOOTER (ID: 611) listo
+[MOTO] GAMMA (ID: 839)
+[MOTO] GAS GAS (ID: 850) listo
+[MOTO] GILERA (ID: 940) listo
+[MOTO] GUERRERO (ID: 930) listo
+[MOTO] GUZZI (ID: 994) listo
+[MOTO] HARLEY DAVI (ID: 926) listo
+[MOTO] HERO (ID: 961) listo
+[MOTO] HONDA (ID: 881) listo
+[MOTO] HUSQVARNA (ID: 855) listo
+[MOTO] JAWA (ID: 886) listo
+[MOTO] JIANSHE (ID: 912) listo
+[MOTO] KAWASAKI (ID: 960) listo 
+[MOTO] KAYO (ID: 609) listo
+[MOTO] KELLER (ID: 937) listo
+[MOTO] KIDEN (ID: 608) listo
+[MOTO] KTM (ID: 849) listo
+[MOTO] KYMCO (ID: 950) listo
+[MOTO] LIFAN (ID: 844) listo
+[MOTO] LUCKY LION (ID: 603) listo
+[MOTO] MINARELLI (ID: 919) listo
+[MOTO] MONDIAL (ID: 910) listo
+[MOTO] MORBIDELLI (ID: 616) listo
+[MOTO] MOTOMEL (ID: 920) listo
+[MOTO] MOTO MORINI (ID: 606) listo
+[MOTO] MV AGUSTA (ID: 982) listo
+[MOTO] NUUV (ID: 604)
+[MOTO] OKINOI (ID: 934) listo
+[MOTO] PIAGGIO (ID: 841) listo
+[MOTO] POLARIS (ID: 847) listo
+[MOTO] QJMOTOR (ID: 612) listo
+[MOTO] ROYAL ENFIELD (ID: 991) listo
+[MOTO] RVM (ID: 614) listo
+[MOTO] SHERCO (ID: 615) listo
+[MOTO] SIAM (ID: 607) listo
+[MOTO] SUNRA (ID: 601) listo
+[MOTO] SUPER SOCO (ID: 602) listo
+[MOTO] SUZUKI (ID: 916) listo
+[MOTO] SYM (ID: 853) listo
+[MOTO] TEKNIAL (ID: 613) listo 
+[MOTO] TRIUMPH (ID: 992) listo
+[MOTO] TVS (ID: 854) listo
+[MOTO] VESPA (ID: 993) listo
+[MOTO] VOGE (ID: 600) listo
+[MOTO] YAMAHA (ID: 911) listo
+[MOTO] ZANELLA MOTOS (ID: 990) listo

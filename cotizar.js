@@ -378,8 +378,9 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     if (!catPlaceholder) return "autos";
     const val = (catPlaceholder.dataset.value || catPlaceholder.textContent || "").toLowerCase();
+    // --- CAMBIO: Si contiene "moto", devolver "motos"
     if (val.includes("moto")) return "motos";
-    if (val.includes("utilitario")) return "utilitarios";
+    if (val.includes("utilitario") || val.includes("camion")) return "utilitarios";
     return "autos";
   }
 
@@ -453,11 +454,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const getLogo = (id) => {
     const element = dataWithLogo.find((element) => element.id == id);
-    const logoUrl = element?.logo || "./images/logos/generic-logo.png";
+    let logoUrl = element?.logo;
+
+    // Si no hay logo, buscar localmente según categoría
+    if (!logoUrl || logoUrl === "" || logoUrl === "null") {
+      // Obtener categoría seleccionada
+      const categoria = getSelectedCategoria();
+      // Normalizar nombre de marca: minúsculas, sin espacios, sin tildes, sin puntos
+      let nombreMarca = (element?.name || "").toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quitar tildes
+        .replace(/[^a-z0-9]/g, "-") // reemplazar todo lo que no sea letra o número por guión
+        .replace(/-+/g, "-") // un solo guión
+        .replace(/^-|-$/g, ""); // quitar guión inicial/final
+
+      // Ruta base según categoría
+      let basePath = "./images/logos/autos/";
+      if (categoria === "motos") basePath = "./images/logos/motos/";
+
+      // Probar con .png y .jpg
+      const img = document.getElementById("vehicle-logo");
+      const tryPng = `${basePath}${nombreMarca}.png`;
+      const tryJpg = `${basePath}${nombreMarca}.jpg`;
+
+      // Probar si existe el PNG, si no, probar JPG, si no, usar genérico
+      img.onerror = function () {
+        if (img.src.endsWith(".png")) {
+          img.src = tryJpg;
+          img.onerror = function () {
+            img.src = "./images/logos/generic-logo.png";
+          };
+        } else {
+          img.src = "./images/logos/generic-logo.png";
+        }
+      };
+      img.src = tryPng;
+      img.alt = `Logo de ${element?.name || "genérico"}`;
+      return;
+    }
+
+    // Si hay logo de la API, usarlo
     document.getElementById("vehicle-logo").src = logoUrl;
-    document.getElementById("vehicle-logo").alt = `Logo de $(
-        element?.name || "genérico"
-      )`;
+    document.getElementById("vehicle-logo").alt = `Logo de ${element?.name || "genérico"}`;
   };
 
   // Llamar a fetchMarcasFromInfoauto al seleccionar un año
@@ -864,7 +901,7 @@ document.addEventListener("DOMContentLoaded", () => {
       value = value.slice(0, 12); // Limitar a 12 dígitos
     }
 
-    const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear con puntos
+    const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear with puntos
     financeInput.value = formattedValue;
 
     // Validar si el monto supera el máximo permitido
@@ -943,8 +980,9 @@ async function fetchModelosFromInfoauto(marcaId, year) {
     );
     if (!catPlaceholder) return "autos";
     const val = (catPlaceholder.dataset.value || catPlaceholder.textContent || "").toLowerCase();
+    // --- CAMBIO: Si contiene "moto", devolver "motos"
     if (val.includes("moto")) return "motos";
-    if (val.includes("utilitario")) return "utilitarios";
+    if (val.includes("utilitario") || val.includes("camion")) return "utilitarios";
     return "autos";
   }
   const categoria = getSelectedCategoria();
@@ -2401,6 +2439,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+
 // --- NUEVO: Resetear selects dependientes al cambiar la categoría ---
 document.addEventListener("DOMContentLoaded", () => {
   const categoriaOptions = document.getElementById("categoria-options");
@@ -2551,13 +2590,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // --- OBTENER CATEGORIA CORRECTA ---
+      const categoria = getSelectedCategoria(); // <-- AGREGADO
+
       // 2. Hacer fetch a curl.php para obtener el precio
       try {
         const body = {
           codia,
           year,
           accessToken: accessToken,
-          action: "getPriceByCodia"
+          action: "getPriceByCodia",
+          categoria // <-- AGREGADO
         };
         const res = await fetch("php/curl.php", {
           method: "POST",
@@ -2647,6 +2690,7 @@ function updateMaximoAFinanciar() {
   // Validar si el producto existe en ltvData
   if (!window.ltvData || !(producto in window.ltvData)) {
     console.warn("[MAXAFIN] Producto no encontrado en ltvData.");
+
     return;
   }
 
@@ -2656,10 +2700,11 @@ function updateMaximoAFinanciar() {
   const year =
     yearPlaceholder?.dataset.value?.trim() ||
     yearPlaceholder?.textContent?.trim() ||
-    null;
+       null;
   console.log("[MAXAFIN] Año seleccionado:", year);
 
   // 3. Obtener el LTV correspondiente
+
   let ltv = null;
   if (
     window.ltvData &&
@@ -2904,5 +2949,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (productOptions) productOptions.addEventListener("click", () => setTimeout(actualizarCuotasPantalla4, 100));
     const anioOptions = document.getElementById("anio-options");
     if (anioOptions) anioOptions.addEventListener("click", () => setTimeout(actualizarCuotasPantalla4, 100));
-}); 
+});
+
+// --- HACER GLOBAL getSelectedCategoria ---
+function getSelectedCategoria() {
+  const catPlaceholder = document.querySelector(
+    '[onclick="toggleCustomOptions(\'categoria-options\')"]'
+  );
+  if (!catPlaceholder) return "autos";
+  const val = (catPlaceholder.dataset.value || catPlaceholder.textContent || "").toLowerCase();
+  if (val.includes("moto")) return "motos";
+  if (val.includes("utilitario") || val.includes("camion")) return "utilitarios";
+  return "autos";
+}
 
