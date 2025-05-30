@@ -207,11 +207,34 @@ app.get('/api/data', (req, res) => {
 });
 
 app.post('/api/data', (req, res) => {
-    /* if (!req.session.username) {
-        return res.status(401).json({ success: false, message: 'Unauthorized' });
-    } */
+    const { minAFinanciar, productos, ltv, newProductName } = req.body;
 
-    const { minAFinanciar, productos, ltv } = req.body;
+    const selectedProduct = Object.keys(productos)[0]; // Obtener el producto seleccionado
+
+    const updateProductName = new Promise((resolve, reject) => {
+        if (newProductName && newProductName !== selectedProduct) {
+            // Actualizar el nombre del producto en la tabla `productos`
+            const updateProductosQuery = `
+                UPDATE productos SET nombre = ?
+                WHERE nombre = ?
+            `;
+            db.query(updateProductosQuery, [newProductName, selectedProduct], (err) => {
+                if (err) return reject(err);
+
+                // Actualizar el nombre del producto en la tabla `ltv`
+                const updateLtvQuery = `
+                    UPDATE ltv SET producto = ?
+                    WHERE producto = ?
+                `;
+                db.query(updateLtvQuery, [newProductName, selectedProduct], (err) => {
+                    if (err) return reject(err);
+                    resolve();
+                });
+            });
+        } else {
+            resolve(); // No hay cambios en el nombre
+        }
+    });
 
     const updateConfig = new Promise((resolve, reject) => {
         const query = `
@@ -228,12 +251,12 @@ app.post('/api/data', (req, res) => {
     const updateProductos = Object.entries(productos).flatMap(([nombre, { plazos }]) =>
         Object.entries(plazos).map(([plazo, { interest, fee, minfee }]) => {
             return new Promise((resolve, reject) => {
-                const query = `
+                const updateQuery = `
                     UPDATE productos
                     SET interest = ?, fee = ?, minfee = ?
                     WHERE nombre = ? AND plazo = ?
                 `;
-                db.query(query, [interest, fee, minfee, nombre, plazo], (err, result) => {
+                db.query(updateQuery, [interest, fee, minfee, newProductName || nombre, plazo], (err, result) => {
                     if (err) return reject(err);
                     resolve(result);
                 });
@@ -241,23 +264,63 @@ app.post('/api/data', (req, res) => {
         })
     );
 
-    const updateLtv = Object.entries(ltv).flatMap(([producto, years]) =>
-        Object.entries(years).map(([year, value]) => {
-            return new Promise((resolve, reject) => {
-                const query = `
-                    UPDATE ltv
-                    SET value = ?, \`show\` = ?
-                    WHERE producto = ? AND year = ?
-                `;
-                db.query(query, [value.value || value, value.show || false, producto, year], (err, result) => {
-                    if (err) return reject(err);
-                    resolve(result);
-                });
-            });
-        })
-    );
+    const updateLtv = new Promise((resolve, reject) => {
+        if (newProductName && newProductName !== selectedProduct) {
+            // Eliminar registros antiguos de LTV con el nombre anterior
+            const deleteOldLtvQuery = `
+                DELETE FROM ltv WHERE producto = ?
+            `;
+            db.query(deleteOldLtvQuery, [selectedProduct], (err) => {
+                if (err) return reject(err);
 
-    Promise.all([updateConfig, ...updateProductos, ...updateLtv])
+                // Insertar o actualizar los nuevos registros de LTV
+                const ltvPromises = Object.entries(ltv).flatMap(([producto, years]) =>
+                    Object.entries(years).map(([year, value]) => {
+                        return new Promise((resolve, reject) => {
+                            const query = `
+                                INSERT INTO ltv (producto, year, value)
+                                VALUES (?, ?, ?)
+                                ON DUPLICATE KEY UPDATE
+                                value = VALUES(value)
+                            `;
+                            db.query(query, [newProductName || producto, year, value.value || value], (err, result) => {
+                                if (err) return reject(err);
+                                resolve(result);
+                            });
+                        });
+                    })
+                );
+
+                Promise.all(ltvPromises)
+                    .then(resolve)
+                    .catch(reject);
+            });
+        } else {
+            // Insertar o actualizar los registros de LTV sin eliminar
+            const ltvPromises = Object.entries(ltv).flatMap(([producto, years]) =>
+                Object.entries(years).map(([year, value]) => {
+                    return new Promise((resolve, reject) => {
+                        const query = `
+                            INSERT INTO ltv (producto, year, value)
+                            VALUES (?, ?, ?)
+                            ON DUPLICATE KEY UPDATE
+                            value = VALUES(value)
+                        `;
+                        db.query(query, [newProductName || producto, year, value.value || value], (err, result) => {
+                            if (err) return reject(err);
+                            resolve(result);
+                        });
+                    });
+                })
+            );
+
+            Promise.all(ltvPromises)
+                .then(resolve)
+                .catch(reject);
+        }
+    });
+
+    Promise.all([updateProductName, updateConfig, ...updateProductos, updateLtv])
         .then(() => res.json({ success: true }))
         .catch(err => {
             console.error('Error saving data:', err);
@@ -330,6 +393,129 @@ app.get('/api/calculadora', (req, res) => {
             console.error('Error fetching data:', err);
             res.status(500).json({ success: false, message: 'Internal Server Error' });
         });
+});
+
+app.post('/api/new-product', (req, res) => {
+    const { nombre, minAFinanciar, ltv, plazos } = req.body;
+
+    const insertProduct = new Promise((resolve, reject) => {
+        const query = `
+            INSERT INTO configuracion (id, minAFinanciar)
+            VALUES (1, ?)
+            ON DUPLICATE KEY UPDATE minAFinanciar = VALUES(minAFinanciar)
+        `;
+        db.query(query, [minAFinanciar], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+
+    const insertPlazos = Object.entries(plazos).map(([plazo, { interest, fee, minfee }]) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                INSERT INTO productos (nombre, plazo, interest, fee, minfee)
+                VALUES (?, ?, ?, ?, ?)
+            `;
+            db.query(query, [nombre, plazo, interest, fee, minfee], (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        });
+    });
+
+    const insertLtv = Object.entries(ltv).map(([year, { value, show }]) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                INSERT INTO ltv (producto, year, value, \`show\`)
+                VALUES (?, ?, ?, ?)
+            `;
+            db.query(query, [nombre, year, value, show], (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        });
+    });
+
+    Promise.all([insertProduct, ...insertPlazos, ...insertLtv])
+        .then(() => res.json({ success: true }))
+        .catch(err => {
+            console.error('Error creating new product:', err);
+            res.status(500).json({ success: false, message: 'Internal Server Error' });
+        });
+});
+
+app.delete('/api/plazo', (req, res) => {
+    const { producto, plazo } = req.body;
+
+    const query = `
+        DELETE FROM productos
+        WHERE nombre = ? AND plazo = ?
+    `;
+
+    db.query(query, [producto, plazo], (err, result) => {
+        if (err) {
+            console.error('Error eliminando el plazo:', err);
+            return res.status(500).json({ success: false, message: 'Error eliminando el plazo' });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Plazo no encontrado' });
+        }
+
+        res.json({ success: true });
+    });
+});
+
+app.delete('/api/producto', (req, res) => {
+    const { producto } = req.body;
+
+    const deleteLtvQuery = `
+        DELETE FROM ltv
+        WHERE producto = ?
+    `;
+    const deletePlazosQuery = `
+        DELETE FROM productos
+        WHERE nombre = ?
+    `;
+
+    // Ejecutar las consultas en serie
+    db.query(deleteLtvQuery, [producto], (err) => {
+        if (err) {
+            console.error('Error eliminando LTV del producto:', err);
+            return res.status(500).json({ success: false, message: 'Error eliminando LTV del producto' });
+        }
+
+        db.query(deletePlazosQuery, [producto], (err) => {
+            if (err) {
+                console.error('Error eliminando plazos del producto:', err);
+                return res.status(500).json({ success: false, message: 'Error eliminando plazos del producto' });
+            }
+
+            res.json({ success: true });
+        });
+    });
+});
+
+app.delete('/api/ltv', (req, res) => {
+    const { producto, year } = req.body;
+
+    const query = `
+        DELETE FROM ltv
+        WHERE producto = ? AND year = ?
+    `;
+
+    db.query(query, [producto, year], (err, result) => {
+        if (err) {
+            console.error('Error eliminando el LTV:', err);
+            return res.status(500).json({ success: false, message: 'Error eliminando el LTV' });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'LTV no encontrado' });
+        }
+
+        res.json({ success: true });
+    });
 });
 
 app.listen(PORT, () => {
