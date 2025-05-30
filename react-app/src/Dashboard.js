@@ -14,9 +14,18 @@ console.log('API_URL (Dashboard):', API_URL); // Verificar que se está utilizan
 function Tablero() {
     const [data, setData] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState('');
+    const [products, setProducts] = useState([]);
     const [minAFinanciar, setMinAFinanciar] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [ltv, setLtv] = useState({});
+    const [showNewProductModal, setShowNewProductModal] = useState(false); // Nuevo estado para el modal
+    const [newProduct, setNewProduct] = useState({
+        nombre: '',
+        minAFinanciar: '',
+        ltv: {},
+        plazos: {}
+    });
+    const [newProductName, setNewProductName] = useState(''); // Estado para el nuevo nombre del producto
 
     console.log('API_URL (Tablero):', API_URL); // Verificar la URL
 
@@ -28,6 +37,7 @@ function Tablero() {
                     { withCredentials: true }
                 );
                 setData(response.data);
+                setProducts(Object.keys(response.data.productos)); // Obtener los nombres de los productos
                 setMinAFinanciar(formatNumber(response.data.minAFinanciar));
                 setLtv(response.data.ltv || {});
             } catch (error) {
@@ -36,6 +46,12 @@ function Tablero() {
         };
         fetchData();
     }, []);
+
+    useEffect(() => {
+        if (selectedProduct) {
+            setNewProductName(selectedProduct); // Inicializar el nuevo nombre con el nombre actual
+        }
+    }, [selectedProduct]);
 
     const formatNumber = (number) => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -53,19 +69,34 @@ function Tablero() {
         const updatedData = {
             minAFinanciar: parseInt(minAFinanciar.replace(/\./g, '')),
             productos: {
-                [selectedProduct]: data.productos[selectedProduct]
+                [selectedProduct]: data.productos[selectedProduct] // Solo enviar el producto seleccionado
             },
             ltv: {
-                ...data.ltv,
-                [selectedProduct]: updatedLtv
-            }
+                [selectedProduct]: updatedLtv // Solo enviar el LTV del producto seleccionado
+            },
+            newProductName // Enviar el nuevo nombre del producto
         };
+
         try {
             await axios.post(
                 `${API_URL}/api/data`, // Usa la URL dinámica
                 updatedData,
                 { withCredentials: true }
             );
+
+            // Actualizar el estado local con el nuevo nombre
+            setData(prevData => {
+                const newProductos = { ...prevData.productos };
+                newProductos[newProductName] = newProductos[selectedProduct];
+                delete newProductos[selectedProduct];
+                return {
+                    ...prevData,
+                    productos: newProductos
+                };
+            });
+
+            setProducts(prevProducts => prevProducts.map(product => (product === selectedProduct ? newProductName : product)));
+            setSelectedProduct(newProductName); // Actualizar el producto seleccionado
             setShowModal(true);
         } catch (error) {
             console.error('Error saving data:', error);
@@ -122,7 +153,7 @@ function Tablero() {
                         ...prevData.productos[selectedProduct],
                         plazos: {
                             ...prevData.productos[selectedProduct].plazos,
-                            [nuevoPlazo]: { interest: '', fee: '', minfee: '' }
+                            [nuevoPlazo]: { interest: '', fee: '', minfee: '' } // Inicializar valores vacíos
                         }
                     }
                 }
@@ -131,6 +162,7 @@ function Tablero() {
     };
 
     const generarPlazoHtml = (producto, plazo, datos) => {
+        if (!datos) return null; // Manejar el caso en que los datos sean undefined
         return (
             <tr key={`${producto}${plazo}Form`}>
                 <td>{plazo} meses</td>
@@ -176,21 +208,157 @@ function Tablero() {
         }
     };
 
-    const eliminarPlazo = (producto, plazo) => {
-        setData(prevData => {
-            const newPlazos = { ...prevData.productos[producto].plazos };
-            delete newPlazos[plazo];
-            return {
-                ...prevData,
-                productos: {
-                    ...prevData.productos,
-                    [producto]: {
-                        ...prevData.productos[producto],
-                        plazos: newPlazos
+    const eliminarPlazo = async (producto, plazo) => {
+        try {
+            // Enviar solicitud al backend para eliminar el plazo
+            await axios.delete(`${API_URL}/api/plazo`, {
+                data: { producto, plazo },
+                withCredentials: true
+            });
+
+            // Actualizar el estado local después de eliminar
+            setData(prevData => {
+                const newPlazos = { ...prevData.productos[producto].plazos };
+                delete newPlazos[plazo];
+                return {
+                    ...prevData,
+                    productos: {
+                        ...prevData.productos,
+                        [producto]: {
+                            ...prevData.productos[producto],
+                            plazos: newPlazos
+                        }
                     }
+                };
+            });
+        } catch (error) {
+            console.error('Error eliminando el plazo:', error);
+        }
+    };
+
+    const handleNewProductChange = (e, field) => {
+        setNewProduct(prev => ({
+            ...prev,
+            [field]: e.target.value
+        }));
+    };
+
+    const handleNewProductLtvChange = (e, year, field) => {
+        const value = field === 'show' ? e.target.checked : e.target.value;
+        setNewProduct(prev => ({
+            ...prev,
+            ltv: {
+                ...prev.ltv,
+                [year]: {
+                    ...prev.ltv[year],
+                    [field]: value
                 }
-            };
-        });
+            }
+        }));
+    };
+
+    const handleNewProductPlazoChange = (e, plazo, field) => {
+        const value = e.target.value;
+        setNewProduct(prev => ({
+            ...prev,
+            plazos: {
+                ...prev.plazos,
+                [plazo]: {
+                    ...prev.plazos[plazo],
+                    [field]: value
+                }
+            }
+        }));
+    };
+
+    const agregarNuevoPlazo = () => {
+        const nuevoPlazo = prompt('Ingrese el nuevo plazo en meses:');
+        if (nuevoPlazo) {
+            setNewProduct(prev => ({
+                ...prev,
+                plazos: {
+                    ...prev.plazos,
+                    [nuevoPlazo]: { interest: '', fee: '', minfee: '' }
+                }
+            }));
+        }
+    };
+
+    const handleSaveNewProduct = async () => {
+        try {
+            await axios.post(
+                `${API_URL}/api/new-product`,
+                newProduct,
+                { withCredentials: true }
+            );
+            setShowNewProductModal(false);
+            setNewProduct({ nombre: '', minAFinanciar: '', ltv: {}, plazos: {} });
+            // Recargar los datos
+            const response = await axios.get(`${API_URL}/api/data`, { withCredentials: true });
+            setData(response.data);
+            setProducts(Object.keys(response.data.productos));
+        } catch (error) {
+            console.error('Error saving new product:', error);
+        }
+    };
+
+    const eliminarProducto = async () => {
+        const confirmacion = window.confirm(`¿Está seguro que desea eliminar el producto "${selectedProduct}" y todos sus datos asociados?`);
+        if (!confirmacion) return;
+
+        try {
+            // Enviar solicitud al backend para eliminar el producto
+            await axios.delete(`${API_URL}/api/producto`, {
+                data: { producto: selectedProduct },
+                withCredentials: true
+            });
+
+            // Actualizar el estado local después de eliminar
+            setData(prevData => {
+                const newProductos = { ...prevData.productos };
+                delete newProductos[selectedProduct];
+                return {
+                    ...prevData,
+                    productos: newProductos
+                };
+            });
+
+            setProducts(prevProducts => prevProducts.filter(product => product !== selectedProduct));
+            setSelectedProduct(''); // Limpiar el producto seleccionado
+        } catch (error) {
+            console.error('Error eliminando el producto:', error);
+        }
+    };
+
+    const eliminarLtv = async (producto, year) => {
+        try {
+            // Enviar solicitud al backend para eliminar el año de LTV
+            await axios.delete(`${API_URL}/api/ltv`, {
+                data: { producto, year },
+                withCredentials: true
+            });
+
+            // Actualizar el estado local después de eliminar
+            setLtv(prevLtv => {
+                const newLtv = { ...prevLtv };
+                delete newLtv[year];
+                return newLtv;
+            });
+        } catch (error) {
+            console.error('Error eliminando el LTV:', error);
+        }
+    };
+
+    const agregarAnoLtv = () => {
+        const nuevoAno = prompt('Ingrese el nuevo año:');
+        if (nuevoAno && !ltv[nuevoAno]) {
+            setLtv(prevLtv => ({
+                ...prevLtv,
+                [nuevoAno]: { value: '' } // Inicializar con un valor vacío
+            }));
+        } else if (ltv[nuevoAno]) {
+            alert('El año ya existe en el LTV.');
+        }
     };
 
     if (!data) return <div>Cargando...</div>;
@@ -198,6 +366,12 @@ function Tablero() {
     return (
         <div className="content">
             <h1>Tablero de Configuración</h1>
+            <Button variant="primary" onClick={() => setShowNewProductModal(true)}>Nuevo Producto</Button>
+            {selectedProduct && (
+                <Button variant="danger" onClick={eliminarProducto} style={{ marginLeft: '10px' }}>
+                    Eliminar Producto
+                </Button>
+            )}
             <Form id="configForm">
                 <Form.Group controlId="minAFinanciar">
                     <Form.Label>Mínimo a Financiar:</Form.Label>
@@ -211,10 +385,22 @@ function Tablero() {
                     <Form.Label>Seleccionar Producto:</Form.Label>
                     <Form.Control as="select" value={selectedProduct} onChange={handleProductChange}>
                         <option value="" disabled>Seleccione un producto</option>
-                        <option value="a">Producto A</option>
-                        <option value="b">Producto B</option>
+                        {products.map(product => ( // Renderizar dinámicamente los productos
+                            <option key={product} value={product}>{product}</option>
+                        ))}
                     </Form.Control>
                 </Form.Group>
+                {selectedProduct && (
+                    <Form.Group controlId="newProductName">
+                        <Form.Label>Modificar Nombre del Producto:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={newProductName}
+                            onChange={(e) => setNewProductName(e.target.value)}
+                            required
+                        />
+                    </Form.Group>
+                )}
                 {selectedProduct && (
                     <div id="productoForm">
                         <h2>Producto {selectedProduct.toUpperCase()}</h2>
@@ -229,9 +415,10 @@ function Tablero() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {Object.keys(data.productos[selectedProduct].plazos).map(plazo => (
-                                    generarPlazoHtml(selectedProduct, plazo, data.productos[selectedProduct].plazos[plazo])
-                                ))}
+                                {data.productos[selectedProduct]?.plazos &&
+                                    Object.keys(data.productos[selectedProduct].plazos).map(plazo =>
+                                        generarPlazoHtml(selectedProduct, plazo, data.productos[selectedProduct].plazos[plazo])
+                                    )}
                             </tbody>
                         </Table>
                         <Button variant="primary" onClick={agregarPlazo}>Agregar Plazo</Button>
@@ -245,33 +432,33 @@ function Tablero() {
                                 <tr>
                                     <th>Año</th>
                                     <th>LTV</th>
-                                    <th>Mostrar</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {[2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012].map(year => (
+                                {Object.keys(ltv).map(year => (
                                     <tr key={`${selectedProduct}${year}Ltv`}>
                                         <td>{year}</td>
                                         <td>
                                             <Form.Control
                                                 type="number"
-                                                value={ltv[year]?.value || ltv[year] || ''} // Mantener los puntos como separadores decimales
+                                                value={ltv[year]?.value || ''}
                                                 onChange={(e) => handleLtvChange(e, year, 'value')}
                                                 required
                                             />
                                         </td>
-                                        <td>
-                                            <Form.Check
-                                                type="checkbox"
-                                                checked={ltv[year]?.show || false}
-                                                onChange={(e) => handleLtvChange(e, year, 'show')}
-                                                disabled // Deshabilitar el checkbox
+                                        <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            <FaTimes
+                                                color="red"
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => eliminarLtv(selectedProduct, year)}
                                             />
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </Table>
+                        <Button variant="secondary" onClick={agregarAnoLtv}>Agregar Año</Button>
                     </div>
                 )}
                 <Button variant="success" onClick={handleSave}>Guardar</Button>
@@ -285,6 +472,110 @@ function Tablero() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>Cerrar</Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Modal para nuevo producto */}
+            <Modal show={showNewProductModal} onHide={() => setShowNewProductModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Nuevo Producto</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="newProductName">
+                            <Form.Label>Nombre del Producto:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={newProduct.nombre}
+                                onChange={(e) => handleNewProductChange(e, 'nombre')}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="newProductMinAFinanciar">
+                            <Form.Label>Mínimo a Financiar:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={newProduct.minAFinanciar}
+                                onChange={(e) => handleNewProductChange(e, 'minAFinanciar')}
+                                required
+                            />
+                        </Form.Group>
+                        <h5>LTV</h5>
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>Año</th>
+                                    <th>LTV</th>
+                                    <th>Mostrar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[2025, 2024, 2023, 2022, 2021].map(year => (
+                                    <tr key={year}>
+                                        <td>{year}</td>
+                                        <td>
+                                            <Form.Control
+                                                type="number"
+                                                value={newProduct.ltv[year]?.value || ''}
+                                                onChange={(e) => handleNewProductLtvChange(e, year, 'value')}
+                                            />
+                                        </td>
+                                        <td>
+                                            <Form.Check
+                                                type="checkbox"
+                                                checked={newProduct.ltv[year]?.show || false}
+                                                onChange={(e) => handleNewProductLtvChange(e, year, 'show')}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                        <h5>Plazos</h5>
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>Plazo</th>
+                                    <th>Interés</th>
+                                    <th>Fee</th>
+                                    <th>Min Fee</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {Object.keys(newProduct.plazos).map(plazo => (
+                                    <tr key={plazo}>
+                                        <td>{plazo} meses</td>
+                                        <td>
+                                            <Form.Control
+                                                type="number"
+                                                value={newProduct.plazos[plazo]?.interest || ''}
+                                                onChange={(e) => handleNewProductPlazoChange(e, plazo, 'interest')}
+                                            />
+                                        </td>
+                                        <td>
+                                            <Form.Control
+                                                type="number"
+                                                value={newProduct.plazos[plazo]?.fee || ''}
+                                                onChange={(e) => handleNewProductPlazoChange(e, plazo, 'fee')}
+                                            />
+                                        </td>
+                                        <td>
+                                            <Form.Control
+                                                type="number"
+                                                value={newProduct.plazos[plazo]?.minfee || ''}
+                                                onChange={(e) => handleNewProductPlazoChange(e, plazo, 'minfee')}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                        <Button variant="secondary" onClick={agregarNuevoPlazo}>Agregar Plazo</Button>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowNewProductModal(false)}>Cancelar</Button>
+                    <Button variant="primary" onClick={handleSaveNewProduct}>Guardar</Button>
                 </Modal.Footer>
             </Modal>
         </div>
