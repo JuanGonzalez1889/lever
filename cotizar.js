@@ -595,23 +595,7 @@ function selectCustomOption(value, id, extraData = null) {
 
   placeholder.textContent = value;
   placeholder.dataset.label = value; // Guardar el nombre visible
-
-  if (id === "product-options" && extraData) {
-    // Forzar SIEMPRE el valor interno (a/b) en dataset.value
-    placeholder.dataset.value = extraData;
-    // Mostrar el nombre visible
-    let displayName = "Seguro en Banco";
-    if (extraData === "b") displayName = "Seguro Liberado";
-    placeholder.textContent = displayName;
-  } else if (id === "modelo-options" && extraData) {
-    placeholder.dataset.value = extraData;
-  } else if (id === "marca-options" && extraData) {
-    placeholder.dataset.value = extraData;
-  } else if (id === "anio-options" && extraData) {
-    placeholder.dataset.value = extraData;
-  } else {
-    placeholder.dataset.value = value;
-  }
+  placeholder.dataset.value = extraData || value; // Guardar el valor seleccionado
 
   // Cerrar el menú desplegable
   options.classList.add("hidden");
@@ -619,9 +603,13 @@ function selectCustomOption(value, id, extraData = null) {
 
   console.log(`Opción seleccionada: ${value}`);
 
-  // Si se selecciona un producto, recalcular el máximo a financiar
+  // Si se selecciona un producto, actualizar el producto seleccionado en pantalla 4
   if (id === "product-options") {
-    updateMaximoAFinanciar();
+    const selectedProductStep4 = document.getElementById("selected-product-step4");
+    if (selectedProductStep4) {
+      selectedProductStep4.textContent = value; // Mostrar el producto seleccionado
+    }
+    updateMaximoAFinanciar(); // Recalcular el máximo a financiar
   }
 
   // Si se selecciona una marca, cargar los modelos
@@ -1131,9 +1119,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const productoPlaceholder = document.querySelector(
       `[onclick="toggleCustomOptions('product-options')"]`
     );
-    const value = productoPlaceholder?.dataset.value || "a"; // Mantener el valor seleccionado
-    let displayName = value === "b" ? "Seguro Liberado" : "Seguro en Banco"; // Mostrar el nombre correcto
-    document.getElementById("selected-product-step4").textContent = displayName;
+    const value = productoPlaceholder?.dataset.value || productoPlaceholder?.textContent?.trim();
+    const selectedProductStep4 = document.getElementById("selected-product-step4");
+    if (selectedProductStep4) {
+      selectedProductStep4.textContent = value; // Mostrar el producto seleccionado
+    }
   };
 
   const nextBtnStep4 = document.querySelector(".next-button[onclick='goToStep(4)']");
@@ -1152,13 +1142,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ? "http://localhost:5000"
         : "https://api.lever.com.ar";
 
-    // Mapeo de nombres internos a nombres visibles
-    const PRODUCT_DISPLAY_NAMES = {
-      A: "Seguro en Banco",
-      B: "Seguro Liberado",
-      // Agrega más si sumás productos
-    };
-
     fetch(`${API_URL}/api/calculadora`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
@@ -1176,14 +1159,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
       Object.keys(productos).forEach((nombre) => {
-        // Usar el nombre personalizado si existe, sino el nombre original
-        const displayName =
-          PRODUCT_DISPLAY_NAMES[nombre.toUpperCase()] || nombre;
         const option = document.createElement("div");
         option.className = "custom-option";
-        option.textContent = displayName;
+        option.textContent = nombre; // Mostrar el nombre tal cual está en la base de datos
         option.onclick = function () {
-          selectCustomOption(displayName, "product-options", nombre);
+          selectCustomOption(nombre, "product-options", nombre);
         };
         productOptions.appendChild(option);
       });
@@ -1963,6 +1943,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", updateSwitchVisibility);
 
     // Y al cargar la página
+   
+   
     updateSwitchVisibility();
 
     // Si tu showDropdown/hideDropdown cambian la clase 'expanded', puedes enganchar aquí:
@@ -2439,11 +2421,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
 // --- NUEVO: Resetear selects dependientes al cambiar la categoría ---
 document.addEventListener("DOMContentLoaded", () => {
   const categoriaOptions = document.getElementById("categoria-options");
-  if (categoriaOptions) {
+  const anioOptions = document.getElementById("anio-options");
+
+  if (categoriaOptions && anioOptions) {
     categoriaOptions.addEventListener("click", (event) => {
       if (event.target.classList.contains("custom-option")) {
         // Resetear placeholders y valores de selects dependientes
@@ -2488,6 +2471,38 @@ document.addEventListener("DOMContentLoaded", () => {
         if (logo) {
           logo.src = "";
           logo.alt = "Logo de la marca";
+        }
+
+        // Mostrar solo los últimos 6 años si la categoría es "Motos"
+        const categoriaTexto = event.target.textContent.trim().toLowerCase();
+        if (categoriaTexto === "motos") {
+          const years = [2025, 2024, 2023, 2022, 2021, 2020];
+          anioOptions.innerHTML = "";
+          years.forEach((year) => {
+            const option = document.createElement("div");
+            option.className = "custom-option";
+            option.textContent = year;
+            option.onclick = function () {
+              selectCustomOption(year, "anio-options", year);
+            };
+            anioOptions.appendChild(option);
+          });
+        } else {
+          // Restaurar todos los años originales (2025 a 2012)
+          anioOptions.innerHTML = "";
+          const years = [
+            2025, 2024, 2023, 2022, 2021, 2020,
+            2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012
+          ];
+          years.forEach((year) => {
+            const option = document.createElement("div");
+            option.className = "custom-option";
+            option.textContent = year;
+            option.onclick = function () {
+              selectCustomOption(year, "anio-options", year);
+            };
+            anioOptions.appendChild(option);
+          });
         }
       }
     });
@@ -2700,7 +2715,7 @@ function updateMaximoAFinanciar() {
   const year =
     yearPlaceholder?.dataset.value?.trim() ||
     yearPlaceholder?.textContent?.trim() ||
-       null;
+    null;
   console.log("[MAXAFIN] Año seleccionado:", year);
 
   // 3. Obtener el LTV correspondiente
@@ -2866,33 +2881,21 @@ function actualizarCuotasPantalla4() {
 
     // 2. Producto seleccionado
     const productoPlaceholder = document.querySelector(
-      `[onclick="toggleCustomOptions('product-options')"]`
+        `[onclick="toggleCustomOptions('product-options')"]`
     );
-    let producto = productoPlaceholder?.dataset.value?.toLowerCase(); // Usar directamente 'a' o 'b'
+    const producto = productoPlaceholder?.dataset.value?.trim(); // Usar el nombre exacto del producto
     if (!producto) {
         console.error("[CUOTAS] Producto no seleccionado. No se puede calcular.");
         document.querySelectorAll("#step-4 .scrollable-value").forEach(el => el.textContent = "--");
         return;
     }
-
-    // Mapear el producto seleccionado a las claves internas de ltvData
-    if (producto === "seguro en banco") producto = "a";
-    else if (producto === "seguro liberado") producto = "b";
-
-    console.log("[CUOTAS] Producto seleccionado (clave):", producto);
-
-    // Actualizar el producto seleccionado en pantalla 4
-    const selectedProductStep4 = document.getElementById("selected-product-step4");
-    if (selectedProductStep4) {
-        selectedProductStep4.textContent =
-            producto === "b" ? "Seguro Liberado" : "Seguro en Banco";
-    }
+    console.log("[CUOTAS] Producto seleccionado:", producto);
 
     // 3. Año seleccionado
     const yearPlaceholder = document.querySelector(
-      `[onclick="toggleCustomOptions('anio-options')"]`
+        `[onclick="toggleCustomOptions('anio-options')"]`
     );
-    const year = yearPlaceholder?.dataset.value || yearPlaceholder?.textContent?.trim() || null;
+    const year = yearPlaceholder?.dataset.value?.trim() || yearPlaceholder?.textContent?.trim() || null;
     console.log("[CUOTAS] Año seleccionado:", year);
 
     // 4. Validar datos de productos y plazos
@@ -2904,7 +2907,7 @@ function actualizarCuotasPantalla4() {
 
     console.log("[CUOTAS] Estructura de ltvData:", JSON.stringify(window.ltvData, null, 2));
 
-    const productoData = window.ltvData[producto]; // Usar directamente 'a' o 'b'
+    const productoData = window.ltvData[producto]; // Usar el nombre exacto del producto
     if (!productoData) {
         console.error(`[CUOTAS] No hay datos para el producto seleccionado: ${producto}. Verifica que las claves en ltvData coincidan.`);
         document.querySelectorAll("#step-4 .scrollable-value").forEach(el => el.textContent = "--");
@@ -2929,7 +2932,7 @@ function actualizarCuotasPantalla4() {
             console.log(`[CUOTAS] Cuota calculada para ${plazo} meses:`, cuota);
             cuotaEl.innerHTML = "$" + cuota.toLocaleString("es-AR");
         } else if (cuotaEl) {
-            cuotaEl.textContent = "--";
+            cuotaEl.innerHTML = "--";
         }
     });
 }
@@ -2963,3 +2966,50 @@ function getSelectedCategoria() {
   return "autos";
 }
 
+// Configuración de categorías y productos
+const categoriaProductos = {
+  "autos - pickups - utilitarios - camiones": ["UVA", "Seguro Liberado"], // Asegúrate de que estos nombres coincidan con las claves en ltvData
+  motos: ["Motos"]
+};
+
+function actualizarProductosPorCategoria(categoria) {
+  const productos = categoriaProductos[categoria.toLowerCase()] || [];
+  const productOptions = document.getElementById("product-options");
+  productOptions.innerHTML = "";
+
+  if (productos.length === 0) {
+    productOptions.innerHTML =
+      '<div class="custom-option">No hay productos disponibles</div>';
+    return;
+  }
+
+  productos.forEach((producto) => {
+    const option = document.createElement("div");
+    option.className = "custom-option";
+    option.textContent = producto;
+    option.dataset.value = producto; // Asegúrate de que el valor coincida con ltvData
+    option.onclick = function () {
+      selectCustomOption(producto, "product-options", producto);
+    };
+    productOptions.appendChild(option);
+  });
+}
+
+// Llamar a esta función al seleccionar una categoría
+document.getElementById("categoria-options").addEventListener("click", (event) => {
+  if (event.target.classList.contains("custom-option")) {
+    const categoria = event.target.dataset.value || event.target.textContent.trim().toLowerCase();
+    actualizarProductosPorCategoria(categoria);
+  }
+});
+
+// Validar y cargar productos al iniciar
+document.addEventListener("DOMContentLoaded", () => {
+  const categoriaPlaceholder = document.querySelector(
+    '[onclick="toggleCustomOptions(\'categoria-options\')"]'
+  );
+  if (categoriaPlaceholder) {
+    const categoria = categoriaPlaceholder.dataset.value || categoriaPlaceholder.textContent.trim().toLowerCase();
+    actualizarProductosPorCategoria(categoria);
+  }
+});
