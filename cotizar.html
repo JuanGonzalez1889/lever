@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cotizar - LEVER</title>
-    <link rel="stylesheet" href="cotizar.css?v=1.2" />
-    <link rel="stylesheet" href="cotizarDesktop.css" />
-    
+    <title>Lever</title>
+    <link rel="stylesheet" href="cotizar.css" />
+    <link rel="stylesheet" href="cotizarTabletDesktop.css" />
+    <link rel="stylesheet" href="pantallasChicas.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap"
       rel="stylesheet"
     />
+    
     
   </head>
   <body>
@@ -99,7 +100,7 @@
           </li>
           <li>
             <a
-              href="index.html#nosotros"
+              href="nosotros.html"
               itemprop="url"
               class="scroller outline"
               data-text="Nosotros"
@@ -110,7 +111,7 @@
           </li>
           <li>
             <a
-              href="#"
+              href="contacto.html"
               itemprop="url"
               class="scroller outline"
               data-text="Contacto"
@@ -132,13 +133,16 @@
       <div class="menu-overlay" id="menu-overlay"></div>
     </header>
     <main>
-      
+      <div class="tituloysubtitulo">
+        <h2>Cotizador online</h2>
+        <h1>PASO <strong>1 DE 3</strong></h1></div>
       <section id="cotizar" class="cotizar-section">
+      
         <div class="container">
-          <!-- Paso 1 -->
+          <!-- Paso 1 --> 
+           
           <div id="step-1" class="step active">
-            <h2>Cotizador online</h2>
-            <h1>PASO <strong>1 DE 3</strong></h1>
+           
             <div class="switch-container">
               <span class="switch-label-left" onclick="toggleSwitch(false)"
                 >PERSONA</span
@@ -335,8 +339,7 @@
 
           <!-- Paso 2 -->
           <div id="step-2" class="step hidden">
-            <h2>Cotizador online</h2>
-            <h1>PASO <strong>2 DE 3</strong></h1>
+            <div class="contenedor-padre">
             <div class="options-container">
               <!-- Nuevo contenedor de opciones para Categoría -->
               <div class="custom-options-container">
@@ -385,6 +388,7 @@
                     </div>-->
                   </div>
                 </div>
+                
               </div>
 
               <!-- Nuevo contenedor de opciones para Año -->
@@ -467,6 +471,7 @@
                 </div>
               </div>
             </div>
+          </div>
             <div class="navigation-buttons">
               <button class="back-button" onclick="goToStep(1)">
                 <img
@@ -488,8 +493,6 @@
 
           <!-- Paso 3 -->
           <div id="step-3" class="step hidden">
-            <h2>Cotizador online</h2>
-            <h1>PASO <strong>3 DE 3</strong></h1>
             <div class="container-step3">
               <div class="vehicle-summary">
                 <img id="vehicle-logo" src="" alt="Logo de la marca" />
@@ -547,10 +550,11 @@
                   class="net-finance-input"
                   placeholder="Monto neto a financiar"
                 />
-                <p class="min-amount-text">Monto mínimo: $1.000.000</p>
+                
               </div>
+             
             </div>
-
+            <p class="min-amount-text">Monto mínimo: $1.000.000</p>
             <div class="navigation-buttons">
               <button class="back-button" onclick="goToStep(2)">
                 <img
@@ -572,28 +576,7 @@
 
           <!-- Paso 4 - Nueva pantalla para cotización estimada -->
           <div id="step-4" class="step hidden">
-            <h2>Cotizador online</h2>
-            <h1>
-              <span
-                style="
-                  font-size: 24px;
-                  font-family: Montserrat;
-                  font-weight: bold;
-                  color: #2adc9f;
-                "
-                >COTIZACIÓN</span
-              >
-              <span
-                style="
-                  font-size: 24px;
-                  font-family: Montserrat;
-                  font-weight: 300;
-                  color: #2adc9f;
-                  letter-spacing: -3px;
-                "
-                >ESTIMADA</span
-              >
-            </h1>
+            
             <div class="container-step4-desktop">
               <div>
                 <div class="vehicle-summary">
@@ -667,181 +650,104 @@
                     <span class="scrollable-text">48 CUOTAS</span>
                     <span class="scrollable-value">$125.500</span>
                   </div>
+                  
                 </div>
-                <p id="select-cuota-message" class="hidden">
-                  Seleccioná una opción para poder cotizar
-                </p>
-                <div class="navigation-buttons">
-                  <button class="back-button" onclick="goToStep(3)">
-                    <img
-                      src="./images/icons/FlechaNegra.svg"
-                      alt="flecha"
-                      class="next-arrow"
-                    />
-                    <span class="back-text">Modificar</span>
-                  </button>
-                  <button class="share-button">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="18"
-                      viewBox="0 0 16 18"
-                    >
-                      <g
-                        id="Grupo_2606"
-                        data-name="Grupo 2606"
-                        transform="translate(-161.74 -654.288)"
-                      >
-                        <circle
-                          id="Elipse_9"
-                          data-name="Elipse 9"
-                          cx="3"
-                          cy="3"
-                          r="3"
-                          transform="translate(161.74 660.288)"
-                          fill="#25d39d"
-                        />
-                        <circle
-                          id="Elipse_10"
-                          data-name="Elipse 10"
-                          cx="3"
-                          cy="3"
-                          r="3"
-                          transform="translate(171.74 654.288)"
-                          fill="#25d39d"
-                        />
-                        <circle
-                          id="Elipse_11"
-                          data-name="Elipse 11"
-                          cx="3"
-                          cy="3"
-                          r="3"
-                          transform="translate(171.74 666.288)"
-                          fill="#25d39d"
-                        />
-                        <line
-                          id="Línea_14"
-                          data-name="Línea 14"
-                          y1="6.966"
-                          x2="9.288"
-                          transform="translate(165.483 656.709)"
-                          fill="none"
-                          stroke="#25d39d"
-                          stroke-width="2"
-                        />
-                        <line
-                          id="Línea_15"
-                          data-name="Línea 15"
-                          x2="9.288"
-                          y2="6.966"
-                          transform="translate(165.483 663.288)"
-                          fill="none"
-                          stroke="#25d39d"
-                          stroke-width="2"
-                        />
-                      </g>
-                    </svg>
-                  </button>
-                  <button class="next-button" onclick="finalizeCotizacion()">
-                    <span class="next-text">Cotizar ahora</span>
-                    <img
-                      src="./images/icons/flecha.svg"
-                      alt="flecha"
-                      class="next-arrow"
-                    />
-                  </button>
-                </div>
+                
+                
               </div>
+              
+            </div>
+            <div class="mensaje4"> 
+              <p id="select-cuota-message" class="hidden">
+              Seleccioná una opción para poder cotizar
+            </p></div>
+            <div class="navigation-buttons">
+              <button class="back-button" onclick="goToStep(3)">
+                <img
+                  src="./images/icons/FlechaNegra.svg"
+                  alt="flecha"
+                  class="next-arrow"
+                />
+                <span class="back-text">Modificar</span>
+              </button>
+              <button class="share-button">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="18"
+                  viewBox="0 0 16 18"
+                >
+                  <g
+                    id="Grupo_2606"
+                    data-name="Grupo 2606"
+                    transform="translate(-161.74 -654.288)"
+                  >
+                    <circle
+                      id="Elipse_9"
+                      data-name="Elipse 9"
+                      cx="3"
+                      cy="3"
+                      r="3"
+                      transform="translate(161.74 660.288)"
+                      fill="#25d39d"
+                    />
+                    <circle
+                      id="Elipse_10"
+                      data-name="Elipse 10"
+                      cx="3"
+                      cy="3"
+                      r="3"
+                      transform="translate(171.74 654.288)"
+                      fill="#25d39d"
+                    />
+                    <circle
+                      id="Elipse_11"
+                      data-name="Elipse 11"
+                      cx="3"
+                      cy="3"
+                      r="3"
+                      transform="translate(171.74 666.288)"
+                      fill="#25d39d"
+                    />
+                    <line
+                      id="Línea_14"
+                      data-name="Línea 14"
+                      y1="6.966"
+                      x2="9.288"
+                      transform="translate(165.483 656.709)"
+                      fill="none"
+                      stroke="#25d39d"
+                      stroke-width="2"
+                    />
+                    <line
+                      id="Línea_15"
+                      data-name="Línea 15"
+                      x2="9.288"
+                      y2="6.966"
+                      transform="translate(165.483 663.288)"
+                      fill="none"
+                      stroke="#25d39d"
+                      stroke-width="2"
+                    />
+                  </g>
+                </svg>
+              </button>
+              <button class="next-button" onclick="finalizeCotizacion()">
+                <span class="next-text">Cotizar ahora</span>
+                <img
+                  src="./images/icons/flecha.svg"
+                  alt="flecha"
+                  class="next-arrow"
+                />
+              </button>
             </div>
           </div>
         </section>
-       <!-- NUEVA SECCIÓN: NOSOTROS (replica exacta de index.html) -->
-       <section id="nosotros-cotizar" class="hidden">
-        <div class="container">
-         <div class="bubbles">
-           <div class="bubble bubble01">
-             <div>
-               <mark
-                 class="odometer odometer-theme-default"
-                 data-value="1474"
-               ></mark>
-               <p><strong>CRÉDITOS</strong></p>
-               <p>OTORGADOS EN<br />DOS AÑOS</p>
-             </div>
-           </div>
-           <div class="bubble bubble02">
-             <div>
-               <mark
-                 class="odometer odometer-theme-default"
-                 data-value="28"
-               ></mark>
-               <p><strong>AÑOS</strong></p>
-               <p>DE EXPERIENCIA<br />EN EL SECTOR</p>
-             </div>
-           </div>
-           <div class="bubble bubble03">
-             <div>
-               <p>OPERAMOS EN</p>
-               <mark
-                 class="odometer odometer-theme-default"
-                 data-value="3"
-               ></mark>
-               <p><strong>PROVINCIAS</strong></p>
-             </div>
-           </div>
-           <div class="bubble bubble04">
-             <div>
-               <mark
-                 class="odometer odometer-theme-default"
-                 data-value="76"
-               ></mark>
-               <p><strong>AGENCIAS</strong></p>
-               <p>OPERAN CON<br />NOSOTROS</p>
-             </div>
-           </div>
-         </div>
-        </div>
-       <div class="container wrapped">
-         <div class="videos-container">
-           <button id="prev-video-cotizar" class="videocontrol"></button>
-           <button id="next-video-cotizar" class="videocontrol"></button>
-         </div>
-         <div class="videos">
-           <div>
-             <a href="#" class="video_thumb" data-video="1"
-               ><img src="./images/videos/01.svg" alt=""
-             /></a>
-           </div>
-           <div>
-             <a href="#" class="video_thumb" data-video="2"
-               ><img src="./images/videos/02.svg" alt=""
-             /></a>
-           </div>
-           <div>
-             <a href="#" class="video_thumb" data-video="3"
-               ><img src="./images/videos/03.svg" alt=""
-             /></a>
-           </div>
-         </div>
-       </div>
-       <div class="videowrap" id="videowrap-cotizar">
-         <label class="closebox"
-           ><img src="./images/icons/close.svg" alt="close btn"
-         /></label>
-         <div class="video-container">
-           <iframe
-             id="video-cotizar"
-             frameborder="0"
-             allowfullscreen
-             autoplay
-             muted="muted"
-           ></iframe>
-         </div>
-       </div>
-     </section>
+      
     </main>
+    
     <footer class="footer">
-      <button class="inicio-button" onclick="goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
+      <div class="footer-icons"><button class="inicio-button" onclick="goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
         <img
           src="./images/icons/inicio1.svg"
           alt="inicio icon"
@@ -982,6 +888,7 @@
           </g>
         </svg>
       </button>
+    </div>
     </footer>
 
     <!-- Botón flotante inferior derecho -->
@@ -1130,6 +1037,12 @@
         </g>
       </svg>
     </div>
+    <script>
+        // Inicializar transición de entrada para cotizar.html
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('page-transition', 'fade-in');
+        });
+    </script>
     <script src="cotizar.js"></script>
     <!-- Agregar html2canvas desde CDN antes del cierre de </body> -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -1138,9 +1051,8 @@
       href="https://github.hubspot.com/odometer/themes/odometer-theme-default.css"
     />
     <script src="https://github.hubspot.com/odometer/odometer.js"></script>
-
     <!-- MODAL SELECCIÓN DE PERSONA POR DNI -->
-    <div id="modal-personas-dni" class="modal-overlay hidden" style="z-index:9999; position:fixed; top:0; left:0; width:100vw; height:100vh; display:none; align-items:center; justify-content:center;">
+    <div id="modal-personas-dni" class="modal-overlay hidden" style="display:none;">
       <div class="modal-content" >
         <div class="modal-title" >Seleccioná la persona correcta</div>
         <div class="modal-subtitle" >

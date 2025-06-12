@@ -1,0 +1,2675 @@
+@media (min-width: 200px) and (max-width: 320px) {
+    body {
+        background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
+        opacity: 1;
+        font-family: Montserrat, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+
+    body {
+        /* Layout Properties */
+        top: 0px;
+        left: 0px;
+        width: auto;
+        height: 120vh;
+        /* UI Properties */
+        background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
+        opacity: 1;
+        font-family: Montserrat, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    .desktop-header-buttons {
+        display: none;
+    }
+
+    /* Ocultar switch-container y confidentiality-text cuando .dni-container está expandido */
+    /* Aplica solo si están en el mismo contenedor padre */
+
+    .dni-container.expanded+.confidentiality-text {
+        display: none !important;
+    }
+
+
+
+    .dni-container:not(.expanded)+.confidentiality-text {
+        display: block !important;
+    }
+
+    h1 {
+        text-align: left;
+        color: #2adc9f;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .tituloysubtitulo {
+        margin-left: 31px;
+        margin-top: 17px;
+    }
+
+    h2 {
+        /* Layout Properties */
+        width: 247px;
+        height: 0rem;
+        text-align: left;
+        font: normal normal bold 12px / 8px Montserrat;
+        letter-spacing: 0px;
+        color: #FFFFFF;
+        opacity: 1;
+        margin-left: 1px;
+    }
+
+    #step-4 h2 {
+        /* Layout Properties */
+        top: 136px;
+        left: 34px;
+        width: 247px;
+        height: 0rem;
+        /* UI Properties */
+        text-align: left;
+        font: normal normal bold 15px/17px Montserrat;
+        letter-spacing: 0px;
+        color: #FFFFFF;
+        opacity: 1;
+        margin-left: 13px;
+        margin-top: 20px;
+    }
+
+    .cotizar-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+        width: 289px;
+        position: relative;
+        /* Añadido para el posicionamiento relativo */
+    }
+
+    /* Estilos para el  h1 y strong */
+    #cotizar h1 {
+        top: 0px;
+        left: 0px;
+        height: 26px;
+        text-align: left;
+        font: normal normal 300 24px/26px Montserrat;
+        letter-spacing: 0px;
+        color: #2ADC9F;
+        margin-left: 11px;
+    }
+
+    #cotizar h1 strong {
+        top: 0px;
+        left: 93px;
+        width: 57px;
+        height: 26px;
+        text-align: left;
+        font: normal normal bold 24px/26px Montserrat;
+        letter-spacing: 0px;
+        color: #2ADC9F;
+    }
+
+
+    /* Estilos para el campo de DNI */
+    .dni-container {
+        width: 266px;
+        height: 48px;
+        margin-left: 12px;
+        background: #FFFFFF;
+        border-radius: 30px;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        z-index: 3;
+        overflow: hidden;
+        transition: all 0.5s ease;
+        margin-top: 16px;
+    }
+
+    .dni-container.expanded {
+        top: 297px;
+        /* Expande hacia arriba hasta donde termina el switch */
+        height: 226px;
+        /* Ajustar altura total */
+        flex-direction: column;
+        align-items: flex-start;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: visible;
+        margin-top: -56px;
+        /* Permitir que el contenido sea visible */
+    }
+
+    .dni-input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: none;
+        font: normal normal 300 14px / 15px Montserrat;
+        color: #15224F;
+        opacity: 0.5;
+        transition: opacity 0.5s ease;
+    }
+
+    .dni-container.expanded .dni-input {
+        opacity: 0;
+        /* Ocultar el campo de entrada al expandirse */
+    }
+
+
+    .dropdown-content {
+        display: none;
+        /* Ocultar inicialmente */
+        width: 100%;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        position: relative;
+        /* Posicionar dentro del contenedor padre */
+        margin-top: 10px;
+        /* Espaciado entre el campo de entrada y el contenido desplegable */
+    }
+
+    .dni-container.expanded .dropdown-content {
+        display: block;
+        opacity: 1;
+    }
+
+    .search-icon-container {
+        width: 47px;
+        height: 39px;
+        background: transparent linear-gradient(180deg, #0BA290 0%, #27D79E 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: opacity 0.5s ease;
+    }
+
+    .search-icon-container svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Estilos para el texto de confidencialidad */
+    .confidentiality-text {
+        width: 270px;
+        height: 63px;
+        text-align: left;
+        font: normal normal 300 12px / 12px montserrat;
+        letter-spacing: -0.12px;
+        color: #FFFFFF;
+        opacity: 0.5;
+        margin-left: 22px;
+        margin-top: 22px;
+    }
+
+    .confidentiality-text strong {
+        font: normal normal bold 12px/12px Montserrat;
+        letter-spacing: -0.12px;
+        color: #FFFFFF;
+    }
+
+    /* Estilos para el botón "Siguiente" */
+
+
+    /* Estilos para el botón "Cambiar solicitante" */
+    .change-applicant-button {
+        width: 132px;
+        height: 40px;
+        background: linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%);
+        border-radius: 20px;
+        border: none;
+        color: #FFFFFF;
+        font: bold 12px/20px Montserrat;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .dni-container.expanded .change-applicant-button {
+        opacity: 1;
+        left: 73px;
+        /* position: absolute; */
+        position: relative;
+        margin-bottom: 9px;
+        font-size: 11px;
+        padding: 9px;
+        top: 4px;
+    }
+
+    /* Estilos para el menú */
+
+
+    nav#menu ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav#menu ul li {
+        margin-bottom: 10px;
+    }
+
+    nav#menu ul li a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #fff;
+        font-size: 2rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        transition: color 0.2s;
+        display: block;
+    }
+
+    nav#menu ul li a:hover {
+        color: #2adc9f;
+    }
+
+    #menu.mobile-active {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    header nav#menu {
+        display: none !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(14, 21, 44, 0.40);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(16px);
+        position: fixed;
+        top: 0;
+        left: 0;
+        max-width: 100vw;
+        z-index: 1202;
+        transform: translateX(100%);
+        transition: transform 0.3s;
+        padding-top: 0;
+        transform: translateX(0);
+    }
+
+    .menu-overlay {
+        display: none;
+    }
+
+    .menu-overlay.active {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(14, 21, 44, 0.95);
+        z-index: 1200;
+    }
+
+    .close-menu img {
+        width: 22px;
+        height: 32px;
+        display: block;
+        margin-top: -30rem;
+        margin-left: 19rem;
+    }
+
+    #menu {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Estilos para el menú hamburguesa */
+    .hamburguer-menu {
+        position: absolute;
+        top: 21px;
+        left: 320px;
+        width: 25px;
+        height: 19px;
+        cursor: pointer;
+        opacity: 1;
+        border-radius: 100px;
+    }
+
+    .hamburguer-menu .bar {
+        height: 3px;
+        background-color: #ffff;
+        margin: 4px 0;
+    }
+
+    .hamburguer-menu .bar:nth-child(1) {
+        width: 14.44px;
+        justify-self: center;
+        height: 2.28px;
+    }
+
+    .hamburguer-menu .bar:nth-child(2) {
+        width: 25.08px;
+        justify-self: center;
+        height: 2.28px;
+    }
+
+    .hamburguer-menu .bar:nth-child(3) {
+        width: 11.4px;
+        justify-self: center;
+        height: 2.28px;
+    }
+
+    /* Estilos para el logo */
+    .logo-container {
+        position: relative;
+        z-index: 9999;
+        width: 6.8rem;
+        height: auto;
+        display: inline-block;
+        vertical-align: middle;
+        top: 6px;
+        margin-left: 14px;
+    }
+
+    .logo-container img {
+        top: 69px;
+        left: 34px;
+        width: 90px;
+        height: 21px;
+        /* UI Properties */
+        opacity: 1;
+    }
+
+
+    /* Estilos para el footer */
+    .footer-icons {
+        width: 100%;
+        display: flex;
+        /* text-align: center; */
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        height: 9px;
+    }
+
+    footer .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    footer .not-center {
+        display: flex;
+        align-items: center;
+    }
+
+    footer .social a {
+        margin: 0 10px;
+    }
+
+    footer .social img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .footer {
+        width: 100%;
+        height: 9px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        opacity: 1;
+        padding: 20px 0;
+        text-align: center;
+        border-top: 1px solid #ccc;
+        padding: 30px 0;
+        position: absolute;
+        bottom: -190px;
+    }
+
+    body.nosotros-cotizar-activo .footer {
+        display: none;
+    }
+
+    /* Ocultar el footer en la sección "Contacto" en versión móvil */
+    body.contacto-activo footer {
+        display: none;
+    }
+
+    /* Loader Smiley CSS */
+    .loader-overlay {
+        position: absolute;
+        z-index: 1000;
+        top: -55px;
+        left: -3px;
+        right: 0;
+        bottom: 0;
+        border-radius: 30px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* NUEVO: desenfoque del fondo */
+        backdrop-filter: blur(7px);
+        -webkit-backdrop-filter: blur(7px);
+        pointer-events: all;
+    }
+
+    .smiley {
+        width: 5em;
+        height: 5em;
+    }
+
+    .smiley__eye1,
+    .smiley__eye2,
+    .smiley__mouth1,
+    .smiley__mouth2 {
+        animation: eye1 3s ease-in-out infinite;
+    }
+
+    .smiley__eye1,
+    .smiley__eye2 {
+        transform-origin: 64px 64px;
+    }
+
+    .smiley__eye2 {
+        animation-name: eye2;
+    }
+
+    .smiley__mouth1 {
+        animation-name: mouth1;
+    }
+
+    .smiley__mouth2 {
+        animation-name: mouth2;
+        visibility: hidden;
+    }
+
+    @keyframes eye1 {
+        from {
+            transform: rotate(-260deg) translate(0, -56px);
+        }
+
+        50%,
+        60% {
+            animation-timing-function: cubic-bezier(0.17, 0, 0.58, 1);
+            transform: rotate(-40deg) translate(0, -56px) scale(1);
+        }
+
+        to {
+            transform: rotate(225deg) translate(0, -56px) scale(0.35);
+        }
+    }
+
+    @keyframes eye2 {
+        from {
+            transform: rotate(-260deg) translate(0, -56px);
+        }
+
+        50% {
+            transform: rotate(40deg) translate(0, -56px) rotate(-40deg) scale(1);
+        }
+
+        52.5% {
+            transform: rotate(40deg) translate(0, -56px) rotate(-40deg) scale(1, 0);
+        }
+
+        55%,
+        70% {
+            animation-timing-function: cubic-bezier(0, 0, 0.28, 1);
+            transform: rotate(40deg) translate(0, -56px) rotate(-40deg) scale(1);
+        }
+
+        to {
+            transform: rotate(150deg) translate(0, -56px) scale(0.4);
+        }
+    }
+
+    @keyframes mouth1 {
+        from {
+            animation-timing-function: ease-in;
+            stroke-dasharray: 0 351.86;
+            stroke-dashoffset: 0;
+        }
+
+        25% {
+            animation-timing-function: ease-out;
+            stroke-dasharray: 175.93 351.86;
+            stroke-dashoffset: 0;
+        }
+
+        50% {
+            animation-timing-function: steps(1, start);
+            stroke-dasharray: 175.93 351.86;
+            stroke-dashoffset: -175.93;
+            visibility: visible;
+        }
+
+        75%,
+        to {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes mouth2 {
+        from {
+            animation-timing-function: steps(1, end);
+            visibility: hidden;
+        }
+
+        50% {
+            animation-timing-function: ease-in-out;
+            visibility: visible;
+            stroke-dashoffset: 0;
+        }
+
+        to {
+            stroke-dashoffset: -351.86;
+        }
+    }
+
+    /* Solo las líneas del loader en verde, fondo sin verde */
+    .loader-overlay .smiley>g>g>rect {
+        fill: #06b312 !important;
+    }
+
+    .loader-overlay .smiley>g>g>g,
+    .loader-overlay .smiley>g>g>g>circle,
+    .loader-overlay .smiley>g>g>g>rect {
+        fill: none !important;
+        stroke: #06b312 !important;
+    }
+
+    .loader-overlay .smiley>g>g>g>circle,
+    .loader-overlay .smiley>g>g>g>rect {
+        stroke: #06b312 !important;
+    }
+
+    /* Asegura que el fondo del SVG nunca sea verde */
+    .loader-overlay .smiley {
+        background: transparent !important;
+    }
+
+    .modal-overlay {
+        z-index: 9999;
+        position: fixed;
+        top: 9px;
+        left: 7px;
+        width: 96vw;
+        height: 99vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    .modal-content {
+        background: #fff;
+        border-radius: 16px;
+        padding: 32px 24px;
+        max-width: 400px;
+        width: 90vw;
+        height: 29vh;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        text-align: center;
+        margin-bottom: 6rem;
+    }
+
+    .modal-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #444444;
+    }
+
+    .modal-subtitle {
+        font-size: 15px;
+        color: #555;
+        margin-bottom: 49px;
+        margin-top: 20px;
+    }
+
+    .clients-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .modal-close-btn {
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: none;
+        margin-top: 30px;
+        border-radius: 8px;
+        padding: 8px 24px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .client-select-btn {
+        background: #2ADC9f;
+        border-radius: 20px !important;
+        padding: 0 15px;
+        font: normal normal 300 17px / 15px Montserrat;
+        color: #ffffff;
+        outline: none;
+        border: 1px solid #2ADC9f;
+        padding-left: 29px;
+        height: 2rem;
+
+    }
+
+    /* Estilos para el botón "INICIO" */
+    .inicio-button {
+        width: 105px;
+        height: 40px;
+        background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        cursor: pointer;
+    }
+
+    .inicio-button .inicio-icon {
+        width: 18px;
+        height: 19px;
+        color: #FFFFFF;
+    }
+
+    .inicio-button .inicio-text {
+        font: normal normal bold 12px/20px Montserrat;
+        color: #FFFFFF;
+    }
+
+    /* Estilos para el rectángulo desplegable y la animación */
+    .dropdown {
+        position: absolute;
+        top: -65px;
+        left: 0px;
+        width: 320px;
+        /* Ancho fijo */
+        height: 226px;
+        /* Altura fija */
+        background: #FFFFFF;
+        /* Fondo blanco */
+        border-radius: 30px;
+        opacity: 0;
+        /* Comienza invisible */
+        transform-origin: center;
+        /* Expande y colapsa desde el centro */
+        transform: scaleY(0);
+        /* Comienza colapsado */
+        transition: transform 0.5s ease, opacity 0.5s ease;
+        /* Mantener la transición de apertura */
+        z-index: 2;
+        /* Asegurar que esté debajo del campo */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        /* Añadir sombra para visibilidad */
+        overflow: hidden;
+        /* Evitar que el contenido se desborde */
+        visibility: visible;
+        /* Asegurar que sea visible inicialmente */
+    }
+
+    .dropdown.animate-dropdown {
+        transform: scaleY(1);
+        /* Expande completamente */
+        opacity: 1;
+        /* Hacer visible al desplegar */
+        visibility: visible;
+        /* Asegurar que sea visible */
+    }
+
+    .dropdown.hidden {
+        transform: scaleY(0);
+        /* Colapsar nuevamente */
+        opacity: 0;
+        /* Hacer invisible al colapsar */
+        /* No cambiar visibility aquí, se maneja en JavaScript */
+        transition: transform 0.5s ease, opacity 0.5s ease;
+        /* Asegurar que coincida con la apertura */
+    }
+
+    .switch-container.hidden {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .inner-box {
+        background: #F6F6F6 0% 0% no-repeat padding-box;
+        border-radius: 20px;
+        opacity: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+        align-self: center;
+        height: 114px;
+    }
+
+    .dropdown.animate-dropdown .inner-box {
+        transform: translate(-50%, -50%) scale(1);
+        /* Expande completamente */
+        opacity: 1;
+        /* Hacer visible */
+    }
+
+    .dropdown.hidden .inner-box {
+        transform: translate(-50%, -50%) scale(0);
+        /* Colapsar nuevamente */
+        opacity: 0;
+        /* Hacer invisible */
+    }
+
+    .inner-box-title {
+        position: absolute;
+        top: 33px;
+        left: 13px;
+        width: 265px;
+        height: 19px;
+        text-align: left;
+        font: normal normal bold 13px / 13px Montserrat;
+        letter-spacing: 0px;
+        color: #444444;
+        opacity: 1;
+    }
+
+    .credit-viability-bar {
+        width: 267px;
+        height: 7px;
+        background: linear-gradient(90deg, #1BBB10 0%, #FFDF00 51%, #FF0000 100%);
+        border-radius: 12px;
+        position: relative;
+        top: 35px;
+        left: 9px;
+    }
+
+    .credit-indicator {
+        width: 6px;
+        height: 19px;
+        background: #26BD10;
+        border: 1px solid #ECECEC;
+        border-radius: 8px;
+        position: absolute;
+        top: -6px;
+        left: 0;
+    }
+
+    .credit-status-title {
+        position: absolute;
+        font: bold 12px / 13px Montserrat;
+        color: #06B312;
+        margin-top: 13px;
+        /* text-align: center; */
+        top: 80px;
+        left: 10px;
+    }
+
+    .credit-status-subtitle {
+        font: 300 12px / 13px Montserrat;
+        position: absolute;
+        color: #444444;
+        margin-top: 5px;
+        text-align: center;
+        top: 100px;
+        left: 11px;
+    }
+
+    /* Estilos para el perfil */
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        /* Espaciado entre el ícono y el nombre */
+        margin-bottom: 10px;
+        /* Espaciado inferior */
+        position: relative;
+        /* Asegurar que se posicione correctamente */
+    }
+
+    .profile-icon {
+        width: 24px;
+        height: 24px;
+        opacity: 1;
+    }
+
+    .profile-name {
+        font: normal normal bold 14px / 15px Montserrat;
+        color: #444444;
+        opacity: 1;
+        margin: 0;
+    }
+
+    .step {
+        display: none;
+    }
+
+    .step.active {
+        display: block;
+    }
+
+
+
+    /* Estilos para el select personalizado */
+    .custom-select {
+
+        left: 23px;
+        width: 300px;
+        height: 59px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border-radius: 30px;
+
+        /* border: none; */
+        /* margin-bottom: 1rem; */
+        margin-top: 10px;
+        outline: none;
+        padding: 0px 15px;
+        font: normal normal 283 15px / 15px Montserrat;
+        color: #15224F;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        position: relative;
+        z-index: 2;
+        /* Asegurar que esté encima */
+        opacity: 1;
+        /* Mantener opacidad fija */
+    }
+
+    /* Evitar cambios de color al seleccionar */
+    .custom-select:focus,
+    .custom-select:hover {
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        /* Mantener fondo blanco */
+        border-radius: 30px;
+        opacity: 1;
+    }
+
+    /* Opciones del select */
+    .custom-select option {
+        font: normal normal 300 14px / 15px Montserrat;
+        color: #15224F;
+    }
+
+    .custom-select::placeholder {
+        color: #15224F;
+        opacity: 0.5;
+        /* Aseguramos la opacidad */
+
+    }
+
+    .custom-select::-webkit-input-placeholder {
+        color: #15224F;
+        opacity: 0.5;
+        /* Compatibilidad con navegadores basados en WebKit */
+    }
+
+    .custom-select::-moz-placeholder {
+        color: #15224F;
+        opacity: 0.5;
+        /* Compatibilidad con Firefox */
+    }
+
+    .custom-select:-ms-input-placeholder {
+        color: #15224F;
+        opacity: 0.5;
+        /* Compatibilidad con Internet Explorer */
+    }
+
+    .custom-select:-moz-placeholder {
+        color: #15224F;
+        opacity: 0.5;
+        /* Compatibilidad adicional con Firefox */
+    }
+
+    .custom-select::placeholder,
+    .custom-select option[value=""][disabled] {
+        color: #15224F;
+        opacity: 0.5;
+        font: normal normal 300 14px/15px Montserrat;
+    }
+
+    .custom-select::-webkit-input-placeholder {
+        color: #15224F;
+        opacity: 0.5;
+    }
+
+    .custom-select::-moz-placeholder {
+        color: #15224F;
+        opacity: 0.5;
+    }
+
+    .custom-select:-ms-input-placeholder {
+        color: #15224F;
+        opacity: 0.5;
+    }
+
+    .custom-select:-moz-placeholder {
+        color: #15224F;
+        opacity: 0.5;
+    }
+
+    .custom-select option[value=""],
+    .custom-select option[disabled] {
+        color: #15224F;
+        opacity: 0.5;
+        font: normal normal 300 14px/15px Montserrat;
+    }
+
+    /* Evitar cambios visuales en el estado :focus y :active */
+    .custom-select:focus,
+    .custom-select:active {
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        /* Mantener fondo blanco */
+        border-radius: 30px;
+        opacity: 1;
+        outline: none;
+        /* Eliminar el borde azul predeterminado */
+        box-shadow: none;
+        /* Eliminar cualquier sombra predeterminada */
+    }
+
+    /* Evitar cambios visuales en el estado :focus, :active y :hover */
+    .custom-select:focus,
+    .custom-select:active,
+    .custom-select:hover {
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        /* Mantener fondo blanco */
+        border-radius: 30px;
+        opacity: 1;
+        outline: none;
+        /* Eliminar el borde azul predeterminado */
+        box-shadow: none;
+        /* Eliminar cualquier sombra predeterminada */
+        -webkit-box-shadow: none;
+        /* Compatibilidad con navegadores basados en WebKit */
+        -moz-box-shadow: none;
+        /* Compatibilidad con navegadores basados en Mozilla */
+    }
+
+    /* Eliminar el color de fondo gris predeterminado en navegadores móviles */
+    .custom-select:focus-visible {
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        /* Mantener fondo blanco */
+        outline: none;
+    }
+
+    /* Estilos para el contenedor del select personalizado */
+    .custom-select-container {
+        position: relative;
+        width: 263px;
+        height: 59px;
+        background: #FFFFFF;
+        border-radius: 30px;
+        padding: 0 15px;
+        font: normal normal 300 14px / 15px Montserrat;
+        color: #15224F;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        transition: border-radius 0.3s ease;
+        overflow: hidden;
+        /* Ocultar cualquier contenido que sobresalga */
+    }
+
+    .custom-select-container.expanded {
+        border-radius: 39px 39px 3px 3px;
+        /* Ajuste del border-radius al expandirse */
+    }
+
+    .custom-select-placeholder {
+        color: #15224F;
+        opacity: 0.5;
+        font: normal normal 300 14px / 15px Montserrat;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        width: 100%;
+        margin-left: 15px;
+        padding-right: 40px;
+        /* Espacio para la flecha */
+    }
+
+    .custom-select-arrow {
+        pointer-events: none;
+        width: 16px;
+        height: 16px;
+        opacity: 1;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: url('./images/icons/flechaDerecha.svg') no-repeat center center;
+        background-size: contain;
+    }
+
+    .custom-select-options {
+        position: absolute;
+        top: 32px;
+        left: 0;
+        height: 14rem;
+        width: 100%;
+        background: #F6F6F6 0% 0% no-repeat padding-box;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: -1;
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+        opacity: 0;
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .custom-select-options.active {
+        display: block;
+        opacity: 1;
+        transform: scaleY(1);
+    }
+
+
+
+
+    /* Estilos para los selects personalizados */
+    .custom-select-container {
+        position: relative;
+        width: 100%;
+        max-width: 263px;
+        height: 59px;
+        background: #FFFFFF;
+        border-radius: 30px;
+        padding: 0 15px;
+        font: normal normal 300 14px / 15px Montserrat;
+        color: #15224F;
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-select {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        /* Fondo blanco fijo */
+        border-radius: 30px;
+        font: normal normal 300 14px / 15px Montserrat;
+        color: #15224F;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding: 0 10px;
+        cursor: pointer;
+        z-index: 2;
+        /* Asegurar que esté encima */
+        position: relative;
+        opacity: 1;
+        /* Mantener opacidad fija */
+    }
+
+    /* Evitar cambios de color al seleccionar */
+    .custom-select:focus,
+    .custom-select:hover {
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        /* Mantener fondo blanco */
+        border-radius: 30px;
+        opacity: 1;
+    }
+
+
+    /* Opciones del select */
+    .custom-select option {
+        font: normal normal 300 14px / 15px Montserrat;
+        color: #15224F;
+    }
+
+    .custom-select-container::after {
+        content: '';
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        background: url('./images/icons/flechaDer.svg') no-repeat center center;
+        background-size: contain;
+        pointer-events: none;
+        z-index: 3;
+        /* Asegurar que esté encima del select */
+    }
+
+    @media (min-width: 200px) and (max-width: 320px) {
+
+        /* Estilos para el switch */
+        .switch-container {
+            display: flex;
+            width: 130px;
+            height: 30px;
+            background: #FFFFFF 0% 0% no-repeat padding-box;
+            border-radius: 20px;
+            opacity: 1;
+            z-index: 3;
+            margin-left: 87px;
+            transition: opacity 0.3s ease;
+        }
+
+        .switch-container.hidden {
+            opacity: 0;
+            /* Hacerlo invisible suavemente */
+            z-index: 1;
+            /* Moverlo detrás del rectángulo */
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 130px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        input:checked+.switch-slider {
+            transform: translateX(75px);
+        }
+
+        .switch-label-left,
+        .switch-label-right {
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: -1px;
+            z-index: 1;
+            /* Asegura que las etiquetas estén por encima del slider */
+        }
+
+        .switch-label-left {
+            left: 13px;
+            color: #FFFFFF;
+            margin-left: 9px;
+            margin-top: 15px;
+        }
+
+        .switch-label-right {
+            right: 13px;
+            color: #303047;
+            margin-right: 10px;
+            margin-top: 15px;
+        }
+
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 2px;
+            left: -56px;
+            width: 64px;
+            height: 26px;
+            background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+            border-radius: 20px;
+            transition: .4s;
+        }
+
+        /* Switch-slider para EMPRESA (checkbox checked) */
+        .toggle-switch input:checked+.switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 2px;
+            left: -71px;
+            width: 64px;
+            height: 26px;
+            background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+            border-radius: 20px;
+            transition: .4s;
+
+        }
+
+        /* Estilos para los botones de navegación */
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 26px;
+            left: 0;
+            right: 0;
+            bottom: 145px;
+            z-index: 1001;
+            pointer-events: none;
+            /* Para evitar bloquear clics fuera de los botones */
+        }
+
+        .navigation-buttons>* {
+            pointer-events: auto;
+            /* Los botones siguen siendo clickeables */
+        }
+
+        #step-1 .next-button {
+            width: 105px;
+            height: 40px;
+            background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+            border-radius: 20px;
+            opacity: 1;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 169px;
+            margin-top: 41px;
+        }
+
+        .next-button span {
+            margin-left: 4px;
+            font: normal normal bold 13px / 20px Montserrat;
+            letter-spacing: -1px;
+            color: #FFFFFF;
+            opacity: 1;
+        }
+
+        .next-button .next-arrow {
+            margin-left: 25px;
+            width: 11px;
+            top: 15px;
+            opacity: 1;
+        }
+
+        #step-2 .navigation-buttons {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 107px;
+            z-index: 1001;
+            justify-content: center;
+            gap: 26px;
+            pointer-events: none;
+            display: flex
+        }
+
+        #step-2 .next-button {
+            width: 105px;
+            height: 36px;
+            background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+            border-radius: 20px;
+            opacity: 1;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        #step-2 .next-button span {
+            margin-left: 12px;
+            font: normal normal bold 12px / 20px Montserrat;
+            letter-spacing: -1px;
+            color: #FFFFFF;
+            opacity: 1;
+        }
+
+        #step-2 .next-button .next-arrow {
+            margin-left: 25px;
+            width: 11px;
+            top: 15px;
+            opacity: 1;
+        }
+
+        #step-2 .back-button {
+            width: 36px;
+            height: 35px;
+            background: #FFFFFF 0% 0% no-repeat padding-box;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            opacity: 1;
+        }
+
+
+        .back-button.hidden {
+            visibility: hidden;
+        }
+
+        /* Estilos para el nuevo contenedor de opciones */
+        #step-2 .options-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: fixed;
+            margin-top: -16rem;
+            margin-left: -126px;
+        }
+
+        #step-2 .custom-options-container {
+            width: 246px;
+            margin-left: 0px;
+            height: 45px;
+            background: #FFFFFF;
+            border-radius: 30px;
+            padding: 0 15px;
+            font: normal normal 300 14px / 15px Montserrat;
+            color: #15224F;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: margin-top 0.3s ease;
+        }
+
+        .custom-options-container {
+            width: 242px;
+            margin-left: 14px;
+            height: 45px;
+            background: #FFFFFF;
+            border-radius: 30px;
+            padding: 0 15px;
+            font: normal normal 300 14px / 15px Montserrat;
+            color: #15224F;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: margin-top 0.3s ease;
+        }
+
+        .custom-options-placeholder {
+            color: #15224F;
+            opacity: 0.5;
+            font: normal normal 300 14px / 15px Montserrat;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            width: 100%;
+            margin-left: 15px;
+            top: 2px;
+            height: 100%;
+            z-index: 1;
+            /* Espacio para la flecha */
+        }
+
+        .custom-options-placeholder::after {
+            content: '';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            /* Posición original */
+            width: 16px;
+            height: 16px;
+            background: url('./images/icons/flechaDer.svg') no-repeat center center;
+            background-size: contain;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+            /* Transición suave */
+        }
+
+        .custom-options-placeholder.active::after {
+            transform: translateY(-50%) rotate(90deg);
+            /* Rotar hacia abajo */
+        }
+
+        #step-2 .custom-options {
+            position: absolute;
+            left: 0px;
+            height: 182px;
+            z-index: -1;
+            background: #F6F6F6 0% 0% no-repeat padding-box;
+            width: 276px;
+            border-radius: 0 0 30px 30px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            display: flex;
+            /* Forzar que se muestren */
+            flex-direction: column;
+            opacity: 1;
+            visibility: visible;
+            transform: scaleY(1);
+            transform-origin: top;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #step-2 .custom-options.hidden {
+            display: none;
+            /* Forzar que no se muestren */
+            opacity: 0;
+            visibility: hidden;
+            transform: scaleY(0);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .custom-option:hover {
+            background: #f4f4f4;
+        }
+
+        /* Estilos para el nuevo div que se despliega junto con las opciones del select */
+        .custom-options-extra {
+            display: none;
+
+        }
+
+        .custom-options-extra.active {
+            display: none;
+            /* Mostrar cuando se despliega */
+        }
+
+        /* Estilos para el nuevo buscador */
+        .custom-search-container {
+            display: flex;
+            align-items: center;
+            background-color: #D3D3D3;
+            border-radius: 0 0 30px 30px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            gap: 10px;
+            width: 78%;
+            margin-top: 28px;
+            margin-left: 18px;
+            margin-bottom: -34px;
+            opacity: 0;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .floating-action-btn {
+            display: none !important;
+        }
+
+        .custom-search-container.active {
+            opacity: 1;
+            /* Visible al activarse */
+            transform: scaleY(1);
+            /* Expandido al activarse */
+        }
+
+        .custom-search-container img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .custom-search-container input {
+            border: none;
+            outline: none;
+            background: none;
+            font: normal normal 300 14px/15px Montserrat;
+            color: #15224F;
+            width: 100%;
+        }
+
+        .custom-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* Espaciado entre la imagen y el texto */
+            padding: 10px 15px;
+            margin-left: 2rem;
+            margin-right: 2rem;
+            font: normal normal bold 14px / 15px Montserrat;
+            color: #444444;
+            cursor: pointer;
+            border-bottom: 1px solid #e0e0e0;
+            margin-top: 3rem;
+            margin-bottom: -3rem;
+        }
+
+        .custom-option img.option-icon {
+            width: 40px;
+            height: 37px;
+            object-fit: contain;
+        }
+
+        .custom-option:hover {
+            background: #f4f4f4;
+        }
+
+        #step-3 .custom-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            margin-left: 2rem;
+            margin-right: 2rem;
+            font: normal normal bold 9px / 11px Montserrat;
+            color: #444444;
+            cursor: pointer;
+            border-bottom: 1px solid #e0e0e0;
+            margin-top: -1rem;
+            margin-bottom: 2px;
+        }
+
+        #step-3 .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 26px;
+        }
+
+        #step-3 .next-button {
+            top: 650px;
+            left: 46%;
+            width: 132px;
+            height: 40px;
+            background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+            border-radius: 20px;
+            opacity: 1;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        #step-3 .next-button span {
+            margin-left: 13px;
+            font: normal normal bold 15px / 20px Montserrat;
+            letter-spacing: -1px;
+            color: #FFFFFF;
+            opacity: 1;
+        }
+
+        #step-3 .next-button .next-arrow {
+            margin-left: 25px;
+            width: 11px;
+            top: 15px;
+            opacity: 1;
+        }
+
+        #step-3 .back-button {
+
+            width: 40px;
+            height: 40px;
+            background: #FFFFFF 0% 0% no-repeat padding-box;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        #step-3 .custom-options {
+            width: 274px;
+            display: none;
+            border-radius: 0 0 30px 30px;
+            height: 134px;
+            background: #F6F6F6 0% 0% no-repeat padding-box;
+            max-height: 199px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            visibility: visible;
+            transform: scaleY(1);
+            transform-origin: top;
+            position: relative;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            margin-left: -330px;
+            margin-right: -8rem;
+            left: 73px;
+            z-index: 1;
+            margin-top: 205px;
+            pointer-events: auto;
+        }
+
+        #step-3 .custom-options-extra {
+            height: 59px;
+            margin-left: -15px;
+            margin-top: 9rem;
+            width: 274px;
+            position: absolute;
+            z-index: -1;
+            background-color: #F6F6F6;
+            border-radius: 30px 30px 0 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #step-3 .custom-options-extra.active {
+            display: block;
+            margin-top: 13px;
+        }
+
+        #step-3 .custom-options-placeholder::after {
+            content: '';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            width: 16px;
+            height: 16px;
+            background: url(./images/icons/flechaDer.svg) no-repeat center center;
+            background-size: contain;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+        }
+
+        #step-3 .custom-options-placeholder.active::after {
+            transform: translateY(-50%) rotate(90deg);
+            /* Rotar hacia abajo */
+        }
+
+        /* Estilos para el recuadro transparente y los elementos dentro de él */
+        .vehicle-summary {
+            height: 37px;
+            width: 246px;
+            border: 1px solid #FFFFFF;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-left: 19px;
+            border-radius: 32px 32px 32px 32px;
+            margin-top: -33px;
+        }
+
+        .vehicle-summary img#vehicle-logo {
+            width: 43px;
+            height: 47px;
+            object-fit: contain;
+            margin-right: 25px;
+            margin-left: 8px;
+        }
+
+        .vehicle-summary .vehicle-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .vehicle-summary .vehicle-details h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 300;
+            color: #FFFFFF;
+            margin: 0;
+            width: 134px;
+            height: 19px;
+        }
+
+        .vehicle-summary .vehicle-details p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            color: #FFFFFF;
+            margin: 2px 0;
+        }
+
+        .vehicle-summary .vehicle-details p:nth-child(2) {
+            font-weight: bold;
+        }
+
+        .vehicle-summary .vehicle-details p:nth-child(3) {
+            font-size: 11px;
+            font-weight: 300;
+        }
+
+        /* Ocultar las opciones cuando tienen la clase 'hidden' */
+        .custom-options.hidden {
+            opacity: 0;
+            visibility: hidden;
+            /* Aseguramos que estén ocultas */
+            transform: scaleY(0);
+            /* Colapsar visualmente */
+            pointer-events: none;
+            /* Evitar interacciones mientras están ocultas */
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Controlar el display con una clase adicional */
+        .custom-options.display-none {
+            display: none;
+            /* Aseguramos que estén completamente ocultas */
+        }
+
+        /* Asegurar que las opciones ocultas no interfieran */
+        .custom-options.hidden {
+            display: none !important;
+            opacity: 0;
+            visibility: hidden;
+            transform: scaleY(0);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Asegurar que las opciones visibles se comporten correctamente */
+        .custom-options {
+            display: flex !important;
+            flex-direction: column;
+            opacity: 1;
+            visibility: visible;
+            transform: scaleY(1);
+            transform-origin: top;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Asegurar que el margen de los contenedores sea consistente */
+
+
+        /* Rotación de la flecha */
+        .custom-options-placeholder.active::after {
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .custom-summary {
+            width: 252px;
+            height: 50px;
+            border: 1px solid #FFFFFF;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-top: 13px;
+            margin-left: 13px;
+            border-radius: 32px;
+        }
+
+        .custom-summary-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin: 0;
+            margin-bottom: 28px;
+            margin-left: 11px;
+        }
+
+        #step-4 .custom-summary-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin: 0;
+            margin-bottom: 28px;
+            margin-left: 11px;
+        }
+
+        .custom-summary-currency {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 300;
+            color: #FFFFFF;
+            display: block;
+            margin-left: -122px;
+            margin-top: 33px;
+        }
+
+        .custom-summary-step4 .custom-summary-currency {
+            margin-left: -135px;
+        }
+
+        .custom-summary-amount {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 17px;
+            font-weight: bold;
+            color: #28D89E;
+            margin-left: 5px;
+            margin-top: 31px;
+            display: inline-block;
+        }
+
+        .net-finance-input {
+            width: 232px;
+            top: 124px;
+            height: 45px;
+            background: #FFFFFF;
+            border-radius: 30px;
+            padding: 0 15px;
+            font: normal normal 300 14px / 15px Montserrat;
+            color: #15224F;
+            outline: none;
+            border: none;
+            margin-top: 16px;
+            margin-left: 12px;
+            padding-left: 29px;
+        }
+
+        .net-finance-input::placeholder {
+            font: normal normal 300 14px / 15px Montserrat;
+            color: #15224F;
+            opacity: 0.5;
+            width: 185px;
+        }
+
+        .min-amount-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            /* Medium */
+            color: #FF594B;
+            text-align: center;
+        }
+
+        .container-step4-desktop {
+            margin-top: -27rem;
+        }
+
+        #vehicle-logo-step4 {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin-right: 15px;
+        }
+
+        #vehicle-brand-step4,
+        #vehicle-model-step4,
+        #vehicle-year-step4 {
+            font-family: 'Montserrat', sans-serif;
+            color: #FFFFFF;
+            margin: 2px 0;
+        }
+
+        #vehicle-brand-step4 {
+            font-size: 14px;
+            font-weight: 300;
+            width: 134px;
+            height: 19px;
+        }
+
+        #vehicle-model-step4 {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #vehicle-year-step4 {
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        .custom-summary-step4 {
+            margin-left: 22px;
+            height: 36px;
+            width: 241px;
+
+        }
+
+        .selected-product {
+            width: 94px;
+            height: 17px;
+            border: 1px solid #28D89E;
+            color: #FFFFFF;
+            font-size: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: 10px;
+            margin-top: -26px;
+            border-radius: 12px;
+        }
+
+        #step-4 .vehicle-summary {
+            height: 40px;
+            border: 1px solid #FFFFFF;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 32px 32px 32px 32px;
+            margin-top: 24rem;
+        }
+
+        #step-4 .back-button .back-text {
+            display: none;
+        }
+
+        .scrollable-container {
+            width: 254px;
+            height: 133px;
+            overflow-y: auto;
+            margin-left: 28px;
+            margin-top: 8px;
+        }
+
+        .scrollable-item {
+            width: 223px;
+            height: 46px;
+            background-color: #FFFFFF;
+            margin-bottom: 5px;
+            border-radius: 36px;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+        }
+
+        .scrollable-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            color: #444444;
+            display: flex;
+            align-items: center;
+        }
+
+        .scrollable-value {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: #28D89E;
+            display: flex;
+            align-items: center;
+        }
+
+        .scrollable-item.selected {
+            border: 2px solid #28D89E;
+        }
+
+        .mensaje4 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #select-cuota-message {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            color: #FF594B;
+            text-align: center;
+        }
+
+        #step-4 .next-text {
+            width: 90px;
+            font-size: 13px;
+        }
+
+
+        #step-4 .next-button {
+            left: 196px;
+            top: 667px;
+        }
+
+        #step-4 .back-button {
+            left: 78px;
+            top: 667px;
+        }
+
+        #step-4 .share-button {
+            top: 667px;
+        }
+
+
+
+
+        .new-button {
+            width: 9%;
+            height: 40px;
+            background: #FFFFFF;
+            border: none;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .new-button svg {
+            width: 19px;
+            height: 19px;
+        }
+
+        .another-button {
+            width: 9%;
+            height: 40px;
+            background: #FFFFFF;
+            border: none;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+        }
+
+        .another-button svg {
+            width: 25px;
+            height: 26px;
+            stroke: #A0A0A0;
+            /* Cambiar el color del ícono a gris */
+        }
+
+        .message-button {
+            width: 13%;
+            height: 40px;
+            background: #FFFFFF;
+            border: none;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+        }
+
+        .message-button svg {
+            width: 24.249px;
+            height: 21.59px;
+            stroke: #A0A0A0;
+            /* Cambiar el color del ícono a gris */
+        }
+
+        #nosotros-cotizar .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        #nosotros-cotizar {
+            max-width: 95%;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        #nosotros-cotizar h1 {
+            display: block;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            margin-top: -47px;
+            margin-bottom: 55px;
+            font: normal normal 300 12px / 0px Montserrat;
+            letter-spacing: 0px;
+            color: #f4f4f4;
+            width: 100%;
+        }
+
+        #nosotros-cotizar .video-title {}
+
+        #nosotros-cotizar h1 strong {
+            width: 83%;
+            top: -18px;
+            font: normal normal bold 12px / 13px Montserrat;
+            color: #2ADC9F;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+
+        #nosotros-cotizar .wrapped {
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #nosotros-cotizar .videowrap {
+            display: none;
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        #nosotros-cotizar .videowrap.playing {
+            display: flex;
+        }
+
+        #nosotros-cotizar .videowrap iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #nosotros-cotizar .videowrap .video-container {
+            position: relative;
+            width: 70%;
+            margin: auto;
+        }
+
+        #nosotros-cotizar .videowrap .video-container:before {
+            content: "";
+            display: block;
+            padding-top: 56.25%;
+        }
+
+        #nosotros-cotizar .videowrap .closebox {
+            cursor: pointer;
+            position: fixed;
+            top: 50px;
+            right: 50px;
+        }
+
+
+        #nosotros-cotizar .videos {
+            overflow: hidden;
+            display: flex;
+            position: relative;
+            width: 100%;
+            gap: 0px 15px;
+            justify-content: center;
+            align-items: center;
+            scroll-behavior: smooth;
+            transition: all 500ms ease;
+            box-sizing: border-box;
+        }
+
+        #nosotros-cotizar .videos div {
+            flex: 0 0 25%;
+        }
+
+        #nosotros-cotizar .videos div a {
+            position: relative;
+            border-radius: 25px;
+            width: 100%;
+            display: inline-flex;
+            text-decoration: none;
+            text-indent: -9999px;
+        }
+
+        #nosotros-cotizar .videos div a img {
+            height: auto;
+            width: 100%;
+        }
+
+        #nosotros-cotizar .videos-container {
+            display: none;
+            z-index: 3;
+            position: absolute;
+            width: 100%;
+            gap: 0px 15px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #nosotros-cotizar .videos-container .videocontrol {
+            position: absolute;
+            border-radius: 50%;
+            border: 0px;
+            background: #22927E;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        #nosotros-cotizar .videos-container .videocontrol:before {
+            display: block;
+            content: "";
+            background: url("./images/icons/arrow-video.svg") no-repeat center center;
+            background-size: cover;
+            left: 0;
+            top: 0;
+            width: 25px;
+            height: 25px;
+            position: relative;
+        }
+
+        #nosotros-cotizar .videos-container .videocontrol#prev-video-cotizar {
+            left: 25px;
+        }
+
+        #nosotros-cotizar .videos-container .videocontrol#next-video-cotizar {
+            left: auto;
+            right: 25px;
+        }
+
+        #nosotros-cotizar .videos-container .videocontrol#next-video-cotizar:before {
+            content: "";
+            transform: rotate(-180deg);
+        }
+
+        #nosotros-cotizar .videos-container .videocontrol.disable {
+            opacity: 0.5;
+        }
+
+        #nosotros-cotizar .bubbles {
+            align-items: center;
+            margin-top: 55px;
+            width: 15rem;
+        }
+
+        #nosotros-cotizar .bubbles .bubble {
+            text-align: center;
+            width: 93%;
+            margin-top: -152px;
+            height: 347px;
+            margin-left: -24px;
+            background-size: contain !important;
+            position: relative;
+            flex: 0 0 25%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #nosotros-cotizar .bubbles .bubble:nth-child(2n) {
+            margin-left: 25px;
+        }
+
+        #nosotros-cotizar .bubbles .bubble>div {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 100%;
+            height: auto;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #nosotros-cotizar .bubbles .bubble mark,
+        #nosotros-cotizar .bubbles .bubble strong {
+            font-weight: bold;
+        }
+
+        #nosotros-cotizar .bubbles .bubble mark {
+            white-space: nowrap;
+            background: transparent;
+            line-height: 0.75;
+            font-size: 2.2rem;
+            width: 100%;
+            text-align: center;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        #nosotros-cotizar .bubbles .bubble mark>* {
+            line-height: 0.99;
+        }
+
+        #nosotros-cotizar .bubbles .bubble p,
+        #nosotros-cotizar .bubbles .bubble mark,
+        #nosotros-cotizar .bubbles .bubble strong {
+            color: #fff;
+            text-align: center;
+            width: 100%;
+        }
+
+        #nosotros-cotizar .bubbles .bubble mark+p {
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        #nosotros-cotizar .bubbles .bubble mark+p+p {
+            font-size: 0.75rem;
+            margin: 0;
+        }
+
+        #nosotros-cotizar .bubbles .bubble.bubble01 {
+            background: url("./images/bubbles/buble01.svg") center center no-repeat;
+        }
+
+        #nosotros-cotizar .bubbles .bubble.bubble02 {
+            background: url("./images/bubbles/buble02.svg") center center no-repeat;
+        }
+
+        #nosotros-cotizar .bubbles .bubble.bubble03 {
+            background: url("./images/bubbles/buble03.svg") center center no-repeat;
+        }
+
+        #nosotros-cotizar .bubbles .bubble.bubble03>div {
+            margin-left: 0;
+        }
+
+        #nosotros-cotizar .bubbles .bubble.bubble04 {
+            background: url("./images/bubbles/buble04.svg") center center no-repeat;
+        }
+
+        body:has(#nosotros-cotizar:not(.hidden)) {
+            height: 185vh !important;
+        }
+
+        body.nosotros-cotizar-activo .step {
+            display: none;
+        }
+
+        body.nosotros-cotizar-activo .tituloysubtitulo {
+            display: none;
+        }
+
+        body.nosotros-cotizar-activo .floating-action-btn {
+            position: absolute;
+            right: 63px;
+            bottom: 0px !important;
+            margin-bottom: -26rem;
+            width: 69.72px;
+            height: 69.72px;
+            background: #2ADC9F;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 16px 0 rgba(40, 216, 158, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            padding: 0;
+        }
+
+        /* Estilos básicos para el formulario de contacto */
+        body.contacto-activo .step {
+            display: none;
+        }
+
+        body.contacto-activo #contacto {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #contacto .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 56vh;
+            width: 270px;
+            margin-top: 46px;
+        }
+
+        #contacto .section-title {
+            display: block;
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 95%;
+            z-index: 1;
+        }
+
+        .contact-form .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-form label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            margin-bottom: 8px;
+            color: #FFFFFF;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: #28d89e;
+        }
+
+        .primary-button {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: #fff;
+            background-color: #28d89e;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .primary-button:hover {
+            background-color: #22b884;
+        }
+
+        body.contacto-activo .footer {
+            display: none !important;
+        }
+
+        body.contacto-activo .tituloysubtitulo {
+            display: none !important;
+        }
+
+        #step-4 .navigation-buttons {
+            margin-left: 35px;
+            display: flex;
+            justify-content: center;
+            gap: 26px;
+        }
+
+        #step-4 .next-button {
+            width: 132px;
+            height: 33px;
+            background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
+            border-radius: 20px;
+            opacity: 1;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        #step-4 .next-button span {
+            display: flex;
+            top: 9px;
+            position: static;
+            left: 18px;
+            width: 120px;
+            height: 20px;
+            text-align: left;
+            font: normal normal bold 13px / 20px Montserrat;
+            letter-spacing: -1px;
+            color: #FFFFFF;
+            opacity: 1;
+        }
+
+        #step-4 .next-button .next-arrow {
+            margin-left: 25px;
+            width: 11px;
+            top: 15px;
+            opacity: 1;
+        }
+
+        #step-4 .back-button {
+            width: 32px;
+            height: 32px;
+            background: #FFFFFF 0% 0% no-repeat padding-box;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            opacity: 1;
+            margin-left: -22px;
+        }
+
+        #step-4 .share-button {
+            width: 32px;
+            height: 32px;
+            background: #FFFFFF;
+            border: none;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    /* --- MENÚ HAMBURGUESA MOBILE ESTILO INDEX --- */
+    .hamburguer {
+        position: absolute;
+        right: 24px;
+        top: 20px;
+        z-index: 1201;
+        background: none;
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0;
+        cursor: pointer;
+    }
+
+    .hamburguer span {
+        display: block;
+        width: 32px;
+        height: 32px;
+        /* Reemplaza el background-image por SVG inline usando background-image: url('data:image/svg+xml;utf8,...') */
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="25.08" height="19" viewBox="0 0 25.08 19"><g id="Humberger_menu" data-name="Humberger menu" transform="translate(-33.96 -70)"><rect id="Rectangle_178" data-name="Rectangle 178" width="14.44" height="2.28" rx="1.14" transform="translate(39.28 70)" fill="white"/><rect id="Rectangle_179" data-name="Rectangle 179" width="25.08" height="2.28" rx="1.14" transform="translate(33.96 78.36)" fill="white"/><rect id="Rectangle_180" data-name="Rectangle 180" width="11.4" height="2.28" rx="1.14" transform="translate(40.8 86.72)" fill="white"/></g></svg>') no-repeat center center;
+        background-size: 25px 19px;
+        text-indent: -9999px;
+    }
+
+    .menu-overlay {
+        display: none;
+    }
+
+    .menu-overlay.active {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(14, 21, 44, 0.95);
+        z-index: 1200;
+    }
+
+    #menu {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Estilos básicos para el formulario de contacto */
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .contact-form .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .contact-form label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
+        margin-bottom: 8px;
+        color: #FFFFFF;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 14px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+        border-color: #28d89e;
+    }
+
+    .primary-button {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        color: #fff;
+        background-color: #28d89e;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .primary-button:hover {
+        background-color: #22b884;
+    }
+
+    body.contacto-activo .footer {
+        display: none !important;
+    }
+
+    /* Estilo específico para el h1 del paso y su strong */
+    .tituloysubtitulo h1 {
+        font: normal normal 300 14px / 16px Montserrat;
+        color: #2ADC9F;
+        margin-top: 15px;
+        margin-bottom: 0;
+        letter-spacing: 0px;
+        text-align: left;
+    }
+
+    .tituloysubtitulo h1 strong {
+        font: normal normal bold 14px / 17px Montserrat;
+        color: #2ADC9F;
+        letter-spacing: 0px;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
+
+
+    .navigation-buttons>* {
+        pointer-events: auto;
+        /* Los botones siguen siendo clickeables */
+    }
+}

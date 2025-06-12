@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lever - Contacto</title>
+    <link rel="stylesheet" href="cotizar.css" />
+    <link rel="stylesheet" href="cotizarTabletDesktop.css" />
+    <link rel="stylesheet" href="pantallasChicas.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="container header-container">
+        <div itemprop="logo" class="logo-container">
+          <a href="cotizar.html" onclick=""
+            ><img src="./images/logos/lever.svg" alt="Lever Technology"
+          /></a>
+        </div>
+        <!-- Agrupa los botones en un contenedor para stacking y posición -->
+        <div class="desktop-header-buttons">
+          <button
+            type="button"
+            class="desktop-inicio-btn"
+            onclick="window.location.href='cotizar.html'"
+          >
+            <span class="desktop-inicio-btn-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="17"
+                height="16"
+                viewBox="0 0 17 16"
+              >
+                <path
+                  id="Vector"
+                  d="M16.648,7.869,8.924.175a.6.6,0,0,0-.848,0L.353,7.869A1.2,1.2,0,0,0,1.2,9.912h.814V15.4a.6.6,0,0,0,.6.6H7.3V11.813H9.4V16h4.986a.6.6,0,0,0,.6-.6V9.912H15.8a1.2,1.2,0,0,0,.848-2.043Z"
+                  fill="#fff"
+                />
+              </svg>
+            </span>
+            <span class="desktop-inicio-btn-text"> Inicio</span>
+          </button>
+          <button
+            type="button"
+            class="desktop-nosotros-btn"
+            onclick="mostrarNosotrosCotizar()"
+          >
+            <span class="desktop-nosotros-btn-icon">
+              <svg
+                id="Grupo_2625"
+                data-name="Grupo 2625"
+                xmlns="http://www.w3.org/2000/svg"
+                width="22.767"
+                height="22.767"
+                viewBox="0 0 22.767 22.767"
+              >
+                <g clip-path="url(#clip-path)">
+                  <defs>
+                    <clipPath id="clip-path">
+                      <rect width="22.767" height="22.767" fill="#15224f" />
+                    </clipPath>
+                  </defs>
+                  <path
+                    d="M11.384,0A11.384,11.384,0,1,0,22.767,11.384,11.384,11.384,0,0,0,11.384,0m3.037,6.83A1.517,1.517,0,1,1,12.9,8.347,1.517,1.517,0,0,1,14.421,6.83m-6.072,0A1.517,1.517,0,1,1,6.832,8.347,1.517,1.517,0,0,1,8.349,6.83m9.015,7.852a6.808,6.808,0,0,1-11.338.945c-.362-.457-.977-1.209-.459-1.761a.818.818,0,0,1,.35-.2c.753-.142.905.508,1.274.981a5.327,5.327,0,0,0,8.366.026c.22-.281.524-.908.854-1a.756.756,0,0,1,.953,1"
+                    fill="#15224f"
+                  />
+                </g>
+              </svg>
+            </span>
+            <span class="desktop-nosotros-btn-text">Nosotros</span>
+          </button>
+        </div>
+        <a href="#" class="hamburguer" id="hamburguer-menu"
+          ><span>Menu</span></a
+        >
+      </div>
+      <nav
+        id="menu"
+        itemprop="mainEntityOfPage"
+        itemscope
+        itemtype="http://schema.org/SiteNavigationElement"
+        class="hidden"
+      >
+        <ul>
+          <li>
+            <a
+              href="cotizar.html"
+              itemprop="url"
+              class="scroller outline"
+              data-text="Inicio"
+              data-url="#inicio"
+              ><span itemprop="name">Inicio</span></a
+            >
+          </li>
+          <li>
+            <a
+              href="nosotros.html"
+              itemprop="url"
+              class="scroller outline"
+              data-text="Nosotros"
+              data-url="#nosotros"
+              onclick="mostrarNosotrosCotizar();return false;"
+              ><span itemprop="name">Nosotros</span></a
+            >
+          </li>
+          <li>
+            <a
+              href="contacto.html"
+              itemprop="url"
+              class="scroller outline"
+              data-text="Contacto"
+              data-url="#contacto"
+              ><span itemprop="name">Contacto</span></a
+            >
+          </li>
+        </ul>
+        <!-- Botón de cerrar menú hamburguesa (cruz) -->
+        <a href="#" class="close-menu" id="close-menu" aria-label="Cerrar menú">
+          <img
+            src="./images/icons/close.svg"
+            alt="Cerrar menú"
+            width="32"
+            height="29"
+          />
+        </a>
+      </nav>
+      <div class="menu-overlay" id="menu-overlay"></div>
+    </header>
+    <!-- NUEVA SECCIÓN: CONTACTO -->
+    <section id="contacto">
+      <div class="container">
+        <form id="contact-form" class="contact-form">
+          <h1 class="section-title">Contacto</h1>
+          <div class="form-group">
+            <label for="contact-name">Nombre Completo</label>
+            <input
+              type="text"
+              id="contact-name"
+              name="name"
+              placeholder="Tu nombre completo"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="contact-email">Email</label>
+            <input
+              type="email"
+              id="contact-email"
+              name="email"
+              placeholder="Te email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="contact-phone">Teléfono</label>
+            <input
+              type="tel"
+              id="contact-phone"
+              name="phone"
+              placeholder="Tu teléfono"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="contact-message">Mensaje</label>
+            <textarea
+              id="contact-message"
+              name="message"
+              placeholder="Escribe tu mensaje aquí..."
+              rows="4"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="primary-button">Enviar</button>
+        </form>
+      </div>
+    </section>
+    <script src="cotizar.js"></script>
+    <!-- AGREGAR este script específico para contacto.html -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar transición de entrada
+            document.body.classList.add('page-transition', 'fade-in');
+            
+            console.log('contacto.html cargado, verificando menú...');
+            
+            // Forzar inicialización del menú hamburguesa
+            setTimeout(function() {
+                const hamburguer = document.getElementById("hamburguer-menu");
+                const menu = document.getElementById("menu");
+                const closeBtn = document.getElementById("close-menu");
+                
+                if (hamburguer && menu) {
+                    console.log('Elementos encontrados en contacto.html');
+                    
+                    // Función para cerrar menú
+                    function closeMenu() {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("mobile-active");
+                        document.getElementById("menu-overlay").classList.remove("active");
+                    }
+                    
+                    // Evento directo como fallback para hamburguesa
+                    hamburguer.onclick = function(e) {
+                        e.preventDefault();
+                        console.log('Fallback: clic hamburguesa en contacto.html');
+                        
+                        if (menu.classList.contains("mobile-active")) {
+                            closeMenu();
+                        } else {
+                            menu.classList.remove("hidden");
+                            menu.classList.add("mobile-active");
+                            document.getElementById("menu-overlay").classList.add("active");
+                        }
+                    };
+                    
+                    // Evento directo para botón cerrar
+                    if (closeBtn) {
+                        closeBtn.onclick = function(e) {
+                            e.preventDefault();
+                            console.log('Fallback: clic cerrar en contacto.html');
+                            closeMenu();
+                        };
+                    }
+                } else {
+                    console.error('Elementos del menú NO encontrados en contacto.html');
+                }
+            }, 100);
+        });
+    </script>
+  </body>
+</html>

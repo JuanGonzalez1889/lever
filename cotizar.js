@@ -66,6 +66,23 @@ function hideDropdown() {
 }
 
 function goToStep(step) {
+  ocultarContacto();
+
+  // Actualizar el título de pasos arriba del cotizador
+  const tituloPaso = document.querySelector('.tituloysubtitulo h1');
+  if (tituloPaso) {
+    if (step === 1) {
+      tituloPaso.innerHTML = 'PASO <strong>1 DE 3</strong>';
+    } else if (step === 2) {
+      tituloPaso.innerHTML = 'PASO <strong>2 DE 3</strong>';
+    } else if (step === 3) {
+      tituloPaso.innerHTML = 'PASO <strong>3 DE 3</strong>';
+    } else if (step === 4) {
+      // "cotización" en strong, "estimada" normal
+      tituloPaso.innerHTML = '<strong>cotización</strong> estimada';
+    }
+  }
+
   console.log("goToStep llamada con step:", step);
 
   const steps = document.querySelectorAll(".step");
@@ -86,7 +103,7 @@ function goToStep(step) {
             message.style.display = "block";
           } else {
             message.classList.add("hidden"); // Ocultar el mensaje si ya hay una cuota seleccionada
-            message.style.display = "none";
+            message.style.removeProperty("display");
           }
         } else {
           console.error(
@@ -198,6 +215,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Asegurar que el mensaje no se muestre al avanzar al paso 4 si ya se seleccionó una cuota
 function goToStep(step) {
+  ocultarContacto();
+
+  // Actualizar el título de pasos arriba del cotizador
+  const tituloPaso = document.querySelector('.tituloysubtitulo h1');
+  if (tituloPaso) {
+    if (step === 1) {
+      tituloPaso.innerHTML = "PASO <strong>1 DE 3</strong>";
+    } else if (step === 2) {
+      tituloPaso.innerHTML = "PASO <strong>2 DE 3</strong>";
+    } else if (step === 3) {
+      tituloPaso.innerHTML = "PASO <strong>3 DE 3</strong>";
+    } else if (step === 4) {
+      tituloPaso.innerHTML = "<strong>COTIZACIÓN</strong> ESTIMADA";
+    }
+    
+  }
+
+  console.log("goToStep llamada con step:", step);
+
   const steps = document.querySelectorAll(".step");
   steps.forEach((stepElement, index) => {
     if (index + 1 === step) {
@@ -242,35 +278,34 @@ document.addEventListener("DOMContentLoaded", () => {
         ".custom-options-placeholder"
       );
       const options = container.querySelector(".custom-options");
-      const extraDiv = container.querySelector(".custom-options-extra"); // Nuevo div
-      const searchContainer = options.querySelector(".custom-search-container"); // Nuevo buscador
+      const extraDiv = container.querySelector(".custom-options-extra");
+      const searchContainer = options.querySelector(".custom-search-container");
       const searchInput = searchContainer
         ? searchContainer.querySelector("input")
-        : null; // Input del buscador
+        : null;
 
-      // Función para ajustar el margen del siguiente select
+      // --- CORREGIDO: Solo el siguiente select cambia el margin-top ---
       const adjustNextSelect = (isExpanded) => {
         containers.forEach((cont, i) => {
           if (i === index + 1) {
-            cont.style.marginTop = isExpanded ? "197px" : "15px"; // Ajustar margen solo para el siguiente select
-          } else {
-            cont.style.marginTop = "15px"; // Los demás no tienen margen adicional
+            cont.style.marginTop = isExpanded ? "168px" : "15px";
+          } else if (i !== index) {
+            cont.style.marginTop = "15px";
           }
         });
       };
 
       // Abrir o cerrar las opciones al hacer clic en el placeholder
       placeholder.addEventListener("click", (event) => {
-        event.stopPropagation(); // Evitar que el evento se propague
+        event.stopPropagation();
         const allOptions = document.querySelectorAll(".custom-options");
         const allPlaceholders = document.querySelectorAll(
           ".custom-options-placeholder"
         );
-
-        const allExtras = document.querySelectorAll(".custom-options-extra"); // Todos los extras
+        const allExtras = document.querySelectorAll(".custom-options-extra");
         const allSearchContainers = document.querySelectorAll(
           ".custom-search-container"
-        ); // Todos los buscadores
+        );
 
         // Cerrar todos los selects abiertos excepto el actual
         allOptions.forEach((opt) => {
@@ -278,38 +313,35 @@ document.addEventListener("DOMContentLoaded", () => {
             opt.classList.add("hidden");
           }
         });
-
         allPlaceholders.forEach((ph) => {
           if (ph !== placeholder) {
-            ph.classList.remove("active"); // Quitar clase para rotar la flecha
+            ph.classList.remove("active");
           }
         });
-
         allExtras.forEach((extra) => {
           if (extra !== extraDiv) {
-            extra.classList.remove("active"); // Ocultar extras no relacionados
+            extra.classList.remove("active");
           }
         });
-
         allSearchContainers.forEach((search) => {
           if (search !== searchContainer) {
-            search.classList.remove("active"); // Ocultar buscadores no relacionados
+            search.classList.remove("active");
           }
         });
 
-        // Alternar el estado del select actual, su extra y el buscador
+        // --- CORREGIDO: Solo el siguiente select cambia el margin-top ---
         if (options.classList.contains("hidden")) {
           options.classList.remove("hidden");
-          placeholder.classList.add("active"); // Agregar clase para rotar la flecha
-          extraDiv.classList.add("active"); // Mostrar el extra
-          if (searchContainer) searchContainer.classList.add("active"); // Mostrar el buscador
-          adjustNextSelect(true); // Ajustar margen del siguiente select
+          placeholder.classList.add("active");
+          extraDiv.classList.add("active");
+          if (searchContainer) searchContainer.classList.add("active");
+          adjustNextSelect(true);
         } else {
           options.classList.add("hidden");
-          placeholder.classList.remove("active"); // Quitar clase para rotar la flecha
-          extraDiv.classList.remove("active"); // Ocultar el extra
-          if (searchContainer) searchContainer.classList.remove("active"); // Ocultar el buscador
-          adjustNextSelect(false); // Volver a la posición original
+          placeholder.classList.remove("active");
+          extraDiv.classList.remove("active");
+          if (searchContainer) searchContainer.classList.remove("active");
+          adjustNextSelect(false);
         }
       });
 
@@ -894,9 +926,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Validar si el monto supera el máximo permitido
     if (parseInt(value, 10) > maxAmount) {
-      financeInput.style.color = "red";
+      financeInput.style.color = "#FF594B";
       minAmountText.textContent = "No puede superar el máximo a financiar.";
-      minAmountText.style.color = "red";
+      minAmountText.style.color = "#FF594B";
       isValidAmount = false;
       nextButtonStep3.disabled = true; // Deshabilitar el botón
       nextButtonStep3.style.opacity = "0.5";
@@ -1076,7 +1108,7 @@ document.addEventListener("DOMContentLoaded", () => {
       options.classList.remove("hidden");
       placeholder.classList.add("active");
       if (extra) extra.classList.add("active");
-      if (arr[idx + 1]) arr[idx + 1].style.marginTop = "197px";
+      if (arr[idx + 1]) arr[idx + 1].style.marginTop = "168px";
       open = true;
     });
 
@@ -1724,10 +1756,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Menú hamburguesa estilo index.html
+    // Menú hamburguesa robusto para cualquier página
     const hamburguer = document.getElementById("hamburguer-menu");
     const menu = document.getElementById("menu");
     const overlay = document.getElementById("menu-overlay");
+    const closeBtn = document.getElementById("close-menu");
+
+    if (!hamburguer || !menu || !overlay) return;
 
     function openMenu() {
       menu.classList.remove("hidden");
@@ -1741,38 +1776,34 @@ document.addEventListener("DOMContentLoaded", () => {
       overlay.classList.remove("active");
       document.body.classList.remove("menu-open");
     }
-    hamburguer.addEventListener("click", (e) => {
+
+    hamburguer.addEventListener("click", function (e) {
       e.preventDefault();
       if (menu.classList.contains("mobile-active")) closeMenu();
       else openMenu();
     });
+
     overlay.addEventListener("click", closeMenu);
-    menu.querySelectorAll("a").forEach((link) => {
+
+    // Cerrar menú al hacer click en cualquier link del menú
+    menu.querySelectorAll("a").forEach(function (link) {
       link.addEventListener("click", closeMenu);
     });
-    document.addEventListener("keydown", (e) => {
+
+    // Cerrar menú con la cruz
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        closeMenu();
+      });
+    }
+
+    // Cerrar menú con ESC
+    document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") closeMenu();
     });
   });
 
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const closeBtn = document.getElementById("close-menu");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        // Llama a closeMenu solo si está en mobile
-        if (window.innerWidth <= 1024) {
-          const menu = document.getElementById("menu");
-          const overlay = document.getElementById("menu-overlay");
-          menu.classList.add("hidden");
-          menu.classList.remove("mobile-active");
-          overlay.classList.remove("active");
-          document.body.classList.remove("menu-open");
-        }
-      });
-    }
-  });
 
 
 //seccion nosotros-cotizar videos
@@ -1910,49 +1941,30 @@ document.addEventListener("DOMContentLoaded", () => {
         "#step-1 .switch-container"
       );
       if (!dniContainer || !switchContainer) return;
-      if (window.innerWidth >= 1025) {
-        if (dniContainer.classList.contains("expanded")) {
-          switchContainer.style.display = "none";
-        } else {
-          switchContainer.style.display = "flex";
-        }
+
+      if (dniContainer.classList.contains("expanded")) {
+        // Ocultar el switch-container si el dni-container está expandido
+        switchContainer.style.display = "none";
+     
       } else {
-        // En mobile, siempre visible (o según tu lógica)
-        switchContainer.style.display = "";
+        // Mostrar el switch-container en todos los casos, excepto cuando está expandido
+        switchContainer.style.display = "flex";
       }
     }
 
-    // Llama a la función al expandir/cerrar el popup
-    const dniContainer = document.querySelector("#step-1 .dni-container");
-    const searchIcon = document.querySelector("#step-1 .search-icon-container");
-    const changeApplicantBtn = document.querySelector(
-      "#step-1 .change-applicant-button"
-    );
-    if (searchIcon) {
-      searchIcon.addEventListener("click", () => {
-        setTimeout(updateSwitchVisibility, 700); // Cambia aquí el delay
-      });
-    }
-    if (changeApplicantBtn) {
-      changeApplicantBtn.addEventListener("click", () => {
-        setTimeout(updateSwitchVisibility, 700); // Cambia aquí el delay
-      });
-    }
-
-    // También al cambiar el tamaño de la ventana
-    window.addEventListener("resize", updateSwitchVisibility);
-
-    // Y al cargar la página
-   
-   
+    // Llama a la función al cargar la página   
     updateSwitchVisibility();
 
-    // Si tu showDropdown/hideDropdown cambian la clase 'expanded', puedes enganchar aquí:
+    // Llama a la función al cambiar el tamaño de la ventana
+    window.addEventListener("resize", updateSwitchVisibility);
+
+    // Engancha la lógica en showDropdown y hideDropdown
     const originalShowDropdown = window.showDropdown;
     window.showDropdown = function () {
       if (typeof originalShowDropdown === "function") originalShowDropdown();
       updateSwitchVisibility();
     };
+
     const originalHideDropdown = window.hideDropdown;
     window.hideDropdown = function () {
       if (typeof originalHideDropdown === "function") originalHideDropdown();
@@ -3012,4 +3024,370 @@ document.addEventListener("DOMContentLoaded", () => {
     const categoria = categoriaPlaceholder.dataset.value || categoriaPlaceholder.textContent.trim().toLowerCase();
     actualizarProductosPorCategoria(categoria);
   }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const contactButton = document.querySelector('a[data-url="#contacto"]');
+  if (contactButton) {
+    contactButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      // Ocultar todas las secciones principales
+      document.querySelectorAll("main > section").forEach((sec) => {
+        sec.classList.add("hidden");
+      });
+      // Mostrar la sección de contacto
+      document.getElementById("contacto").classList.remove("hidden");
+      window.scrollTo(0, 0);
+    });
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const floatingActionButton = document.querySelector(".floating-action-btn");
+  const sections = document.querySelectorAll("main > section");
+  const contactoSection = document.getElementById("contacto");
+
+  if (floatingActionButton) {
+    floatingActionButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      // Ocultar todas las secciones principales
+      sections.forEach((sec) => sec.classList.add("hidden"));
+      // Mostrar la sección de contacto
+      contactoSection.classList.remove("hidden");
+      window.scrollTo(0, 0);
+    });
+  }
+
+  // Asegurar que el formulario de contacto se oculte al cambiar de sección
+  document.querySelectorAll(".inicio-button, .new-button, .another-button, .message-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      contactoSection.classList.add("hidden");
+    });
+  });
+
+  document.querySelectorAll('a[data-url="#nosotros"], a[data-url="#inicio"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      contactoSection.classList.remove("hidden");
+    });
+  });
+
+  // Ocultar contacto al hacer clic en cualquier sección que no sea contacto
+  sections.forEach((section) => {
+    section.addEventListener("click", () => {
+      if (!section.classList.contains("contacto-section")) {
+        contactoSection.classList.add("hidden");
+      }
+    });
+  });
+
+  // Ocultar contacto al avanzar entre pasos
+  document.querySelectorAll(".step").forEach((step) => {
+    step.addEventListener("click", () => {
+      contactoSection.classList.add("hidden");
+    });
+  });
+});
+
+// Función global para ocultar el formulario de contacto
+function ocultarContacto() {
+  const contactoSection = document.getElementById("contacto");
+  if (contactoSection) contactoSection.classList.add("hidden");
+}
+
+// Función global para mostrar el formulario de contacto
+function mostrarContacto() {
+    // Oculta todas las secciones principales
+    document.querySelectorAll("main > section").forEach((sec) => sec.classList.add("hidden"));
+    // Muestra la sección de contacto
+    const contactoSection = document.getElementById("contacto");
+    if (contactoSection) contactoSection.classList.remove("hidden");
+    // Agrega la clase 'contacto-activo' al body
+    document.body.classList.add("contacto-activo");
+    window.scrollTo(0, 0);
+}
+
+// Reemplaza todos los listeners de botones/secciones relacionados con contacto:
+document.addEventListener("DOMContentLoaded", () => {
+    // Botón flotante
+    const floatingActionButton = document.querySelector(".floating-action-btn");
+    if (floatingActionButton) {
+        floatingActionButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            mostrarContacto();
+        });
+    }
+
+    // Menú hamburguesa y enlaces de menú
+    document.querySelectorAll('a[data-url="#contacto"]').forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            mostrarContacto();
+        });
+    });
+
+    // Ocultar contacto al ir a inicio o nosotros
+    document.querySelectorAll('a[data-url="#inicio"], a[data-url="#nosotros"]').forEach((link) => {
+        link.addEventListener("click", () => {
+            ocultarContacto();
+        });
+    });
+
+    // Footer y otros botones que cambian de sección
+    document.querySelectorAll(".inicio-button, .new-button, .another-button, .message-button").forEach((button) => {
+        button.addEventListener("click", () => {
+            ocultarContacto();
+        });
+    });
+});
+
+// Modifica goToStep para ocultar contacto siempre que se navega entre pasos
+const originalGoToStep = window.goToStep || goToStep;
+window.goToStep = function(step) {
+  ocultarContacto();
+
+  // Actualizar el título de pasos arriba del cotizador
+  const tituloPaso = document.querySelector('.tituloysubtitulo h1');
+  if (tituloPaso) {
+    if (step === 1) {
+      tituloPaso.innerHTML = 'PASO <strong>1 DE 3</strong>';
+    } else if (step === 2) {
+      tituloPaso.innerHTML = 'PASO <strong>2 DE 3</strong>';
+    } else if (step === 3) {
+      tituloPaso.innerHTML = 'PASO <strong>3 DE 3</strong>';
+    } else if (step === 4) {
+      // "cotización" en strong, "estimada" normal
+      tituloPaso.innerHTML = '<strong>cotización</strong> estimada';
+    }
+  }
+ 
+  originalGoToStep(step);
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Redirección botón header "Inicio" para todas las páginas
+  document.querySelectorAll('.desktop-inicio-btn').forEach(btn => {
+    // Solo aplicar redirección si NO estamos en cotizar.html
+    if (!window.location.pathname.includes('cotizar.html')) {
+      btn.onclick = function(e) {
+        e.preventDefault();
+        window.location.href = "cotizar.html";
+      };
+    }
+  });
+
+  // Redirección botón header "Nosotros"
+  document.querySelectorAll('.desktop-nosotros-btn').forEach(btn => {
+    btn.onclick = function(e) {
+      e.preventDefault();
+      window.location.href = "nosotros.html";
+    };
+  });
+
+  // Redirección enlaces menú "Nosotros"
+  document.querySelectorAll('a[data-text="Nosotros"], a[data-url="#nosotros"]').forEach(link => {
+    link.onclick = function(e) {
+      e.preventDefault();
+      window.location.href = "nosotros.html";
+    };
+  });
+
+  // Redirección botón header "Contacto"
+  document.querySelectorAll('.desktop-header-buttons .desktop-contacto-btn').forEach(btn => {
+    btn.onclick = function(e) {
+      e.preventDefault();
+      window.location.href = "contacto.html";
+    };
+  });
+
+  // Redirección enlaces menú "Contacto"
+  document.querySelectorAll('a[data-text="Contacto"], a[data-url="#contacto"]').forEach(link => {
+    link.onclick = function(e) {
+      e.preventDefault();
+      window.location.href = "contacto.html";
+    };
+  });
+
+  // Redirección botón flotante
+  const floatingBtn = document.querySelector('.floating-action-btn');
+  if (floatingBtn) {
+    floatingBtn.onclick = function(e) {
+      e.preventDefault();
+      window.location.href = "contacto.html";
+    };
+  }
+});
+
+// --- MENÚ HAMBURGUESA UNIVERSAL PARA TODAS LAS PÁGINAS ---
+// ELIMINAR cualquier otro bloque de menú hamburguesa y reemplazar con este:
+(function() {
+    'use strict';
+    
+    // Función de inicialización del menú
+    function initHamburguerMenu() {
+        console.log('Inicializando menú hamburguesa...');
+        
+        const hamburguer = document.getElementById("hamburguer-menu");
+        const menu = document.getElementById("menu");
+        const overlay = document.getElementById("menu-overlay");
+        const closeBtn = document.getElementById("close-menu");
+        
+        if (!hamburguer || !menu || !overlay) {
+            console.warn('Elementos del menú no encontrados en esta página');
+            return;
+        }
+        
+        console.log('Elementos del menú encontrados, configurando eventos...');
+        
+        // Eliminar eventos previos para evitar duplicados
+        hamburguer.removeEventListener('click', handleHamburguerClick);
+        overlay.removeEventListener('click', closeMenu);
+        if (closeBtn) closeBtn.removeEventListener('click', handleCloseClick);
+        
+        function openMenu() {
+            console.log('Abriendo menú...');
+            menu.classList.remove("hidden");
+            menu.classList.add("mobile-active");
+            overlay.classList.add("active");
+            document.body.classList.add("menu-open");
+        }
+        
+        function closeMenu() {
+            console.log('Cerrando menú...');
+            menu.classList.add("hidden");
+            menu.classList.remove("mobile-active");
+            overlay.classList.remove("active");
+            document.body.classList.remove("menu-open");
+        }
+        
+        function handleHamburguerClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Clic en hamburguesa detectado');
+            
+            if (menu.classList.contains("mobile-active")) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        }
+        
+        function handleCloseClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeMenu();
+        }
+        
+        // Asignar eventos
+        hamburguer.addEventListener("click", handleHamburguerClick);
+        overlay.addEventListener("click", closeMenu);
+        
+        if (closeBtn) {
+            closeBtn.addEventListener("click", handleCloseClick);
+        }
+        
+        // Cerrar menú al hacer click en cualquier link del menú
+        menu.querySelectorAll("a").forEach(function(link) {
+            link.addEventListener("click", function() {
+                closeMenu();
+            });
+        });
+        
+        // Cerrar menú con ESC
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") closeMenu();
+        });
+        
+        console.log('Menú hamburguesa inicializado correctamente');
+    }
+    
+    // Inicializar cuando el DOM esté listo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHamburguerMenu);
+    } else {
+        initHamburguerMenu();
+    }
+    
+    // También inicializar cuando la página se cargue completamente
+    window.addEventListener('load', initHamburguerMenu);
+})();
+
+// --- SISTEMA DE TRANSICIONES SUAVES ENTRE PÁGINAS ---
+function smoothPageTransition(targetUrl, delay = 400) {
+    // Agregar clase de fade out
+    document.body.classList.add('page-transition', 'fade-out');
+    
+    // Después del delay, navegar a la nueva página
+    setTimeout(() => {
+        window.location.href = targetUrl;
+    }, delay);
+}
+
+// Función para inicializar transición de entrada en página nueva
+function initPageTransition() {
+    document.body.classList.add('page-transition');
+    
+    // Pequeño delay para asegurar que el DOM esté listo
+    setTimeout(() => {
+        document.body.classList.add('fade-in');
+    }, 50);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Inicializar transición de entrada
+    initPageTransition();
+
+    // Aplicar transiciones a todos los enlaces de navegación
+    
+    // Enlaces del menú hamburguesa
+    document.querySelectorAll('a[href="cotizar.html"], a[href="nosotros.html"], a[href="contacto.html"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            // Solo aplicar transición si no estamos ya en esa página
+            if (!window.location.pathname.includes(href)) {
+                e.preventDefault();
+                smoothPageTransition(href);
+            }
+        });
+    });
+
+    // Botones del header desktop
+    document.querySelectorAll('.desktop-inicio-btn, .desktop-nosotros-btn').forEach(btn => {
+        const originalOnclick = btn.onclick;
+        btn.onclick = function(e) {
+            const isInicioBtn = this.classList.contains('desktop-inicio-btn');
+            const isNosotrosBtn = this.classList.contains('desktop-nosotros-btn');
+            
+            if (isInicioBtn && !window.location.pathname.includes('cotizar.html')) {
+                e.preventDefault();
+                smoothPageTransition('cotizar.html');
+            } else if (isNosotrosBtn && !window.location.pathname.includes('nosotros.html')) {
+                e.preventDefault();
+                smoothPageTransition('nosotros.html');
+            } else if (originalOnclick) {
+                originalOnclick.call(this, e);
+            }
+        };
+    });
+
+    // Botón flotante (contacto)
+    const floatingBtn = document.querySelector('.floating-action-btn');
+    if (floatingBtn) {
+        floatingBtn.onclick = function(e) {
+            if (!window.location.pathname.includes('contacto.html')) {
+                e.preventDefault();
+                smoothPageTransition('contacto.html');
+            }
+        };
+    }
+
+    // Enlaces del footer
+    document.querySelectorAll('.footer-icons a, footer a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && href.includes('.html') && !window.location.pathname.includes(href)) {
+                e.preventDefault();
+                smoothPageTransition(href);
+            }
+        });
+    });
 });
