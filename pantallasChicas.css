@@ -94,7 +94,6 @@
         justify-content: center;
         align-items: center;
         height: 70vh;
-        width: 289px;
         position: relative;
         /* Añadido para el posicionamiento relativo */
     }
@@ -1308,15 +1307,14 @@
         }
 
         #step-2 .navigation-buttons {
-            position: fixed;
             left: 0;
             right: 0;
-            bottom: 107px;
+            bottom: 145px;
             z-index: 1001;
             justify-content: center;
             gap: 26px;
             pointer-events: none;
-            display: flex
+            display: flex;
         }
 
         #step-2 .next-button {
@@ -1365,12 +1363,11 @@
         /* Estilos para el nuevo contenedor de opciones */
         #step-2 .options-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
-            position: fixed;
-            margin-top: -16rem;
-            margin-left: -126px;
+            position: relative;
+            height: 80vh;
+            margin-top: 122px;
+            overflow-y: auto;
         }
 
         #step-2 .custom-options-container {
@@ -1835,7 +1832,7 @@
 
         .custom-summary-amount {
             font-family: 'Montserrat', sans-serif;
-            font-size: 17px;
+            font-size: 15px;
             font-weight: bold;
             color: #28D89E;
             margin-left: 5px;
@@ -1873,10 +1870,11 @@
             /* Medium */
             color: #FF594B;
             text-align: center;
+            margin-bottom: 20px;
         }
 
         .container-step4-desktop {
-            margin-top: -27rem;
+            margin-top: -24rem;
         }
 
         #vehicle-logo-step4 {
@@ -1996,6 +1994,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            margin-bottom: 30px;
         }
 
         #select-cuota-message {
@@ -2671,5 +2670,21 @@
     .navigation-buttons>* {
         pointer-events: auto;
         /* Los botones siguen siendo clickeables */
+    }
+}
+
+@media (max-width: 200px) and (max-width: 999px) and (orientation: landscape) {
+    body {
+        top: 0px;
+        left: 0px;
+        width: auto;
+        height: 250vh;
+        background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
+        opacity: 1;
+        font-family: Montserrat, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+
     }
 }

@@ -4,6 +4,72 @@ let accessToken = null;
 // Variable global para guardar el precio del vehículo
 window.precioVehiculo = null;
 
+// --- FUNCIÓN GLOBAL PARA LIMPIAR FORMULARIO DE PANTALLA 1 ---
+// IMPORTANTE: Definir como función global en el ámbito window
+window.limpiarFormularioPantalla1 = function() {
+  // Limpiar campo DNI/CUIT
+  const dniInput = document.querySelector(".dni-input");
+  if (dniInput) {
+    dniInput.value = "";
+  }
+  
+  // Restaurar switch a PERSONA (posición izquierda/default)
+  const switchInput = document.querySelector(".toggle-switch input");
+  if (switchInput && switchInput.checked) {
+    switchInput.checked = false;
+    // Llamar a la función existente que actualiza los labels y el placeholder
+    if (typeof updateSwitchLabels === "function") {
+      updateSwitchLabels();
+    }
+  }
+  
+  // Limpiar nombre del perfil
+  const profileName = document.querySelector(".profile-name");
+  if (profileName) {
+    profileName.textContent = "";
+  }
+  
+  // Ocultar el dropdown si está visible
+  const dropdownContent = document.querySelector(".dropdown-content");
+  if (dropdownContent && !dropdownContent.classList.contains("hidden")) {
+    hideDropdown();
+  }
+  
+  // Restaurar el indicador crediticio a su estado predeterminado (verde/viable)
+  const indicator = document.querySelector(".credit-indicator");
+  if (indicator) {
+    indicator.style.transition = "left 0.25s cubic-bezier(0.4,0,0.2,1), border-color 0.25s, background 0.25s";
+    indicator.style.left = "0";
+    indicator.style.background = "#26BD10";
+    indicator.style.border = "1px solid #ECECEC";
+    indicator.style.width = "6px";
+    indicator.style.height = "19px";
+    indicator.style.borderRadius = "8px";
+    indicator.style.position = "absolute";
+    indicator.style.top = "-6px";
+  }
+  
+  // Mostrar título "VIABLE" y ocultar "VIABLE CON OBSERVACIONES"
+  const tituloVerde = document.querySelector(".credit-status-title-verde");
+  const tituloAmarillo = document.querySelector(".credit-status-title-amarillo");
+  if (tituloVerde) tituloVerde.style.display = "";
+  if (tituloAmarillo) tituloAmarillo.style.display = "none";
+  
+  // Deshabilitar el botón de búsqueda (lupa)
+  const searchIcon = document.querySelector(".search-icon-container");
+  if (searchIcon) {
+    searchIcon.classList.add("disabled");
+    searchIcon.style.pointerEvents = "none";
+    searchIcon.style.opacity = "0.5";
+  }
+  
+  // Limpiar datos almacenados en sessionStorage
+  sessionStorage.removeItem("solicitante_dni");
+  sessionStorage.removeItem("solicitante_nombre");
+  
+  console.log("Formulario de pantalla 1 limpiado correctamente");
+};
+
 function toggleMenu() {
   const menu = document.getElementById("menu");
   menu.classList.toggle("hidden");
@@ -65,106 +131,80 @@ function hideDropdown() {
   searchIcon.style.display = "flex";
 }
 
-function goToStep(step) {
-  ocultarContacto();
-
-  // Actualizar el título de pasos arriba del cotizador
-  const tituloPaso = document.querySelector('.tituloysubtitulo h1');
-  if (tituloPaso) {
-    if (step === 1) {
-      tituloPaso.innerHTML = 'PASO <strong>1 DE 3</strong>';
-    } else if (step === 2) {
-      tituloPaso.innerHTML = 'PASO <strong>2 DE 3</strong>';
-    } else if (step === 3) {
-      tituloPaso.innerHTML = 'PASO <strong>3 DE 3</strong>';
-    } else if (step === 4) {
-      // "cotización" en strong, "estimada" normal
-      tituloPaso.innerHTML = '<strong>cotización</strong> estimada';
-    }
-  }
-
-  console.log("goToStep llamada con step:", step);
-
-  const steps = document.querySelectorAll(".step");
-  steps.forEach((stepElement, index) => {
-    if (index + 1 === step) {
-      stepElement.classList.remove("hidden");
-      stepElement.classList.add("active");
-
-      // Mostrar el mensaje en la pantalla 4
-      if (step === 4) {
-        const message = document.getElementById("select-cuota-message");
-        const selectedCuota = document.querySelector(
-          ".scrollable-item.selected"
-        );
-        if (message) {
-          if (!selectedCuota) {
-            message.classList.remove("hidden"); // Mostrar el mensaje si no hay cuota seleccionada
-            message.style.display = "block";
-          } else {
-            message.classList.add("hidden"); // Ocultar el mensaje si ya hay una cuota seleccionada
-            message.style.removeProperty("display");
-          }
-        } else {
-          console.error(
-            "No se encontró el elemento con ID 'select-cuota-message' en la pantalla 4."
-          );
-        }
-      }
-    } else {
-      stepElement.classList.add("hidden");
-      stepElement.classList.remove("active");
-    }
-  });
-}
-
 function finalizeCotizacion() {
-  // --- NUEVO: Enviar cotización por WhatsApp
+    const solicitante = sessionStorage.getItem("solicitante_nombre") || "";
+    const solicitanteDoc = sessionStorage.getItem("solicitante_dni") || "";
+    const producto = document.getElementById("selected-product-step4")?.textContent?.trim();
+    const monto = document.getElementById("custom-summary-amount-step4")?.textContent?.trim();
+    const cuotaSeleccionada = document.querySelector("#step-4 .scrollable-item.selected");
+    const cuotas = cuotaSeleccionada?.querySelector(".scrollable-text")?.textContent?.trim();
+    const valorCuota = cuotaSeleccionada?.querySelector(".scrollable-value")?.textContent?.trim();
+    const marca = document.getElementById("vehicle-brand-step4")?.textContent?.trim();
+    const modelo = document.getElementById("vehicle-model-step4")?.textContent?.trim();
+    const anio = document.getElementById("vehicle-year-step4")?.textContent?.trim();
 
-  const solicitante = sessionStorage.getItem("solicitante_nombre") || "";
-  const solicitanteDoc = sessionStorage.getItem("solicitante_dni") || "";
-  const producto =
-    document.getElementById("selected-product-step4")?.textContent?.trim() ||
-    "";
-  const monto =
-    document
-      .getElementById("custom-summary-amount-step4")
-      ?.textContent?.trim() || "";
-  const cuotaSeleccionada = document.querySelector(
-    "#step-4 .scrollable-item.selected"
-  );
-  const cuotas = cuotaSeleccionada
-    ? cuotaSeleccionada
-        .querySelector(".scrollable-text")
-        ?.textContent?.trim() || ""
-    : "";
-  const valorCuota = cuotaSeleccionada
-    ? cuotaSeleccionada
-        .querySelector(".scrollable-value")
-        ?.textContent?.trim() || ""
-    : "";
-  const marca =
-    document.getElementById("vehicle-brand-step4")?.textContent?.trim() || "";
-  const modelo =
-    document.getElementById("vehicle-model-step4")?.textContent?.trim() || "";
-  const anio =
-    document.getElementById("vehicle-year-step4")?.textContent?.trim() || "";
+    // Depuración: Verificar los datos recopilados
+    console.log("Datos recopilados para cotización:", {
+        solicitante,
+        solicitanteDoc,
+        producto,
+        monto,
+        cuotas,
+        valorCuota,
+        marca,
+        modelo,
+        anio,
+    });
 
-  let mensaje = `¡Hola! Quiero avanzar con la cotización:\n\n`;
-  if (solicitante) mensaje += `Solicitante: ${solicitante}\n`;
-  if (solicitanteDoc) mensaje += `DNI/CUIT: ${solicitanteDoc}\n`;
-  if (marca) mensaje += `Marca: ${marca}\n`;
-  if (modelo) mensaje += `Modelo: ${modelo}\n`;
-  if (anio) mensaje += `Año: ${anio}\n`;
-  if (producto) mensaje += `Producto: ${producto}\n`;
-  if (monto) mensaje += `Monto a financiar: $${monto}\n`;
-  if (cuotas && valorCuota) mensaje += `Cuotas: ${cuotas} de ${valorCuota}\n`;
+    // Validar datos requeridos
+    if (!producto || producto === "Seleccionar Producto" || !monto || monto === "0" || !cuotas || !valorCuota) {
+        alert("Por favor, completa todos los datos antes de cotizar.");
+        return;
+    }
 
-  const numero = "+5493417049138";
+    let mensaje = `¡Hola! Quiero avanzar con la cotización:\n\n`;
+    if (solicitante) mensaje += `Solicitante: ${solicitante}\n`;
+    if (solicitanteDoc) mensaje += `DNI/CUIT: ${solicitanteDoc}\n`;
+    if (marca) mensaje += `Marca: ${marca}\n`;
+    if (modelo) mensaje += `Modelo: ${modelo}\n`;
+    if (anio) mensaje += `Año: ${anio}\n`;
+    if (producto) mensaje += `Producto: ${producto}\n`;
+    if (monto) mensaje += `Monto a financiar: $${monto}\n`;
+    if (cuotas && valorCuota) mensaje += `Cuotas: ${cuotas} de ${valorCuota}\n`;
 
-  const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+    const numero = "+5493417049138";
+    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
 
-  window.open(url, "_blank");
+    // CORRECCIÓN: Usar método más confiable para abrir en nueva pestaña
+    try {
+        // Método 1: Crear un elemento <a> y simular clic
+        const newTab = document.createElement('a');
+        newTab.href = url;
+        newTab.target = '_blank';
+        newTab.rel = 'noopener noreferrer'; // Por seguridad
+        document.body.appendChild(newTab);
+        newTab.click();
+        document.body.removeChild(newTab);
+    } catch (error) {
+        console.error("Error al abrir nueva pestaña:", error);
+        
+        // Método 2: Fallback con window.open
+        try {
+            const newWindow = window.open();
+            if (newWindow) {
+                newWindow.opener = null; // Seguridad
+                newWindow.location = url;
+            } else {
+                // Método 3: Último fallback, redirigir en la misma ventana
+                alert("Tu navegador bloqueó la apertura de una nueva pestaña. Se abrirá WhatsApp en esta ventana.");
+                window.location.href = url;
+            }
+        } catch (error2) {
+            console.error("Error con métodos alternativos:", error2);
+            // Método 3: Último recurso
+            window.location.href = url;
+        }
+    }
 }
 
 function selectCuota(element) {
@@ -240,6 +280,8 @@ function goToStep(step) {
       stepElement.classList.remove("hidden");
       stepElement.classList.add("active");
 
+    
+
       // Mostrar el mensaje en la pantalla 4 si corresponde
       if (step === 4) {
         const message = document.getElementById("select-cuota-message");
@@ -266,6 +308,51 @@ function goToStep(step) {
     } else {
       stepElement.classList.add("hidden");
       stepElement.classList.remove("active");
+    }
+  });
+  
+  if (step === 3) {
+    // Deshabilitar el botón "Siguiente" al ingresar a la pantalla 3
+    const nextButtonStep3 = document.querySelector(
+      '.next-button[onclick="goToStep(4)"]'
+    );
+    if (nextButtonStep3) {
+      nextButtonStep3.disabled = true;
+      nextButtonStep3.style.opacity = "0.5";
+      nextButtonStep3.style.pointerEvents = "none";
+      nextButtonStep3.style.cursor = "not-allowed";
+    }
+  }
+  function validarBotonSiguientePaso3() {
+    const monto = document.querySelector(".net-finance-input");
+    if (!monto) return;
+
+    const montoOk =
+      monto.value && parseInt(monto.value.replace(/\D/g, "")) >= 1000000;
+
+    if (montoOk) {
+      nextButtonStep3.disabled = false;
+      nextButtonStep3.style.opacity = "1";
+      nextButtonStep3.style.pointerEvents = "auto";
+      nextButtonStep3.style.cursor = "pointer";
+    } else {
+      nextButtonStep3.disabled = true;
+      nextButtonStep3.style.opacity = "0.5";
+      nextButtonStep3.style.pointerEvents = "none";
+      nextButtonStep3.style.cursor = "not-allowed";
+    }
+  }
+
+  // Llama a esta función:
+  // - Al ingresar a la pantalla 3 (después de tu código actual)
+  // - Cuando cambia el select de producto
+  // - Cuando cambia el input de monto
+
+  // Ejemplo de listeners:
+  document.addEventListener("DOMContentLoaded", function () {
+    const monto = document.querySelector(".net-finance-input");
+    if (monto) {
+      monto.addEventListener("input", validarBotonSiguientePaso3);
     }
   });
 }
@@ -916,6 +1003,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const validateAmount = () => {
     const maxAmount = parseInt(maxAmountElement.textContent.replace(/\./g, ""), 10) || 0;
     let value = financeInput.value.replace(/[^0-9]/g, ""); // Permitir solo números
+    const numericValue = parseInt(value, 10) || 0;
 
     if (value.length > 12) {
       value = value.slice(0, 12); // Limitar a 12 dígitos
@@ -924,21 +1012,42 @@ document.addEventListener("DOMContentLoaded", () => {
     const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Formatear with puntos
     financeInput.value = formattedValue;
 
+    // NUEVA VALIDACIÓN: Verificar si el monto es menor al mínimo requerido
+    if (numericValue < 1000000 && numericValue !== 0) { // Si es 0, no mostrar mensaje todavía
+      financeInput.style.color = "#FF594B";
+      minAmountText.textContent = "El monto mínimo es de $1.000.000";
+      minAmountText.style.color = "#FF594B";
+      minAmountText.style.display = "block"; // Aseguramos que sea visible
+      isValidAmount = false;
+      nextButtonStep3.disabled = true;
+      nextButtonStep3.style.opacity = "0.5";
+      nextButtonStep3.style.pointerEvents = "none";
+    }
     // Validar si el monto supera el máximo permitido
-    if (parseInt(value, 10) > maxAmount) {
+    else if (numericValue > maxAmount && maxAmount > 0) {
       financeInput.style.color = "#FF594B";
       minAmountText.textContent = "No puede superar el máximo a financiar.";
       minAmountText.style.color = "#FF594B";
+      minAmountText.style.display = "block"; // Aseguramos que sea visible
       isValidAmount = false;
-      nextButtonStep3.disabled = true; // Deshabilitar el botón
+      nextButtonStep3.disabled = true;
       nextButtonStep3.style.opacity = "0.5";
       nextButtonStep3.style.pointerEvents = "none";
-    } else {
+    } 
+    else {
       financeInput.style.color = "";
-      minAmountText.textContent = "Monto mínimo: $1.000.000";
-      minAmountText.style.color = "";
+      
+      // MODIFICACIÓN: Ocultar texto cuando el monto es mayor a $1.000.000
+      if (numericValue > 1000000) {
+        minAmountText.style.display = "none"; // Ocultar el texto si el monto es mayor a 1.000.000
+      } else {
+        minAmountText.style.display = "block"; // Mantener visible si no hay monto o es igual a 1.000.000
+        minAmountText.textContent = "";
+        minAmountText.style.color = "";
+      }
+      
       isValidAmount = true;
-      nextButtonStep3.disabled = false; // Habilitar el botón
+      nextButtonStep3.disabled = false;
       nextButtonStep3.style.opacity = "1";
       nextButtonStep3.style.pointerEvents = "auto";
     }
@@ -950,12 +1059,55 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.target.value.endsWith(".")) {
       event.target.value = event.target.value.slice(0, -1); // Eliminar punto final si existe
     }
+    
+    // Validación adicional al perder el foco: verificar si está vacío o es menor al mínimo
+    const value = event.target.value.replace(/[^0-9]/g, "");
+    const numericValue = parseInt(value, 10) || 0;
+    
+    if (numericValue < 1000000) {
+      isValidAmount = false;
+      nextButtonStep3.disabled = true;
+      nextButtonStep3.style.opacity = "0.5";
+      nextButtonStep3.style.pointerEvents = "none";
+      
+      if (numericValue > 0) { // Solo mostrar el mensaje de error si hay algún valor
+        minAmountText.textContent = "El monto mínimo es de $1.000.000";
+        minAmountText.style.color = "#FF594B";
+        minAmountText.style.display = "block"; // Asegurar que sea visible
+        financeInput.style.color = "#FF594B";
+      }
+    } else {
+      // Ocultar el texto cuando el monto es válido (mayor a $1.000.000)
+      minAmountText.style.display = "none";
+    }
   });
 
   nextButtonStep3.addEventListener("click", (event) => {
+    // Validación al hacer clic en el botón "Siguiente"
+    const value = financeInput.value.replace(/[^0-9]/g, "");
+    const numericValue = parseInt(value, 10) || 0;
+    
+    if (numericValue < 1000000) {
+      event.preventDefault();
+      isValidAmount = false;
+      minAmountText.textContent = "El monto mínimo es de $1.000.000";
+      minAmountText.style.color = "#FF594B";
+      minAmountText.style.display = "block"; // Asegurar que sea visible
+      financeInput.style.color = "#FF594B";
+      nextButtonStep3.disabled = true;
+      nextButtonStep3.style.opacity = "0.5";
+      nextButtonStep3.style.pointerEvents = "none";
+      alert("El monto debe ser como mínimo $1.000.000 para continuar.");
+      return;
+    }
+    
     if (!isValidAmount) {
       event.preventDefault();
-      alert("El monto ingresado supera el máximo a financiar permitido. Corrige el monto para continuar.");
+      if (numericValue > maxAmount) {
+        alert("El monto ingresado supera el máximo a financiar permitido. Corrige el monto para continuar.");
+      } else {
+        alert("Por favor, ingresa un monto válido para continuar.");
+      }
     }
   });
 
@@ -970,6 +1122,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Validar al cargar la página
   validateAmount();
 });
+
 document.addEventListener("DOMContentLoaded", () => {
   const nextBtnStep1 = document.querySelector("#step-1 .next-button");
   if (nextBtnStep1) {
@@ -1803,7 +1956,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.key === "Escape") closeMenu();
     });
   });
-
+  
 
 
 //seccion nosotros-cotizar videos
@@ -1849,19 +2002,26 @@ document.addEventListener("DOMContentLoaded", () => {
         showVideo(idx);
       });
     });
-    prevBtn.addEventListener("click", function () {
-      if (currentVideo > 0) showVideo(currentVideo - 1);
-    });
-    nextBtn.addEventListener("click", function () {
-      if (currentVideo < videos.length - 1) showVideo(currentVideo + 1);
-    });
-    videoWrap.querySelector(".closebox").addEventListener("click", function () {
-      videoWrap.classList.remove("playing");
-      videoIframe.src = "";
-    });
+    if (prevBtn) {
+      prevBtn.addEventListener("click", function () {
+        if (currentVideo > 0) showVideo(currentVideo - 1);
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener("click", function () {
+        if (currentVideo < videos.length - 1) showVideo(currentVideo + 1);
+      });
+    }
+    if (videoWrap && videoIframe) {
+      const closeBox = videoWrap.querySelector(".closebox");
+      if (closeBox) {
+        closeBox.addEventListener("click", function () {
+          videoWrap.classList.remove("playing");
+          videoIframe.src = "";
+        });
+      }
+    }
   });
-
-
  
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -1935,6 +2095,77 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("DOMContentLoaded", () => {
     // Función para mostrar/ocultar el switch-container en desktop
+
+
+
+    // --- FUNCIÓN GLOBAL PARA LIMPIAR FORMULARIO DE PANTALLA 1 ---
+    function limpiarFormularioPantalla1() {
+      // Limpiar campo DNI/CUIT
+      const dniInput = document.querySelector(".dni-input");
+      if (dniInput) {
+        dniInput.value = "";
+      }
+
+      // Restaurar switch a PERSONA (posición izquierda/default)
+      const switchInput = document.querySelector(".toggle-switch input");
+      if (switchInput && switchInput.checked) {
+        switchInput.checked = false;
+        // Llamar a la función existente que actualiza los labels y el placeholder
+        if (typeof updateSwitchLabels === "function") {
+          updateSwitchLabels();
+        }
+      }
+
+      // Limpiar nombre del perfil
+      const profileName = document.querySelector(".profile-name");
+      if (profileName) {
+        profileName.textContent = "";
+      }
+
+      // Ocultar el dropdown si está visible
+      const dropdownContent = document.querySelector(".dropdown-content");
+      if (dropdownContent && !dropdownContent.classList.contains("hidden")) {
+        hideDropdown();
+      }
+
+      // Restaurar el indicador crediticio a su estado predeterminado (verde/viable)
+      const indicator = document.querySelector(".credit-indicator");
+      if (indicator) {
+        indicator.style.transition =
+          "left 0.25s cubic-bezier(0.4,0,0.2,1), border-color 0.25s, background 0.25s";
+        indicator.style.left = "0";
+        indicator.style.background = "#26BD10";
+        indicator.style.border = "1px solid #ECECEC";
+        indicator.style.width = "6px";
+        indicator.style.height = "19px";
+        indicator.style.borderRadius = "8px";
+        indicator.style.position = "absolute";
+        indicator.style.top = "-6px";
+      }
+
+      // Mostrar título "VIABLE" y ocultar "VIABLE CON OBSERVACIONES"
+      const tituloVerde = document.querySelector(".credit-status-title-verde");
+      const tituloAmarillo = document.querySelector(
+        ".credit-status-title-amarillo"
+      );
+      if (tituloVerde) tituloVerde.style.display = "";
+      if (tituloAmarillo) tituloAmarillo.style.display = "none";
+
+      // Deshabilitar el botón de búsqueda (lupa)
+      const searchIcon = document.querySelector(".search-icon-container");
+      if (searchIcon) {
+        searchIcon.classList.add("disabled");
+        searchIcon.style.pointerEvents = "none";
+        searchIcon.style.opacity = "0.5";
+      }
+  
+      // Limpiar datos almacenados en sessionStorage
+      sessionStorage.removeItem("solicitante_dni");
+      sessionStorage.removeItem("solicitante_nombre");
+  
+      console.log("Formulario de pantalla 1 limpiado correctamente");
+    }
+
     function updateSwitchVisibility() {
       const dniContainer = document.querySelector("#step-1 .dni-container");
       const switchContainer = document.querySelector(
@@ -1944,15 +2175,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (dniContainer.classList.contains("expanded")) {
         // Ocultar el switch-container si el dni-container está expandido
+
         switchContainer.style.display = "none";
-     
       } else {
         // Mostrar el switch-container en todos los casos, excepto cuando está expandido
         switchContainer.style.display = "flex";
       }
     }
 
-    // Llama a la función al cargar la página   
+    // Llama a la función al cargar la página
     updateSwitchVisibility();
 
     // Llama a la función al cambiar el tamaño de la ventana
@@ -1984,10 +2215,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".step").forEach(function (step) {
       step.classList.add("hidden");
     });
-    // Muestra la sección nosotros-cotizar
-    document.getElementById("nosotros-cotizar").classList.remove("hidden");
-    document.body.classList.add("nosotros-cotizar-activo");
-    window.scrollTo(0, 0);
+    // Muestra la sección nosotros-cotizar SOLO si existe
+    var nosotrosSection = document.getElementById("nosotros-cotizar");
+    if (nosotrosSection) {
+      nosotrosSection.classList.remove("hidden");
+      document.body.classList.add("nosotros-cotizar-activo");
+      window.scrollTo(0, 0);
+    } else {
+      // Opcional: redirigir a nosotros.html si no existe la sección
+      window.location.href = "nosotros.html";
+    }
   }
 
   document.addEventListener("DOMContentLoaded", () => { 
@@ -2059,6 +2296,7 @@ function mostrarModalPersonasDNI(personas, onSelect) {
       console.log("Persona seleccionada en modal:", persona);
       modal.classList.add('hidden');
       modal.style.display = "none";
+      document.body.classList.remove('modal-open'); // <--- Restaurar scroll al cerrar modal
       // --- Nueva lógica: consulta directa a InfoExperto para ese perfil ---
       const dniInput = document.querySelector(".dni-input");
       const switchInput = document.querySelector(".toggle-switch input");
@@ -2191,7 +2429,7 @@ function mostrarModalPersonasDNI(personas, onSelect) {
   });
   modal.classList.remove('hidden');
   modal.style.display = "flex";
-  console.log("Modal de selección de persona mostrado");
+  document.body.classList.add('modal-open'); // <--- Bloquear scroll al abrir modal
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -2433,6 +2671,134 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// --- NUEVO: Resetear pantalla 2 al volver desde el botón BACK de pantalla 3 ---
+document.addEventListener("DOMContentLoaded", () => {
+  const backBtnStep3 = document.querySelector('#step-3 .back-button');
+  if (backBtnStep3) {
+    backBtnStep3.addEventListener("click", () => {
+      resetearFormulariosPantalla2();
+    });
+  }
+});
+
+// --- NUEVA FUNCIÓN: Validar pantalla 2 y habilitar/deshabilitar botón según corresponda ---
+function validarFormularioPantalla2() {
+  const nextButton = document.querySelector('#step-2 .next-button');
+  if (!nextButton) return;
+
+  // Obtener los valores de los selectores
+  const categoriaPlaceholder = document.querySelector('[onclick="toggleCustomOptions(\'categoria-options\')"]');
+  const anioPlaceholder = document.querySelector('[onclick="toggleCustomOptions(\'anio-options\')"]');
+  const marcaPlaceholder = document.querySelector('[onclick="toggleCustomOptions(\'marca-options\')"]');
+  const modeloPlaceholder = document.querySelector('[onclick="toggleCustomOptions(\'modelo-options\')"]');
+
+  // Verificar si todos tienen valores seleccionados (no son el texto por defecto)
+  const categoriaSelected = categoriaPlaceholder && (
+    categoriaPlaceholder.dataset.value ||
+    categoriaPlaceholder.textContent.trim() !== "Categoría"
+  );
+  const anioSelected = anioPlaceholder && (
+    anioPlaceholder.dataset.value ||
+    anioPlaceholder.textContent.trim() !== "Año"
+  );
+  const marcaSelected = marcaPlaceholder && (
+    marcaPlaceholder.dataset.value ||
+    marcaPlaceholder.textContent.trim() !== "Marca"
+  );
+  const modeloSelected = modeloPlaceholder && (
+    modeloPlaceholder.dataset.value ||
+    modeloPlaceholder.textContent.trim() !== "Modelo"
+  );
+
+  const formCompleto = categoriaSelected && anioSelected && marcaSelected && modeloSelected;
+
+  // Habilitar o deshabilitar botón según corresponda
+  if (formCompleto) {
+    nextButton.disabled = false;
+    nextButton.style.opacity = "1";
+    nextButton.style.pointerEvents = "auto";
+    nextButton.style.cursor = "pointer";
+  } else {
+    nextButton.disabled = true;
+    nextButton.style.opacity = "0.5";
+    nextButton.style.pointerEvents = "none";
+    nextButton.style.cursor = "not-allowed";
+  }
+
+  return formCompleto;
+}
+
+
+
+// Inicializar la validación en cada paso relevante
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Deshabilitar botón al entrar a paso 2
+  const step1Button = document.querySelector('#step-1 .next-button');
+  if (step1Button) {
+    const originalOnClick = step1Button.onclick;
+    step1Button.onclick = function(e) {
+      if (typeof originalOnClick === 'function') {
+        originalOnClick.call(this, e);
+      }
+      // Después de ir al paso 2, ejecutar la validación
+      setTimeout(validarFormularioPantalla2, 50);
+    };
+  }
+
+  // 2. Actualizar estado del botón cuando se selecciona una opción
+  const optionContainers = [
+    "categoria-options", 
+    "anio-options", 
+    "marca-options", 
+    "modelo-options"
+  ];
+  
+  optionContainers.forEach(containerId => {
+    const container = document.getElementById(containerId);
+    if (container) {
+      container.addEventListener("click", function(e) {
+        if (e.target.classList.contains("custom-option")) {
+          // Usar setTimeout para dar tiempo a que se actualicen los datos
+          setTimeout(validarFormularioPantalla2, 50);
+        }
+      });
+    }
+  });
+
+  // 3. Agregar validación al resetear formularios de pantalla 2
+  const originalResetearFormularios = window.resetearFormulariosPantalla2;
+  if (typeof originalResetearFormularios === 'function') {
+    window.resetearFormulariosPantalla2 = function() {
+      originalResetearFormularios.apply(this, arguments);
+      setTimeout(validarFormularioPantalla2, 50);
+    };
+  }
+
+  // 4. Integrar con la función goToStep existente
+  const originalGoToStep = window.goToStep;
+  if (typeof originalGoToStep === 'function') {
+    window.goToStep = function(step) {
+      originalGoToStep.apply(this, arguments);
+      if (step === 2) {
+        setTimeout(validarFormularioPantalla2, 50);
+      }
+    };
+  }
+});
+
+// Ampliar la función selectCustomOption para validar después de seleccionar
+const originalSelectCustomOption = window.selectCustomOption;
+if (typeof originalSelectCustomOption === 'function') {
+  window.selectCustomOption = function() {
+    originalSelectCustomOption.apply(this, arguments);
+    // Si estamos en el paso 2, validar el formulario
+    if (document.getElementById('step-2').classList.contains('active')) {
+      setTimeout(validarFormularioPantalla2, 50);
+    }
+  };
+}
+
+
 // --- NUEVO: Resetear selects dependientes al cambiar la categoría ---
 document.addEventListener("DOMContentLoaded", () => {
   const categoriaOptions = document.getElementById("categoria-options");
@@ -2441,6 +2807,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (categoriaOptions && anioOptions) {
     categoriaOptions.addEventListener("click", (event) => {
       if (event.target.classList.contains("custom-option")) {
+        // --- NUEVO: Limpiar accessToken al cambiar de categoría ---
+        accessToken = null;
+      
         // Resetear placeholders y valores de selects dependientes
         const anioPlaceholder = document.querySelector(
           '[onclick="toggleCustomOptions(\'anio-options\')"]'
@@ -2521,7 +2890,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// --- NUEVO: Resetear selects de pantalla 2 al volver a step 1 ---
+// --- NUEVO: Resetear selects de pantalla 2 al volver desde el botón BACK de pantalla 3 ---
 document.addEventListener("DOMContentLoaded", () => {
   // Botón "Back" de step 2
   const backBtnStep2 = document.querySelector('#step-2 .back-button');
@@ -2605,29 +2974,25 @@ document.addEventListener("DOMContentLoaded", () => {
     nextBtnStep2.addEventListener("click", async (event) => {
       event.preventDefault();
 
-      // 1. Obtener codia y año seleccionados
+      // Obtener el precio del vehículo y la categoría seleccionada
       const codia = getSelectedCodia();
       const year = getSelectedYear();
+      const categoria = getSelectedCategoria();
 
-      // --- DEBUG extra ---
-      console.log("[DEBUG] codia:", codia, "year:", year);
+     
 
       if (!codia || !year) {
         alert("Seleccioná año y modelo antes de avanzar.");
         return;
       }
 
-      // --- OBTENER CATEGORIA CORRECTA ---
-      const categoria = getSelectedCategoria(); // <-- AGREGADO
-
-      // 2. Hacer fetch a curl.php para obtener el precio
       try {
         const body = {
           codia,
           year,
           accessToken: accessToken,
           action: "getPriceByCodia",
-          categoria // <-- AGREGADO
+          categoria
         };
         const res = await fetch("php/curl.php", {
           method: "POST",
@@ -2635,62 +3000,57 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify(body)
         });
 
-        // Leer como texto y validar si es JSON
-        const text = await res.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          console.error("Respuesta no es JSON:", text);
-          alert("No se pudo obtener el precio del vehículo. Respuesta inesperada del servidor.");
+        const data = await res.json();
+        accessToken = data.accessToken || accessToken;
+        window.precioVehiculo = data.price;
+
+        // Validación específica para motos
+        if (categoria === "motos" && window.precioVehiculo < 6000000) {
+          console.log("[VALIDACIÓN MOTOS] Vehículo no financiable.");
+          
+          // Mostrar mensaje "Vehículo no financiable"
+          const el3 = document.querySelector(".custom-summary-amount");
+          if (el3) el3.textContent = "Vehículo no financiable";
+
+          const el4 = document.getElementById("custom-summary-amount-step4");
+          if (el4) el4.textContent = "Vehículo no financiable";
+
+          // Bloquear el botón "Siguiente"
+          const nextButton = document.querySelector('.next-button[onclick="goToStep(4)"]');
+          if (nextButton) {
+            nextButton.disabled = true;
+            nextButton.style.opacity = "0.5";
+            nextButton.style.pointerEvents = "none";
+          }
+
+          // Bloquear la selección de productos
+          const productOptions = document.getElementById("product-options");
+          if (productOptions) {
+            productOptions.innerHTML = '<div class="custom-option disabled">Vehículo no financiable</div>';
+          }
+
+          // Bloquear el select de producto (agregar clase y quitar eventos)
+          const productSelectContainer = document.querySelector('.custom-options-container.product-select');
+          if (productSelectContainer) {
+            productSelectContainer.classList.add('disabled');
+            // Opcional: quitar el click del placeholder
+            const placeholder = productSelectContainer.querySelector('.custom-options-placeholder');
+            if (placeholder) {
+              placeholder.style.pointerEvents = "none";
+              placeholder.style.opacity = "0.5";
+            }
+          }
+
+          // Detener el avance al paso 3
           return;
         }
 
-        accessToken = data.accessToken || accessToken;
-        window.precioVehiculo = data.price;
-        console.log("[DEBUG] Precio obtenido para codia", codia, "año", year, ":", window.precioVehiculo);
+        // Avanzar al paso 3 si no aplica la regla
+        goToStep(3);
       } catch (err) {
         console.error("Error al obtener el precio del vehículo:", err);
         alert("No se pudo obtener el precio del vehículo.");
-        return;
       }
-
-      // --- NUEVO: LOG extra para verificar que window.precioVehiculo está seteado antes de avanzar ---
-      console.log("[DEBUG] window.precioVehiculo antes de avanzar a paso 3:", window.precioVehiculo);
-
-      // 3. Actualizar resumen del vehículo (opcional, ya lo hacías)
-      const yearPlaceholder = document.querySelector(
-        `[onclick="toggleCustomOptions('anio-options')"]`
-      );
-      const brandPlaceholder = document.querySelector(
-        `[onclick="toggleCustomOptions('marca-options')"]`
-      );
-      const modelPlaceholder = document.querySelector(
-        `[onclick="toggleCustomOptions('modelo-options')"]`
-      );
-      if (!yearPlaceholder || !brandPlaceholder || !modelPlaceholder) {
-        console.log("[DEBUG] No se encontraron los placeholders de los selects.", { yearPlaceholder, brandPlaceholder, modelPlaceholder });
-        return;
-      }
-      const yearText =
-        yearPlaceholder.dataset.label?.trim() ||
-        yearPlaceholder.dataset.value?.trim() ||
-        yearPlaceholder.textContent.trim();
-      const brand =
-        brandPlaceholder.dataset.label?.trim() ||
-        brandPlaceholder.dataset.value?.trim() ||
-        brandPlaceholder.textContent.trim();
-      const model =
-        modelPlaceholder.dataset.label?.trim() ||
-        modelPlaceholder.dataset.value?.trim() ||
-        modelPlaceholder.textContent.trim();
-
-      document.getElementById("vehicle-brand").textContent = brand || "Marca";
-      document.getElementById("vehicle-model").textContent = model || "Modelo";
-      document.getElementById("vehicle-year").textContent = yearText || "Año";
-
-      // 4. Avanzar a paso 3
-      goToStep(3);
     });
   }
 });
@@ -3050,42 +3410,52 @@ document.addEventListener("DOMContentLoaded", () => {
   if (floatingActionButton) {
     floatingActionButton.addEventListener("click", (e) => {
       e.preventDefault();
-      // Ocultar todas las secciones principales
-      sections.forEach((sec) => sec.classList.add("hidden"));
-      // Mostrar la sección de contacto
-      contactoSection.classList.remove("hidden");
-      window.scrollTo(0, 0);
+      // Si existe la sección de contacto en la página, mostrarla
+      const contactoSection = document.getElementById("contacto");
+      if (contactoSection) {
+        // Ocultar todas las secciones principales
+        document.querySelectorAll("main > section").forEach((sec) => sec.classList.add("hidden"));
+        contactoSection.classList.remove("hidden");
+        window.scrollTo(0, 0);
+      } else {
+        // Si no existe (por ejemplo, en nosotros.html), redirigir a contacto.html
+        window.location.href = "contacto.html";
+      }
     });
   }
 
   // Asegurar que el formulario de contacto se oculte al cambiar de sección
   document.querySelectorAll(".inicio-button, .new-button, .another-button, .message-button").forEach((button) => {
     button.addEventListener("click", () => {
-      contactoSection.classList.add("hidden");
+      if (contactoSection) contactoSection.classList.add("hidden");
     });
   });
 
   document.querySelectorAll('a[data-url="#nosotros"], a[data-url="#inicio"]').forEach((link) => {
     link.addEventListener("click", () => {
-      contactoSection.classList.remove("hidden");
+      if (contactoSection) contactoSection.classList.remove("hidden");
     });
   });
 
   // Ocultar contacto al hacer clic en cualquier sección que no sea contacto
-  sections.forEach((section) => {
-    section.addEventListener("click", () => {
-      if (!section.classList.contains("contacto-section")) {
-        contactoSection.classList.add("hidden");
-      }
+  if (sections && sections.length > 0 && contactoSection) {
+    sections.forEach((section) => {
+      section.addEventListener("click", () => {
+        if (!section.classList.contains("contacto-section")) {
+          contactoSection.classList.add("hidden");
+        }
+      });
     });
-  });
+  }
 
   // Ocultar contacto al avanzar entre pasos
-  document.querySelectorAll(".step").forEach((step) => {
-    step.addEventListener("click", () => {
-      contactoSection.classList.add("hidden");
+  if (contactoSection) {
+    document.querySelectorAll(".step").forEach((step) => {
+      step.addEventListener("click", () => {
+        contactoSection.classList.add("hidden");
+      });
     });
-  });
+  }
 });
 
 // Función global para ocultar el formulario de contacto
@@ -3113,16 +3483,36 @@ document.addEventListener("DOMContentLoaded", () => {
     if (floatingActionButton) {
         floatingActionButton.addEventListener("click", (e) => {
             e.preventDefault();
-            mostrarContacto();
-        });
+            // Si existe la sección de contacto en la página, mostrarla
+            const contactoSection = document.getElementById("contacto");
+            if (contactoSection) {
+              // Ocultar todas las secciones principales
+              document.querySelectorAll("main > section").forEach((sec) => sec.classList.add("hidden"));
+              contactoSection.classList.remove("hidden");
+              window.scrollTo(0, 0);
+            } else {
+              // Si no existe (por ejemplo, en nosotros.html), redirigir a contacto.html
+              window.location.href = "contacto.html";
+            }
+          });
     }
 
     // Menú hamburguesa y enlaces de menú
     document.querySelectorAll('a[data-url="#contacto"]').forEach((link) => {
         link.addEventListener("click", (e) => {
             e.preventDefault();
-            mostrarContacto();
-        });
+            // Si existe la sección de contacto en la página, mostrarla
+            const contactoSection = document.getElementById("contacto");
+            if (contactoSection) {
+              // Ocultar todas las secciones principales
+              document.querySelectorAll("main > section").forEach((sec) => sec.classList.add("hidden"));
+              contactoSection.classList.remove("hidden");
+              window.scrollTo(0, 0);
+            } else {
+              // Si no existe (por ejemplo, en nosotros.html), redirigir a contacto.html
+              window.location.href = "contacto.html";
+            }
+          });
     });
 
     // Ocultar contacto al ir a inicio o nosotros
@@ -3155,7 +3545,6 @@ window.goToStep = function(step) {
     } else if (step === 3) {
       tituloPaso.innerHTML = 'PASO <strong>3 DE 3</strong>';
     } else if (step === 4) {
-      // "cotización" en strong, "estimada" normal
       tituloPaso.innerHTML = '<strong>cotización</strong> estimada';
     }
   }
@@ -3172,6 +3561,12 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         window.location.href = "cotizar.html";
       };
+    } else {
+      // Si estamos en cotizar.html, limpiamos el formulario de pantalla 1
+      btn.addEventListener('click', function(e) {
+        limpiarFormularioPantalla1();
+        goToStep(1);
+      });
     }
   });
 
@@ -3212,7 +3607,17 @@ document.addEventListener("DOMContentLoaded", () => {
   if (floatingBtn) {
     floatingBtn.onclick = function(e) {
       e.preventDefault();
-      window.location.href = "contacto.html";
+      // Si existe la sección de contacto en la página, mostrarla
+      const contactoSection = document.getElementById("contacto");
+      if (contactoSection) {
+        // Ocultar todas las secciones principales
+        document.querySelectorAll("main > section").forEach((sec) => sec.classList.add("hidden"));
+        contactoSection.classList.remove("hidden");
+        window.scrollTo(0, 0);
+      } else {
+        // Si no existe (por ejemplo, en nosotros.html), redirigir a contacto.html
+        window.location.href = "contacto.html";
+      }
     };
   }
 });
@@ -3244,7 +3649,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (closeBtn) closeBtn.removeEventListener('click', handleCloseClick);
         
         function openMenu() {
-            console.log('Abriendo menú...');
             menu.classList.remove("hidden");
             menu.classList.add("mobile-active");
             overlay.classList.add("active");
@@ -3252,7 +3656,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         function closeMenu() {
-            console.log('Cerrando menú...');
             menu.classList.add("hidden");
             menu.classList.remove("mobile-active");
             overlay.classList.remove("active");
@@ -3310,6 +3713,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // También inicializar cuando la página se cargue completamente
     window.addEventListener('load', initHamburguerMenu);
 })();
+
 
 // --- SISTEMA DE TRANSICIONES SUAVES ENTRE PÁGINAS ---
 function smoothPageTransition(targetUrl, delay = 400) {
@@ -3373,11 +3777,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const floatingBtn = document.querySelector('.floating-action-btn');
     if (floatingBtn) {
         floatingBtn.onclick = function(e) {
-            if (!window.location.pathname.includes('contacto.html')) {
-                e.preventDefault();
-                smoothPageTransition('contacto.html');
+            e.preventDefault();
+            // Si existe la sección de contacto en la página, mostrarla
+            const contactoSection = document.getElementById("contacto");
+            if (contactoSection) {
+              // Ocultar todas las secciones principales
+              document.querySelectorAll("main > section").forEach((sec) => sec.classList.add("hidden"));
+              contactoSection.classList.remove("hidden");
+              window.scrollTo(0, 0);
+            } else {
+              // Si no existe (por ejemplo, en nosotros.html), redirigir a contacto.html
+              window.location.href = "contacto.html";
             }
-        };
+          };
     }
 
     // Enlaces del footer
@@ -3390,4 +3802,302 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+});
+
+// Al final del archivo o después de definir finalizeCotizacion
+document.addEventListener("DOMContentLoaded", () => {
+  const cotizarAhoraBtn = document.getElementById("cotizar-ahora-btn");
+  if (cotizarAhoraBtn) {
+    cotizarAhoraBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      finalizeCotizacion();
+    });
+  }
+});
+
+// --- FUNCIÓN GLOBAL PARA RESETEAR FORMULARIOS DE PANTALLA 2 ---
+function resetearFormulariosPantalla2() {
+  // Resetear placeholders y valores de selects dependientes
+  const categoriaPlaceholder = document.querySelector(
+    '[onclick="toggleCustomOptions(\'categoria-options\')"]'
+  );
+  const anioPlaceholder = document.querySelector(
+    '[onclick="toggleCustomOptions(\'anio-options\')"]'
+  );
+  const marcaPlaceholder = document.querySelector(
+    '[onclick="toggleCustomOptions(\'marca-options\')"]'
+  );
+  const modeloPlaceholder = document.querySelector(
+    '[onclick="toggleCustomOptions(\'modelo-options\')"]'
+  );
+  if (categoriaPlaceholder) {
+    categoriaPlaceholder.textContent = "Categoría";
+    categoriaPlaceholder.dataset.value = "";
+  }
+  if (anioPlaceholder) {
+    anioPlaceholder.textContent = "Año";
+    anioPlaceholder.dataset.value = "";
+  }
+  if (marcaPlaceholder) {
+    marcaPlaceholder.textContent = "Marca";
+    marcaPlaceholder.dataset.value = "";
+  }
+  if (modeloPlaceholder) {
+    modeloPlaceholder.textContent = "Modelo";
+    modeloPlaceholder.dataset.value = "";
+  }
+
+  // Limpiar opciones de selects dependientes (dejar solo el buscador si existe)
+  const marcaOptions = document.getElementById("marca-options");
+  if (marcaOptions) {
+    const search = marcaOptions.querySelector(".custom-search-container");
+    marcaOptions.innerHTML = "";
+    if (search) marcaOptions.appendChild(search);
+  }
+  const modeloOptions = document.getElementById("modelo-options");
+  if (modeloOptions) {
+    const search = modeloOptions.querySelector(".custom-search-container");
+    modeloOptions.innerHTML = "";
+    if (search) modeloOptions.appendChild(search);
+  }
+
+  // Limpiar logo del vehículo si existe (pantalla 3)
+  const logo = document.getElementById("vehicle-logo");
+  if (logo) {
+    logo.src = "";
+    logo.alt = "Logo de la marca";
+  }
+  setTimeout(validarFormularioPantalla2, 50);
+}
+
+// --- FUNCIÓN GLOBAL PARA LIMPIAR FORMULARIO DE PANTALLA 3 ---
+function limpiarFormularioPantalla3() {
+  // Limpiar el input de monto a financiar
+  const financeInput = document.querySelector(".net-finance-input");
+  if (financeInput) {
+    financeInput.value = "";
+    financeInput.style.color = ""; // Resetear color en caso de que hubiera error
+  }
+
+  // Resetear el select de producto
+  const productoPlaceholder = document.querySelector(
+    '[onclick="toggleCustomOptions(\'product-options\')"]'
+  );
+  if (productoPlaceholder) {
+    productoPlaceholder.textContent = "Seleccionar Producto";
+    productoPlaceholder.dataset.value = "";
+    productoPlaceholder.dataset.label = "";
+    // Restaurar la interactividad al placeholder si estaba deshabilitado
+    productoPlaceholder.style.pointerEvents = "auto";
+    productoPlaceholder.style.opacity = "1";
+  }
+
+ 
+  // Reactivar el botón "Siguiente" si estaba deshabilitado
+  const nextButtonStep3 = document.querySelector('.next-button[onclick="goToStep(4)"]');
+  if (nextButtonStep3) {
+    nextButtonStep3.disabled = false;
+    nextButtonStep3.style.opacity = "1";
+    nextButtonStep3.style.pointerEvents = "auto";
+  }
+
+  // NUEVO: Restaurar el texto de "máximo a financiar" si estaba en "Vehículo no financiable"
+  const maxAmount = document.querySelector(".custom-summary-amount");
+  if (maxAmount && maxAmount.textContent === "Vehículo no financiable") {
+    maxAmount.textContent = "Selecciona producto";
+  }
+
+  // NUEVO: Quitar la clase "disabled" del contenedor de productos
+  const productSelectContainer = document.querySelector('.custom-options-container.product-select');
+  if (productSelectContainer) {
+    productSelectContainer.classList.remove('disabled');
+  }
+
+  // NUEVO: Recargar las opciones de productos según la categoría seleccionada
+  try {
+    const categoria = getSelectedCategoria();
+    if (categoria) {
+      actualizarProductosPorCategoria(categoria.toLowerCase());
+    }
+  } catch (error) {
+    console.error("Error al recargar opciones de productos:", error);
+  }
+}
+
+// --- NUEVO: Limpiar formulario de pantalla 3 al hacer clic en el botón "back" ---
+document.addEventListener("DOMContentLoaded", () => {
+  const backBtnStep3 = document.querySelector('#step-3 .back-button');
+  if (backBtnStep3) {
+    backBtnStep3.addEventListener("click", () => {
+      resetearFormulariosPantalla2(); // Ya existente - resetea pantalla 2
+      limpiarFormularioPantalla3(); // Nueva función - limpia pantalla 3
+    });
+  }
+});
+
+// Función simple para validar y controlar el estado del botón de la pantalla 1
+function validarBotonPantalla1() {
+  const dniInput = document.querySelector(".dni-input");
+  const nextButton = document.querySelector("#step-1 .next-button");
+  
+  if (!dniInput || !nextButton) return;
+  
+  if (dniInput.value.trim() !== "") {
+    // Habilitar botón si hay texto
+    nextButton.disabled = false;
+    nextButton.style.opacity = "1";
+    nextButton.style.pointerEvents = "auto";
+    nextButton.style.cursor = "pointer";
+  } else {
+    // Deshabilitar botón si está vacío
+    nextButton.disabled = true;
+    nextButton.style.opacity = "0.5";
+    nextButton.style.pointerEvents = "none";
+    nextButton.style.cursor = "not-allowed";
+  }
+}
+
+
+// Inicializar al cargar el documento
+document.addEventListener("DOMContentLoaded", () => {
+  // Desactivar el botón al inicio
+  const step1Button = document.querySelector("#step-1 .next-button");
+  if (step1Button) {
+    step1Button.disabled = true;
+    step1Button.style.opacity = "0.5";
+    step1Button.style.pointerEvents = "none";
+    step1Button.style.cursor = "not-allowed";
+  }
+  
+  // Agregar listener al campo DNI/CUIT
+  const dniInput = document.querySelector(".dni-input");
+  if (dniInput) {
+    dniInput.addEventListener("input", validarBotonPantalla1);
+    // También usar el listener existente
+    if (typeof updateSearchIconState === "function") {
+      dniInput.addEventListener("input", updateSearchIconState);
+    }
+  }
+
+  // Actualizar estado del botón cuando cambia el switch
+  const switchInput = document.querySelector(".toggle-switch input");
+  if (switchInput) {
+    switchInput.addEventListener("change", () => {
+      setTimeout(validarBotonPantalla1, 50);
+    });
+  }
+});
+
+// Modificar la función limpiarFormularioPantalla1 para actualizar el estado del botón
+const originalLimpiarFormulario = window.limpiarFormularioPantalla1;
+window.limpiarFormularioPantalla1 = function() {
+  if (typeof originalLimpiarFormulario === 'function') {
+    originalLimpiarFormulario();
+  }
+  
+  // Deshabilitar el botón después de limpiar
+  setTimeout(validarBotonPantalla1, 50);
+};
+  if (categoriaPlaceholder) {
+    categoriaPlaceholder.textContent = "Categoría";
+    categoriaPlaceholder.dataset.value = "";
+  }
+  if (anioPlaceholder) {
+    anioPlaceholder.textContent = "Año";
+    anioPlaceholder.dataset.value = "";
+  }
+  if (marcaPlaceholder) {
+    marcaPlaceholder.textContent = "Marca";
+    marcaPlaceholder.dataset.value = "";
+  }
+  if (modeloPlaceholder) {
+    modeloPlaceholder.textContent = "Modelo";
+    modeloPlaceholder.dataset.value = "";
+  }
+
+  // Limpiar opciones de selects dependientes (dejar solo el buscador si existe)
+  const marcaOptions = document.getElementById("marca-options");
+  if (marcaOptions) {
+    const search = marcaOptions.querySelector(".custom-search-container");
+    marcaOptions.innerHTML = "";
+    if (search) marcaOptions.appendChild(search);
+  }
+  const modeloOptions = document.getElementById("modelo-options");
+  if (modeloOptions) {
+    const search = modeloOptions.querySelector(".custom-search-container");
+    modeloOptions.innerHTML = "";
+    if (search) modeloOptions.appendChild(search);
+  }
+
+  // Limpiar logo del vehículo si existe (pantalla 3)
+  const logo = document.getElementById("vehicle-logo");
+  if (logo) {
+    logo.src = "";
+    logo.alt = "Logo de la marca";
+  }
+
+
+// --- FUNCIÓN GLOBAL PARA LIMPIAR FORMULARIO DE PANTALLA 3 ---
+function limpiarFormularioPantalla3() {
+  // Limpiar el input de monto a financiar
+  const financeInput = document.querySelector(".net-finance-input");
+  if (financeInput) {
+    financeInput.value = "";
+    financeInput.style.color = ""; // Resetear color en caso de que hubiera error
+  }
+
+  // Resetear el select de producto
+  const productoPlaceholder = document.querySelector(
+    '[onclick="toggleCustomOptions(\'product-options\')"]'
+  );
+  if (productoPlaceholder) {
+    productoPlaceholder.textContent = "Seleccionar Producto";
+    productoPlaceholder.dataset.value = "";
+    productoPlaceholder.dataset.label = "";
+    // Restaurar la interactividad al placeholder si estaba deshabilitado
+    productoPlaceholder.style.pointerEvents = "auto";
+    productoPlaceholder.style.opacity = "1";
+  }
+
+ 
+  // Reactivar el botón "Siguiente" si estaba deshabilitado
+  const nextButtonStep3 = document.querySelector('.next-button[onclick="goToStep(4)"]');
+  if (nextButtonStep3) {
+    nextButtonStep3.disabled = false;
+    nextButtonStep3.style.opacity = "1";
+    nextButtonStep3.style.pointerEvents = "auto";
+  }
+
+  // NUEVO: Restaurar el texto de "máximo a financiar" si estaba en "Vehículo no financiable"
+  const maxAmount = document.querySelector(".custom-summary-amount");
+  if (maxAmount && maxAmount.textContent === "Vehículo no financiable") {
+    maxAmount.textContent = "Selecciona producto";
+  }
+
+  // NUEVO: Quitar la clase "disabled" del contenedor de productos
+  const productSelectContainer = document.querySelector('.custom-options-container.product-select');
+  if (productSelectContainer) {
+    productSelectContainer.classList.remove('disabled');
+  }
+
+  // NUEVO: Recargar las opciones de productos según la categoría seleccionada
+  try {
+    const categoria = getSelectedCategoria();
+    if (categoria) {
+      actualizarProductosPorCategoria(categoria.toLowerCase());
+    }
+  } catch (error) {
+    console.error("Error al recargar opciones de productos:", error);
+  }
+}
+
+// --- NUEVO: Limpiar formulario de pantalla 3 al hacer clic en el botón "back" ---
+document.addEventListener("DOMContentLoaded", () => {
+  const backBtnStep3 = document.querySelector('#step-3 .back-button');
+  if (backBtnStep3) {
+    backBtnStep3.addEventListener("click", () => {
+      resetearFormulariosPantalla2(); // Ya existente - resetea pantalla 2
+      limpiarFormularioPantalla3(); // Nueva función - limpia pantalla 3
+    });
+  }
 });

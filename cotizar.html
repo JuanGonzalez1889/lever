@@ -27,7 +27,7 @@
           <button
             type="button"
             class="desktop-inicio-btn"
-            onclick="goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');"
+            onclick="limpiarFormularioPantalla1();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');"
           >
             <span class="desktop-inicio-btn-icon">
               <svg
@@ -554,7 +554,7 @@
               </div>
              
             </div>
-            <p class="min-amount-text">Monto mínimo: $1.000.000</p>
+            <p class="min-amount-text"></p>
             <div class="navigation-buttons">
               <button class="back-button" onclick="goToStep(2)">
                 <img
@@ -732,7 +732,7 @@
                   </g>
                 </svg>
               </button>
-              <button class="next-button" onclick="finalizeCotizacion()">
+              <button class="next-button" id="cotizar-ahora-btn">
                 <span class="next-text">Cotizar ahora</span>
                 <img
                   src="./images/icons/flecha.svg"
@@ -747,7 +747,7 @@
     </main>
     
     <footer class="footer">
-      <div class="footer-icons"><button class="inicio-button" onclick="goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
+      <div class="footer-icons"><button class="inicio-button" href=""  onclick="limpiarFormularioPantalla1();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
         <img
           src="./images/icons/inicio1.svg"
           alt="inicio icon"
@@ -755,7 +755,7 @@
         />
         <span class="inicio-text">Inicio</span>
       </button>
-      <button class="new-button" onclick="goToStep(1)">
+      <button class="new-button"  onclick="limpiarFormularioPantalla1();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="19"
