@@ -5,6 +5,7 @@ const cors = require('cors');
 const session = require('express-session');
 const mysql = require('mysql');
 const path = require('path');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -515,6 +516,38 @@ app.delete('/api/ltv', (req, res) => {
         }
 
         res.json({ success: true });
+    });
+});
+
+// Configuración de Nodemailer
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "leverweb25@gmail.com", // Tu correo electrónico
+    pass: "bvzw qlcz fwcx idkp", // Reemplaza con la contraseña de aplicación generada
+  },
+});
+
+// Ruta para manejar el formulario de contacto
+app.post('/api/contact', (req, res) => {
+    const { name, email, phone, message } = req.body;
+
+    // Configuración del correo
+    const mailOptions = {
+      from: email,
+      to: "leverweb25@gmail.com", // Cambia esto al correo donde quieres recibir los mensajes
+      subject: `Nuevo mensaje de contacto de ${name}`,
+      text: `Nombre: ${name}\nCorreo: ${email}\nTeléfono: ${phone}\n\nMensaje:\n${message}`,
+    };
+
+    // Enviar el correo
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error al enviar el correo:', error);
+            return res.status(500).json({ message: 'Error al enviar el correo' });
+        }
+        console.log('Correo enviado:', info.response);
+        res.status(200).json({ message: 'Correo enviado correctamente' });
     });
 });
 
