@@ -28,21 +28,26 @@
 
     .floating-action-btn {
         position: absolute;
-        right: 63px;
-        bottom: 32px;
+        right: 11%;
+        /* left: 0; */
+        bottom: 15px;
         width: 69.72px;
-        height: 69.72px;
+        /* height: 69.72px; */
         background: #2ADC9F;
         border: none;
         border-radius: 50%;
-        box-shadow: 0 4px 16px 0 rgba(40, 216, 158, 0.18);
+        /* box-shadow: 0 4px 16px 0 rgba(40, 216, 158, 0.18); */
         display: flex;
-        align-items: center;
-        justify-content: center;
+        align-items: unset;
+        justify-content: start;
         z-index: 3000;
         cursor: pointer;
         transition: background 0.2s, box-shadow 0.2s;
         padding: 0;
+        max-width: 87%;
+        margin: 0px auto;
+        padding: 20px;
+
     }
 
     footer {
@@ -57,15 +62,16 @@
 
     .logo-container {
         z-index: 9999;
-        top: 15px;
+        top: 30px;
+        margin-left: 14px;
     }
 
     .logo-container img {
         top: 69px;
         left: 34px;
-        width: 226px;
+        width: 189px;
         height: 52px;
-        margin-left: 75px;
+        margin-left: 0px;
         opacity: 1;
     }
 
@@ -138,7 +144,7 @@
         font-size: 15px;
         font-weight: bold;
         color: #152351;
-        margin-right: 8px;
+        margin-right: 16px;
     }
 
     /* Solo mostrar en escritorio */
@@ -160,20 +166,61 @@
         pointer-events: none;
     }
 
+    .tituloysubtitulo {
+        margin-left: 0px;
+        margin-top: 17px;
+    }
 
-    h1,
+    #step-1 .tituloysubtitulo,
+    #step-2 .tituloysubtitulo,
+    #step-3 .tituloysubtitulo,
+    #step-4 .tituloysubtitulo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 32px auto;
+        text-align: center;
+    }
+
     h2 {
-        display: none;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        color: #fff;
+        margin: 0;
+        text-align: center;
+        width: 100%;
+        height: 2rem;
+    }
+
+    .tituloysubtitulo h1 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 26px;
+        color: #2ADC9F;
+        margin: 0 0 8px 0;
+        letter-spacing: 1px;
+        text-align: center;
+    }
+
+    .tituloysubtitulo h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        margin: 0;
+        text-align: center;
     }
 
     .cotizar-section {
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 74vh;
     }
 
     .container {
-        max-width: 96%;
+        max-width: 83%;
         margin: 0 auto;
         padding: 20px;
     }
@@ -181,7 +228,7 @@
     .switch-container {
         top: 297px;
         left: 114px;
-        width: 157px;
+        width: 188px;
         height: 30px;
         background: #FFFFFF 0% 0% no-repeat padding-box;
         border-radius: 20px;
@@ -196,7 +243,7 @@
     .switch-container {
         top: 297px;
         left: 114px;
-        width: 176px;
+        width: 188px;
         height: 30px;
         background: #FFFFFF 0% 0% no-repeat padding-box;
         border-radius: 20px;
@@ -243,21 +290,21 @@
     .switch-label-left {
         left: 13px;
         color: #FFFFFF;
-        margin-left: 12px;
+        margin-left: 17px;
     }
 
     .switch-label-right {
-        right: 13px;
+        right: 15px;
         color: #303047;
-        margin-right: 12px;
+        margin-right: 16px;
     }
 
     .switch-slider {
         position: absolute;
         cursor: pointer;
         top: 2px;
-        left: -74px;
-        width: 84px;
+        left: -78px;
+        width: 91px;
         height: 26px;
         background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
         border-radius: 20px;
@@ -269,13 +316,12 @@
         position: absolute;
         cursor: pointer;
         top: 2px;
-        left: -70px;
-        width: 80px;
+        left: -65px;
+        width: 91px;
         height: 26px;
         background: transparent linear-gradient(67deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
         border-radius: 20px;
         transition: .4s;
-
     }
 
     .switch-label-left,
@@ -413,17 +459,16 @@
     .loader-overlay {
         position: absolute;
         z-index: 1000;
-        top: -51px;
-        left: 0;
+        top: 3%;
+        left: 27%;
         right: 0;
         bottom: 0;
         border-radius: 30px;
-        width: 100%;
-        height: 100%;
+        width: 45%;
+        height: 54%;
         display: flex;
         align-items: center;
         justify-content: center;
-        /* NUEVO: desenfoque del fondo */
         backdrop-filter: blur(7px);
         -webkit-backdrop-filter: blur(7px);
         pointer-events: all;
@@ -619,6 +664,7 @@
         font-size: 15px;
         cursor: pointer;
         margin-top: 31px;
+        font-family: 'Montserrat';
     }
 
     .client-select-btn {
@@ -641,8 +687,7 @@
         justify-content: center;
         gap: 17px;
         align-items: center;
-        width: 90%;
-        padding: 83px;
+
     }
 
     #step-2 .custom-options-placeholder {
@@ -685,7 +730,7 @@
         height: 59px;
 
         margin-left: -15px;
-        width: 312px;
+        width: 301px;
         position: relative;
         z-index: -1;
         background-color: #F6F6F6;
@@ -701,10 +746,10 @@
 
     #step-2 .custom-options-container {
         max-width: 282px;
-        width: 282px;
+        width: 271px;
         flex: 1 1 0;
         margin-top: 0 !important;
-        margin-bottom: 0 !important;
+        margin-bottom: 61px !important;
         position: relative;
         height: 59px;
         background: #FFFFFF;
@@ -723,12 +768,13 @@
     }
 
     #step-2 .custom-options {
-        width: 312px;
-        border-radius: 0 0 30px 30px;
+        width: 301px;
+        border-radius: 0 0 23px 23px;
         height: 182px;
         background: #F6F6F6 0% 0% no-repeat padding-box;
         max-height: 200px;
         overflow-y: auto;
+        overflow-x: hidden;
         display: flex;
         flex-direction: column;
         display: flex !important;
@@ -741,8 +787,31 @@
         transition: opacity 0.3s ease, transform 0.3s ease;
         margin-left: -15px;
         margin-top: 0px;
-        pointer-events: auto
+        pointer-events: auto;
+        box-shadow: inset 0 -8px 12px -10px #f6f6f6;
+        padding-bottom: 15px;
+        max-height: 200px;
+        /* o el valor que prefieras */
+        height: auto;
+        overflow-y: auto;
+        transition: max-height 0.3s;
     }
+
+    #step-2 .custom-options::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 32px;
+        /* un poco más grande para tapar bien */
+        height: 32px;
+        background: #F6F6F6;
+        border-bottom-right-radius: 30px;
+        pointer-events: none;
+        z-index: 10;
+        /* más alto que el scrollbar */
+    }
+
 
     #step-2 .custom-options.hidden {
         display: none !important;
@@ -831,7 +900,7 @@
         height: 40px;
         background: transparent linear-gradient(73deg, #2ADC9F 0%, #099E8F 100%) 0% 0% no-repeat padding-box;
         border-radius: 20px;
-        opacity: 0.5; 
+        opacity: 0.5;
         border: none;
         display: flex;
         align-items: center;
@@ -874,7 +943,7 @@
         display: grid !important;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
-        gap: 0px 42px;
+        gap: 21px 42px;
         align-items: center;
         justify-items: center;
     }
@@ -882,14 +951,13 @@
     #step-3 .vehicle-summary {
         top: 183px;
         width: 315px;
-        height: 61px;
+        height: 86px;
         border: 1px solid #FFFFFF;
         background: transparent;
         display: flex;
         align-items: center;
         padding: 10px;
         border-radius: 32px 32px 32px 32px;
-        margin-top: -2rem;
     }
 
     #step-3 .vehicle-summary img#vehicle-logo {
@@ -941,8 +1009,8 @@
 
     #step-3 .custom-options-placeholder {
         color: #15224F;
-        opacity: 0.5;
-        font: normal normal 300 14px / 15px Montserrat;
+        opacity: 1.5;
+        font: normal normal bold 14px / 15px Montserrat;
         position: relative;
         display: flex;
         align-items: center;
@@ -1013,7 +1081,7 @@
 
     #step-3 .custom-options {
         width: 345px;
-        border-radius: 0 0 30px 30px;
+        border-radius: 0 0 43px 37px;
         height: 160px;
         background: #F6F6F6 0% 0% no-repeat padding-box;
         max-height: 200px;
@@ -1031,6 +1099,23 @@
         margin-left: -15px;
         margin-top: -4px;
         pointer-events: auto;
+        max-height: 165px;
+        /* o el valor que prefieras */
+        height: auto;
+        overflow-y: auto;
+        transition: max-height 0.3s;
+    }
+
+    #step-3 .custom-options::-webkit-scrollbar {
+        width: 4px;
+        border-radius: 0 0 30px 30px;
+    }
+
+    #step-3 .custom-options::-webkit-scrollbar-thumb,
+    .custom-select-options::-webkit-scrollbar-thumb {
+        background: #2ADC9F;
+        border-radius: 8px;
+        min-height: 8px;
     }
 
     #step-3 .custom-options.hidden {
@@ -1072,14 +1157,11 @@
 
     #step-3 .custom-summary {
         width: 315px;
-        height: 89px;
+        height: 86px;
         border: 1px solid #FFFFFF;
-        background: #FFFFFF;
         display: flex;
         align-items: center;
         padding: 10px;
-        margin-left: 8px;
-        margin-bottom: 4px;
         border-radius: 32px;
     }
 
@@ -1087,9 +1169,9 @@
         font-family: 'Montserrat', sans-serif;
         font-size: 15px;
         font-weight: bold;
-        color: #444444;
+        color: #ffffff;
         margin: 0;
-        margin-bottom: 50px;
+        margin-bottom: 42px;
         margin-left: 15px;
     }
 
@@ -1097,7 +1179,7 @@
         font-family: 'Montserrat', sans-serif;
         font-size: 15px;
         font-weight: 300;
-        color: #444444;
+        color: #ffffff;
         display: block;
         margin-left: -151px;
         margin-top: 33px;
@@ -1128,7 +1210,8 @@
     }
 
     #step-3 .net-finance-input::placeholder {
-        font: normal normal 300 14px / 15px Montserrat;
+        font: normal normal 14px / 15px Montserrat;
+        font-weight: lighter;
         color: #15224F;
         opacity: 0.5;
         width: 185px;
@@ -1136,10 +1219,10 @@
 
     #step-3 .min-amount-text {
         font-family: 'Montserrat', sans-serif;
-        font-size: 10px;
-        font-weight: 500;
-        color: #FF594B;
-        margin-left: 35rem;
+        font-size: 12px;
+        font-weight: bold;
+        color: #ffffff !important;
+        margin-left: 38.5rem;
         margin-top: -13px;
     }
 
@@ -1256,17 +1339,13 @@
     }
 
     #step-4 .custom-summary-step4 {
-        grid-row: 2 / 3;
-        grid-column: 1 / 2;
-        top: -6px;
-        left: 0;
         width: 315px;
         height: 103px;
-        background: #ffffff;
         display: flex;
         align-items: center;
         padding: 10px;
         margin-top: 1rem;
+        border: 1px solid #FFFFFF;
         border-radius: 32px;
     }
 
@@ -1276,14 +1355,14 @@
         font-family: 'Montserrat', sans-serif;
         font-size: 15px;
         font-weight: bold;
-        color: #444444;
+        color: #ffffff;
         display: flex;
         align-items: center;
 
     }
 
     #step-4 .custom-summary-currency {
-        color: #444444;
+        color: #ffffff;
         font-family: 'Montserrat', sans-serif;
         font-size: 15px;
         font-weight: 300;
@@ -1293,7 +1372,7 @@
     }
 
     #step-4 .selected-product {
-        color: #444444;
+        color: #ffffff;
         border: 2px solid #28D89E;
     }
 
@@ -1312,7 +1391,7 @@
         width: 94px;
         height: 17px;
         border: 1px solid #28D89E;
-        font-size: 10px;
+        font-size: 9px;
         font-weight: bold;
         display: flex;
         align-items: center;
@@ -1341,6 +1420,14 @@
         align-items: center;
         justify-content: space-between;
         padding: 0 15px;
+        cursor: pointer;
+        transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.18s;
+    }
+
+    #step-4 .scrollable-item:hover {
+        transform: scale(1.04);
+        box-shadow: 0 4px 16px 0 rgba(40, 216, 158, 0.10);
+        z-index: 2;
     }
 
     #step-4 .scrollable-text {
@@ -1350,6 +1437,7 @@
         color: #444444;
         display: flex;
         align-items: center;
+        margin-left: 12px;
     }
 
     #step-4 .scrollable-value {
@@ -1359,10 +1447,16 @@
         color: #28D89E;
         display: flex;
         align-items: center;
+        margin-right: 13px;
+    }
+
+    #step-4 .cuota-label-mas-elegida-inside {
+        margin-left: 12px;
+        font-size: 10.8px;
     }
 
     #step-4 .scrollable-item.selected {
-        border: 2px solid #28D89E;
+        border: 4px solid #28D89E;
     }
 
     #step-4 .scrollable-item-36 {
@@ -1418,8 +1512,15 @@
         min-width: 90px;
     }
 
+    #step-4 .mensaje4 {
+        margin-top: 5px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
     #step-4 .navigation-buttons {
-        margin-top: 149px;
+        margin-top: 165px;
         margin-left: 43px;
         display: flex;
         justify-content: center;
@@ -1511,13 +1612,15 @@
 
     #select-cuota-message {
         font-family: 'Montserrat', sans-serif;
-        font-size: 10px;
-        font-weight: 500;
-        color: #FF594B;
+        font-size: 12px;
+        font-weight: bold;
+        color: #ffffff;
         text-align: center;
-        margin-top: 66px;
-        margin-bottom: -42px;
-        margin-left: 35rem;
+        margin: 0;
+        padding: 0;
+        margin-top: 5px;
+        margin-bottom: 0;
+        margin-left: 0;
     }
 
 
@@ -1575,8 +1678,16 @@
         font-size: 14px;
         padding: 10px;
         border: 1px solid #ccc;
-        border-radius: 8px;
+        border-radius: 30px;
         outline: none;
+    }
+
+    ::-webkit-input-placeholder {
+        opacity: 0.5;
+    }
+
+    input::-webkit-input-placeholder {
+        opacity: 1.5;
     }
 
     .contact-form input:focus,
@@ -1592,7 +1703,7 @@
         background-color: #28d89e;
         padding: 12px;
         border: none;
-        border-radius: 8px;
+        border-radius: 32px;
         cursor: pointer;
         text-align: center;
     }
@@ -1908,7 +2019,7 @@
     .switch-container {
         top: 297px;
         left: 114px;
-        width: 167px;
+        width: 188px;
         height: 30px;
         background: #FFFFFF 0% 0% no-repeat padding-box;
         border-radius: 20px;
@@ -1922,21 +2033,53 @@
 
     /* Estilo para la barra de scroll - WebKit (Chrome, Safari, Edge) */
     #step-2 .custom-options::-webkit-scrollbar {
-        width: 6px;
+        width: 10px;
+        border-radius: 0 0 30px 30px;
     }
 
     #step-2 .custom-options::-webkit-scrollbar-track {
         background: #F6F6F6;
-        border-radius: 0 0 30px 1px;
+        /* igual que el contenedor */
+        border-radius: 0 0 30px 30px;
         margin-bottom: 15px;
     }
 
     #step-2 .custom-options::-webkit-scrollbar-thumb {
         background: #28D89E;
         border-radius: 10px;
-        /* Acortar el thumb para que no llegue hasta el borde */
         min-height: 30px;
         max-height: calc(100% - 15px);
+    }
+
+    #step-3 .custom-options::-webkit-scrollbar {
+        width: 10px;
+        border-radius: 0 0 30px 30px;
+    }
+
+    #step-3 .custom-options::-webkit-scrollbar-track {
+        background: #F6F6F6;
+        border-radius: 0 0 30px 0px;
+        margin-bottom: 16px;
+    }
+
+    #step-3 .custom-options::-webkit-scrollbar-thumb {
+        background: #28D89E;
+        border-radius: 10px;
+        min-height: 30px;
+        max-height: calc(100% - 15px);
+    }
+
+    /* Aplicar los mismos ajustes a otros select del paso 2 */
+    #step-3 .custom-options-container .custom-options {
+
+        max-height: 148px;
+        padding-bottom: 15px;
+        margin-bottom: 5px;
+    }
+
+    /* Asegurarse de que el último elemento tenga margen inferior */
+    #step-3 .custom-options .custom-option:last-child {
+        margin-bottom: 10px;
     }
 
     /* Aplicar los mismos ajustes a otros select del paso 2 */
@@ -1963,6 +2106,5 @@
         border-radius: 0 0 30px 30px;
     }
 
-   
-}
 
+}

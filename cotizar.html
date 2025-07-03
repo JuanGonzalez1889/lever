@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="cotizar.css" />
     <link rel="stylesheet" href="cotizarTabletDesktop.css" />
     <link rel="stylesheet" href="pantallasChicas.css" />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap"
       rel="stylesheet"
@@ -27,7 +28,7 @@
           <button
             type="button"
             class="desktop-inicio-btn"
-            onclick="limpiarFormularioPantalla1();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');"
+            onclick="limpiarFormularioPantalla1();resetearFormulariosPantalla2();limpiarFormularioPantalla3();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');"
           >
             <span class="desktop-inicio-btn-icon">
               <svg
@@ -100,7 +101,7 @@
           </li>
           <li>
             <a
-              href="nosotros.html"
+              href="nosotrosNew.html"
               itemprop="url"
               class="scroller outline"
               data-text="Nosotros"
@@ -299,13 +300,13 @@
                     <div class="credit-indicator"></div>
                   </div>
                   <h4 class="credit-status-title credit-status-title-verde">
-                    VIABLE
+                    EVALUACIÓN POSITIVA
                   </h4>
                   <h4
                     class="credit-status-title credit-status-title-amarillo"
                     style="display: none; color: #ffdf00"
                   >
-                    VIABLE CON OBSERVACIONES
+                    SUJETO A REVISIÓN
                   </h4>
                   <p class="credit-status-subtitle">
                     Es posible que el crédito se apruebe
@@ -541,8 +542,8 @@
               <!-- Nuevo div debajo del select de productos -->
               <div class="custom-summary">
                 <h3 class="custom-summary-title">Máximo a financiar</h3>
-                <span class="custom-summary-currency">$</span>
-                <span class="custom-summary-amount">Selecciona producto</span>
+                <span class="custom-summary-currency"></span>
+                <span class="custom-summary-amount">Seleccioná producto</span>
               </div>
               <div class="custom-summary-input">
                 <input
@@ -650,17 +651,17 @@
                     <span class="scrollable-text">48 CUOTAS</span>
                     <span class="scrollable-value">$125.500</span>
                   </div>
-                  
+                  <div class="mensaje4"> 
+                    <p id="select-cuota-message" class="hidden">
+                    Seleccioná una opción para poder cotizar </p>
+                  </div>
                 </div>
                 
                 
               </div>
               
             </div>
-            <div class="mensaje4"> 
-              <p id="select-cuota-message" class="hidden">
-              Seleccioná una opción para poder cotizar
-            </p></div>
+            
             <div class="navigation-buttons">
               <button class="back-button" onclick="goToStep(3)">
                 <img
@@ -733,7 +734,7 @@
                 </svg>
               </button>
               <button class="next-button" id="cotizar-ahora-btn">
-                <span class="next-text">Cotizar ahora</span>
+                <span class="next-text">Avanzar</span>
                 <img
                   src="./images/icons/flecha.svg"
                   alt="flecha"
@@ -747,7 +748,7 @@
     </main>
     
     <footer class="footer">
-      <div class="footer-icons"><button class="inicio-button" href=""  onclick="limpiarFormularioPantalla1();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
+      <div class="footer-icons"><button class="inicio-button" href=""  onclick="limpiarFormularioPantalla1();resetearFormulariosPantalla2();limpiarFormularioPantalla3();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
         <img
           src="./images/icons/inicio1.svg"
           alt="inicio icon"
@@ -755,7 +756,7 @@
         />
         <span class="inicio-text">Inicio</span>
       </button>
-      <button class="new-button"  onclick="limpiarFormularioPantalla1();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
+      <button class="new-button"  onclick="limpiarFormularioPantalla1();resetearFormulariosPantalla2();limpiarFormularioPantalla3();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="19"

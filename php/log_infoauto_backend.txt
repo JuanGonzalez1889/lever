@@ -11721,3 +11721,2638 @@ PARSED: Array
 
 [2025-06-19 21:13:50] codia: 30147 | year: 2025 | apiType: cars
 PRICE FOUND: 91683000
+[2025-06-23 21:54:30] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-23 21:54:30] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-23 21:54:30] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-23 21:56:26] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-23 21:56:26] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-23 21:56:26] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-23 22:51:36] codia: 8840027 | year: 2023 | apiType: motorcycles
+URL: https://api.infoauto.com.ar/motorcycles/pub/models/8840027/prices/
+RESPONSE: [{"price":2232,"year":2021},{"price":2350,"year":2022},{"price":2474,"year":2023},{"price":2605,"year":2024}]
+
+[2025-06-23 22:51:36] codia: 8840027 | year: 2023 | apiType: motorcycles
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 2232
+            [year] => 2021
+        )
+
+    [1] => Array
+        (
+            [price] => 2350
+            [year] => 2022
+        )
+
+    [2] => Array
+        (
+            [price] => 2474
+            [year] => 2023
+        )
+
+    [3] => Array
+        (
+            [price] => 2605
+            [year] => 2024
+        )
+
+)
+
+[2025-06-23 22:51:36] codia: 8840027 | year: 2023 | apiType: motorcycles
+PRICE FOUND: 2474000
+[2025-06-23 22:51:45] codia: 9420018 | year: 2023 | apiType: motorcycles
+URL: https://api.infoauto.com.ar/motorcycles/pub/models/9420018/prices/
+RESPONSE: [{"price":13894,"year":2017},{"price":14624,"year":2018},{"price":15394,"year":2019},{"price":16205,"year":2020},{"price":17057,"year":2021},{"price":17953,"year":2022},{"price":18898,"year":2023},{"price":19892,"year":2024}]
+
+[2025-06-23 22:51:45] codia: 9420018 | year: 2023 | apiType: motorcycles
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 13894
+            [year] => 2017
+        )
+
+    [1] => Array
+        (
+            [price] => 14624
+            [year] => 2018
+        )
+
+    [2] => Array
+        (
+            [price] => 15394
+            [year] => 2019
+        )
+
+    [3] => Array
+        (
+            [price] => 16205
+            [year] => 2020
+        )
+
+    [4] => Array
+        (
+            [price] => 17057
+            [year] => 2021
+        )
+
+    [5] => Array
+        (
+            [price] => 17953
+            [year] => 2022
+        )
+
+    [6] => Array
+        (
+            [price] => 18898
+            [year] => 2023
+        )
+
+    [7] => Array
+        (
+            [price] => 19892
+            [year] => 2024
+        )
+
+)
+
+[2025-06-23 22:51:45] codia: 9420018 | year: 2023 | apiType: motorcycles
+PRICE FOUND: 18898000
+[2025-06-24 14:51:27] codia: 460979 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/460979/list_price
+RESPONSE: {"list_price":49600}
+
+[2025-06-24 14:51:27] codia: 460979 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 49600
+)
+
+[2025-06-24 14:51:27] codia: 460979 | year: 2025 | apiType: cars
+PRICE FOUND: 49600000
+[2025-06-24 15:34:15] codia: 320803 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/320803/prices/
+RESPONSE: [{"price":31500,"year":2024},{"price":33000,"year":2025}]
+
+[2025-06-24 15:34:15] codia: 320803 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 31500
+            [year] => 2024
+        )
+
+    [1] => Array
+        (
+            [price] => 33000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 15:34:15] codia: 320803 | year: 2024 | apiType: cars
+PRICE FOUND: 31500000
+[2025-06-24 16:00:58] codia: 30140 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30140/list_price
+RESPONSE: {"list_price":101738}
+
+[2025-06-24 16:00:58] codia: 30140 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 101738
+)
+
+[2025-06-24 16:00:58] codia: 30140 | year: 2025 | apiType: cars
+PRICE FOUND: 101738000
+[2025-06-24 16:20:42] codia: 9300056 | year: 2025 | apiType: motorcycles
+URL: https://api.infoauto.com.ar/motorcycles/pub/models/9300056/list_price
+RESPONSE: {"list_price":2350}
+
+[2025-06-24 16:20:42] codia: 9300056 | year: 2025 | apiType: motorcycles
+PARSED: Array
+(
+    [list_price] => 2350
+)
+
+[2025-06-24 16:20:42] codia: 9300056 | year: 2025 | apiType: motorcycles
+PRICE FOUND: 2350000
+[2025-06-24 16:21:40] codia: 9300069 | year: 2023 | apiType: motorcycles
+URL: https://api.infoauto.com.ar/motorcycles/pub/models/9300069/prices/
+RESPONSE: [{"price":1645,"year":2017},{"price":1719,"year":2018},{"price":1841,"year":2019},{"price":1957,"year":2020},{"price":2075,"year":2021},{"price":2187,"year":2022},{"price":2305,"year":2023},{"price":2425,"year":2024}]
+
+[2025-06-24 16:21:40] codia: 9300069 | year: 2023 | apiType: motorcycles
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 1645
+            [year] => 2017
+        )
+
+    [1] => Array
+        (
+            [price] => 1719
+            [year] => 2018
+        )
+
+    [2] => Array
+        (
+            [price] => 1841
+            [year] => 2019
+        )
+
+    [3] => Array
+        (
+            [price] => 1957
+            [year] => 2020
+        )
+
+    [4] => Array
+        (
+            [price] => 2075
+            [year] => 2021
+        )
+
+    [5] => Array
+        (
+            [price] => 2187
+            [year] => 2022
+        )
+
+    [6] => Array
+        (
+            [price] => 2305
+            [year] => 2023
+        )
+
+    [7] => Array
+        (
+            [price] => 2425
+            [year] => 2024
+        )
+
+)
+
+[2025-06-24 16:21:40] codia: 9300069 | year: 2023 | apiType: motorcycles
+PRICE FOUND: 2305000
+[2025-06-24 16:23:06] codia: 30147 | year: 2023 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 16:23:06] codia: 30147 | year: 2023 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 16:23:06] codia: 30147 | year: 2023 | apiType: cars
+PRICE FOUND: 75000000
+[2025-06-24 16:31:16] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-24 16:31:16] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-24 16:31:16] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-24 16:33:29] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 16:33:29] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 16:33:29] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 16:42:14] codia: 30140 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30140/prices/
+RESPONSE: [{"price":61000,"year":2018},{"price":65000,"year":2019},{"price":70000,"year":2020},{"price":75000,"year":2021},{"price":80000,"year":2022},{"price":85000,"year":2023},{"price":90000,"year":2024},{"price":95000,"year":2025}]
+
+[2025-06-24 16:42:14] codia: 30140 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 61000
+            [year] => 2018
+        )
+
+    [1] => Array
+        (
+            [price] => 65000
+            [year] => 2019
+        )
+
+    [2] => Array
+        (
+            [price] => 70000
+            [year] => 2020
+        )
+
+    [3] => Array
+        (
+            [price] => 75000
+            [year] => 2021
+        )
+
+    [4] => Array
+        (
+            [price] => 80000
+            [year] => 2022
+        )
+
+    [5] => Array
+        (
+            [price] => 85000
+            [year] => 2023
+        )
+
+    [6] => Array
+        (
+            [price] => 90000
+            [year] => 2024
+        )
+
+    [7] => Array
+        (
+            [price] => 95000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 16:42:14] codia: 30140 | year: 2024 | apiType: cars
+PRICE FOUND: 90000000
+[2025-06-24 16:42:49] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-24 16:42:49] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-24 16:42:49] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-24 16:44:00] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 16:44:00] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 16:44:00] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 16:45:06] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 16:45:06] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 16:45:06] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 16:45:18] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 16:45:18] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 16:45:18] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 16:45:41] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-24 16:45:41] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-24 16:45:41] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-24 16:46:05] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 16:46:05] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 16:46:05] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 16:56:12] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 16:56:12] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 16:56:12] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 20:01:13] codia: 30140 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30140/prices/
+RESPONSE: [{"price":61000,"year":2018},{"price":65000,"year":2019},{"price":70000,"year":2020},{"price":75000,"year":2021},{"price":80000,"year":2022},{"price":85000,"year":2023},{"price":90000,"year":2024},{"price":95000,"year":2025}]
+
+[2025-06-24 20:01:13] codia: 30140 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 61000
+            [year] => 2018
+        )
+
+    [1] => Array
+        (
+            [price] => 65000
+            [year] => 2019
+        )
+
+    [2] => Array
+        (
+            [price] => 70000
+            [year] => 2020
+        )
+
+    [3] => Array
+        (
+            [price] => 75000
+            [year] => 2021
+        )
+
+    [4] => Array
+        (
+            [price] => 80000
+            [year] => 2022
+        )
+
+    [5] => Array
+        (
+            [price] => 85000
+            [year] => 2023
+        )
+
+    [6] => Array
+        (
+            [price] => 90000
+            [year] => 2024
+        )
+
+    [7] => Array
+        (
+            [price] => 95000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 20:01:13] codia: 30140 | year: 2024 | apiType: cars
+PRICE FOUND: 90000000
+[2025-06-24 20:10:48] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-24 20:10:48] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-24 20:10:48] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-24 20:11:09] codia: 30143 | year: 2023 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30143/prices/
+RESPONSE: [{"price":37000,"year":2018},{"price":40000,"year":2019},{"price":43000,"year":2020},{"price":46000,"year":2021},{"price":49000,"year":2022},{"price":52000,"year":2023}]
+
+[2025-06-24 20:11:09] codia: 30143 | year: 2023 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 37000
+            [year] => 2018
+        )
+
+    [1] => Array
+        (
+            [price] => 40000
+            [year] => 2019
+        )
+
+    [2] => Array
+        (
+            [price] => 43000
+            [year] => 2020
+        )
+
+    [3] => Array
+        (
+            [price] => 46000
+            [year] => 2021
+        )
+
+    [4] => Array
+        (
+            [price] => 49000
+            [year] => 2022
+        )
+
+    [5] => Array
+        (
+            [price] => 52000
+            [year] => 2023
+        )
+
+)
+
+[2025-06-24 20:11:09] codia: 30143 | year: 2023 | apiType: cars
+PRICE FOUND: 52000000
+[2025-06-24 20:11:31] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 20:11:31] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 20:11:31] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 20:16:41] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 20:16:41] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 20:16:41] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 20:18:51] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 20:18:51] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 20:18:51] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 20:19:06] codia: 9140045 | year: 2024 | apiType: motorcycles
+URL: https://api.infoauto.com.ar/motorcycles/pub/models/9140045/prices/
+RESPONSE: [{"price":20063,"year":2017},{"price":21120,"year":2018},{"price":22232,"year":2019},{"price":23402,"year":2020},{"price":24634,"year":2021},{"price":25931,"year":2022},{"price":27301,"year":2023},{"price":28737,"year":2024}]
+
+[2025-06-24 20:19:06] codia: 9140045 | year: 2024 | apiType: motorcycles
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 20063
+            [year] => 2017
+        )
+
+    [1] => Array
+        (
+            [price] => 21120
+            [year] => 2018
+        )
+
+    [2] => Array
+        (
+            [price] => 22232
+            [year] => 2019
+        )
+
+    [3] => Array
+        (
+            [price] => 23402
+            [year] => 2020
+        )
+
+    [4] => Array
+        (
+            [price] => 24634
+            [year] => 2021
+        )
+
+    [5] => Array
+        (
+            [price] => 25931
+            [year] => 2022
+        )
+
+    [6] => Array
+        (
+            [price] => 27301
+            [year] => 2023
+        )
+
+    [7] => Array
+        (
+            [price] => 28737
+            [year] => 2024
+        )
+
+)
+
+[2025-06-24 20:19:06] codia: 9140045 | year: 2024 | apiType: motorcycles
+PRICE FOUND: 28737000
+[2025-06-24 20:19:20] codia: 30143 | year: 2023 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30143/prices/
+RESPONSE: [{"price":37000,"year":2018},{"price":40000,"year":2019},{"price":43000,"year":2020},{"price":46000,"year":2021},{"price":49000,"year":2022},{"price":52000,"year":2023}]
+
+[2025-06-24 20:19:20] codia: 30143 | year: 2023 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 37000
+            [year] => 2018
+        )
+
+    [1] => Array
+        (
+            [price] => 40000
+            [year] => 2019
+        )
+
+    [2] => Array
+        (
+            [price] => 43000
+            [year] => 2020
+        )
+
+    [3] => Array
+        (
+            [price] => 46000
+            [year] => 2021
+        )
+
+    [4] => Array
+        (
+            [price] => 49000
+            [year] => 2022
+        )
+
+    [5] => Array
+        (
+            [price] => 52000
+            [year] => 2023
+        )
+
+)
+
+[2025-06-24 20:19:20] codia: 30143 | year: 2023 | apiType: cars
+PRICE FOUND: 52000000
+[2025-06-24 20:20:50] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 20:20:50] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 20:20:50] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 20:41:12] codia: 630032 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/630032/list_price
+RESPONSE: {"list_price":86603}
+
+[2025-06-24 20:41:12] codia: 630032 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 86603
+)
+
+[2025-06-24 20:41:12] codia: 630032 | year: 2025 | apiType: cars
+PRICE FOUND: 86603000
+[2025-06-24 20:50:13] codia: 460979 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/460979/list_price
+RESPONSE: {"list_price":49600}
+
+[2025-06-24 20:50:13] codia: 460979 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 49600
+)
+
+[2025-06-24 20:50:13] codia: 460979 | year: 2025 | apiType: cars
+PRICE FOUND: 49600000
+[2025-06-24 21:41:29] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-24 21:41:29] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-24 21:41:29] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-24 21:42:46] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 21:42:46] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 21:42:46] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 21:43:43] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 21:43:43] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 21:43:43] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 22:22:39] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 22:22:39] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 22:22:39] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 22:29:17] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 22:29:17] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 22:29:17] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 22:32:18] codia: 30140 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30140/list_price
+RESPONSE: {"list_price":101738}
+
+[2025-06-24 22:32:18] codia: 30140 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 101738
+)
+
+[2025-06-24 22:32:18] codia: 30140 | year: 2025 | apiType: cars
+PRICE FOUND: 101738000
+[2025-06-24 22:33:58] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-24 22:33:58] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-24 22:33:58] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-24 22:45:37] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 22:45:37] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 22:45:37] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-24 22:46:14] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-24 22:46:14] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-24 22:46:14] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 14:49:27] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 14:49:27] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 14:49:27] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 14:50:45] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 14:50:45] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 14:50:45] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 14:58:05] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 14:58:05] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 14:58:05] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 15:02:08] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 15:02:08] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 15:02:08] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 15:04:38] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 15:04:38] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 15:04:38] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 15:06:32] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 15:06:32] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 15:06:32] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 15:09:33] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 15:09:33] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 15:09:33] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 15:10:01] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 15:10:01] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 15:10:01] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 15:19:46] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 15:19:46] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 15:19:46] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 15:21:54] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 15:21:54] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 15:21:54] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 15:23:05] codia: 30143 | year: 2023 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30143/prices/
+RESPONSE: [{"price":37000,"year":2018},{"price":40000,"year":2019},{"price":43000,"year":2020},{"price":46000,"year":2021},{"price":49000,"year":2022},{"price":52000,"year":2023}]
+
+[2025-06-25 15:23:05] codia: 30143 | year: 2023 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 37000
+            [year] => 2018
+        )
+
+    [1] => Array
+        (
+            [price] => 40000
+            [year] => 2019
+        )
+
+    [2] => Array
+        (
+            [price] => 43000
+            [year] => 2020
+        )
+
+    [3] => Array
+        (
+            [price] => 46000
+            [year] => 2021
+        )
+
+    [4] => Array
+        (
+            [price] => 49000
+            [year] => 2022
+        )
+
+    [5] => Array
+        (
+            [price] => 52000
+            [year] => 2023
+        )
+
+)
+
+[2025-06-25 15:23:05] codia: 30143 | year: 2023 | apiType: cars
+PRICE FOUND: 52000000
+[2025-06-25 15:27:01] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 15:27:01] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 15:27:01] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 15:28:33] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 15:28:33] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 15:28:33] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 15:30:14] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 15:30:14] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 15:30:14] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 15:32:54] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 15:32:54] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 15:32:54] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 16:08:33] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 16:08:33] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 16:08:33] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 16:09:06] codia: 630032 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/630032/prices/
+RESPONSE: [{"price":51350,"year":2016},{"price":52935,"year":2017},{"price":54575,"year":2018},{"price":56265,"year":2019},{"price":58005,"year":2020},{"price":59785,"year":2021},{"price":61645,"year":2022},{"price":63555,"year":2023},{"price":65520,"year":2024},{"price":76585,"year":2025}]
+
+[2025-06-25 16:09:06] codia: 630032 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 51350
+            [year] => 2016
+        )
+
+    [1] => Array
+        (
+            [price] => 52935
+            [year] => 2017
+        )
+
+    [2] => Array
+        (
+            [price] => 54575
+            [year] => 2018
+        )
+
+    [3] => Array
+        (
+            [price] => 56265
+            [year] => 2019
+        )
+
+    [4] => Array
+        (
+            [price] => 58005
+            [year] => 2020
+        )
+
+    [5] => Array
+        (
+            [price] => 59785
+            [year] => 2021
+        )
+
+    [6] => Array
+        (
+            [price] => 61645
+            [year] => 2022
+        )
+
+    [7] => Array
+        (
+            [price] => 63555
+            [year] => 2023
+        )
+
+    [8] => Array
+        (
+            [price] => 65520
+            [year] => 2024
+        )
+
+    [9] => Array
+        (
+            [price] => 76585
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 16:09:06] codia: 630032 | year: 2024 | apiType: cars
+PRICE FOUND: 65520000
+[2025-06-25 16:11:20] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 16:11:20] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 16:11:20] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 16:16:02] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 16:16:02] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 16:16:02] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 16:21:59] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 16:21:59] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 16:21:59] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 16:26:39] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 16:26:39] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 16:26:39] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 16:27:45] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 16:27:45] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 16:27:45] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 16:30:58] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 16:30:58] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 16:30:58] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 16:34:25] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 16:34:25] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 16:34:25] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 16:52:30] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 16:52:30] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 16:52:30] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 17:01:11] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 17:01:11] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 17:01:11] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 17:24:10] codia: 30140 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30140/prices/
+RESPONSE: [{"price":61000,"year":2018},{"price":65000,"year":2019},{"price":70000,"year":2020},{"price":75000,"year":2021},{"price":80000,"year":2022},{"price":85000,"year":2023},{"price":90000,"year":2024},{"price":95000,"year":2025}]
+
+[2025-06-25 17:24:10] codia: 30140 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 61000
+            [year] => 2018
+        )
+
+    [1] => Array
+        (
+            [price] => 65000
+            [year] => 2019
+        )
+
+    [2] => Array
+        (
+            [price] => 70000
+            [year] => 2020
+        )
+
+    [3] => Array
+        (
+            [price] => 75000
+            [year] => 2021
+        )
+
+    [4] => Array
+        (
+            [price] => 80000
+            [year] => 2022
+        )
+
+    [5] => Array
+        (
+            [price] => 85000
+            [year] => 2023
+        )
+
+    [6] => Array
+        (
+            [price] => 90000
+            [year] => 2024
+        )
+
+    [7] => Array
+        (
+            [price] => 95000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 17:24:10] codia: 30140 | year: 2024 | apiType: cars
+PRICE FOUND: 90000000
+[2025-06-25 17:25:18] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 17:25:18] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 17:25:18] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 17:28:53] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 17:28:53] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 17:28:53] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 17:43:15] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 17:43:15] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 17:43:15] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 17:43:54] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 17:43:54] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 17:43:54] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 18:03:32] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 18:03:32] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 18:03:32] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-25 18:06:28] codia: 320803 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/320803/prices/
+RESPONSE: [{"price":31500,"year":2024},{"price":33000,"year":2025}]
+
+[2025-06-25 18:06:28] codia: 320803 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 31500
+            [year] => 2024
+        )
+
+    [1] => Array
+        (
+            [price] => 33000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 18:06:28] codia: 320803 | year: 2024 | apiType: cars
+PRICE FOUND: 31500000
+[2025-06-25 18:07:23] codia: 320803 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/320803/list_price
+RESPONSE: {"list_price":37800}
+
+[2025-06-25 18:07:23] codia: 320803 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 37800
+)
+
+[2025-06-25 18:07:23] codia: 320803 | year: 2025 | apiType: cars
+PRICE FOUND: 37800000
+[2025-06-25 18:16:12] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 18:16:12] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 18:16:12] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 18:17:00] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":75000,"year":2023},{"price":79000,"year":2024},{"price":83000,"year":2025}]
+
+[2025-06-25 18:17:00] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 75000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 79000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 83000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-25 18:17:00] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 79000000
+[2025-06-25 18:17:41] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-06-25 18:17:41] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-06-25 18:17:41] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-06-30 16:54:31] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-06-30 16:54:31] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-06-30 16:54:31] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-01 16:14:14] codia: 30140 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30140/prices/
+RESPONSE: [{"price":60000,"year":2018},{"price":64000,"year":2019},{"price":69000,"year":2020},{"price":74000,"year":2021},{"price":79000,"year":2022},{"price":84000,"year":2023},{"price":89000,"year":2024},{"price":94000,"year":2025}]
+
+[2025-07-01 16:14:14] codia: 30140 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 60000
+            [year] => 2018
+        )
+
+    [1] => Array
+        (
+            [price] => 64000
+            [year] => 2019
+        )
+
+    [2] => Array
+        (
+            [price] => 69000
+            [year] => 2020
+        )
+
+    [3] => Array
+        (
+            [price] => 74000
+            [year] => 2021
+        )
+
+    [4] => Array
+        (
+            [price] => 79000
+            [year] => 2022
+        )
+
+    [5] => Array
+        (
+            [price] => 84000
+            [year] => 2023
+        )
+
+    [6] => Array
+        (
+            [price] => 89000
+            [year] => 2024
+        )
+
+    [7] => Array
+        (
+            [price] => 94000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 16:14:14] codia: 30140 | year: 2024 | apiType: cars
+PRICE FOUND: 89000000
+[2025-07-01 16:15:44] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-01 16:15:44] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 16:15:44] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-01 16:16:52] codia: 30140 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30140/prices/
+RESPONSE: [{"price":60000,"year":2018},{"price":64000,"year":2019},{"price":69000,"year":2020},{"price":74000,"year":2021},{"price":79000,"year":2022},{"price":84000,"year":2023},{"price":89000,"year":2024},{"price":94000,"year":2025}]
+
+[2025-07-01 16:16:52] codia: 30140 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 60000
+            [year] => 2018
+        )
+
+    [1] => Array
+        (
+            [price] => 64000
+            [year] => 2019
+        )
+
+    [2] => Array
+        (
+            [price] => 69000
+            [year] => 2020
+        )
+
+    [3] => Array
+        (
+            [price] => 74000
+            [year] => 2021
+        )
+
+    [4] => Array
+        (
+            [price] => 79000
+            [year] => 2022
+        )
+
+    [5] => Array
+        (
+            [price] => 84000
+            [year] => 2023
+        )
+
+    [6] => Array
+        (
+            [price] => 89000
+            [year] => 2024
+        )
+
+    [7] => Array
+        (
+            [price] => 94000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 16:16:52] codia: 30140 | year: 2024 | apiType: cars
+PRICE FOUND: 89000000
+[2025-07-01 17:07:45] codia: 60534 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/60534/list_price
+RESPONSE: {"list_price":47570}
+
+[2025-07-01 17:07:45] codia: 60534 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 47570
+)
+
+[2025-07-01 17:07:45] codia: 60534 | year: 2025 | apiType: cars
+PRICE FOUND: 47570000
+[2025-07-01 17:55:09] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-07-01 17:55:09] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-07-01 17:55:09] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-07-01 18:10:41] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-01 18:10:41] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 18:10:41] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-01 18:12:50] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-01 18:12:50] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 18:12:50] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-01 18:16:44] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-01 18:16:44] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 18:16:44] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-01 18:18:34] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-07-01 18:18:34] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-07-01 18:18:34] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-07-01 18:20:01] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-01 18:20:01] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 18:20:01] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-01 18:25:01] codia: 9350044 | year: 2025 | apiType: motorcycles
+URL: https://api.infoauto.com.ar/motorcycles/pub/models/9350044/list_price
+RESPONSE: {"list_price":14260}
+
+[2025-07-01 18:25:01] codia: 9350044 | year: 2025 | apiType: motorcycles
+PARSED: Array
+(
+    [list_price] => 14260
+)
+
+[2025-07-01 18:25:01] codia: 9350044 | year: 2025 | apiType: motorcycles
+PRICE FOUND: 14260000
+[2025-07-01 18:30:29] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-07-01 18:30:29] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-07-01 18:30:29] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-07-01 18:42:24] codia: 60534 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/60534/list_price
+RESPONSE: {"list_price":47570}
+
+[2025-07-01 18:42:24] codia: 60534 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 47570
+)
+
+[2025-07-01 18:42:24] codia: 60534 | year: 2025 | apiType: cars
+PRICE FOUND: 47570000
+[2025-07-01 18:44:16] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-01 18:44:16] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 18:44:16] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-01 18:47:08] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-01 18:47:08] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 18:47:08] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-01 18:48:47] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-01 18:48:47] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-01 18:48:47] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-02 15:13:30] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-07-02 15:13:30] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-07-02 15:13:30] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-07-02 15:15:06] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-02 15:15:06] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-02 15:15:06] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-02 15:17:16] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-07-02 15:17:16] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-07-02 15:17:16] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-07-02 15:22:26] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-07-02 15:22:26] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-07-02 15:22:26] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000
+[2025-07-02 15:24:32] codia: 30147 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/prices/
+RESPONSE: [{"price":73000,"year":2023},{"price":77000,"year":2024},{"price":81000,"year":2025}]
+
+[2025-07-02 15:24:32] codia: 30147 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 73000
+            [year] => 2023
+        )
+
+    [1] => Array
+        (
+            [price] => 77000
+            [year] => 2024
+        )
+
+    [2] => Array
+        (
+            [price] => 81000
+            [year] => 2025
+        )
+
+)
+
+[2025-07-02 15:24:32] codia: 30147 | year: 2024 | apiType: cars
+PRICE FOUND: 77000000
+[2025-07-02 15:30:17] codia: 30147 | year: 2025 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/30147/list_price
+RESPONSE: {"list_price":91683}
+
+[2025-07-02 15:30:17] codia: 30147 | year: 2025 | apiType: cars
+PARSED: Array
+(
+    [list_price] => 91683
+)
+
+[2025-07-02 15:30:17] codia: 30147 | year: 2025 | apiType: cars
+PRICE FOUND: 91683000

@@ -97,7 +97,7 @@
           </li>
           <li>
             <a
-              href="nosotros.html"
+              href="nosotrosNew.html"
               itemprop="url"
               class="scroller outline"
               data-text="Nosotros"
@@ -181,85 +181,89 @@
     <script src="cotizar.js"></script>
     <!-- AGREGAR este script específico para contacto.html -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar transición de entrada
-            document.body.classList.add('page-transition', 'fade-in');
-            
-            console.log('contacto.html cargado, verificando menú...');
-            
-            // Forzar inicialización del menú hamburguesa
-            setTimeout(function() {
-                const hamburguer = document.getElementById("hamburguer-menu");
-                const menu = document.getElementById("menu");
-                const closeBtn = document.getElementById("close-menu");
-                
-                if (hamburguer && menu) {
-                    console.log('Elementos encontrados en contacto.html');
-                    
-                    // Función para cerrar menú
-                    function closeMenu() {
-                        menu.classList.add("hidden");
-                        menu.classList.remove("mobile-active");
-                        document.getElementById("menu-overlay").classList.remove("active");
-                    }
-                    
-                    // Evento directo como fallback para hamburguesa
-                    hamburguer.onclick = function(e) {
-                        e.preventDefault();
-                        console.log('Fallback: clic hamburguesa en contacto.html');
-                        
-                        if (menu.classList.contains("mobile-active")) {
-                            closeMenu();
-                        } else {
-                            menu.classList.remove("hidden");
-                            menu.classList.add("mobile-active");
-                            document.getElementById("menu-overlay").classList.add("active");
-                        }
-                    };
-                    
-                    // Evento directo para botón cerrar
-                    if (closeBtn) {
-                        closeBtn.onclick = function(e) {
-                            e.preventDefault();
-                            console.log('Fallback: clic cerrar en contacto.html');
-                            closeMenu();
-                        };
-                    }
-                } else {
-                    console.error('Elementos del menú NO encontrados en contacto.html');
-                }
-            }, 100);
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        // Inicializar transición de entrada
+        document.body.classList.add("page-transition", "fade-in");
+
+        console.log("contacto.html cargado, verificando menú...");
+
+        // Forzar inicialización del menú hamburguesa
+        setTimeout(function () {
+          const hamburguer = document.getElementById("hamburguer-menu");
+          const menu = document.getElementById("menu");
+          const closeBtn = document.getElementById("close-menu");
+
+          if (hamburguer && menu) {
+            console.log("Elementos encontrados en contacto.html");
+
+            // Función para cerrar menú
+            function closeMenu() {
+              menu.classList.add("hidden");
+              menu.classList.remove("mobile-active");
+              document
+                .getElementById("menu-overlay")
+                .classList.remove("active");
+            }
+
+            // Evento directo como fallback para hamburguesa
+            hamburguer.onclick = function (e) {
+              e.preventDefault();
+              console.log("Fallback: clic hamburguesa en contacto.html");
+
+              if (menu.classList.contains("mobile-active")) {
+                closeMenu();
+              } else {
+                menu.classList.remove("hidden");
+                menu.classList.add("mobile-active");
+                document.getElementById("menu-overlay").classList.add("active");
+              }
+            };
+
+            // Evento directo para botón cerrar
+            if (closeBtn) {
+              closeBtn.onclick = function (e) {
+                e.preventDefault();
+                console.log("Fallback: clic cerrar en contacto.html");
+                closeMenu();
+              };
+            }
+          } else {
+            console.error("Elementos del menú NO encontrados en contacto.html");
+          }
+        }, 100);
+      });
     </script>
     <script>
-      document.getElementById('contact-form').addEventListener('submit', async (e) => {
+      document
+        .getElementById("contact-form")
+        .addEventListener("submit", async (e) => {
           e.preventDefault();
 
           const formData = {
-              name: document.getElementById('contact-name').value,
-              email: document.getElementById('contact-email').value,
-              phone: document.getElementById('contact-phone').value,
-              message: document.getElementById('contact-message').value
+            name: document.getElementById("contact-name").value,
+            email: document.getElementById("contact-email").value,
+            phone: document.getElementById("contact-phone").value,
+            message: document.getElementById("contact-message").value,
           };
 
           try {
-              const response = await fetch('http://localhost:5000/api/contact', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(formData)
-              });
+            const response = await fetch("http://localhost:5000/api/contact", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData),
+            });
 
-              if (response.ok) {
-                  alert('Mensaje enviado correctamente.');
-                  document.getElementById('contact-form').reset();
-              } else {
-                  alert('Error al enviar el mensaje. Inténtalo nuevamente.');
-              }
+            if (response.ok) {
+              alert("Mensaje enviado correctamente.");
+              document.getElementById("contact-form").reset();
+            } else {
+              alert("Error al enviar el mensaje. Inténtalo nuevamente.");
+            }
           } catch (error) {
-              console.error('Error:', error);
-              alert('Error al enviar el mensaje. Inténtalo nuevamente.');
+            console.error("Error:", error);
+            alert("Error al enviar el mensaje. Inténtalo nuevamente.");
           }
-      });
+        });
     </script>
   </body>
 </html>
