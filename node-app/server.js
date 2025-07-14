@@ -249,76 +249,58 @@ app.post('/api/data', (req, res) => {
         });
     });
 
-    const updateProductos = Object.entries(productos).flatMap(([nombre, { plazos }]) =>
+    const updateProductos = Object.entries(productos).flatMap(
+      ([nombre, { plazos }]) =>
         Object.entries(plazos).map(([plazo, { interest, fee, minfee }]) => {
-            return new Promise((resolve, reject) => {
-                const updateQuery = `
-                    UPDATE productos
-                    SET interest = ?, fee = ?, minfee = ?
-                    WHERE nombre = ? AND plazo = ?
-                `;
-                db.query(updateQuery, [interest, fee, minfee, newProductName || nombre, plazo], (err, result) => {
-                    if (err) return reject(err);
-                    resolve(result);
-                });
-            });
+          return new Promise((resolve, reject) => {
+            const query = `
+                INSERT INTO productos (nombre, plazo, interest, fee, minfee)
+                VALUES (?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                    interest = VALUES(interest),
+                    fee = VALUES(fee),
+                    minfee = VALUES(minfee)
+            `;
+            db.query(
+              query,
+              [newProductName || nombre, plazo, interest, fee, minfee],
+              (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+              }
+            );
+          });
         })
     );
 
     const updateLtv = new Promise((resolve, reject) => {
-        if (newProductName && newProductName !== selectedProduct) {
-            // Eliminar registros antiguos de LTV con el nombre anterior
-            const deleteOldLtvQuery = `
-                DELETE FROM ltv WHERE producto = ?
-            `;
-            db.query(deleteOldLtvQuery, [selectedProduct], (err) => {
+      const ltvPromises = Object.entries(ltv).flatMap(([producto, years]) =>
+        Object.entries(years).map(([year, value]) => {
+          return new Promise((resolve, reject) => {
+            const query = `
+                    INSERT INTO ltv (producto, year, value, \`show\`)
+                    VALUES (?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
+                        value = VALUES(value),
+                        \`show\` = VALUES(\`show\`)
+                `;
+            db.query(
+              query,
+              [
+                newProductName || producto,
+                year,
+                value.value || value,
+                value.show ?? 1,
+              ],
+              (err, result) => {
                 if (err) return reject(err);
-
-                // Insertar o actualizar los nuevos registros de LTV
-                const ltvPromises = Object.entries(ltv).flatMap(([producto, years]) =>
-                    Object.entries(years).map(([year, value]) => {
-                        return new Promise((resolve, reject) => {
-                            const query = `
-                                INSERT INTO ltv (producto, year, value)
-                                VALUES (?, ?, ?)
-                                ON DUPLICATE KEY UPDATE
-                                value = VALUES(value)
-                            `;
-                            db.query(query, [newProductName || producto, year, value.value || value], (err, result) => {
-                                if (err) return reject(err);
-                                resolve(result);
-                            });
-                        });
-                    })
-                );
-
-                Promise.all(ltvPromises)
-                    .then(resolve)
-                    .catch(reject);
-            });
-        } else {
-            // Insertar o actualizar los registros de LTV sin eliminar
-            const ltvPromises = Object.entries(ltv).flatMap(([producto, years]) =>
-                Object.entries(years).map(([year, value]) => {
-                    return new Promise((resolve, reject) => {
-                        const query = `
-                            INSERT INTO ltv (producto, year, value)
-                            VALUES (?, ?, ?)
-                            ON DUPLICATE KEY UPDATE
-                            value = VALUES(value)
-                        `;
-                        db.query(query, [newProductName || producto, year, value.value || value], (err, result) => {
-                            if (err) return reject(err);
-                            resolve(result);
-                        });
-                    });
-                })
+                resolve(result);
+              }
             );
-
-            Promise.all(ltvPromises)
-                .then(resolve)
-                .catch(reject);
-        }
+          });
+        })
+      );
+      Promise.all(ltvPromises).then(resolve).catch(reject);
     });
 
     Promise.all([updateProductName, updateConfig, ...updateProductos, updateLtv])
