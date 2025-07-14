@@ -135,3 +135,6 @@ button {
         text-align: center;
     }
 }
+.dropdown-toggle::after {
+    display: none;
+}

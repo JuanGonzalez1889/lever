@@ -67,7 +67,7 @@ select {
     color: #0e152c;
     padding: .45rem 1.25rem;
     border-radius: 25px;
-    border: 1px solid #1fe5b7;
+    border: 1px solid #707070;
     font-size: 1.5rem;
     background: 0 0;
     opacity: 1;
@@ -152,8 +152,7 @@ h2 {
     background-color: #fff;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
+    max-width: 500px;
     border-radius: 8px;
     text-align: center;
 }
