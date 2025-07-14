@@ -276,32 +276,279 @@ body {
 
 @media (max-width: 900px) {
     .container.header-container {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 16px 12px 0 12px;
-    }
-
-    .logo-container img {
-        width: 140px;
-    }
-
-    .desktop-header-buttons {
-        margin-top: 12px;
-        gap: 8px;
+        max-width: 100%;
+        padding: 12px 8px;
     }
 
     .fullhero .container {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 24px;
+        gap: 18px;
+        padding: 0 8px;
+    }
+
+    .fullhero-text {
+        width: 100%;
+        margin-top: 18px;
     }
 
     .can img {
         width: 180px;
+        margin-right: 0;
+        margin-top: 0;
+    }
+
+    .btn_container {
+        margin-left: 0;
+        margin-top: 18px;
+    }
+
+    .agencias-title span {
+        font-size: 28px !important;
+    }
+
+    .financieras-flex {
+        flex-direction: column;
+        gap: 24px;
+        padding: 0 8px;
+        align-items: stretch;
+    }
+
+    .financieras-imgbox {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+    }
+
+    .financieras-text {
+        text-align: center;
+        font-size: 17px;
+        line-height: 1.3;
+    }
+
+    /* CONTACTO */
+    #contacto .container {
+        max-width: 98vw;
+        padding: 0 8px;
+    }
+
+    #contacto .container>div[style*="display: flex"] {
+        gap: 40px !important;
+    }
+
+    #contacto .container>div>div,
+    #contacto .container>div>form {
+        max-width: 100% !important;
+    }
+
+    #contacto .container>div>div {
+        margin-left: 0 !important;
+        align-items: center !important;
+    }
+
+    #contacto .container>div>div>div {
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
+        text-align: center !important;
+        font-size: 1rem !important;
+    }
+
+    #contacto .container>div>div>button {
+        width: 100% !important;
+        font-size: 1rem !important;
+        padding: 10px 0 !important;
+    }
+
+    #contacto .container>div>form input,
+    #contacto .container>div>form textarea {
+        font-size: 1rem !important;
+        padding: 14px 10px !important;
+    }
+
+    #contacto .container>div>form button {
+        font-size: 1rem !important;
+        padding: 10px 0 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .container.header-container {
+        padding: 8px 2vw;
+    }
+
+    .logo-container img {
+        width: 120px;
+    }
+
+    .desktop-header-buttons {
+        flex-direction: column;
+        margin-top: 8px;
+        gap: 6px;
+    }
+
+    .fullhero {
+        width: 80%;
+        margin-left: 40px;
+        padding: 71px 0 32px 0;
     }
 
     .fullhero h1 {
-        font-size: 2rem;
+        font-size: 1.1rem;
+        letter-spacing: -1px;
+        line-height: 1.2;
+    }
+
+    .fullhero-text p,
+    .fullhero-text strong {
+        font-size: 13px;
+    }
+
+    .btn_container {
+        margin-top: 10px;
+    }
+
+    .can img {
+        width: 90px;
+    }
+
+    .agencias-title {
+        margin: 12px 0 6px 0;
+    }
+
+    .agencias-title span {
+        font-size: 14px !important;
+    }
+
+    #nosotros .bubbles {
+        flex-direction: column;
+        gap: 4px 0 !important;
+        padding: 0;
+        min-height: unset;
+    }
+
+    #nosotros .bubbles .bubble {
+        width: 100%;
+        height: 90px;
+        min-height: 220px;
+        margin-bottom: 0 !important;
+    }
+
+    #nosotros .bubbles .bubble mark {
+        font-size: 1.1rem;
+    }
+
+    #nosotros .bubbles .bubble mark+p {
+        font-size: 0.7rem;
+    }
+
+    #nosotros .bubbles .bubble mark+p+p {
+        font-size: 0.6rem;
+    }
+
+    .financieras-flex {
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 2vw;
+    }
+
+    .financieras-imgbox {
+        width: 100%;
+        max-width: 90px;
+        height: auto;
+        min-height: unset;
+    }
+
+    .financieras-text,
+    .financieras-trabajamos,
+    .financieras-inst,
+    .financieras-primer {
+        font-size: 11px !important;
+        line-height: 1.1;
+    }
+
+    /* CONTACTO */
+    #contacto {
+        padding: 18px 0 0 0;
+    }
+
+    #contacto .container {
+        max-width: 72vw;
+        padding: 0 2vw;
+    }
+
+    .contacto-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+
+    #contacto .container>div[style*="display: flex"] {
+        flex-direction: column !important;
+        gap: 12px !important;
+        align-items: stretch !important;
+    }
+
+    #contacto .container>div>div,
+    #contacto .container>div>form {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    #contacto .container>div>div {
+        align-items: center !important;
+        margin-left: 0 !important;
+    }
+
+    #contacto .container>div>div>div {
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 6px !important;
+        text-align: center !important;
+        font-size: 0.85rem !important;
+    }
+
+    #contacto .container>div>div>span {
+        font-size: 0.9rem !important;
+    }
+
+    #contacto .container>div>div>button {
+        width: 100% !important;
+        font-size: 0.95rem !important;
+        padding: 8px 0 !important;
+    }
+
+    #contacto .container>div>form input,
+    #contacto .container>div>form textarea {
+        font-size: 0.85rem !important;
+        padding: 8px 6px !important;
+    }
+
+    #contacto .container>div>form button {
+        font-size: 0.95rem !important;
+        padding: 8px 0 !important;
+    }
+
+    /* Footer oculto solo en mobile */
+    footer,
+    .container.center,
+    .container-flex.center {
+        display: none !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* Cards una debajo de la otra en .container.wrapped */
+    .container.wrapped {
+        flex-direction: column !important;
+        gap: 10px !important;
+        align-items: center !important;
+        margin-left: 0 !important;
+        max-width: 100vw !important;
+        padding: 0 !important;
     }
 }
 
@@ -534,7 +781,7 @@ body {
 
 #nosotros .bubbles .bubble {
     text-align: center;
-    width: 18%;
+    width: 24%;
     height: 313px;
     background-size: contain !important;
     position: relative;
@@ -933,4 +1180,368 @@ button {
     text-decoration: none;
 }
 
-/* ====== FIN ESTILOS SECCIÓN CONTACTO ====== */
+/* ===================== */
+/* RESPONSIVE AJUSTES PARA MOBILE Y TABLET EN SECCIÓN NOSOTROS Y FOOTER */
+/* ===================== */
+
+@media (max-width: 900px) {
+    .container.header-container {
+        max-width: 100%;
+        padding: 12px 8px;
+    }
+
+    .fullhero .container {
+        flex-direction: column;
+        gap: 18px;
+        padding: 0 8px;
+    }
+
+    .fullhero-text {
+        width: 100%;
+        margin-top: 18px;
+    }
+
+    .can img {
+        width: 180px;
+        margin-right: 0;
+        margin-top: 0;
+    }
+
+    .btn_container {
+        margin-left: 0;
+        margin-top: 18px;
+    }
+
+    .agencias-title span {
+        font-size: 28px !important;
+    }
+
+    .financieras-flex {
+        flex-direction: column;
+        gap: 24px;
+        padding: 0 8px;
+        align-items: stretch;
+    }
+
+    .financieras-imgbox {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+    }
+
+    .financieras-text {
+        text-align: center;
+        font-size: 17px;
+        line-height: 1.3;
+    }
+
+    /* CONTACTO */
+    #contacto .container {
+        max-width: 98vw;
+        padding: 0 8px;
+    }
+
+    #contacto .container>div[style*="display: flex"] {
+        gap: 40px !important;
+    }
+
+    #contacto .container>div>div,
+    #contacto .container>div>form {
+        max-width: 100% !important;
+    }
+
+    #contacto .container>div>div {
+        margin-left: 0 !important;
+        align-items: center !important;
+    }
+
+    #contacto .container>div>div>div {
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
+        text-align: center !important;
+        font-size: 1rem !important;
+    }
+
+    #contacto .container>div>div>button {
+        width: 100% !important;
+        font-size: 1rem !important;
+        padding: 10px 0 !important;
+    }
+
+    #contacto .container>div>form input,
+    #contacto .container>div>form textarea {
+        font-size: 1rem !important;
+        padding: 14px 10px !important;
+    }
+
+    #contacto .container>div>form button {
+        font-size: 1rem !important;
+        padding: 10px 0 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .container.header-container {
+        padding: 8px 2vw;
+    }
+
+    .logo-container img {
+        width: 120px;
+    }
+
+    .desktop-header-buttons {
+        flex-direction: column;
+        margin-top: 8px;
+        gap: 6px;
+    }
+
+    .fullhero {
+        padding: 24px 0 12px 0;
+    }
+
+    .fullhero h1 {
+        font-size: 1.1rem;
+        letter-spacing: -1px;
+        line-height: 1.2;
+    }
+
+    .fullhero-text p,
+    .fullhero-text strong {
+        font-size: 13px;
+    }
+
+    .btn_container {
+        margin-top: 10px;
+    }
+
+    .can img {
+        width: 90px;
+    }
+
+    .agencias-title {
+        margin: 12px 0 6px 0;
+    }
+
+    .agencias-title span {
+        font-size: 14px !important;
+    }
+
+    #nosotros .bubbles .bubble.bubble04 {
+        background: url("./images/bubbles/buble04.svg") center center no-repeat;
+        margin-top: -1px;
+    }
+
+    #nosotros .bubbles .bubble.bubble03 {
+        background: url(./images/bubbles/buble03.svg) center center no-repeat;
+        margin-top: 1px;
+    }
+
+    #nosotros .bubbles {
+        flex-direction: column;
+        gap: 4px 0 !important;
+        padding: 0;
+        min-height: unset;
+    }
+
+    #nosotros .bubbles .bubble {
+        width: 100%;
+        height: 90px;
+        margin-bottom: 0 !important;
+    }
+
+    #nosotros .bubbles .bubble mark {
+        font-size: 1.1rem;
+    }
+
+    #nosotros .bubbles .bubble mark+p {
+        font-size: 0.7rem;
+    }
+
+    #nosotros .bubbles .bubble mark+p+p {
+        font-size: 0.6rem;
+    }
+
+    .financieras-flex {
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 2vw;
+    }
+
+    .financieras-imgbox {
+        width: 100%;
+        max-width: 90px;
+        height: auto;
+        min-height: unset;
+    }
+
+    .financieras-text,
+    .financieras-trabajamos,
+    .financieras-inst,
+    .financieras-primer {
+        font-size: 11px !important;
+        line-height: 1.1;
+    }
+
+    /* CONTACTO */
+    #contacto {
+        padding: 18px 0 0 0;
+    }
+
+    #contacto .container {
+        max-width: 72vw;
+        padding: 0 2vw;
+    }
+
+    .contacto-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+
+    #contacto .container>div[style*="display: flex"] {
+        flex-direction: column !important;
+        gap: 12px !important;
+        align-items: stretch !important;
+    }
+
+    #contacto .container>div>div,
+    #contacto .container>div>form {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    #contacto .container>div>div {
+        align-items: center !important;
+        margin-left: 0 !important;
+    }
+
+    #contacto .container>div>div>div {
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 6px !important;
+        text-align: center !important;
+        font-size: 0.85rem !important;
+    }
+
+    #contacto .container>div>div>span {
+        font-size: 0.9rem !important;
+    }
+
+    #contacto .container>div>div>button {
+        width: 100% !important;
+        font-size: 0.95rem !important;
+        padding: 8px 0 !important;
+    }
+
+    #contacto .container>div>form input,
+    #contacto .container>div>form textarea {
+        font-size: 0.85rem !important;
+        padding: 8px 6px !important;
+    }
+
+    #contacto .container>div>form button {
+        font-size: 0.95rem !important;
+        padding: 8px 0 !important;
+    }
+
+    /* Footer oculto solo en mobile */
+    footer,
+    .container.center,
+    .container-flex.center {
+        display: none !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* Cards una debajo de la otra en .container.wrapped */
+    .container.wrapped {
+        flex-direction: column !important;
+        gap: 10px !important;
+        align-items: center !important;
+        margin-left: 0 !important;
+        max-width: 100vw !important;
+        padding: 0 !important;
+    }
+    
+}
+
+/* ...existing code... */
+@media (max-width: 900px) {
+
+    /* ...existing code... */
+    /* Cards una debajo de la otra en .container.wrapped */
+    .container.wrapped {
+        flex-direction: column !important;
+        gap: 18px !important;
+        align-items: center !important;
+        margin-left: 0 !important;
+        max-width: 100vw !important;
+        padding: 0 !important;
+    }
+
+    .container.wrapped .videos {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 18px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 340px !important;
+        margin: 0 auto !important;
+    }
+
+    .container.wrapped .videos>div {
+        width: 100% !important;
+        max-width: 340px !important;
+        margin: 0 auto 12px auto !important;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container.wrapped .videos div a img {
+        width: 100% !important;
+        max-width: 320px !important;
+        height: auto !important;
+    }
+}
+
+@media (max-width: 600px) {
+
+    /* ...existing code... */
+    .container.wrapped {
+        flex-direction: column !important;
+        gap: 10px !important;
+        align-items: center !important;
+        margin-left: 0 !important;
+        max-width: 100vw !important;
+        padding: 0 !important;
+    }
+
+    .container.wrapped .videos {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 95vw !important;
+        margin: 0 auto !important;
+    }
+
+    .container.wrapped .videos>div {
+        width: 100% !important;
+        max-width: 220px !important;
+        margin: 0 auto 8px auto !important;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container.wrapped .videos div a img {
+        width: 100% !important;
+        max-width: 200px !important;
+        height: auto !important;
+    }
+}

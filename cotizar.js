@@ -2977,7 +2977,7 @@ document.addEventListener("DOMContentLoaded", () => {
           anioOptions.innerHTML = "";
           const years = [
             2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015,
-            2014, 2013, 2012,
+            2014, 2013, 2012, 2011, 2010
           ];
           years.forEach((year) => {
             const option = document.createElement("div");
@@ -3569,34 +3569,94 @@ function getSelectedCategoria() {
   return "autos";
 }
 
-// Configuración de categorías y productos
 function actualizarProductosPorCategoria(categoria) {
   if (!window.ltvData) return;
   const productOptions = document.getElementById("product-options");
   productOptions.innerHTML = "";
 
+  // Obtener el año seleccionado
+  const yearPlaceholder = document.querySelector(
+    `[onclick="toggleCustomOptions('anio-options')"]`
+  );
+  const year =
+    yearPlaceholder?.dataset.value || yearPlaceholder?.textContent?.trim();
+
   // Filtrar productos según la categoría seleccionada
   let productos = Object.keys(window.ltvData);
 
-  // Si la categoría es "motos", solo mostrar productos que incluyan "moto" en el nombre (ignora mayúsculas/minúsculas)
   if (categoria && categoria.toLowerCase().includes("moto")) {
     productos = productos.filter((nombre) =>
       nombre.toLowerCase().includes("moto")
     );
   } else {
-    // Si NO es motos, ocultar productos que incluyan "moto" en el nombre
     productos = productos.filter(
       (nombre) => !nombre.toLowerCase().includes("moto")
     );
   }
 
+  // --- FILTRAR POR AÑO DISPONIBLE ---
+  productos = productos.filter((nombre) => {
+    const ltv = window.ltvData[nombre]?.ltv;
+    return ltv && ltv[year];
+  });
+
   // Ordenar alfabéticamente
   productos.sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
 
+  // --- NUEVA LÓGICA ---
+  const productSelectContainer = document.querySelector(
+    ".custom-options-container.product-select"
+  );
+  const productoPlaceholder = document.querySelector(
+    `[onclick="toggleCustomOptions('product-options')]`
+  );
+  const maxAmount = document.querySelector(".custom-summary-amount");
+  const customSummaryInput = document.querySelector(".custom-summary-input");
+
   if (productos.length === 0) {
-    productOptions.innerHTML =
-      '<div class="custom-option">No hay productos disponibles</div>';
+    // Deshabilitar el select de productos y mostrar "CONSULTANOS"
+    if (productSelectContainer) {
+      productSelectContainer.classList.add("disabled");
+    }
+    if (productoPlaceholder) {
+      productoPlaceholder.textContent = "Sin productos disponibles";
+      productoPlaceholder.style.pointerEvents = "none";
+      productoPlaceholder.style.opacity = "0.5";
+      productoPlaceholder.dataset.value = "";
+      productoPlaceholder.dataset.label = "";
+    }
+    if (maxAmount) {
+      maxAmount.textContent = "CONSULTANOS";
+    }
+    // Deshabilitar y grisear el input de monto
+    if (customSummaryInput) {
+      customSummaryInput.disabled = true;
+      customSummaryInput.style.opacity = "0.5";
+      customSummaryInput.style.pointerEvents = "none";
+      customSummaryInput.value = "";
+    }
     return;
+  } else {
+    // Habilitar el select si hay productos
+    if (productSelectContainer) {
+      productSelectContainer.classList.remove("disabled");
+    }
+    if (productoPlaceholder) {
+      productoPlaceholder.textContent = "Seleccionar Producto";
+      productoPlaceholder.style.pointerEvents = "auto";
+      productoPlaceholder.style.opacity = "1";
+      productoPlaceholder.dataset.value = "";
+      productoPlaceholder.dataset.label = "";
+    }
+    if (maxAmount) {
+      maxAmount.textContent = "Seleccioná un producto";
+    }
+    // Habilitar el input de monto
+    if (customSummaryInput) {
+      customSummaryInput.disabled = false;
+      customSummaryInput.style.opacity = "1";
+      customSummaryInput.style.pointerEvents = "auto";
+    }
   }
 
   productos.forEach((producto) => {
@@ -3632,6 +3692,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const categoria =
       categoriaPlaceholder.dataset.value ||
       categoriaPlaceholder.textContent.trim().toLowerCase();
+    actualizarProductosPorCategoria(categoria);
+  }
+});
+document.getElementById("anio-options").addEventListener("click", (event) => {
+  if (event.target.classList.contains("custom-option")) {
+    const categoria = getSelectedCategoria();
     actualizarProductosPorCategoria(categoria);
   }
 });
