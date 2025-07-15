@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Dashboard.css'; // Importar el archivo CSS personalizado
 import Cotizador from './Cotizador'; // Importar el nuevo componente Cotizador
 
-const API_URL = process.env.REACT_APP_API_URL; // Leer la URL desde .env
+const API_URL = "https://api.lever.com.ar" // Leer la URL desde .env
 console.log('API_URL (Dashboard):', API_URL); // Verificar que se está utilizando el .env
 
 function Tablero() {
