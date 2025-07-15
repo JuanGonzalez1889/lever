@@ -58,11 +58,18 @@ function Tablero() {
     };
 
     const handleSave = async () => {
-        const updatedLtv = { ...ltv };
-        // Convertir los valores de LTV a números si es necesario
-        Object.keys(updatedLtv).forEach(year => {
-            if (typeof updatedLtv[year] === 'object' && updatedLtv[year].value) {
-                updatedLtv[year] = parseFloat(updatedLtv[year].value);
+        // --- CORRECCIÓN: Normalizar el objeto LTV ---
+        const updatedLtv = {};
+        Object.keys(ltv).forEach(year => {
+            // Si el valor es un objeto, mantener value y show
+            if (typeof ltv[year] === 'object') {
+                updatedLtv[year] = {
+                    value: ltv[year].value ?? ltv[year],
+                    show: ltv[year].show ?? 1
+                };
+            } else {
+                // Si es un número, poner como value y show=1
+                updatedLtv[year] = { value: ltv[year], show: 1 };
             }
         });
 
