@@ -52,7 +52,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false, // <-- Para desarrollo local, debe ser false
+      secure: true, // <-- Para desarrollo local, debe ser false
       httpOnly: true,
       sameSite: "lax",
     },
