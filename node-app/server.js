@@ -52,7 +52,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: true, // Solo para HTTPS
+      secure: false, // <-- Para desarrollo local, debe ser false
       httpOnly: true,
       sameSite: "lax",
     },
@@ -222,14 +222,44 @@ app.post('/api/data', (req, res) => {
             db.query(updateProductosQuery, [newProductName, selectedProduct], (err) => {
                 if (err) return reject(err);
 
-                // Actualizar el nombre del producto en la tabla `ltv`
-                const updateLtvQuery = `
-                    UPDATE ltv SET producto = ?
-                    WHERE producto = ?
+                // --- CORRECCIÓN: Eliminar duplicados antes de actualizar ---
+                const checkDuplicatesQuery = `
+                    SELECT year FROM ltv WHERE producto = ? AND year IN (
+                        SELECT year FROM ltv WHERE producto = ?
+                    )
                 `;
-                db.query(updateLtvQuery, [newProductName, selectedProduct], (err) => {
+                db.query(checkDuplicatesQuery, [newProductName, selectedProduct], (err, duplicateRows) => {
                     if (err) return reject(err);
-                    resolve();
+
+                    if (duplicateRows.length > 0) {
+                        // Eliminar los duplicados antes de actualizar
+                        const yearsToDelete = duplicateRows.map(r => r.year);
+                        const deleteQuery = `
+                            DELETE FROM ltv WHERE producto = ? AND year IN (${yearsToDelete.map(() => '?').join(',')})
+                        `;
+                        db.query(deleteQuery, [newProductName, ...yearsToDelete], (err) => {
+                            if (err) return reject(err);
+                            // Ahora sí actualiza el nombre en LTV
+                            const updateLtvQuery = `
+                                UPDATE ltv SET producto = ?
+                                WHERE producto = ?
+                            `;
+                            db.query(updateLtvQuery, [newProductName, selectedProduct], (err) => {
+                                if (err) return reject(err);
+                                resolve();
+                            });
+                        });
+                    } else {
+                        // Si no hay duplicados, actualizar el nombre en LTV
+                        const updateLtvQuery = `
+                            UPDATE ltv SET producto = ?
+                            WHERE producto = ?
+                        `;
+                        db.query(updateLtvQuery, [newProductName, selectedProduct], (err) => {
+                            if (err) return reject(err);
+                            resolve();
+                        });
+                    }
                 });
             });
         } else {
@@ -252,6 +282,15 @@ app.post('/api/data', (req, res) => {
     const updateProductos = Object.entries(productos).flatMap(
       ([nombre, { plazos }]) =>
         Object.entries(plazos).map(([plazo, { interest, fee, minfee }]) => {
+          // Validación de valores
+          if (
+            interest === undefined || interest === '' || isNaN(Number(interest)) ||
+            fee === undefined || fee === '' || isNaN(Number(fee)) ||
+            minfee === undefined || minfee === '' || isNaN(Number(minfee))
+          ) {
+            console.error(`Valores inválidos en producto ${nombre}, plazo ${plazo}:`, { interest, fee, minfee });
+            return Promise.reject(new Error(`Valores inválidos en producto ${nombre}, plazo ${plazo}`));
+          }
           return new Promise((resolve, reject) => {
             const query = `
                 INSERT INTO productos (nombre, plazo, interest, fee, minfee)
@@ -276,6 +315,15 @@ app.post('/api/data', (req, res) => {
     const updateLtv = new Promise((resolve, reject) => {
       const ltvPromises = Object.entries(ltv).flatMap(([producto, years]) =>
         Object.entries(years).map(([year, value]) => {
+          // Validación de LTV
+          let ltvValue = value.value ?? value;
+          let ltvShow = value.show ?? 1;
+          if (
+            ltvValue === undefined || ltvValue === '' || isNaN(Number(ltvValue))
+          ) {
+            console.error(`LTV inválido para producto ${producto}, año ${year}:`, value);
+            return Promise.reject(new Error(`LTV inválido para producto ${producto}, año ${year}`));
+          }
           return new Promise((resolve, reject) => {
             const query = `
                     INSERT INTO ltv (producto, year, value, \`show\`)
@@ -307,7 +355,7 @@ app.post('/api/data', (req, res) => {
         .then(() => res.json({ success: true }))
         .catch(err => {
             console.error('Error saving data:', err);
-            res.status(500).json({ success: false, message: 'Internal Server Error' });
+            res.status(400).json({ success: false, message: err.message || 'Datos inválidos' });
         });
 });
 
