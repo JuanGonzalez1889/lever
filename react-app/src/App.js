@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Login from './Login';
 import Dashboard from './Dashboard';
 
-const API_URL = process.env.REACT_APP_API_URL; // Leer la URL desde .env
+const API_URL = "https://api.lever.com.ar"; // Leer la URL desde .env
 console.log('API_URL (App):', API_URL); // Verificar que se está utilizando el .env
 
 function App() {
