@@ -31,7 +31,7 @@ db.connect((err) => {
 
 app.use(bodyParser.json());
 
-const allowedOrigins = [process.env.CLIENT_URL, "http://localhost"]; // Agregar http://localhost como origen permitido
+const allowedOrigins = [process.env.CLIENT_URL, "http://api.lever.com.ar/"]; // Agregar http://localhost como origen permitido
 
 app.use(
   cors({
