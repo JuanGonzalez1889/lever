@@ -1,5 +1,13 @@
 /* === Desktop (mayor a 1024px) === */
 @media (min-width: 1024px) and (max-width: 1536px) {
+    .selected-bold {
+        font-weight: bold !important;
+        color: #222 !important;
+        /* Opcional: para que se note más */
+    }
+
+    
+
     /* Estilos para desktop estándar */
 }
 
@@ -16,11 +24,141 @@
         padding: 0;
         background-color: #f4f4f4;
     }
+
+    .selected-bold {
+        font-weight: bold !important;
+        color: #222 !important;
+        /* Opcional: para que se note más */
+    }
+
+    #select-cuota-message.hidden {
+        visibility: hidden;
+        display: block;
+    }
+
+    .cuota-info-container {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .mensaje-ayuda-cuota-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: flex-start;
+    }
+
+    .cuota-info-btn {
+        background: #28d89e;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(40, 216, 158, 0.07);
+        transition: background 0.2s;
+        position: relative;
+    }
+
+    .cuota-info-btn:hover {
+        background: #25b98c;
+    }
+
+    .cuota-info-tooltip {
+        display: none;
+        position: absolute;
+        bottom: 120%;
+        /* Aparece arriba del botón */
+        left: 50%;
+        transform: translateX(-5%);
+        background: #28d89e;
+        color: #fff;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: bold;
+        line-height: 1.4;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(40, 216, 158, 0.07);
+        max-width: 340px;
+        width: 251px;
+    }
+
+    .cuota-info-tooltip.active {
+        display: block;
+    }
 }
 
 /* === Desktop grande (mayor a 1440px) === */
 @media (min-width: 1024px) and (max-width: 4608px) {
+    .cuota-info-container {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
 
+    .mensaje-ayuda-cuota-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: flex-start;
+    }
+
+    .cuota-info-btn {
+        background: #28d89e;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(40, 216, 158, 0.07);
+        transition: background 0.2s;
+        position: relative;
+    }
+
+    .cuota-info-btn:hover {
+        background: #25b98c;
+    }
+
+    .cuota-info-tooltip {
+        display: none;
+        position: absolute;
+        bottom: 120%;
+        /* Aparece arriba del botón */
+        left: 50%;
+        transform: translateX(-5%);
+        background: #28d89e;
+        color: #fff;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 9px;
+        height: 4rem;
+        text-align: center;
+        font-weight: bold;
+        line-height: 1.4;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(40, 216, 158, 0.07);
+        max-width: 340px;
+    }
+
+    .cuota-info-tooltip.active {
+        display: block;
+    }
 
     .hamburguer span {
         display: none;
@@ -31,7 +169,7 @@
         right: 11%;
         /* left: 0; */
         bottom: 15px;
-        width: 69.72px;
+        width: 65.72px;
         /* height: 69.72px; */
         background: #2ADC9F;
         border: none;
@@ -377,7 +515,6 @@
         background: none;
         font: normal normal 300 14px / 15px Montserrat;
         color: #15224F;
-        opacity: 0.5;
         transition: opacity 0.5s ease;
     }
 
@@ -741,7 +878,7 @@
 
     #step-2 .custom-options-extra.active {
         display: block;
-        margin-top: -55px;
+        margin-top: -58px;
     }
 
     #step-2 .custom-options-container {
@@ -832,7 +969,7 @@
         gap: 10px;
         /* Espaciado entre la imagen y el texto */
         padding: 10px 15px;
-        margin-top: 0rem;
+        margin-top: -3px;
         margin-bottom: 0rem;
         font: normal normal bold 14px / 15px Montserrat;
         color: #444444;
@@ -946,6 +1083,7 @@
         gap: 21px 42px;
         align-items: center;
         justify-items: center;
+        margin-top: 17px;
     }
 
     #step-3 .vehicle-summary {
@@ -979,7 +1117,7 @@
         font-weight: 300;
         color: #FFFFFF;
         margin: 0;
-        width: 134px;
+        width: 147px;
         height: 19px;
     }
 
@@ -1138,7 +1276,8 @@
         padding: 10px 15px;
         margin-left: 2rem;
         margin-right: 2rem;
-        margin-top: 13px;
+        margin-bottom: -2px;
+        margin-top: 0px;
         font: normal normal bold 14px / 15px Montserrat;
         color: #444444;
         cursor: pointer;
@@ -1222,7 +1361,7 @@
         font-size: 12px;
         font-weight: bold;
         color: #ffffff !important;
-        margin-left: 38.5rem;
+        margin-left: 34rem;
         margin-top: -13px;
     }
 
@@ -1284,6 +1423,7 @@
         gap: 23px 39px;
         align-items: center;
         justify-items: center;
+        margin-top: 3px;
     }
 
     #step-4 .vehicle-summary {
@@ -1315,7 +1455,7 @@
     #vehicle-brand-step4 {
         font-size: 14px;
         font-weight: 300;
-        width: 134px;
+        width: 145px;
         height: 19px;
         font-family: 'Montserrat', sans-serif;
         color: #FFFFFF;
@@ -1388,10 +1528,10 @@
     }
 
     #step-4 .selected-product {
-        width: 94px;
-        height: 17px;
+        width: 110px;
+        height: 24px;
         border: 1px solid #28D89E;
-        font-size: 9px;
+        font-size: 8px;
         font-weight: bold;
         display: flex;
         align-items: center;
@@ -1406,7 +1546,7 @@
         width: 315px;
         height: 274px;
         margin-left: 17px;
-        margin-top: -6px;
+        margin-top: -17px;
     }
 
     #step-4 .scrollable-item {
@@ -1513,18 +1653,25 @@
     }
 
     #step-4 .mensaje4 {
-        margin-top: 5px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
+        margin-top: 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        color: #fff;
+        font-weight: bold;
     }
 
     #step-4 .navigation-buttons {
-        margin-top: 165px;
+        margin-top: 185px;
+        margin-bottom: -61px;
         margin-left: 43px;
         display: flex;
         justify-content: center;
         gap: 26px;
+    }
+
+    #select-cuota-message.hidden {
+        visibility: hidden;
+        display: block;
     }
 
     #step-4 .next-button {
@@ -1618,9 +1765,8 @@
         text-align: center;
         margin: 0;
         padding: 0;
-        margin-top: 5px;
+        margin-top: 10px;
         margin-bottom: 0;
-        margin-left: 0;
     }
 
 
@@ -2001,8 +2147,8 @@
         right: 63px;
         bottom: 0px !important;
         margin-bottom: -26rem;
-        width: 69.72px;
-        height: 69.72px;
+        width: 65.72px;
+       
         background: #2ADC9F;
         border: none;
         border-radius: 50%;
@@ -2072,7 +2218,7 @@
     /* Aplicar los mismos ajustes a otros select del paso 2 */
     #step-3 .custom-options-container .custom-options {
 
-        max-height: 148px;
+        max-height: 190px;
         padding-bottom: 15px;
         margin-bottom: 5px;
     }
@@ -2085,7 +2231,7 @@
     /* Aplicar los mismos ajustes a otros select del paso 2 */
     #step-2 .custom-options-container .custom-options {
 
-        max-height: 182px;
+        max-height: 196px;
         padding-bottom: 15px;
         margin-bottom: 5px;
     }
@@ -2106,5 +2252,24 @@
         border-radius: 0 0 30px 30px;
     }
 
+    .selected-bold {
+        font-weight: bold !important;
+        color: #222 !important;
+        /* Opcional: para que se note más */
+    }
 
+
+}
+
+#marca-options .custom-search-container,
+#modelo-options .custom-search-container {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.selected-bold {
+    font-weight: bold !important;
+    color: #222 !important;
+    /* Opcional: para que se note más */
 }

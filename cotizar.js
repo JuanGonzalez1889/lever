@@ -1,6 +1,28 @@
 // --- Declarar accessToken global al inicio ---
 let accessToken = null;
+window.productosData = [];
+window.segmentosData = [];
 
+fetch("http://localhost:5000/api/productos-con-segmento")
+  .then((res) => res.json())
+  .then((data) => {
+    window.productosData = data;
+    // Opcional: armar segmentos únicos
+    window.segmentosData = Array.from(
+      new Map(
+        data.map((item) => [
+          item.segmento_id,
+          { id: item.segmento_id, nombre: item.segmento_nombre },
+        ])
+      ).values()
+    );
+  });
+
+fetch("http://localhost:5000/api/data")
+  .then((res) => res.json())
+  .then((data) => {
+    window.ltvData = data.productos;
+  });
 // Variable global para guardar el precio del vehículo
 window.precioVehiculo = null;
 
@@ -162,18 +184,18 @@ function finalizeCotizacion() {
     .getElementById("vehicle-year-step4")
     ?.textContent?.trim();
 
-  // Depuración: Verificar los datos recopilados
-  console.log("Datos recopilados para cotización:", {
-    solicitante,
-    solicitanteDoc,
-    producto,
-    monto,
-    cuotas,
-    valorCuota,
-    marca,
-    modelo,
-    anio,
-  });
+  // NUEVO: Obtener la categoría seleccionada
+  const categoriaPlaceholder = document.querySelector(
+    "[onclick=\"toggleCustomOptions('categoria-options')\"]"
+  );
+  let categoria = "";
+  if (categoriaPlaceholder) {
+    categoria =
+      categoriaPlaceholder.dataset.label ||
+      categoriaPlaceholder.textContent.trim();
+    // Limpiar saltos de línea y espacios extra
+    categoria = categoria.replace(/\s+/g, " ").trim();
+  }
 
   // Validar datos requeridos
   if (
@@ -187,10 +209,13 @@ function finalizeCotizacion() {
     alert("Por favor, completa todos los datos antes de cotizar.");
     return;
   }
-  console.log("Viabilidad emoji:", window.estadoViabilidadSolicitante);
+
+  // Obtener el estado de viabilidad global (de tu lógica)
+
   let mensaje = `¡Hola! Quiero avanzar con la cotización:\n\n`;
   if (solicitante) mensaje += `Solicitante: ${solicitante}\n`;
   if (solicitanteDoc) mensaje += `DNI/CUIT: ${solicitanteDoc}\n`;
+  if (categoria) mensaje += `Categoría: ${categoria}\n`; // <-- AQUÍ
   if (marca) mensaje += `Marca: ${marca}\n`;
   if (modelo) mensaje += `Modelo: ${modelo}\n`;
   if (anio) mensaje += `Año: ${anio}\n`;
@@ -198,38 +223,30 @@ function finalizeCotizacion() {
   if (monto) mensaje += `Monto a financiar: $${monto}\n`;
   if (cuotas && valorCuota) mensaje += `Cuotas: ${cuotas} de ${valorCuota}\n`;
 
-  const numero = "+5493417049138";
+  const numero = "+5493413088717";
   const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
 
-  // CORRECCIÓN: Usar método más confiable para abrir en nueva pestaña
   try {
-    // Método 1: Crear un elemento <a> y simular clic
     const newTab = document.createElement("a");
     newTab.href = url;
     newTab.target = "_blank";
-    newTab.rel = "noopener noreferrer"; // Por seguridad
+    newTab.rel = "noopener noreferrer";
     document.body.appendChild(newTab);
     newTab.click();
     document.body.removeChild(newTab);
   } catch (error) {
-    console.error("Error al abrir nueva pestaña:", error);
-
-    // Método 2: Fallback con window.open
     try {
       const newWindow = window.open();
       if (newWindow) {
-        newWindow.opener = null; // Seguridad
+        newWindow.opener = null;
         newWindow.location = url;
       } else {
-        // Método 3: Último fallback, redirigir en la misma ventana
         alert(
           "Tu navegador bloqueó la apertura de una nueva pestaña. Se abrirá WhatsApp en esta ventana."
         );
         window.location.href = url;
       }
     } catch (error2) {
-      console.error("Error con métodos alternativos:", error2);
-      // Método 3: Último recurso
       window.location.href = url;
     }
   }
@@ -247,10 +264,20 @@ function selectCuota(element) {
   // Ocultar el mensaje de selección
   const message = document.getElementById("select-cuota-message");
   if (message) {
-    message.classList.add("hidden"); // Asegurar que se oculte con la clase
-    message.style.removeProperty("display"); // Eliminar el estilo display:block
-  } else {
-    console.error("No se encontró el elemento con ID 'select-cuota-message'.");
+    message.classList.add("hidden");
+    console.log("Ocultando mensaje: agregada clase 'hidden' desde selectCuota");
+    // Log posición del botón
+    const btn = document.querySelector(".cuota-info-btn");
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      console.log(
+        "Botón posición tras seleccionar cuota:",
+        "top:",
+        rect.top,
+        "left:",
+        rect.left
+      );
+    }
   }
 }
 
@@ -366,7 +393,30 @@ function goToStep(step) {
       nextButtonStep3.style.cursor = "not-allowed";
     }
   }
-
+  document.addEventListener("DOMContentLoaded", () => {
+    const modificarBtn = document.querySelector(".modificar-button");
+    if (modificarBtn) {
+      modificarBtn.addEventListener("click", function () {
+        goToStep(3);
+        // Limpiar el input de monto neto a financiar
+        const financeInput = document.querySelector(".net-finance-input");
+        if (financeInput) {
+          financeInput.value = "";
+          financeInput.style.color = "";
+        }
+        // Opcional: deshabilitar el botón "Siguiente" hasta que se ingrese un nuevo monto
+        const nextButtonStep3 = document.querySelector(
+          '.next-button[onclick="goToStep(4)"]'
+        );
+        if (nextButtonStep3) {
+          nextButtonStep3.disabled = true;
+          nextButtonStep3.style.opacity = "0.5";
+          nextButtonStep3.style.pointerEvents = "none";
+          nextButtonStep3.style.cursor = "not-allowed";
+        }
+      });
+    }
+  });
   // Llama a esta función:
   // - Al ingresar a la pantalla 3 (después de tu código actual)
   // - Cuando cambia el select de producto
@@ -381,167 +431,100 @@ function goToStep(step) {
   });
 }
 
+function validarBotonSiguientePantalla3() {
+  const productoPlaceholder = document.querySelector(
+    `[onclick="toggleCustomOptions('product-options')"]`
+  );
+  const financeInput = document.querySelector(".net-finance-input");
+  const nextButtonStep3 = document.querySelector(
+    '.next-button[onclick="goToStep(4)"]'
+  );
+
+  // Verifica si hay producto seleccionado
+  const productoSeleccionado =
+    productoPlaceholder &&
+    productoPlaceholder.dataset.value &&
+    productoPlaceholder.dataset.value !== "" &&
+    productoPlaceholder.textContent.trim() !== "Seleccionar Producto";
+
+  // Verifica si el input tiene valor válido
+  const montoValido =
+    financeInput &&
+    financeInput.value &&
+    !isNaN(financeInput.value.replace(/\./g, "")) &&
+    parseInt(financeInput.value.replace(/\./g, ""), 10) >= 1000000;
+
+  if (productoSeleccionado && montoValido) {
+    nextButtonStep3.disabled = false;
+    nextButtonStep3.style.opacity = "1";
+    nextButtonStep3.style.pointerEvents = "auto";
+    nextButtonStep3.style.cursor = "pointer";
+  } else {
+    nextButtonStep3.disabled = true;
+    nextButtonStep3.style.opacity = "0.5";
+    nextButtonStep3.style.pointerEvents = "none";
+    nextButtonStep3.style.cursor = "not-allowed";
+  }
+}
+function normalizarCategoria(categoria) {
+  return categoria
+    .toLowerCase()
+    .replace(/\s+/g, " ") // reemplaza múltiples espacios por uno
+    .trim();
+}
+// Ejecutar la validación al cambiar producto o input
 document.addEventListener("DOMContentLoaded", () => {
-  document
-    .querySelectorAll(".custom-options-container")
-    .forEach((container, index, containers) => {
-      const placeholder = container.querySelector(
-        ".custom-options-placeholder"
-      );
-      const options = container.querySelector(".custom-options");
-      const extraDiv = container.querySelector(".custom-options-extra");
-      const searchContainer = options.querySelector(".custom-search-container");
-      const searchInput = searchContainer
-        ? searchContainer.querySelector("input")
-        : null;
+  const productOptions = document.getElementById("product-options");
+  const financeInput = document.querySelector(".net-finance-input");
 
-      // --- CORREGIDO: Solo el siguiente select cambia el margin-top ---
-      const adjustNextSelect = (isExpanded) => {
-        containers.forEach((cont, i) => {
-          if (i === index + 1) {
-            cont.style.marginTop = isExpanded ? "168px" : "15px";
-          } else if (i !== index) {
-            cont.style.marginTop = "15px";
-          }
-        });
-      };
-
-      // Abrir o cerrar las opciones al hacer clic en el placeholder
-      placeholder.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const allOptions = document.querySelectorAll(".custom-options");
-        const allPlaceholders = document.querySelectorAll(
-          ".custom-options-placeholder"
-        );
-        const allExtras = document.querySelectorAll(".custom-options-extra");
-        const allSearchContainers = document.querySelectorAll(
-          ".custom-search-container"
-        );
-
-        // Cerrar todos los selects abiertos excepto el actual
-        allOptions.forEach((opt) => {
-          if (opt !== options) {
-            opt.classList.add("hidden");
-          }
-        });
-        allPlaceholders.forEach((ph) => {
-          if (ph !== placeholder) {
-            ph.classList.remove("active");
-          }
-        });
-        allExtras.forEach((extra) => {
-          if (extra !== extraDiv) {
-            extra.classList.remove("active");
-          }
-        });
-        allSearchContainers.forEach((search) => {
-          if (search !== searchContainer) {
-            search.classList.remove("active");
-          }
-        });
-
-        // --- CORREGIDO: Solo el siguiente select cambia el margin-top ---
-        if (options.classList.contains("hidden")) {
-          options.classList.remove("hidden");
-          placeholder.classList.add("active");
-          extraDiv.classList.add("active");
-          if (searchContainer) searchContainer.classList.add("active");
-          adjustNextSelect(true);
-        } else {
-          options.classList.add("hidden");
-          placeholder.classList.remove("active");
-          extraDiv.classList.remove("active");
-          if (searchContainer) searchContainer.classList.remove("active");
-          adjustNextSelect(false);
-        }
-      });
-
-      // Evitar que el buscador cierre o mueva los selects al hacer clic
-      if (searchContainer) {
-        searchContainer.addEventListener("click", (event) => {
-          event.stopPropagation(); // Evitar que el evento cierre el select
-        });
-
-        // Filtrar opciones en tiempo real
-        searchInput.addEventListener("input", (event) => {
-          const filterText = event.target.value.toLowerCase();
-          const allOptions = options.querySelectorAll(".custom-option");
-          allOptions.forEach((option) => {
-            const optionText = option.textContent.toLowerCase();
-            if (optionText.includes(filterText)) {
-              option.style.display = "flex"; // Mostrar opción si coincide
-            } else {
-              option.style.display = "none"; // Ocultar opción si no coincide
-            }
-          });
-        });
+  if (productOptions) {
+    productOptions.addEventListener("click", function (e) {
+      if (e.target.classList.contains("custom-option")) {
+        setTimeout(validarBotonSiguientePantalla3, 10);
       }
-
-      // Seleccionar una opción
-      options.addEventListener("click", (event) => {
-        if (event.target.classList.contains("custom-option")) {
-          // --- CORRECCIÓN SOLO PARA MODELO ---
-          if (options.id === "modelo-options") {
-            placeholder.textContent = event.target.textContent;
-            placeholder.dataset.value = event.target.dataset.value; // codia numérico
-            placeholder.dataset.label = event.target.textContent; // nombre modelo
-          } else if (options.id === "marca-options") {
-            placeholder.textContent = event.target.textContent;
-            placeholder.dataset.value = event.target.dataset.value; // id de marca
-            placeholder.dataset.label = event.target.textContent; // nombre marca
-          } else if (options.id === "anio-options") {
-            placeholder.textContent = event.target.textContent;
-            placeholder.dataset.value = event.target.textContent; // año
-            placeholder.dataset.label = event.target.textContent; // año
-          } else {
-            placeholder.textContent = event.target.textContent;
-            placeholder.dataset.value = event.target.textContent;
-            placeholder.dataset.label = event.target.textContent;
-          }
-          closeSelect(container);
-          open = false;
-        }
-      });
-
-      document.addEventListener("click", (e) => {
-        if (!container.contains(e.target)) {
-          closeSelect();
-        }
-      });
     });
+  }
+  if (financeInput) {
+    financeInput.addEventListener("input", validarBotonSiguientePantalla3);
+  }
+
+  // Validar al cargar la pantalla 3
+  validarBotonSiguientePantalla3();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
   let dataWithLogo = []; // Array para almacenar marcas y sus logos
 
-  // NUEVO: función para obtener la categoría seleccionada
-  function getSelectedCategoria() {
-    const catPlaceholder = document.querySelector(
-      "[onclick=\"toggleCustomOptions('categoria-options')\"]"
-    );
-    if (!catPlaceholder) return "autos";
-    const val = (
-      catPlaceholder.dataset.value ||
-      catPlaceholder.textContent ||
-      ""
-    ).toLowerCase();
-    // --- CAMBIO: Si contiene "moto", devolver "motos"
-    if (val.includes("moto")) return "motos";
-    if (val.includes("utilitario") || val.includes("camion"))
-      return "utilitarios";
-    return "autos";
+  // --- NUEVO: Obtener features por categoría ---
+  async function getFeaturesByCategoria(categoria) {
+    const res = await fetch("http://localhost:5000/api/featuresCategoria", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ categoria }),
+    });
+    const text = await res.text();
+    console.log("Respuesta cruda de featuresCategoria:", text);
+    try {
+      return JSON.parse(text).features || [];
+    } catch (e) {
+      console.error("Error parseando JSON:", e, text);
+      return [];
+    }
+    const data = await res.json();
+    return data.features || [];
   }
 
   const fetchMarcasFromInfoauto = async (year) => {
     try {
-      // NUEVO: obtener la categoría seleccionada
       const categoria = getSelectedCategoria();
+      const features = await getFeaturesByCategoria(categoria);
 
       const requestBody = {
         year: year.trim(),
-        accessToken: accessToken, // <-- enviar el token si lo tenés
+        accessToken: accessToken,
         action: "getBrandsByYear",
-        categoria, // <-- enviar la categoría al backend
+        categoria,
+        features,
       };
 
       const response = await fetch("php/curl.php", {
@@ -557,9 +540,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await response.json();
-      accessToken = data.accessToken || accessToken; // <-- guardar el nuevo token si viene
+      dataWithLogo = data.brands || [];
+      console.log("Marcas cargadas en dataWithLogo:", dataWithLogo);
+      console.log("Respuesta de Infoauto (marcas):", data);
+      accessToken = data.accessToken || accessToken;
+
+      // --- LLENAR EL SELECT DE MARCAS ---
       const marcasSelect = document.getElementById("marca-options");
-      dataWithLogo = data.brands; // Guardar datos de marcas con logos
+      if (!marcasSelect) return;
 
       // Guardar el buscador existente antes de limpiar el contenedor
       let searchContainer = marcasSelect.querySelector(
@@ -569,32 +557,36 @@ document.addEventListener("DOMContentLoaded", () => {
         searchContainer = document.createElement("div");
         searchContainer.className = "custom-search-container active";
         searchContainer.innerHTML = `
-
-                    <img src="./images/icons/lupita.svg" alt="Buscar" />
-                    <input type="text" placeholder="Buscar marca..." oninput="filterOptions('marca-options', this.value)" />
-                `;
+    <img src="./images/icons/lupita.svg" alt="Buscar" />
+    <input type="text" placeholder="Buscar marca..." />
+  `;
         marcasSelect.prepend(searchContainer);
       }
-
-      marcasSelect.innerHTML = ""; // Limpiar opciones existentes
-      // Reinsertar el buscador existente
-      if (searchContainer) {
-        marcasSelect.appendChild(searchContainer);
-        searchContainer.classList.remove("hidden"); // Asegurar que esté visible
+      const searchInput = searchContainer.querySelector("input");
+      if (searchInput) {
+        searchInput.oninput = function () {
+          filterOptions("marca-options", this.value);
+        };
       }
 
-      data.brands.forEach((brand) => {
+      // Agregar las marcas obtenidas
+      if (Array.isArray(data.brands) && data.brands.length > 0) {
+        data.brands.forEach((brand) => {
+          const option = document.createElement("div");
+          option.className = "custom-option";
+          option.textContent = brand.name;
+          option.dataset.value = brand.id;
+          option.onclick = () =>
+            selectCustomOption(brand.name, "marca-options", brand.id);
+          marcasSelect.appendChild(option);
+        });
+      } else {
+        // Si no hay marcas, mostrar mensaje
         const option = document.createElement("div");
-        option.className = "custom-option";
-        option.textContent = brand.name;
-        option.dataset.value = brand.id;
-        option.dataset.logo = brand.logo; // Guardar la URL del logo
-        option.onclick = () =>
-          selectCustomOption(brand.name, "marca-options", brand.id);
+        option.className = "custom-option disabled";
+        option.textContent = "Sin marcas disponibles";
         marcasSelect.appendChild(option);
-      });
-
-      console.log("Marcas obtenidas:", data.brands);
+      }
     } catch (error) {
       console.error("Error al obtener marcas desde Infoauto:", error);
     }
@@ -604,49 +596,53 @@ document.addEventListener("DOMContentLoaded", () => {
     const element = dataWithLogo.find((element) => element.id == id);
     let logoUrl = element?.logo;
 
-    // Si no hay logo, buscar localmente según categoría
-    if (!logoUrl || logoUrl === "" || logoUrl === "null") {
-      // Obtener categoría seleccionada
-      const categoria = getSelectedCategoria();
-      // Normalizar nombre de marca: minúsculas, sin espacios, sin tildes, sin puntos
-      let nombreMarca = (element?.name || "")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // quitar tildes
-        .replace(/[^a-z0-9]/g, "-") // reemplazar todo lo que no sea letra o número por guión
-        .replace(/-+/g, "-") // un solo guión
-        .replace(/^-|-$/g, ""); // quitar guión inicial/final
-
-      // Ruta base según categoría
-      let basePath = "./images/logos/autos/";
-      if (categoria === "motos") basePath = "./images/logos/motos/";
-
-      // Probar con .png y .jpg
+    // Si hay logo de la API, usarlo y salir
+    if (logoUrl && logoUrl !== "null") {
       const img = document.getElementById("vehicle-logo");
-      const tryPng = `${basePath}${nombreMarca}.png`;
-      const tryJpg = `${basePath}${nombreMarca}.jpg`;
-
-      // Probar si existe el PNG, si no, probar JPG, si no, usar genérico
-      img.onerror = function () {
-        if (img.src.endsWith(".png")) {
-          img.src = tryJpg;
-          img.onerror = function () {
-            img.src = "./images/logos/generic-logo.png";
-          };
-        } else {
-          img.src = "./images/logos/generic-logo.png";
-        }
-      };
-      img.src = tryPng;
+      img.src = logoUrl;
       img.alt = `Logo de ${element?.name || "genérico"}`;
       return;
     }
 
-    // Si hay logo de la API, usarlo
-    document.getElementById("vehicle-logo").src = logoUrl;
-    document.getElementById("vehicle-logo").alt = `Logo de ${
-      element?.name || "genérico"
-    }`;
+    // Si no hay logo, buscar localmente según categoría
+    const categoria = getSelectedCategoria();
+    let nombreMarca = (element?.name || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+
+    // Si el nombre está vacío, usar logo genérico y salir
+    const img = document.getElementById("vehicle-logo");
+    if (!nombreMarca) {
+      img.src = "./images/logos/generic-logo.png";
+      img.alt = "Logo genérico";
+      return;
+    }
+
+    // Ruta base según categoría
+    let basePath = "./images/logos/autos/";
+    if (categoria && categoria.toLowerCase().includes("moto")) {
+      basePath = "./images/logos/motos/";
+    }
+    // Probar con .png y .jpg
+    const tryPng = `${basePath}${nombreMarca}.png`;
+    const tryJpg = `${basePath}${nombreMarca}.jpg`;
+
+    img.onerror = function () {
+      if (img.src.endsWith(".png")) {
+        img.src = tryJpg;
+        img.onerror = function () {
+          img.src = "./images/logos/generic-logo.png";
+        };
+      } else {
+        img.src = "./images/logos/generic-logo.png";
+      }
+    };
+    img.src = tryPng;
+    img.alt = `Logo de ${element?.name || "genérico"}`;
   };
 
   // Llamar a fetchMarcasFromInfoauto al seleccionar un año
@@ -667,7 +663,26 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 });
-
+async function getFeaturesByCodia(codia, categoria, accessToken) {
+  const requestBody = {
+    action: "getFeaturesByCodia",
+    codia,
+    accessToken,
+    categoria,
+  };
+  const res = await fetch("php/curl.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestBody),
+  });
+  const text = await res.text();
+  try {
+    return JSON.parse(text); // Infoauto devuelve un objeto con los features
+  } catch (e) {
+    console.error("Error parseando features por codia:", e, text);
+    return null;
+  }
+}
 // Definir la función toggleCustomOptions en el ámbito global
 function toggleCustomOptions(id) {
   const options = document.getElementById(id);
@@ -675,46 +690,47 @@ function toggleCustomOptions(id) {
     `[onclick="toggleCustomOptions('${id}')"]`
   );
 
-  if (!options || !placeholder) {
-    console.error(
-      `Error: No se encontró el elemento con ID "${id}" o su placeholder.`
-    );
-    return;
-  }
+  if (!options || !placeholder) return;
 
-  // Alternar el estado del select actual
-  const isHidden = options.classList.contains("hidden");
-
+  // Cerrar todos los selects y extras antes de abrir el actual
   document.querySelectorAll(".custom-options").forEach((opt) => {
     if (opt !== options) {
       opt.classList.add("hidden");
-      setTimeout(() => opt.classList.add("display-none"), 300); // Retrasar el display: none
+      setTimeout(() => opt.classList.add("display-none"), 300);
     }
   });
-
   document.querySelectorAll(".custom-options-placeholder").forEach((ph) => {
     if (ph !== placeholder) {
-      ph.classList.remove("active"); // Quitar rotación de flecha
+      ph.classList.remove("active");
     }
   });
+  document.querySelectorAll(".custom-options-extra").forEach((extra) => {
+    extra.classList.remove("active");
+  });
 
+  // Alternar el estado del select actual
+  const isHidden = options.classList.contains("hidden");
   if (isHidden) {
-    options.classList.remove("display-none"); // Mostrar antes de la transición
+    options.classList.remove("display-none");
     setTimeout(() => {
       options.classList.remove("hidden");
-      placeholder.classList.add("active"); // Rotar la flecha del placeholder
-    }, 10); // Pequeño retraso para permitir la transición
+      placeholder.classList.add("active");
+      const extra = placeholder.parentElement.querySelector(
+        ".custom-options-extra"
+      );
+      if (extra) extra.classList.add("active");
+    }, 10);
   } else {
     options.classList.add("hidden");
-    placeholder.classList.remove("active"); // Quitar rotación de flecha
-    setTimeout(() => options.classList.add("display-none"), 300); // Retrasar el display: none
+    placeholder.classList.remove("active");
+    const extra = placeholder.parentElement.querySelector(
+      ".custom-options-extra"
+    );
+    if (extra) extra.classList.remove("active");
+    setTimeout(() => options.classList.add("display-none"), 300);
   }
-
-  // Verificar estilos aplicados
-  const computedStyles = window.getComputedStyle(options);
 }
 window.toggleCustomOptions = toggleCustomOptions;
-
 // Cerrar las opciones si se hace clic fuera del contenedor
 document.addEventListener("click", (event) => {
   document
@@ -748,6 +764,8 @@ function selectCustomOption(value, id, extraData = null) {
   placeholder.dataset.label = value; // Guardar el nombre visible
   placeholder.dataset.value = extraData || value; // Guardar el valor seleccionado
 
+  placeholder.classList.add("selected-bold");
+
   // Cerrar el menú desplegable
   options.classList.add("hidden");
   placeholder.classList.remove("active"); // Quitar rotación de flecha
@@ -760,13 +778,37 @@ function selectCustomOption(value, id, extraData = null) {
       "selected-product-step4"
     );
     if (selectedProductStep4) {
-      selectedProductStep4.textContent = value; // Mostrar el producto seleccionado
+      selectedProductStep4.textContent = value;
     }
-    updateMaximoAFinanciar(); // Recalcular el máximo a financiar
+    // Si el precio no está listo, intentar obtenerlo antes de calcular el máximo
+    if (!window.precioVehiculo || window.precioVehiculo === 0) {
+      // Intentar obtener el codia y año seleccionados
+      const codia = getSelectedCodia && getSelectedCodia();
+      const year = getSelectedYear && getSelectedYear();
+      if (codia && year) {
+        fetchPriceFromInfoauto(codia, year).then(() => {
+          updateMaximoAFinanciar();
+        });
+      } else {
+        updateMaximoAFinanciar();
+      }
+    } else {
+      updateMaximoAFinanciar();
+    }
   }
 
   // Si se selecciona una marca, cargar los modelos
   if (id === "marca-options") {
+    // Limpiar el modelo seleccionado
+    const modeloPlaceholder = document.querySelector(
+      "[onclick=\"toggleCustomOptions('modelo-options')\"]"
+    );
+    if (modeloPlaceholder) {
+      modeloPlaceholder.textContent = "Modelo";
+      modeloPlaceholder.dataset.value = "";
+      modeloPlaceholder.dataset.label = "";
+    }
+
     const yearPlaceholder = document.querySelector(
       "[onclick=\"toggleCustomOptions('anio-options')\"]"
     );
@@ -810,58 +852,32 @@ document.addEventListener("DOMContentLoaded", () => {
       placeholder.addEventListener("click", (event) => {
         event.stopPropagation();
 
-        const allOptions = document.querySelectorAll(".custom-options");
-        const allPlaceholders = document.querySelectorAll(
-          ".custom-options-placeholder"
-        );
-
-        // Cerrar todos los selects abiertos excepto el actual
-        allOptions.forEach((opt, optIndex) => {
-          if (opt !== options) {
-            opt.classList.add("hidden");
-          }
+        // Cerrar todos los selects y extras antes de abrir el actual
+        document.querySelectorAll(".custom-options").forEach((opt) => {
+          opt.classList.add("hidden");
         });
-
-        allPlaceholders.forEach((ph, phIndex) => {
-          if (ph !== placeholder) {
+        document
+          .querySelectorAll(".custom-options-placeholder")
+          .forEach((ph) => {
             ph.classList.remove("active");
-          }
-        });
-
-        // Alternar el estado del select actual
-        if (options.classList.contains("hidden")) {
-          options.classList.remove("hidden");
-          placeholder.classList.add("active");
-          resetSearch(); // Reiniciar y mostrar el buscador
-        } else {
-          options.classList.add("hidden");
-          placeholder.classList.remove("active");
-        }
-      });
-
-      // Evitar que el buscador cierre el select al hacer clic
-      if (searchContainer) {
-        searchContainer.addEventListener("click", (event) => {
-          event.stopPropagation(); // Evitar que el evento cierre el select
-        });
-
-        // Filtrar opciones en tiempo real
-        searchInput.addEventListener("input", (event) => {
-          const filterText = event.target.value.toLowerCase();
-
-          const allOptions = options.querySelectorAll(".custom-option");
-          allOptions.forEach((option) => {
-            const optionText = option.textContent.toLowerCase();
-            option.style.display = optionText.includes(filterText)
-              ? "flex"
-              : "none";
           });
+        document.querySelectorAll(".custom-options-extra").forEach((extra) => {
+          extra.classList.remove("active");
         });
-      }
 
+        // Abrir solo el actual
+        options.classList.remove("hidden");
+        placeholder.classList.add("active");
+        const extra = container.querySelector(".custom-options-extra");
+        if (extra) extra.classList.add("active");
+        resetSearch(); // Reiniciar y mostrar el buscador
+      });
       // Seleccionar una opción
       options.addEventListener("click", (event) => {
-        if (event.target.classList.contains("custom-option")) {
+        if (
+          event.target.classList.contains("custom-option") &&
+          !event.target.classList.contains("disabled")
+        ) {
           // --- CORRECCIÓN SOLO PARA MODELO ---
           if (options.id === "modelo-options") {
             placeholder.textContent = event.target.textContent;
@@ -875,12 +891,18 @@ document.addEventListener("DOMContentLoaded", () => {
             placeholder.textContent = event.target.textContent;
             placeholder.dataset.value = event.target.textContent; // año
             placeholder.dataset.label = event.target.textContent; // año
+          } else if (options.id === "product-options") {
+            // --- CORRECCIÓN: usar el value interno (clave compuesta) ---
+            placeholder.textContent = event.target.textContent;
+            placeholder.dataset.value = event.target.dataset.value;
+            placeholder.dataset.label = event.target.textContent;
           } else {
             placeholder.textContent = event.target.textContent;
             placeholder.dataset.value = event.target.textContent;
             placeholder.dataset.label = event.target.textContent;
           }
-          closeSelect();
+          closeSelect(container);
+          open = false;
         }
       });
 
@@ -1188,13 +1210,18 @@ document.addEventListener("DOMContentLoaded", () => {
           dni: dniValue,
           nombreCompleto,
         });
+      } else {
+        // Limpiar si no hay datos nuevos
+        sessionStorage.removeItem("solicitante_dni");
+        sessionStorage.removeItem("solicitante_nombre");
+        console.log("Solicitante limpiado por avance sin datos");
       }
     });
   }
 });
 
 async function fetchModelosFromInfoauto(marcaId, year) {
-  // NUEVO: obtener la categoría seleccionada
+  // Obtener la categoría seleccionada
   function getSelectedCategoria() {
     const catPlaceholder = document.querySelector(
       "[onclick=\"toggleCustomOptions('categoria-options')\"]"
@@ -1205,21 +1232,42 @@ async function fetchModelosFromInfoauto(marcaId, year) {
       catPlaceholder.textContent ||
       ""
     ).toLowerCase();
-    // --- CAMBIO: Si contiene "moto", devolver "motos"
     if (val.includes("moto")) return "motos";
-    if (val.includes("utilitario") || val.includes("camion"))
-      return "utilitarios";
+    if (val.includes("camion")) return "camiones";
+    if (val.includes("utilitario")) return "utilitarios";
     return "autos";
   }
   const categoria = getSelectedCategoria();
 
+  // --- NUEVO: obtener los features de la categoría seleccionada ---
+  async function getFeaturesByCategoria(categoria) {
+    const res = await fetch("http://localhost:5000/api/featuresCategoria", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ categoria }),
+    });
+    const text = await res.text();
+    console.log("Respuesta cruda de featuresCategoria:", text);
+    try {
+      return JSON.parse(text).features || [];
+    } catch (e) {
+      console.error("Error parseando JSON:", e, text);
+      return [];
+    }
+    const data = await res.json();
+    return data.features || [];
+  }
+
   try {
+    const features = await getFeaturesByCategoria(categoria);
+
     const requestBody = {
       idMarca: marcaId,
       year: year.trim(),
-      accessToken: accessToken, // <-- enviar el token si lo tenés
+      accessToken: accessToken,
       action: "getModelsByBrand",
-      categoria, // <-- enviar la categoría al backend
+      categoria,
+      features, // <-- enviar los features al backend
     };
 
     const response = await fetch("php/curl.php", {
@@ -1235,7 +1283,7 @@ async function fetchModelosFromInfoauto(marcaId, year) {
     }
 
     const data = await response.json();
-    accessToken = data.accessToken || accessToken; // <-- guardar el nuevo token si viene
+    accessToken = data.accessToken || accessToken;
     const modelosSelect = document.getElementById("modelo-options");
 
     // Guardar el buscador existente antes de limpiar el contenedor
@@ -1246,20 +1294,35 @@ async function fetchModelosFromInfoauto(marcaId, year) {
       searchContainer = document.createElement("div");
       searchContainer.className = "custom-search-container active";
       searchContainer.innerHTML = `
-      <img src="./images/icons/lupita.svg" alt="Buscar" />
-      <input type="text" placeholder="Buscar modelo..." oninput="filterOptions('modelo-options', this.value)" />
-    `;
+    <img src="./images/icons/lupita.svg" alt="Buscar" />
+    <input type="text" placeholder="Buscar modelo..." />
+  `;
       modelosSelect.prepend(searchContainer);
+    }
+    // Agregar el listener de filtrado SIEMPRE que insertás el buscador
+    const searchInput = searchContainer.querySelector("input");
+    if (searchInput) {
+      searchInput.oninput = function () {
+        filterOptions("modelo-options", this.value);
+      };
     }
 
     modelosSelect.innerHTML = ""; // Limpiar opciones existentes
     // Reinsertar el buscador existente
     if (searchContainer) {
       modelosSelect.appendChild(searchContainer);
-      searchContainer.classList.remove("hidden"); // Asegurar que esté visible
+      searchContainer.classList.remove("hidden");
     }
 
     // Agregar los modelos obtenidos
+    if (!data.models || data.models.length === 0) {
+      const option = document.createElement("div");
+      option.className = "custom-option disabled";
+      option.textContent = "No hay modelos disponibles";
+      modelosSelect.appendChild(option);
+      return; // Salir de la función, no hay modelos para mostrar
+    }
+
     data.models.forEach((model) => {
       const option = document.createElement("div");
       option.className = "custom-option";
@@ -1334,6 +1397,11 @@ document.addEventListener("DOMContentLoaded", () => {
           placeholder.textContent = e.target.textContent;
           placeholder.dataset.value = e.target.textContent; // año
           placeholder.dataset.label = e.target.textContent; // año
+        } else if (options.id === "product-options") {
+          // CORRECCIÓN: usar el value interno (clave compuesta)
+          placeholder.textContent = e.target.textContent;
+          placeholder.dataset.value = e.target.dataset.value;
+          placeholder.dataset.label = e.target.textContent;
         } else {
           placeholder.textContent = e.target.textContent;
           placeholder.dataset.value = e.target.textContent;
@@ -1365,7 +1433,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "selected-product-step4"
     );
     if (selectedProductStep4) {
-      selectedProductStep4.textContent = value; // Mostrar el producto seleccionado
+      selectedProductStep4.textContent = label; // Mostrar el producto seleccionado
     }
   };
 
@@ -1379,68 +1447,76 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-// Mostrar nombres personalizados para los productos A y B (sin modificar base ni backend)
-document.addEventListener("DOMContentLoaded", () => {
-  const API_URL =
-    location.hostname === "localhost"
-      ? "http://localhost:5000"
-      : "https://192.168.0.3";
-
-  fetch(`${API_URL}/api/calculadora`)
-    .then((res) => {
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      return res.json();
-    })
-    .then((data) => {
-      const productos = data.productos || {};
-      const productOptions = document.getElementById("product-options");
-      productOptions.innerHTML = "";
-
-      if (Object.keys(productos).length === 0) {
-        productOptions.innerHTML =
-          '<div class="custom-option">No hay productos disponibles</div>';
-        return;
-      }
-
-      Object.keys(productos).forEach((nombre) => {
-        const option = document.createElement("div");
-        option.className = "custom-option";
-        option.textContent = nombre; // Mostrar el nombre tal cual está en la base de datos
-        option.onclick = function () {
-          selectCustomOption(nombre, "product-options", nombre);
-        };
-        productOptions.appendChild(option);
-      });
-    })
-    .catch((err) => {
-      const productOptions = document.getElementById("product-options");
-      productOptions.innerHTML =
-        '<div class="custom-option">No se pudo conectar al servidor. Verificá que el backend esté iniciado en <b>http://localhost:5000</b></div>';
-      console.error("Error al cargar productos:", err);
-    });
-});
-
+function limpiarDatosSolicitante() {
+  const campos = [
+    "#nombre-solicitante",
+    "#dni-solicitante",
+    "#cuit-solicitante",
+    // Agregá aquí los IDs o clases de todos los campos del solicitante
+  ];
+  campos.forEach((selector) => {
+    const campo = document.querySelector(selector);
+    if (campo) campo.value = "";
+  });
+  // Si guardás datos en variables globales:
+  window.datosSolicitante = {};
+  // Si usás localStorage/sessionStorage:
+  localStorage.removeItem("datosSolicitante");
+  sessionStorage.removeItem("datosSolicitante");
+}
 document.addEventListener("DOMContentLoaded", () => {
   const shareBtn = document.querySelector(".share-button");
   if (!shareBtn) return;
 
+  // Pega aquí tus imágenes en base64 (puedo ayudarte a convertirlas si lo necesitás)
+  const logoBase64 =
+    "data:image/svg+xml;base64,PHN2ZyBpZD0iTE9HT19MRVZFUiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjI2IiBoZWlnaHQ9IjUyLjU5NiIgdmlld0JveD0iMCAwIDIyNiA1Mi41OTYiPjxwYXRoIGQ9Ik0xNS44MSw1MS42ODJhMTYuMTgxLDE2LjE4MSwwLDAsMS04LjM1Mi0yLjEsMTQuOTM3LDE0LjkzNywwLDAsMS01LjUwNi01LjU3OEExNS42MTQsMTUuNjE0LDAsMCwxLDAsMzYuMjUyVjBIMTEuMjU5VjM3LjE2N2E1LjIsNS4yLDAsMCwwLDEuNSwzLjc1LDUuMjE4LDUuMjE4LDAsMCwwLDMuNjU3LDEuNTYxSDMxLjQzNXY5LjIxNUgxNS44MVoiIGZpbGw9IiMyYWRjOWYiLz48cGF0aCBkPSJNMzYuMzMsNTEuNjgyVjE0LjQ1NEExNC40NjgsMTQuNDY4LDAsMCwxLDUwLjc4NCwwSDczLjE2OEw3Ni4yNjAsOS4yMTVINTEuODExYTYuMjYxLDYuMjYxLDAsMCwwLTYuMjU2LDYuMjU2djUuNzYzSDcyLjUxMXY5LjFINDUuNTQ1VjQyLjQ3OEg3Ni4yNXY5LjIxNUgzNi4zM1oiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuOTkxIDApIiBmaWxsPSIjMmFkYzlmIi8+PHBhdGggZD0iTTE0Ni40MzQsNTEuNjgyQTE0LjQ2OCwxNC40NjgsMCwwLDEsMTMxLjk4LDM3LjIyOFY5LjU1NEwxMzUuMTg1LDBIMTcxLjkwVjkuMjE1SDE0MS4xOTVWMjEuMzU3SDE2Ny40VjMwLjVIMTQxLjE5NXY1Ljc2M2E2LjI2MSw2LjI2MSwwLDAsMCw2LjI1Niw2LjI1NkgxNzEuOTB2OS4yMTVIMTQ2LjQzNFoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDMuNTk5KSIgZmlsbD0iIzJhZGM5ZiIvPjxwYXRoIGQ9Ik0xMDQuNSw1Mi42YTEyLjAxNSwxMi4wMTUsMCwwLDEtNi4zMzgtMS42NzQsOS4zMzksOS4zMzksMCwwLDEtMy45LTQuODI4TDc4LjQzLDBIODkuNTcybDEyLjE1Myw0MC42NDlhMi4zMDgsMi4zMDgsMCwwLDAsLjY0NywxLjAzOCwxLjcsMS43LDAsMCwwLDEuMTMsLjQxMSwxLjcxNiwxLjcxNiwwLDAsMCwxLjA1OC0uMzgsMS43NTUsMS43NTUsMCwwLDAsLjY1Ny0xLjEwOUwxMTguNjU4LDBIMTMwLjVMMTE0LjczNCw0NS45NjFhOSw5LDAsMCwxLTMuODYzLDQuOTIxQTEuOSwxLjksMCwwLDEsMTA0LjUsNTIuNloiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIuMTM5KSIgZmlsbD0iIzJhZGM5ZiIvPjxwYXRoIGQ9Ik0yMTQuNTY5LDUxLjY4MmExMS41OTIsMTEuNTkyLDAsMCwxLTEwLTUuNTU4bC01LjkwNy0xMC40NjhIMTg3LjgyOVY1MS42OTJIMTc2LjU3MFYwSDIwMC4xNjZhMTkuNzY5LDE5Ljc2OSwwLDAsMSw5LjQ1MSwyLjI3LDE4LjA1MywxOC4wNTMsMCwwLDEsNi43OSw2LjI3NywxNy4wNzYsMTcuMDc2LDAsMCwxLDIuNTM3LDkuMzI4LDE3LjExNCwxNy4xMTQsMCwwLDEtMi4yOTEsOC43NDIsMTcuNDkyLDE3LjQ5MiwwLDAsMS02LjE2NCw2LjI2NmwtLjYzNy4zODAsNC42NTQsNy44ODkuMDIxLjAzMWEzLjU5MSwzLjU5MSwwLDAsMCwxLjA4OSwxLjAzOCwzLjIyOSwzLjIyOSwwLDAsMCwxLjcyNi40MTEsMy4yMjksMy4yMjksMCwwLDAsMy44NzMsLjQxMWgzLjg3M3Y5LjA2MUgyMTQuNTZaTTE4Ny44MjksMjYuNkgxOTguNzU4YTEwLjA0MywxMC4wNDMsMCwwLDAsNC40NjktLjk4Niw3LjcwOSw3LjcwOSwwLDAsMCwzLjI3Ny0zLjA2MSw5LjA0OCw5LjA0OCwwLDAsMCwxLjItNC42NzQsOC41ODksOC41ODksMCwwLDAtMS4yNTMtNC42OTUsOC4wODIsOC4wODIsMCwwLDAtMy4zMDgtMi45NjksOS44NTksOS44NTksMCwwLDAtNC40LS45ODZIMTg3LjgxOVYyNi42WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNC44MTYpIiBmaWxsPSIjMmFkYzlmIi8+PC9zdmc+";
+
   shareBtn.addEventListener("click", async (e) => {
     e.preventDefault();
 
+    const updateCustomSummaryStep4 = () => {
+      const inputElement = document.querySelector(".net-finance-input");
+      if (!inputElement) return;
+      let inputAmount = inputElement.value || "0";
+      inputAmount = inputAmount.replace(/[^0-9]/g, "");
+      const formattedAmount = inputAmount.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      document.getElementById("custom-summary-amount-step4").textContent =
+        formattedAmount || "0";
+    };
+    updateCustomSummaryStep4();
     // Seleccionar los elementos a compartir
     const vehicleSummary = document.querySelector("#step-4 .vehicle-summary");
     const customSummary = document.querySelector(
       "#step-4 .custom-summary-step4"
     );
-    const cuotaSeleccionada = document.querySelector(
-      "#step-4 .scrollable-item.selected"
+    const cuotasContainer = document.querySelector(
+      "#step-4 .scrollable-container"
     );
-
-    //armado de imagen para compartir
+    const cuotaItems = cuotasContainer
+      ? cuotasContainer.querySelectorAll(".scrollable-item")
+      : [];
+    const cuotaSeleccionada = cuotasContainer
+      ? cuotasContainer.querySelector(".scrollable-item.selected")
+      : null;
 
     // Crear un contenedor temporal para la imagen
     const tempDiv = document.createElement("div");
+    const fechaDiv = document.createElement("div");
+    const fecha = new Date();
+    const opciones = { day: "2-digit", month: "2-digit", year: "numeric" };
+    fechaDiv.textContent = fecha.toLocaleDateString("es-AR", opciones);
+    fechaDiv.style.position = "absolute";
+    fechaDiv.style.top = "18px";
+    fechaDiv.style.right = "32px";
+    fechaDiv.style.fontSize = "13px";
+    fechaDiv.style.color = "#888";
+    fechaDiv.style.fontWeight = "bold";
+    fechaDiv.style.background = "rgba(255,255,255,0.85)";
+    fechaDiv.style.padding = "2px 10px";
+    fechaDiv.style.borderRadius = "8px";
+    fechaDiv.style.zIndex = "10";
+    tempDiv.appendChild(fechaDiv);
     tempDiv.style.background = "#fff";
     tempDiv.style.padding = "32px 0 24px 0";
     tempDiv.style.borderRadius = "24px";
@@ -1449,16 +1525,18 @@ document.addEventListener("DOMContentLoaded", () => {
     tempDiv.style.alignItems = "center";
     tempDiv.style.fontFamily = "Montserrat, sans-serif";
     tempDiv.style.color = "#222";
-    tempDiv.style.width = "370px";
+    tempDiv.style.width = "420px"; // ancho fijo para máxima compatibilidad
+    tempDiv.style.minWidth = "420px";
+    tempDiv.style.maxWidth = "420px";
     tempDiv.style.boxSizing = "border-box";
     tempDiv.style.textAlign = "center";
     tempDiv.style.position = "relative";
     tempDiv.style.fontSize = "15px";
     tempDiv.style.gap = "0";
 
-    // Logo Lever arriba, centrado
+    // Logo Lever arriba, centrado (base64)
     const logo = document.createElement("img");
-    logo.src = "./images/logos/lever.svg";
+    logo.src = logoBase64;
     logo.alt = "Lever";
     logo.style.width = "80px";
     logo.style.height = "auto";
@@ -1466,7 +1544,7 @@ document.addEventListener("DOMContentLoaded", () => {
     logo.style.margin = "0 auto 18px auto";
     tempDiv.appendChild(logo);
 
-    // --- TÍTULO "COTIZACIÓN ESTIMADA" entre logo y solicitante ---
+    // Título "COTIZACIÓN ESTIMADA"
     const tituloDiv = document.createElement("div");
     tituloDiv.style.display = "flex";
     tituloDiv.style.flexDirection = "row";
@@ -1491,7 +1569,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tituloDiv.appendChild(span2);
     tempDiv.appendChild(tituloDiv);
 
-    // --- DATOS DEL SOLICITANTE entre logo y vehículo ---
+    // Datos del solicitante
     const solicitanteDni = sessionStorage.getItem("solicitante_dni");
     const solicitanteNombre = sessionStorage.getItem("solicitante_nombre");
     if (solicitanteDni && solicitanteNombre) {
@@ -1506,6 +1584,10 @@ document.addEventListener("DOMContentLoaded", () => {
       solicitanteDiv.style.display = "flex";
       solicitanteDiv.style.flexDirection = "column";
       solicitanteDiv.style.alignItems = "flex-start";
+      solicitanteDiv.style.width = "320px";
+      solicitanteDiv.style.maxWidth = "320px";
+      solicitanteDiv.style.boxSizing = "border-box";
+      solicitanteDiv.style.alignSelf = "center";
       solicitanteDiv.innerHTML = `
         <span style="font-size:13px;color:#28D89E;">Solicitante</span>
         <span>${solicitanteNombre}</span>
@@ -1518,30 +1600,21 @@ document.addEventListener("DOMContentLoaded", () => {
     function cloneStyled(node, extraStyles = {}) {
       const clone = node.cloneNode(true);
       clone.className = "";
-      clone.style.background = "#fff";
-      clone.style.border = "none";
+      clone.style.background = "#e8fff6"; // Igual que solicitante
+      clone.style.borderRadius = "18px";
+      clone.style.padding = "14px 24px";
       clone.style.margin = "0 0 18px 0";
-      clone.style.padding = "0";
-      clone.style.width = "320px";
-      clone.style.boxSizing = "border-box";
+      clone.style.fontWeight = "bold";
+      clone.style.fontSize = "15px";
+      clone.style.color = "#222";
       clone.style.display = "flex";
-      clone.style.alignItems = "center";
-      clone.style.justifyContent = "flex-start";
-      clone.style.borderRadius = "28px";
-      clone.style.minHeight = "90px";
-      clone.style.position = "relative";
-      clone.style.boxShadow = "0 2px 12px 0 rgba(40,216,158,0.07)";
+      clone.style.flexDirection = "column";
+      clone.style.alignItems = "flex-start";
+      clone.style.width = "320px";
+      clone.style.maxWidth = "320px";
+      clone.style.boxSizing = "border-box";
+      clone.style.alignSelf = "center";
       Object.assign(clone.style, extraStyles);
-
-      // Usar el logo local siempre para la imagen compartida
-      let logoMarca = document.createElement("img");
-      logoMarca.src = "./images/car.svg"; // Usa ruta relativa con ./ inicial
-      logoMarca.alt = "Logo auto";
-      logoMarca.style.width = "54px";
-      logoMarca.style.height = "54px";
-      logoMarca.style.objectFit = "contain";
-      logoMarca.style.marginRight = "18px";
-      logoMarca.style.marginLeft = "18px";
 
       // Clonar y limpiar los textos
       const details = clone.querySelector(".vehicle-details");
@@ -1550,6 +1623,8 @@ document.addEventListener("DOMContentLoaded", () => {
         detailsClone = details.cloneNode(true);
         detailsClone.style.display = "flex";
         detailsClone.style.flexDirection = "column";
+        detailsClone.style.width = "100%";
+        detailsClone.style.boxSizing = "border-box";
         detailsClone.style.alignItems = "flex-start";
         detailsClone.style.justifyContent = "center";
         detailsClone.style.gap = "0";
@@ -1558,27 +1633,29 @@ document.addEventListener("DOMContentLoaded", () => {
           el.style.padding = "0";
           el.style.textAlign = "left";
           el.style.color = "#222";
+          el.style.wordBreak = "break-word"; // <-- Agrega esto
+          el.style.whiteSpace = "normal"; // <-- Y esto
+          el.style.overflowWrap = "break-word"; // <-- Y esto
         });
         const h3 = detailsClone.querySelector("h3");
         if (h3) {
-          h3.style.fontSize = "16px";
+          h3.style.fontSize = "11px";
           h3.style.fontWeight = "bold";
           h3.style.letterSpacing = "0.5px";
         }
         const ps = detailsClone.querySelectorAll("p");
         if (ps[0]) {
-          ps[0].style.fontSize = "15px";
+          ps[0].style.fontSize = "11px";
           ps[0].style.fontWeight = "bold";
         }
         if (ps[1]) {
-          ps[1].style.fontSize = "13px";
+          ps[1].style.fontSize = "11px";
           ps[1].style.fontWeight = "400";
         }
       }
 
-      // Limpiar el contenido y agregar logo y detalles alineados
+      // Limpiar el contenido y agregar detalles alineados
       clone.innerHTML = "";
-      clone.appendChild(logoMarca);
       if (detailsClone) clone.appendChild(detailsClone);
 
       return clone;
@@ -1595,7 +1672,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clone.style.boxSizing = "border-box";
       clone.style.display = "flex";
       clone.style.flexDirection = "column";
-      clone.style.alignItems = "flex-start";
+      clone.style.alignItems = "center";
       clone.style.justifyContent = "center";
       clone.style.borderRadius = "28px";
       clone.style.minHeight = "90px";
@@ -1605,79 +1682,180 @@ document.addEventListener("DOMContentLoaded", () => {
       // Título
       const title = clone.querySelector(".custom-summary-title");
       if (title) {
-        title.style.fontSize = "14px";
+        title.style.fontSize = "16px";
         title.style.fontWeight = "bold";
         title.style.color = "#222";
-        title.style.margin = "18px 0 0 24px";
-        title.style.textAlign = "left";
+        title.style.margin = "14px 0 0 24px";
+        title.style.textAlign = "center";
+        title.style.alignSelf = "center";
+        title.style.padding = "0px 0px";
       }
-      // Monto
-      const amount = clone.querySelector(".custom-summary-amount");
-      if (amount) {
-        amount.style.fontSize = "15px";
-        amount.style.fontWeight = "bold";
-        amount.style.color = "#28D89E";
-        amount.style.margin = "12px 0 0 24px";
-        amount.style.textAlign = "left";
-        amount.style.display = "inline-block";
-        amount.style.marginTop = "-24px";
-        amount.style.marginLeft = "31px";
+
+      // --- BLOQUE DESTACADO: Monto neto a financiar ---
+      // Tomar el valor del DOM original, no del clon
+      const amountValue =
+        document.getElementById("custom-summary-amount-step4")?.textContent ||
+        "";
+      const currencyValue =
+        document.querySelector("#step-4 .custom-summary-currency")
+          ?.textContent || "$";
+
+      if (
+        amountValue &&
+        amountValue !== "0" &&
+        amountValue !== "Vehículo no financiable"
+      ) {
+        const amountBlock = document.createElement("div");
+        amountBlock.style.display = "flex";
+        amountBlock.style.alignItems = "center";
+        amountBlock.style.justifyContent = "center";
+        amountBlock.style.background = "#e8fff6";
+        amountBlock.style.border = "1.5px solid #28D89E";
+        amountBlock.style.borderRadius = "12px";
+        amountBlock.style.fontWeight = "bold";
+        amountBlock.style.fontSize = "22px";
+        amountBlock.style.color = "#28D89E";
+        amountBlock.style.margin = "14px 0 0 24px";
+        amountBlock.style.padding = "8px 24px";
+        amountBlock.style.width = "fit-content";
+        amountBlock.style.alignSelf = "center";
+        amountBlock.style.gap = "6px";
+
+        // Crear los spans manualmente
+        const currencySpan = document.createElement("span");
+        currencySpan.textContent = currencyValue;
+        currencySpan.style.fontSize = "22px";
+        currencySpan.style.fontWeight = "bold";
+        currencySpan.style.color = "#28D89E";
+        currencySpan.style.margin = "0";
+        currencySpan.style.display = "inline-block";
+
+        const amountSpan = document.createElement("span");
+        amountSpan.textContent = amountValue;
+        amountSpan.style.fontSize = "22px";
+        amountSpan.style.fontWeight = "bold";
+        amountSpan.style.color = "#28D89E";
+        amountSpan.style.margin = "0 0 0 6px";
+        amountSpan.style.textAlign = "center";
+        amountSpan.style.display = "inline-block";
+
+        amountBlock.appendChild(currencySpan);
+        amountBlock.appendChild(amountSpan);
+
+        // Insertar el bloque después del título
+        clone.appendChild(amountBlock);
       }
-      // $ símbolo
-      const currency = clone.querySelector(".custom-summary-currency");
-      if (currency) {
-        currency.style.fontSize = "15px";
-        currency.style.fontWeight = "bold";
-        currency.style.color = "#28D89E";
-        currency.style.margin = "12px 0 0 18px";
-        currency.style.display = "inline-block";
-      }
+
+      // Eliminar cualquier otro monto/currency del clon
+      clone
+        .querySelectorAll(".custom-summary-amount, .custom-summary-currency")
+        .forEach((el) => el.remove());
+      const prodTitle = document.createElement("div");
+      prodTitle.textContent = "Producto seleccionado";
+      prodTitle.style.width = "320px";
+      prodTitle.style.maxWidth = "320px";
+      prodTitle.style.margin = "14px 0 0 24px";
+      prodTitle.style.fontWeight = "bold";
+      prodTitle.style.fontSize = "16px";
+      prodTitle.style.textAlign = "center";
+      prodTitle.style.alignSelf = "center";
+      prodTitle.style.padding = "0px 0px";
+      clone.appendChild(prodTitle);
       // Producto
       const prod = clone.querySelector(".selected-product");
       if (prod) {
-        prod.style.position = "absolute";
-        prod.style.right = "18px";
-        prod.style.top = "24px";
-        prod.style.background = "#e8fff6";
-        prod.style.color = "#28D89E";
-        prod.style.border = "1.5px solid #28D89E";
-        prod.style.borderRadius = "12px";
-        prod.style.fontWeight = "bold";
-        prod.style.fontSize = "8px";
-        prod.style.padding = "2px 12px";
-        prod.style.margin = "0";
-        prod.style.display = "inline-block";
-        prod.style.boxShadow = "none";
-        prod.style.height = "35px";
+        // Eliminar el producto del clon para evitar duplicados
+        prod.remove();
+        // Crear un bloque para el producto alineado al centro
+        const prodBlock = document.createElement("div");
+        prodBlock.style.display = "flex";
+        prodBlock.style.alignItems = "center";
+        prodBlock.style.justifyContent = "center";
+        prodBlock.style.background = "#e8fff6";
+        prodBlock.style.color = "#28D89E";
+        prodBlock.style.border = "1.5px solid #28D89E";
+        prodBlock.style.borderRadius = "12px";
+        prodBlock.style.fontWeight = "bold";
+        prodBlock.style.fontSize = "15px";
+        prodBlock.style.padding = "8px 24px";
+        prodBlock.style.margin = "14px 0 0 24px";
+        prodBlock.style.width = "fit-content";
+        prodBlock.style.alignSelf = "center";
+        prodBlock.style.textAlign = "center";
+        prodBlock.textContent = prod.textContent;
+        clone.appendChild(prodBlock);
       }
       return clone;
     }
-
     // Clonar los elementos con estilos fieles al diseño original y alineados
     if (vehicleSummary) tempDiv.appendChild(cloneStyled(vehicleSummary));
     if (customSummary) tempDiv.appendChild(cloneSummaryStyled(customSummary));
 
-    // Agregar la cuota seleccionada (ya estaba bien)
-    if (cuotaSeleccionada) {
-      const cuotaDiv = cuotaSeleccionada.cloneNode(true);
-      cuotaDiv.style.margin = "16px auto 0 auto";
-      cuotaDiv.style.background = "#e8fff6";
-      cuotaDiv.style.border = "2px solid #28D89E";
-      cuotaDiv.style.borderRadius = "16px";
-      cuotaDiv.style.width = "90%";
-      cuotaDiv.style.display = "flex";
-      cuotaDiv.style.justifyContent = "space-between";
-      cuotaDiv.style.alignItems = "center";
-      cuotaDiv.style.padding = "10px 18px";
-      cuotaDiv.style.fontWeight = "bold";
-      cuotaDiv.style.fontSize = "18px";
-      tempDiv.appendChild(cuotaDiv);
+    // --- Mostrar todas las cuotas ---
+    if (cuotaItems.length > 0) {
+      const cuotasDiv = document.createElement("div");
+      cuotasDiv.style.display = "flex";
+      cuotasDiv.style.flexDirection = "column";
+      cuotasDiv.style.width = "320px";
+      cuotasDiv.style.maxWidth = "320px";
+      cuotasDiv.style.margin = "12px 0 0 0"; // <-- Solo margen superior, sin auto
+      cuotasDiv.style.alignItems = "flex-start"; // <-- Alinea los hijos a la izquierda
+
+      cuotaItems.forEach((item) => {
+        const clone = item.cloneNode(true);
+        // Copiar la clase 'selected' si corresponde
+        if (item.classList.contains("selected")) {
+          clone.classList.add("selected");
+        }
+        clone.style.margin = "12px 0 0 0";
+        clone.style.background = "#e8fff6";
+        clone.style.border = "2px solid #28D89E";
+        clone.style.borderRadius = "16px";
+        clone.style.width = "90%";
+        clone.style.display = "flex";
+        clone.style.justifyContent = "space-between";
+        clone.style.alignItems = "center";
+        clone.style.padding = "3px 18px";
+        clone.style.fontWeight = "bold";
+        clone.style.fontSize = "18px";
+        // Si es la seleccionada, remarcar
+        if (item === cuotaSeleccionada) {
+          clone.style.background = "#28D89E";
+          clone.style.color = "#fff";
+          clone.style.border = "3px solid #222";
+          clone.style.boxShadow = "0 0 8px #28D89E";
+          const valueClone = clone.querySelector(".scrollable-value");
+          if (valueClone) {
+            valueClone.style.color = "#fff";
+            valueClone.style.fontWeight = "bold";
+          }
+        }
+        // Copiar el valor de la cuota (por si no se actualizó)
+        const valueOriginal = item.querySelector(".scrollable-value");
+        const valueClone = clone.querySelector(".scrollable-value");
+        if (valueOriginal && valueClone) {
+          valueClone.innerHTML = valueOriginal.innerHTML;
+        }
+        cuotasDiv.appendChild(clone);
+      });
+      tempDiv.appendChild(cuotasDiv);
     }
 
     // Insertar el contenedor temporal en el body (fuera de pantalla)
     tempDiv.style.position = "fixed";
     tempDiv.style.left = "-9999px";
     document.body.appendChild(tempDiv);
+
+    // Esperar a que las imágenes base64 estén cargadas antes de capturar
+    await Promise.all(
+      Array.from(tempDiv.querySelectorAll("img")).map(
+        (img) =>
+          new Promise((resolve) => {
+            if (img.complete) resolve();
+            else img.onload = resolve;
+          })
+      )
+    );
 
     try {
       // Renderizar a imagen con html2canvas
@@ -1821,9 +1999,18 @@ document.addEventListener("DOMContentLoaded", () => {
         nombre = data.message;
       }
 
-      // Mostrar el resultado
       if (nombre && typeof nombre === "string" && nombre.trim() !== "") {
-        profileName.textContent = nombre;
+        // Detectar el mensaje de menor de edad y reemplazarlo
+        if (
+          nombre.includes(
+            "No es posible solicitar este informe debido a que la persona en cuestión es menor de edad"
+          )
+        ) {
+          profileName.textContent =
+            "El DNI ingresado es Menor de edad.";
+        } else {
+          profileName.textContent = nombre;
+        }
       } else {
         profileName.textContent = "No encontrado";
       }
@@ -2274,6 +2461,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const dniInput = document.querySelector(".dni-input");
   const indicator = document.querySelector(".credit-indicator");
   const changeApplicantBtn = document.querySelector(".change-applicant-button");
+  if (changeApplicantBtn) {
+    changeApplicantBtn.addEventListener("click", () => {
+      limpiarDatosSolicitante(); // <--- AGREGAR AQUÍ
+      // ...resto de tu lógica...
+    });
+  }
   const switchInput = document.querySelector(".toggle-switch input");
   const profileName = document.querySelector(".profile-name");
   const searchIcon = document.querySelector(".search-icon-container");
@@ -2811,8 +3004,9 @@ function validarFormularioPantalla2() {
       marcaPlaceholder.textContent.trim() !== "Marca");
   const modeloSelected =
     modeloPlaceholder &&
-    (modeloPlaceholder.dataset.value ||
-      modeloPlaceholder.textContent.trim() !== "Modelo");
+    modeloPlaceholder.dataset.value &&
+    modeloPlaceholder.textContent.trim() !== "Modelo" &&
+    modeloPlaceholder.textContent.trim() !== "No hay modelos disponibles";
 
   const formCompleto =
     categoriaSelected && anioSelected && marcaSelected && modeloSelected;
@@ -2925,14 +3119,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (anioPlaceholder) {
           anioPlaceholder.textContent = "Año";
           anioPlaceholder.dataset.value = "";
+          anioPlaceholder.classList.remove("selected-bold");
         }
         if (marcaPlaceholder) {
           marcaPlaceholder.textContent = "Marca";
           marcaPlaceholder.dataset.value = "";
+          marcaPlaceholder.classList.remove("selected-bold");
         }
         if (modeloPlaceholder) {
           modeloPlaceholder.textContent = "Modelo";
           modeloPlaceholder.dataset.value = "";
+          modeloPlaceholder.classList.remove("selected-bold");
         }
 
         // Limpiar opciones de selects dependientes (dejar solo el buscador si existe)
@@ -2959,11 +3156,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Mostrar solo los últimos 6 años si la categoría es "Motos"
+        // === REGLAS DE AÑOS SEGÚN CATEGORÍA ===
         const categoriaTexto = event.target.textContent.trim().toLowerCase();
-        if (categoriaTexto === "motos") {
-          const years = [2025, 2024, 2023, 2022, 2021, 2020];
+        const anioOptions = document.getElementById("anio-options");
+        if (anioOptions) {
           anioOptions.innerHTML = "";
-          years.forEach((year) => {
+          let desde, hasta;
+          const currentYear = new Date().getFullYear();
+
+          if (categoriaTexto === "motos") {
+            desde = 2020;
+            hasta = currentYear;
+          } else if (categoriaTexto.includes("utilitario")) {
+            desde = 2019;
+            hasta = currentYear;
+          } else if (
+            categoriaTexto === "autos y pickups" ||
+            categoriaTexto === "autos" ||
+            categoriaTexto === "pickups"
+          ) {
+            desde = 2010;
+            hasta = currentYear;
+          } else if (categoriaTexto === "camiones") {
+            desde = 2010;
+            hasta = currentYear;
+          } else {
+            // Por defecto, mostrar todos los años
+            desde = 2010;
+            hasta = currentYear;
+          }
+
+          for (let year = hasta; year >= desde; year--) {
             const option = document.createElement("div");
             option.className = "custom-option";
             option.textContent = year;
@@ -2971,24 +3194,15 @@ document.addEventListener("DOMContentLoaded", () => {
               selectCustomOption(year, "anio-options", year);
             };
             anioOptions.appendChild(option);
-          });
-        } else {
-          // Restaurar todos los años originales (2025 a 2012)
-          anioOptions.innerHTML = "";
-          const years = [
-            2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015,
-            2014, 2013, 2012, 2011, 2010
-          ];
-          years.forEach((year) => {
-            const option = document.createElement("div");
-            option.className = "custom-option";
-            option.textContent = year;
-            option.onclick = function () {
-              selectCustomOption(year, "anio-options", year);
-            };
-            anioOptions.appendChild(option);
-          });
+          }
         }
+
+        // Actualizar productos y habilitar select productos
+        const categoria =
+          event.target.dataset.value ||
+          event.target.textContent.trim().toLowerCase();
+        actualizarProductosPorCategoria(categoria);
+        habilitarSelectProductos();
       }
     });
   }
@@ -3000,6 +3214,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const backBtnStep2 = document.querySelector("#step-2 .back-button");
   if (backBtnStep2) {
     backBtnStep2.addEventListener("click", () => {
+      limpiarDatosSolicitante();
       // Resetear placeholders y valores de selects dependientes
       const categoriaPlaceholder = document.querySelector(
         "[onclick=\"toggleCustomOptions('categoria-options')\"]"
@@ -3016,18 +3231,22 @@ document.addEventListener("DOMContentLoaded", () => {
       if (categoriaPlaceholder) {
         categoriaPlaceholder.textContent = "Categoría";
         categoriaPlaceholder.dataset.value = "";
+        categoriaPlaceholder.classList.remove("selected-bold");
       }
       if (anioPlaceholder) {
         anioPlaceholder.textContent = "Año";
         anioPlaceholder.dataset.value = "";
+        anioPlaceholder.classList.remove("selected-bold");
       }
       if (marcaPlaceholder) {
         marcaPlaceholder.textContent = "Marca";
         marcaPlaceholder.dataset.value = "";
+        marcaPlaceholder.classList.remove("selected-bold");
       }
       if (modeloPlaceholder) {
         modeloPlaceholder.textContent = "Modelo";
         modeloPlaceholder.dataset.value = "";
+        modeloPlaceholder.classList.remove("selected-bold");
       }
 
       // Limpiar opciones de selects dependientes (dejar solo el buscador si existe)
@@ -3093,8 +3312,21 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Seleccioná año y modelo antes de avanzar.");
         return;
       }
-
       try {
+        const tipoFeature = await getFeaturesByCodia(
+          codia,
+          categoria,
+          accessToken
+        );
+
+        // Ahora tipoFeature es un objeto (o null), no un array
+        let tipoVehiculo = null;
+        if (tipoFeature && typeof tipoFeature === "object") {
+          tipoVehiculo = tipoFeature.value || null;
+        }
+        window.tipoVehiculoSeleccionado = tipoVehiculo;
+        console.log("Tipo de vehículo:", tipoVehiculo);
+
         const body = {
           codia,
           year,
@@ -3113,7 +3345,10 @@ document.addEventListener("DOMContentLoaded", () => {
         window.precioVehiculo = data.price;
 
         // Validación específica para motos
-        if (categoria === "motos" && window.precioVehiculo < 6000000) {
+        if (
+          categoria.toLowerCase() === "motos" &&
+          window.precioVehiculo < 6000000
+        ) {
           console.log("[VALIDACIÓN MOTOS] Vehículo no financiable.");
 
           // Mostrar mensaje "Vehículo no financiable"
@@ -3156,10 +3391,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           }
 
+          const financeInput = document.querySelector(".net-finance-input");
+          if (financeInput) {
+            financeInput.disabled = true;
+            financeInput.value = "";
+            financeInput.placeholder = "Vehículo no financiable";
+            financeInput.style.opacity = "0.5";
+            financeInput.style.color = "#FF594B";
+          }
+
           // Detener el avance al paso 3
           return;
         }
-
         // Avanzar al paso 3 si no aplica la regla
         goToStep(3);
       } catch (err) {
@@ -3228,8 +3471,18 @@ function updateMaximoAFinanciar() {
 
   // 4. Calcular el máximo a financiar
   let maxAFinanciar = 0;
-  if (ltv) {
-    maxAFinanciar = Math.round(precio * ltv);
+  if (ltv && !isNaN(Number(ltv.value))) {
+    // Buscar el fee del plazo más corto disponible
+    const productoData = window.ltvData[producto];
+    let fee = 0;
+    if (productoData && productoData.plazos) {
+      // Elegir el plazo más corto (menor cantidad de meses)
+      const plazos = Object.keys(productoData.plazos).map(Number);
+      const plazoMin = Math.min(...plazos);
+      fee = Number(productoData.plazos[plazoMin]?.fee) || 0;
+    }
+    // Aplica el gasto (fee) multiplicado por 1.21
+    maxAFinanciar = Math.round(precio * Number(ltv.value) * (1 - fee * 1.21));
   }
   console.log("[MAXAFIN] Máximo a financiar calculado:", maxAFinanciar);
 
@@ -3246,23 +3499,11 @@ function updateMaximoAFinanciar() {
   );
   if (selectedProductStep4) {
     selectedProductStep4.textContent =
-      producto === "a" ? "Seguro en Banco" : "Seguro Liberado";
+      productoPlaceholder?.dataset.label ||
+      productoPlaceholder?.textContent ||
+      "";
   }
 }
-
-// --- CARGAR LTV DATA AL INICIO ---
-document.addEventListener("DOMContentLoaded", () => {
-  // Cargar ltvData global desde el backend (solo una vez)
-  fetch(
-    location.hostname === "localhost"
-      ? "http://localhost:5000/api/calculadora"
-      : "https://api.lever.com.ar/api/calculadora"
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      window.ltvData = data.productos || {};
-    });
-});
 
 // --- ACTUALIZAR MÁXIMO A FINANCIAR AL AVANZAR A PASO 3 ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -3345,25 +3586,25 @@ async function fetchPriceFromInfoauto(codia, year) {
 }
 
 // --- MODIFICAR cálculo de cuotas para incluir motos ---
-function calcularCuotaFrancesa(monto, tasaAnual, plazo, fee) {
-  // Fórmula sistema francés + comisión + IVA sobre intereses
-  const interesMensual = tasaAnual / 100 / 12;
-  const comision = monto * (fee * 1.21);
-  let saldo = monto + comision;
+function calcularCuotaFrancesaPromedioConIVA(monto, tna, plazo, fee) {
+  // Sumar fee + IVA al monto
+  const comision = monto * fee * 1.21;
+  const montoConFee = monto + comision;
+  const interesMensual = tna / 100 / 12;
   const factor = Math.pow(1 + interesMensual, plazo);
-  const cuotaMensual = (saldo * interesMensual * factor) / (factor - 1);
+  const cuotaMensual = (montoConFee * interesMensual * factor) / (factor - 1);
 
-  let basePromedio = 0;
-  let saldoRestante = saldo;
+  let saldoRestante = montoConFee;
+  let cuotas = [];
   for (let i = 1; i <= plazo; i++) {
     const interesCuota = saldoRestante * interesMensual;
     const iva = interesCuota * 0.21;
+    const cuotaConIVA = cuotaMensual + iva;
+    cuotas.push(cuotaConIVA);
     const capitalCuota = cuotaMensual - interesCuota;
-    const cuotaConIva = cuotaMensual + iva;
     saldoRestante -= capitalCuota;
-    basePromedio += cuotaConIva;
   }
-  return Math.round(basePromedio / plazo);
+  return Math.round(cuotas.reduce((a, b) => a + b, 0) / cuotas.length);
 }
 
 function actualizarCuotasPantalla4() {
@@ -3423,6 +3664,8 @@ function actualizarCuotasPantalla4() {
 
   const productoData = window.ltvData[producto]; // Usar el nombre exacto del producto
   if (!productoData) {
+    console.log("[CUOTAS] Producto buscado:", producto);
+    console.log("[CUOTAS] Claves en ltvData:", Object.keys(window.ltvData));
     console.error(
       `[CUOTAS] No hay datos para el producto seleccionado: ${producto}. Verifica que las claves en ltvData coincidan.`
     );
@@ -3490,11 +3733,11 @@ function actualizarCuotasPantalla4() {
 
     // Si hay monto válido, calcular y mostrar la cuota
     if (monto >= 1000000) {
-      const cuota = calcularCuotaFrancesa(
+      const cuota = calcularCuotaFrancesaPromedioConIVA(
         monto,
-        parseFloat(plazoData.interest),
+        parseFloat(plazoData.interest), // TNA
         plazo,
-        plazoData.fee
+        plazoData.fee // fee (por ejemplo, 0.008)
       );
       item.querySelector(".scrollable-value").innerHTML =
         "$" + cuota.toLocaleString("es-AR");
@@ -3508,20 +3751,64 @@ function actualizarCuotasPantalla4() {
   mensajeDiv.style.width = "100%";
   mensajeDiv.style.display = "flex";
   mensajeDiv.style.justifyContent = "center";
+  mensajeDiv.style.alignItems = "center"; // Alinea verticalmente
+
   mensajeDiv.innerHTML = `
+  <div class="mensaje-ayuda-cuota-row" style="display: flex; align-items: center; gap: 8px; justify-content: flex-start; min-height: 24px;">
+    <div class="cuota-info-container" style="margin-right: 8px; flex-shrink: 0;">
+      <button class="cuota-info-btn" onclick="document.getElementById('cuota-info-tooltip').classList.toggle('active')" title="Información de la cuota">?</button>
+      <div id="cuota-info-tooltip" class="cuota-info-tooltip">
+        CUOTA PROMEDIO TNA vigente a la fecha, sujeto a calificación del solicitante en cada entidad bancaria con las que opera LEVER SRL. No incluye impuestos de SELLOS DE PRENDA, ni SEGURO del bien.
+      </div>
+    </div>
     <p id="select-cuota-message" class="">
       Seleccioná una opción para poder cotizar
     </p>
-  `;
+  </div>
+`;
   container.appendChild(mensajeDiv);
 
   // Si ya hay una cuota seleccionada, ocultar el mensaje
   const selectedCuota = container.querySelector(".scrollable-item.selected");
   const mensajeP = mensajeDiv.querySelector("#select-cuota-message");
+  const btn = mensajeDiv.querySelector(".cuota-info-btn");
+
+  console.log("selectedCuota:", selectedCuota);
+  console.log(
+    "mensajeP antes:",
+    mensajeP ? mensajeP.style.display : "no existe"
+  );
+
   if (selectedCuota && mensajeP) {
     mensajeP.classList.add("hidden");
+    console.log("Ocultando mensaje: agregada clase 'hidden'");
+  } else if (mensajeP) {
+    mensajeP.classList.remove("hidden");
+    console.log("Mostrando mensaje: removida clase 'hidden'");
   }
-  
+
+  if (mensajeP) {
+    console.log(
+      "mensajeP después:",
+      "display:",
+      mensajeP.style.display,
+      "visibility:",
+      mensajeP.style.visibility
+    );
+  }
+
+  if (btn) {
+    const rect = btn.getBoundingClientRect();
+    console.log(
+      "Botón posición:",
+      "top:",
+      rect.top,
+      "left:",
+      rect.left,
+      "display:",
+      btn.style.display
+    );
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -3557,115 +3844,79 @@ function getSelectedCategoria() {
   const catPlaceholder = document.querySelector(
     "[onclick=\"toggleCustomOptions('categoria-options')\"]"
   );
-  if (!catPlaceholder) return "autos";
+  if (!catPlaceholder) return "Autos y Pickup";
   const val = (
     catPlaceholder.dataset.value ||
     catPlaceholder.textContent ||
     ""
   ).toLowerCase();
-  if (val.includes("moto")) return "motos";
-  if (val.includes("utilitario") || val.includes("camion"))
-    return "utilitarios";
-  return "autos";
+
+  if (val.includes("moto")) return "Motos";
+  if (val.includes("camion")) return "Camiones";
+  if (val.includes("utilitario")) return "Utilitarios";
+  return "Autos y Pickup";
 }
 
 function actualizarProductosPorCategoria(categoria) {
-  if (!window.ltvData) return;
+  if (!window.productosData) return;
   const productOptions = document.getElementById("product-options");
   productOptions.innerHTML = "";
+
+  // Buscar el segmento_id correspondiente a la categoría seleccionada
+  const segmento = window.segmentosData.find(
+    (seg) => seg.nombre.toLowerCase() === categoria.toLowerCase()
+  );
+  const segmentoId = segmento ? segmento.id : null;
 
   // Obtener el año seleccionado
   const yearPlaceholder = document.querySelector(
     `[onclick="toggleCustomOptions('anio-options')"]`
   );
-  const year =
-    yearPlaceholder?.dataset.value || yearPlaceholder?.textContent?.trim();
+  const yearSeleccionado =
+    yearPlaceholder?.dataset.value?.trim() ||
+    yearPlaceholder?.textContent?.trim() ||
+    null;
 
-  // Filtrar productos según la categoría seleccionada
-  let productos = Object.keys(window.ltvData);
+  // Filtrar productos por segmento_id
+  const productosFiltrados = window.productosData.filter(
+    (prod) => prod.segmento_id == segmentoId
+  );
 
-  if (categoria && categoria.toLowerCase().includes("moto")) {
-    productos = productos.filter((nombre) =>
-      nombre.toLowerCase().includes("moto")
-    );
-  } else {
-    productos = productos.filter(
-      (nombre) => !nombre.toLowerCase().includes("moto")
-    );
-  }
+  // --- AGRUPAR POR nombre + segmento_id + banco ---
+  const productosUnicos = [];
+  const clavesVistas = new Set();
 
-  // --- FILTRAR POR AÑO DISPONIBLE ---
-  productos = productos.filter((nombre) => {
-    const ltv = window.ltvData[nombre]?.ltv;
-    return ltv && ltv[year];
+  productosFiltrados.forEach((prod) => {
+    const clave = `${prod.nombre}__${prod.segmento_id}__${prod.banco}`;
+    if (!clavesVistas.has(clave)) {
+      // --- FILTRO POR LTV DEL AÑO SELECCIONADO ---
+      // Buscar la clave en window.ltvData
+      if (
+        window.ltvData &&
+        window.ltvData[clave] &&
+        window.ltvData[clave].ltv &&
+        window.ltvData[clave].ltv[yearSeleccionado]
+      ) {
+        clavesVistas.add(clave);
+        productosUnicos.push(prod);
+      }
+    }
   });
 
-  // Ordenar alfabéticamente
-  productos.sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
-
-  // --- NUEVA LÓGICA ---
-  const productSelectContainer = document.querySelector(
-    ".custom-options-container.product-select"
-  );
-  const productoPlaceholder = document.querySelector(
-    `[onclick="toggleCustomOptions('product-options')]`
-  );
-  const maxAmount = document.querySelector(".custom-summary-amount");
-  const customSummaryInput = document.querySelector(".custom-summary-input");
-
-  if (productos.length === 0) {
-    // Deshabilitar el select de productos y mostrar "CONSULTANOS"
-    if (productSelectContainer) {
-      productSelectContainer.classList.add("disabled");
-    }
-    if (productoPlaceholder) {
-      productoPlaceholder.textContent = "Sin productos disponibles";
-      productoPlaceholder.style.pointerEvents = "none";
-      productoPlaceholder.style.opacity = "0.5";
-      productoPlaceholder.dataset.value = "";
-      productoPlaceholder.dataset.label = "";
-    }
-    if (maxAmount) {
-      maxAmount.textContent = "CONSULTANOS";
-    }
-    // Deshabilitar y grisear el input de monto
-    if (customSummaryInput) {
-      customSummaryInput.disabled = true;
-      customSummaryInput.style.opacity = "0.5";
-      customSummaryInput.style.pointerEvents = "none";
-      customSummaryInput.value = "";
-    }
+  if (productosUnicos.length === 0) {
+    productOptions.innerHTML =
+      '<div class="custom-option disabled">Sin productos disponibles</div>';
     return;
-  } else {
-    // Habilitar el select si hay productos
-    if (productSelectContainer) {
-      productSelectContainer.classList.remove("disabled");
-    }
-    if (productoPlaceholder) {
-      productoPlaceholder.textContent = "Seleccionar Producto";
-      productoPlaceholder.style.pointerEvents = "auto";
-      productoPlaceholder.style.opacity = "1";
-      productoPlaceholder.dataset.value = "";
-      productoPlaceholder.dataset.label = "";
-    }
-    if (maxAmount) {
-      maxAmount.textContent = "Seleccioná un producto";
-    }
-    // Habilitar el input de monto
-    if (customSummaryInput) {
-      customSummaryInput.disabled = false;
-      customSummaryInput.style.opacity = "1";
-      customSummaryInput.style.pointerEvents = "auto";
-    }
   }
 
-  productos.forEach((producto) => {
+  productosUnicos.forEach((prod) => {
+    const productoKey = `${prod.nombre}__${prod.segmento_id}__${prod.banco}`;
     const option = document.createElement("div");
     option.className = "custom-option";
-    option.textContent = producto;
-    option.dataset.value = producto;
+    option.textContent = prod.nombre; // Solo el nombre visible
+    option.dataset.value = productoKey; // Value interno con banco
     option.onclick = function () {
-      selectCustomOption(producto, "product-options", producto);
+      selectCustomOption(prod.nombre, "product-options", productoKey);
     };
     productOptions.appendChild(option);
   });
@@ -3680,6 +3931,7 @@ document
         event.target.dataset.value ||
         event.target.textContent.trim().toLowerCase();
       actualizarProductosPorCategoria(categoria);
+      habilitarSelectProductos();
     }
   });
 
@@ -3693,12 +3945,47 @@ document.addEventListener("DOMContentLoaded", () => {
       categoriaPlaceholder.dataset.value ||
       categoriaPlaceholder.textContent.trim().toLowerCase();
     actualizarProductosPorCategoria(categoria);
+    habilitarSelectProductos();
   }
 });
 document.getElementById("anio-options").addEventListener("click", (event) => {
   if (event.target.classList.contains("custom-option")) {
+    // Limpiar placeholders y valores de marca y modelo
+    const marcaPlaceholder = document.querySelector(
+      "[onclick=\"toggleCustomOptions('marca-options')\"]"
+    );
+    const modeloPlaceholder = document.querySelector(
+      "[onclick=\"toggleCustomOptions('modelo-options')\"]"
+    );
+    if (marcaPlaceholder) {
+      marcaPlaceholder.textContent = "Marca";
+      marcaPlaceholder.dataset.value = "";
+      marcaPlaceholder.classList.remove("selected-bold");
+    }
+    if (modeloPlaceholder) {
+      modeloPlaceholder.textContent = "Modelo";
+      modeloPlaceholder.dataset.value = "";
+      modeloPlaceholder.classList.remove("selected-bold");
+    }
+
+    // Limpiar opciones de selects dependientes (dejar solo el buscador si existe)
+    const marcaOptions = document.getElementById("marca-options");
+    if (marcaOptions) {
+      const search = marcaOptions.querySelector(".custom-search-container");
+      marcaOptions.innerHTML = "";
+      if (search) marcaOptions.appendChild(search);
+    }
+    const modeloOptions = document.getElementById("modelo-options");
+    if (modeloOptions) {
+      const search = modeloOptions.querySelector(".custom-search-container");
+      modeloOptions.innerHTML = "";
+      if (search) modeloOptions.appendChild(search);
+    }
+
+    // Actualizar productos y habilitar select productos
     const categoria = getSelectedCategoria();
     actualizarProductosPorCategoria(categoria);
+    habilitarSelectProductos();
   }
 });
 
@@ -3891,16 +4178,17 @@ window.goToStep = function (step) {
 document.addEventListener("DOMContentLoaded", () => {
   // Redirección botón header "Inicio" para todas las páginas
   document.querySelectorAll(".desktop-inicio-btn").forEach((btn) => {
-    // Solo aplicar redirección si NO estamos en cotizar.html
-    if (!window.location.pathname.includes("cotizar.html")) {
+    // Solo aplicar redirección si NO estamos en index.html
+    if (!window.location.pathname.includes("index.html")) {
       btn.onclick = function (e) {
         e.preventDefault();
-        window.location.href = "cotizar.html";
+        window.location.href = "index.html";
       };
     } else {
-      // Si estamos en cotizar.html, limpiamos el formulario de pantalla 1
+      // Si estamos en index.html, limpiamos el formulario de pantalla 1
       btn.addEventListener("click", function (e) {
         limpiarFormularioPantalla1();
+        limpiarDatosSolicitante();
         goToStep(1);
       });
     }
@@ -4088,7 +4376,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Enlaces del menú hamburguesa
   document
     .querySelectorAll(
-      'a[href="cotizar.html"], a[href="nosotros.html"], a[href="contacto.html"]'
+      'a[href="index.html"], a[href="nosotros.html"], a[href="contacto.html"]'
     )
     .forEach((link) => {
       link.addEventListener("click", function (e) {
@@ -4114,9 +4402,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const isInicioBtn = this.classList.contains("desktop-inicio-btn");
         const isNosotrosBtn = this.classList.contains("desktop-nosotros-btn");
 
-        if (isInicioBtn && !window.location.pathname.includes("cotizar.html")) {
+        if (isInicioBtn && !window.location.pathname.includes("index.html")) {
           e.preventDefault();
-          smoothPageTransition("cotizar.html");
+          smoothPageTransition("index.html");
         } else if (
           isNosotrosBtn &&
           !window.location.pathname.includes("nosotros.html")
@@ -4166,13 +4454,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Al final del archivo o después de definir finalizeCotizacion
 document.addEventListener("DOMContentLoaded", () => {
   const cotizarAhoraBtn = document.getElementById("cotizar-ahora-btn");
   if (cotizarAhoraBtn) {
     cotizarAhoraBtn.addEventListener("click", function (e) {
       e.preventDefault();
-      finalizeCotizacion();
+      finalizeCotizacion(); // Abre WhatsApp en nueva pestaña
+
+      // Limpiar formularios y volver a pantalla 1
+      if (typeof limpiarFormularioPantalla1 === "function")
+        limpiarFormularioPantalla1();
+      if (typeof resetearFormulariosPantalla2 === "function")
+        resetearFormulariosPantalla2();
+      if (typeof limpiarFormularioPantalla3 === "function")
+        limpiarFormularioPantalla3();
+      if (typeof limpiarDatosSolicitante === "function")
+        limpiarDatosSolicitante();
+
+      // Volver a la pantalla 1
+      if (typeof goToStep === "function") goToStep(1);
+
+      // Opcional: scroll al top
+      window.scrollTo(0, 0);
     });
   }
 });
@@ -4195,18 +4498,22 @@ function resetearFormulariosPantalla2() {
   if (categoriaPlaceholder) {
     categoriaPlaceholder.textContent = "Categoría";
     categoriaPlaceholder.dataset.value = "";
+    categoriaPlaceholder.classList.remove("selected-bold");
   }
   if (anioPlaceholder) {
     anioPlaceholder.textContent = "Año";
     anioPlaceholder.dataset.value = "";
+    anioPlaceholder.classList.remove("selected-bold");
   }
   if (marcaPlaceholder) {
     marcaPlaceholder.textContent = "Marca";
     marcaPlaceholder.dataset.value = "";
+    marcaPlaceholder.classList.remove("selected-bold");
   }
   if (modeloPlaceholder) {
     modeloPlaceholder.textContent = "Modelo";
     modeloPlaceholder.dataset.value = "";
+    modeloPlaceholder.classList.remove("selected-bold");
   }
 
   // Limpiar opciones de selects dependientes (dejar solo el buscador si existe)
@@ -4232,62 +4539,16 @@ function resetearFormulariosPantalla2() {
   setTimeout(validarFormularioPantalla2, 50);
 }
 
-// --- FUNCIÓN GLOBAL PARA LIMPIAR FORMULARIO DE PANTALLA 3 ---
-function limpiarFormularioPantalla3() {
-  // Limpiar el input de monto a financiar
-  const financeInput = document.querySelector(".net-finance-input");
-  if (financeInput) {
-    financeInput.value = "";
-    financeInput.style.color = ""; // Resetear color en caso de que hubiera error
+document.addEventListener("DOMContentLoaded", () => {
+  const modificarBtn = document.querySelector("#step-4 .back-button");
+  if (modificarBtn) {
+    modificarBtn.addEventListener("click", () => {
+      goToStep(3);
+      limpiarFormularioPantalla3(); // Borra el monto y el producto al volver a pantalla 3
+      setTimeout(validarBotonSiguientePantalla3, 50);
+    });
   }
-
-  // Resetear el select de producto
-  const productoPlaceholder = document.querySelector(
-    "[onclick=\"toggleCustomOptions('product-options')\"]"
-  );
-  if (productoPlaceholder) {
-    productoPlaceholder.textContent = "Seleccionar Producto";
-    productoPlaceholder.dataset.value = "";
-    productoPlaceholder.dataset.label = "";
-    // Restaurar la interactividad al placeholder si estaba deshabilitado
-    productoPlaceholder.style.pointerEvents = "auto";
-    productoPlaceholder.style.opacity = "1";
-  }
-
-  // Reactivar el botón "Siguiente" si estaba deshabilitado
-  const nextButtonStep3 = document.querySelector(
-    '.next-button[onclick="goToStep(4)"]'
-  );
-  if (nextButtonStep3) {
-    nextButtonStep3.disabled = false;
-    nextButtonStep3.style.opacity = "1";
-    nextButtonStep3.style.pointerEvents = "auto";
-  }
-
-  // NUEVO: Restaurar el texto de "máximo a financiar" si estaba en "Vehículo no financiable"
-  const maxAmount = document.querySelector(".custom-summary-amount");
-  if (maxAmount && maxAmount.textContent === "Vehículo no financiable") {
-    maxAmount.textContent = "Selecciona producto";
-  }
-
-  // NUEVO: Quitar la clase "disabled" del contenedor de productos
-  const productSelectContainer = document.querySelector(
-    ".custom-options-container.product-select"
-  );
-  if (productSelectContainer) {
-    productSelectContainer.classList.remove("disabled");
-  }
-
-  // NUEVO: Recargar las opciones de productos según la categoría seleccionada
-  try {
-    const categoria = getSelectedCategoria();
-    if (categoria) {
-      actualizarProductosPorCategoria(categoria.toLowerCase());
-    }
-  } catch (error) {
-    console.error("Error al recargar opciones de productos:", error);
-  }
-}
+});
 
 // --- NUEVO: Limpiar formulario de pantalla 3 al hacer clic en el botón "back" ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -4296,61 +4557,61 @@ document.addEventListener("DOMContentLoaded", () => {
     backBtnStep3.addEventListener("click", () => {
       resetearFormulariosPantalla2(); // Ya existente - resetea pantalla 2
       limpiarFormularioPantalla3(); // Nueva función - limpia pantalla 3
+      setTimeout(validarBotonSiguientePantalla3, 50);
     });
   }
 });
 
 // Función simple para validar y controlar el estado del botón de la pantalla 1
-function validarBotonPantalla1() {
-  const dniInput = document.querySelector(".dni-input");
-  const nextButton = document.querySelector("#step-1 .next-button");
+// function validarBotonPantalla1() {
+//   const dniInput = document.querySelector(".dni-input");
+//   const nextButton = document.querySelector("#step-1 .next-button");
 
-  if (!dniInput || !nextButton) return;
+//   if (!dniInput || !nextButton) return;
 
-  if (dniInput.value.trim() !== "") {
-    // Habilitar botón si hay texto
-    nextButton.disabled = false;
-    nextButton.style.opacity = "1";
-    nextButton.style.pointerEvents = "auto";
-    nextButton.style.cursor = "pointer";
-  } else {
-    // Deshabilitar botón si está vacío
-    nextButton.disabled = true;
-    nextButton.style.opacity = "0.5";
-    nextButton.style.pointerEvents = "none";
-    nextButton.style.cursor = "not-allowed";
+//   if (dniInput.value.trim() !== "") {
+//     // Habilitar botón si hay texto
+//     nextButton.disabled = false;
+//     nextButton.style.opacity = "1";
+//     nextButton.style.pointerEvents = "auto";
+//     nextButton.style.cursor = "pointer";
+//   } else {
+//     // Deshabilitar botón si está vacío
+//     nextButton.disabled = true;
+//     nextButton.style.opacity = "0.5";
+//     nextButton.style.pointerEvents = "none";
+//     nextButton.style.cursor = "not-allowed";
+//   }
+// }
+
+// // Inicializar al cargar el documento
+// document.addEventListener("DOMContentLoaded", () => {
+//   // Desactivar el botón al inicio
+//   const step1Button = document.querySelector("#step-1 .next-button");
+//   if (step1Button) {
+//     step1Button.disabled = true;
+//     step1Button.style.opacity = "0.5";
+//     step1Button.style.pointerEvents = "none";
+//     step1Button.style.cursor = "not-allowed";
+//   }
+
+// Agregar listener al campo DNI/CUIT
+const dniInput = document.querySelector(".dni-input");
+if (dniInput) {
+  dniInput.addEventListener("input", validarBotonPantalla1);
+  // También usar el listener existente
+  if (typeof updateSearchIconState === "function") {
+    dniInput.addEventListener("input", updateSearchIconState);
   }
 }
 
-// Inicializar al cargar el documento
-document.addEventListener("DOMContentLoaded", () => {
-  // Desactivar el botón al inicio
-  const step1Button = document.querySelector("#step-1 .next-button");
-  if (step1Button) {
-    step1Button.disabled = true;
-    step1Button.style.opacity = "0.5";
-    step1Button.style.pointerEvents = "none";
-    step1Button.style.cursor = "not-allowed";
-  }
-
-  // Agregar listener al campo DNI/CUIT
-  const dniInput = document.querySelector(".dni-input");
-  if (dniInput) {
-    dniInput.addEventListener("input", validarBotonPantalla1);
-    // También usar el listener existente
-    if (typeof updateSearchIconState === "function") {
-      dniInput.addEventListener("input", updateSearchIconState);
-    }
-  }
-
-  // Actualizar estado del botón cuando cambia el switch
-  const switchInput = document.querySelector(".toggle-switch input");
-  if (switchInput) {
-    switchInput.addEventListener("change", () => {
-      setTimeout(validarBotonPantalla1, 50);
-    });
-  }
-});
+// Actualizar estado del botón cuando cambia el switch
+const switchInput = document.querySelector(".toggle-switch input");
+if (switchInput) {
+  switchInput.addEventListener("change", () => {
+    setTimeout(validarBotonPantalla1, 50);
+  });
+}
 
 // Modificar la función limpiarFormularioPantalla1 para actualizar el estado del botón
 const originalLimpiarFormulario = window.limpiarFormularioPantalla1;
@@ -4365,18 +4626,22 @@ window.limpiarFormularioPantalla1 = function () {
 if (categoriaPlaceholder) {
   categoriaPlaceholder.textContent = "Categoría";
   categoriaPlaceholder.dataset.value = "";
+  anioPlaceholder.classList.remove("selected-bold");
 }
 if (anioPlaceholder) {
   anioPlaceholder.textContent = "Año";
   anioPlaceholder.dataset.value = "";
+  anioPlaceholder.classList.remove("selected-bold");
 }
 if (marcaPlaceholder) {
   marcaPlaceholder.textContent = "Marca";
   marcaPlaceholder.dataset.value = "";
+  anioPlaceholder.classList.remove("selected-bold");
 }
 if (modeloPlaceholder) {
   modeloPlaceholder.textContent = "Modelo";
   modeloPlaceholder.dataset.value = "";
+  anioPlaceholder.classList.remove("selected-bold");
 }
 
 // Limpiar opciones de selects dependientes (dejar solo el buscador si existe)
@@ -4400,12 +4665,32 @@ if (logo) {
   logo.alt = "Logo de la marca";
 }
 
+function habilitarSelectProductos() {
+  const productSelectContainer = document.querySelector(
+    ".custom-options-container.product-select"
+  );
+  if (productSelectContainer) {
+    productSelectContainer.classList.remove("disabled");
+    // Habilitar el placeholder
+    const placeholder = productSelectContainer.querySelector(
+      ".custom-options-placeholder"
+    );
+    if (placeholder) {
+      placeholder.style.pointerEvents = "auto";
+      placeholder.style.opacity = "1";
+    }
+  }
+}
+
 // --- FUNCIÓN GLOBAL PARA LIMPIAR FORMULARIO DE PANTALLA 3 ---
 function limpiarFormularioPantalla3() {
   // Limpiar el input de monto a financiar
   const financeInput = document.querySelector(".net-finance-input");
   if (financeInput) {
     financeInput.value = "";
+    financeInput.disabled = false;
+    financeInput.placeholder = "Monto neto a financiar";
+    financeInput.style.opacity = "1";
     financeInput.style.color = ""; // Resetear color en caso de que hubiera error
   }
 
@@ -4417,9 +4702,6 @@ function limpiarFormularioPantalla3() {
     productoPlaceholder.textContent = "Seleccionar Producto";
     productoPlaceholder.dataset.value = "";
     productoPlaceholder.dataset.label = "";
-    // Restaurar la interactividad al placeholder si estaba deshabilitado
-    productoPlaceholder.style.pointerEvents = "auto";
-    productoPlaceholder.style.opacity = "1";
   }
 
   // Reactivar el botón "Siguiente" si estaba deshabilitado
@@ -4433,8 +4715,9 @@ function limpiarFormularioPantalla3() {
   }
 
   // NUEVO: Restaurar el texto de "máximo a financiar" si estaba en "Vehículo no financiable"
+
   const maxAmount = document.querySelector(".custom-summary-amount");
-  if (maxAmount && maxAmount.textContent === "Vehículo no financiable") {
+  if (maxAmount) {
     maxAmount.textContent = "Selecciona producto";
   }
 
@@ -4467,3 +4750,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+document.addEventListener("click", (event) => {
+  document
+    .querySelectorAll(".custom-options-container")
+    .forEach((container) => {
+      if (!container.contains(event.target)) {
+        const options = container.querySelector(".custom-options");
+        const placeholder = container.querySelector(
+          ".custom-options-placeholder"
+        );
+        const extra = container.querySelector(".custom-options-extra");
+        options.classList.add("hidden");
+        placeholder.classList.remove("active");
+        if (extra) extra.classList.remove("active");
+      }
+    });
+});
+function filterOptions(selectId, filterText) {
+  const optionsContainer = document.getElementById(selectId);
+  if (!optionsContainer) return;
+  const allOptions = optionsContainer.querySelectorAll(".custom-option");
+  const filter = filterText.toLowerCase();
+  allOptions.forEach((option) => {
+    // No ocultar el buscador ni las opciones deshabilitadas
+    if (option.classList.contains("disabled")) return;
+    const optionText = option.textContent.toLowerCase();
+    option.style.display = optionText.includes(filter) ? "flex" : "none";
+  });
+}

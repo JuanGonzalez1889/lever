@@ -1,1046 +1,1075 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
+<html lang="es">
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1">
-    <title>LEVER: Créditos Prendarios</title>
-    <meta name="description"
-        content="Calcula tu posible financiación con solo tu DNI. Créditos para Pymes. Posibilitá el financiamiento a los clientes de tu agencia por medio de nosotros.">
-    <meta name="keywords"
-        content="Créditos prendarios, Financiamiento con DNI, Créditos para Pymes, Préstamos con garantía prendaria, Financiamiento ágil y seguro, Soluciones financieras para empresas, Préstamos con tasas competitivas, Alternativas de financiamiento para negocios, Créditos para clientes de agencias, Préstamos rápidos con garantía, Financiamiento para la compra de autos, Créditos automotrices, Préstamos para comprar vehículos, Financiamiento vehicular con DNI, Créditos prendarios para autos, Comprar auto con préstamo, Financiación rápida para autos, Créditos para adquirir vehículos, Préstamos para vehículos usados, Financiamiento flexible para autos">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lever</title>
     <link rel="icon" href="./images/favicon.svg">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="alternate" hreflang="x-default" href="https://lever.io">
-    <link rel="alternate" hreflang="en" href="https://lever.io">
-    <link rel="alternate" hreflang="es-AR" href="https://lever.io">
-    <link rel="alternate" hreflang="es" href="https://lever.io">
-    <link rel="stylesheet" type="text/css" href="./css/styles.min.css">
-    <meta property="og:title" content="LEVER: Créditos Prendarios">
-    <meta property="og:description"
-        content="Calcula tu posible financiación con solo tu DNI. Créditos para Pymes. Posibilitá el financiamiento a los clientes de tu agencia por medio de nosotros.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://https://lever.com.ar/images/lever_1920x1080.png">
-    <script>function resizer() { var e = window.innerWidth / 1920; window.innerWidth < 980 ? document.documentElement.style.fontSize = "1em" : document.documentElement.style.fontSize = 1.25 * e + "em" } window.addEventListener("load", resizer), window.addEventListener("resize", resizer);</script>
-</head>
+    <link rel="stylesheet" href="cotizar.css" />
+    <link rel="stylesheet" href="cotizarTabletDesktop.css" />
+    <link rel="stylesheet" href="pantallasChicas.css" />
 
-<body itemscope itemtype="http://schema.org/WebPage">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    
+    
+  </head>
+  <body>
     <header>
-        <div class="container">
-            <div itemprop="logo"><a href="#"><img src="./images/logos/lever.svg" width="226px" height="50px"
-                        alt="Lever Technology"></a></div><a href="#" class="hamburguer"><span>Menu</span></a>
-            <nav id="menu" itemprop="mainEntityOfPage" itemscope itemtype="http://schema.org/SiteNavigationElement">
-                <ul>
-                    <li><a href="#" itemprop="url" class="scroller outline" data-text="Inicio" data-url="#inicio"><span
-                                itemprop="name">Inicio</span></a></li>
-                    <li><a href="#" itemprop="url" class="scroller outline" data-text="Nosotros"
-                            data-url="#nosotros"><span itemprop="name">Nosotros</span></a></li>
-                    <li><a href="#" itemprop="url" class="scroller outline" data-text="Contacto"
-                            data-url="#contacto"><span itemprop="name">Contacto</span></a></li>
-                    <li><button class="btn_outline picker-link">COTIZÁ AHORA</button></li>
-                </ul>
-            </nav>
+      <div class="container header-container">
+        <div itemprop="logo" class="logo-container">
+          <a href="" onclick="goToStep(1)"
+            ><img src="./images/logos/lever.svg" alt="Lever Technology"
+          /></a>
         </div>
+        <!-- Agrupa los botones en un contenedor para stacking y posición -->
+        <div class="desktop-header-buttons">
+          <button
+            type="button"
+            class="desktop-inicio-btn"
+            onclick="limpiarFormularioPantalla1();resetearFormulariosPantalla2();limpiarFormularioPantalla3();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');"
+          >
+            <span class="desktop-inicio-btn-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="17"
+                height="16"
+                viewBox="0 0 17 16"
+              >
+                <path
+                  id="Vector"
+                  d="M16.648,7.869,8.924.175a.6.6,0,0,0-.848,0L.353,7.869A1.2,1.2,0,0,0,1.2,9.912h.814V15.4a.6.6,0,0,0,.6.6H7.3V11.813H9.4V16h4.986a.6.6,0,0,0,.6-.6V9.912H15.8a1.2,1.2,0,0,0,.848-2.043Z"
+                  fill="#fff"
+                />
+              </svg>
+            </span>
+            <span class="desktop-inicio-btn-text">
+              Inicio</span>
+          </button>
+          <button
+            type="button"
+            class="desktop-nosotros-btn"
+            onclick="mostrarNosotrosCotizar()"
+          >
+            <span class="desktop-nosotros-btn-icon">
+              <svg
+                id="Grupo_2625"
+                data-name="Grupo 2625"
+                xmlns="http://www.w3.org/2000/svg"
+                width="22.767"
+                height="22.767"
+                viewBox="0 0 22.767 22.767"
+              >
+                <g clip-path="url(#clip-path)">
+                  <defs>
+                    <clipPath id="clip-path">
+                      <rect width="22.767" height="22.767" fill="#15224f" />
+                    </clipPath>
+                  </defs>
+                  <path
+                    d="M11.384,0A11.384,11.384,0,1,0,22.767,11.384,11.384,11.384,0,0,0,11.384,0m3.037,6.83A1.517,1.517,0,1,1,12.9,8.347,1.517,1.517,0,0,1,14.421,6.83m-6.072,0A1.517,1.517,0,1,1,6.832,8.347,1.517,1.517,0,0,1,8.349,6.83m9.015,7.852a6.808,6.808,0,0,1-11.338.945c-.362-.457-.977-1.209-.459-1.761a.818.818,0,0,1,.35-.2c.753-.142.905.508,1.274.981a5.327,5.327,0,0,0,8.366.026c.22-.281.524-.908.854-1a.756.756,0,0,1,.953,1"
+                    fill="#15224f"
+                  />
+                </g>
+              </svg>
+            </span>
+            <span class="desktop-nosotros-btn-text">Nosotros</span>
+          </button>
+        </div>
+        <a href="#" class="hamburguer" id="hamburguer-menu"
+          ><span>Menu</span></a
+        >
+      </div>
+      <nav
+        id="menu"
+        itemprop="mainEntityOfPage"
+        itemscope
+        itemtype="http://schema.org/SiteNavigationElement"
+        class="hidden"
+      >
+        <ul>
+          <li>
+            <a
+              href="index.html"
+              itemprop="url"
+              class="scroller outline"
+              data-text="Inicio"
+              data-url="#inicio"
+              ><span itemprop="name">Inicio</span></a
+            >
+          </li>
+          <li>
+            <a
+              href="nosotrosNew.html"
+              itemprop="url"
+              class="scroller outline"
+              data-text="Nosotros"
+              data-url="#nosotros"
+              onclick="mostrarNosotrosCotizar();return false;"
+              ><span itemprop="name">Nosotros</span></a
+            >
+          </li>
+          <li>
+            <a
+              href="nosotrosNew.html#contacto"
+              itemprop="url"
+              class="scroller outline"
+              data-text="Contacto"
+              data-url="#contacto"
+              ><span itemprop="name">Contacto</span></a
+            > 
+          </li>
+        </ul> 
+        <!-- Botón de cerrar menú hamburguesa (cruz) -->
+        <a href="#" class="close-menu" id="close-menu" aria-label="Cerrar menú">
+          <img
+            src="./images/icons/close.svg"
+            alt="Cerrar menú"
+            width="32"
+            height="29"
+          />
+        </a>
+      </nav>
+      <div class="menu-overlay" id="menu-overlay"></div>
     </header>
-    <aside>
-        <div>
-            <h3 class="picker-link">CALCULÁ TU CRÉDITO<br>AHORA</h3>
-        </div>
-        <div class="calculadora-container"><img class="picker-link" src="./images/icons/calculator.svg" alt="">
-            <div class="calculadora">
-                <h3>CALCULÁ TU CRÉDITO AHORA <a href="#" class="close-btn"><img src="./images/icons/close.svg"
-                            alt="close btn"></a></h3>
-                <div class="container-flex initial-page">
-                    <form action="#" class="form-calculator-container">
-                        <div class="select-container"><select name="ano" id="anio">
-                                <option disabled="disabled" selected="selected">AÑO</option>
-                                <option value="2025">2025</option>
-                                <option value="2024">2024</option>
-                                <option value="2023">2023</option>
-                                <option value="2022">2022</option>
-                                <option value="2021">2021</option>
-                                <option value="2020">2020</option>
-                                <option value="2019">2019</option>
-                                <option value="2018">2018</option>
-                                <option value="2017">2017</option>
-                                <option value="2016">2016</option>
-                                <option value="2015">2015</option>
-                                <option value="2014">2014</option>
-                                <option value="2013">2013</option>
-                                <option value="2012">2012</option>
-                                <option value="2011">2011</option>
-                                <option value="2010">2010</option>
-                            </select></div>
-                        <div class="select-container"><img class="loader-icon loader-icon-select"
-                                id="loader-icon-select-marcas" src="./images/icons/loader.svg" alt="loader"> <select
-                                name="marcas" id="marcas">
-                                <option>MARCA</option>
-                            </select></div>
-                        <div class="select-container"><img class="loader-icon loader-icon-select"
-                                id="loader-icon-select-modelos" src="./images/icons/loader.svg" alt="loader"> <select
-                                name="modelos" id="modelos">
-                                <option>MODELO</option>
-                            </select></div>
-                        <div class="btn-container"><button id="btn-avanzar" class="btn dark custom"
-                                disabled="disabled">AVANZAR</button></div>
-                    </form>
-                    <div><img src="./images/calculadora/calculadora-big.png" alt="" class="calculadora-img"></div>
-                </div>
-                <div class="container-flex second-page hidden">
-                    <form action="#" class="" style="color: black; font-size: 1rem; width: 100%;">
-                        <div class="descripcion">
-                            <div class="descripcion-container">
-                                <div class="descripcion-container__img">
-                                    <div class="car-logo"></div>
-                                </div>
-                                <div class="descripcion-container__text">
-                                    <p class="marca"></p>
-                                    <p class="modelo"></p>
-                                    <p class="año"></p>
-                                </div>
-                            </div>
-                            <div class="valor-de-mercado-container" style="display: none;">
-                                <div>
-                                    <p class="valor-de-mercado-title">Valor de mercado</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="seguro">
-                            <div class="seguro-container">
-                                <div class="seguro-container__input">
-                                    <div class="switch-container"><label class="toggle-switch"><input id="switch-input"
-                                                type="checkbox"> <span class="switch-slider"></span> <span
-                                                class="switch-label">UVA</span> <span
-                                                class="switch-label">Seguro liberado</span></label></div>
-                                    <div class="container-info"><a href="#">?<div class="pop-up">
-                                                <p><span>UVA</span>: Monto expresado en pesos. Transformado a UVAs al momento de liquidación. Cada cuota se ajustará al valor de cotización de UVA del día en que se efectúa el pago</p>
-                                                <p><span>Seguro liberado</span>: El cliente gestiona seguro con su
-                                                    productor y presenta al banco para su aprobación.</p>
-                                            </div></a></div>
-                                    <div class="monto-a-financiar-mobile">
-                                        <p>Monto a financiar</p>
-                                    </div><input class="" type="text" id="monto-ingresado" pattern="[0-9]"
-                                        inputmode="decimal" placeholder="¿CUÁNTO DINERO NECESITÁS?">
-                                    <div>
-                                        <p class="error-msj">El valor ingresado debe ser mayor a 1 millón de pesos</p>
-                                    </div>
-                                    <div class="cuotas-mobile">
-                                        <div class="card-cuota-mobile">
-                                            <p class="cuota"><span>12</span> CUOTAS</p>
-                                            <p class="financiacion-en-12 cuota-valor"><img class="loader-icon"
-                                                    src="./images/icons/loader.svg" alt="loader"></p>
-                                        </div>
-                                        <div class="card-cuota-mobile">
-                                            <p class="cuota"><span>24</span> CUOTAS</p>
-                                            <p class="financiacion-en-24 cuota-valor"><img class="loader-icon"
-                                                    src="./images/icons/loader.svg" alt="loader"></p>
-                                        </div>
-                                        <div class="card-cuota-mobile destacada mas-elegida-mobile">
-                                            <div class="white-star-container">
-                                                <div><img class="white-star" src="./images/icons/white-star.svg"
-                                                        alt="white-star"></div>
-                                            </div>
-                                            <div class="cuota-container">
-                                                <p class="mas-elegida">MÁS ELEGIDA</p>
-                                                <p class="cuota"><span>36</span> CUOTAS</p>
-                                            </div>
-                                            <div class="cuota-valor-container">
-                                                <p class="financiacion-en-36 cuota-valor"><img class="loader-icon"
-                                                        src="./images/icons/loader.svg" alt="loader"></p>
-                                            </div>
-                                        </div>
-                                        <div class="card-cuota-mobile">
-                                            <p class="cuota"><span>48</span> CUOTAS</p>
-                                            <p class="financiacion-en-48 cuota-valor"><img class="loader-icon"
-                                                    src="./images/icons/loader.svg" alt="loader"></p>
-                                        </div>
-                                        <div class="card-cuota-mobile">
-                                            <p class="cuota"><span>60</span> CUOTAS</p>
-                                            <p class="financiacion-en-60 cuota-valor"><img class="loader-icon"
-                                                    src="./images/icons/loader.svg" alt="loader"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="max-financiar">
-                                <div>
-                                    <p>Máximo a financiar:</p>
-                                    <p class="maximo-a-financiar"><span class="loader-container"><img
-                                                class="loader-icon" src="./images/icons/loader.svg" alt="loader"></span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="ver-cuotas"><button class="ver-cuotas-btn">VER CUOTAS</button></div>
-                            <div class="cotizar-mobile"><button class="volver-btn">VOLVER</button> <a href=""
-                                    class="cotizar-btn" target="_blank">COTIZAR</a></div>
-                        </div>
-                        <div class="cuotas">
-                            <div class="card-cuota">
-                                <p class="cuota"><span>12</span><br>CUOTAS</p>
-                                <p class="financiacion-en-12 cuota-valor"><img class="loader-icon"
-                                        src="./images/icons/loader.svg" alt="loader"></p>
-                            </div>
-                            <div class="card-cuota">
-                                <p class="cuota"><span>24</span><br>CUOTAS</p>
-                                <p class="financiacion-en-24 cuota-valor"><img class="loader-icon"
-                                        src="./images/icons/loader.svg" alt="loader"></p>
-                            </div>
-                            <div class="card-cuota destacada">
-                                <div class="destacada-titulo"><img class="blue-star" src="./images/icons/blue-star.svg"
-                                        alt="blue-star">
-                                    <p class="mas-elegida">MÁS ELEGIDA</p>
-                                </div>
-                                <p class="cuota"><span>36</span><br>CUOTAS</p>
-                                <p class="financiacion-en-36 cuota-valor"><img class="loader-icon"
-                                        src="./images/icons/loader.svg" alt="loader"></p>
-                            </div>
-                            <div class="card-cuota">
-                                <p class="cuota"><span>48</span><br>CUOTAS</p>
-                                <p class="financiacion-en-48 cuota-valor"><img class="loader-icon"
-                                        src="./images/icons/loader.svg" alt="loader"></p>
-                            </div>
-                            <div class="card-cuota">
-                                <p class="cuota"><span>60</span><br>CUOTAS</p>
-                                <p class="financiacion-en-60 cuota-valor"><img class="loader-icon"
-                                        src="./images/icons/loader.svg" alt="loader"></p>
-                            </div>
-                        </div>
-                        <div class="cotizar">
-                            <div><a id="get-quote-btn" target="_blank" class="btn-calculadora"></a></div><button
-                                id="btn-seleccionar-vehiculo"></button>
-                            <div class="container-info"><a href="#">i<div class="pop-up">
-                                        <p>Estimación de <strong>CUOTA PROMEDIO</strong> con menor tasa disponible a la
-                                            fecha, sujeto a proceso de cotización y calificación del solicitante en cada
-                                            entidad bancaria con las que opera LEVER SRL. No incluye impuestos de sellos
-                                            de prenda, ni seguro del bien.</p>
-                                    </div></a></div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </aside>
     <main>
-        <section id="inicio">
-            <div class="fullhero">
-                <div class="container">
-                    <div>
-                        <h1>LA <em>PALANCA</em> QUE NECESITÁS<br><strong>PARA TUS CLIENTES</strong></h1>
-                        <h2>Con más de <strong>dos décadas de experiencia</strong>,<br>ofrecemos <strong>atención ágil y
-                                personalizada</strong><br>junto con el <strong>mejor financiamiento
-                                posible</strong><br>para tus compradores.<p></p>
-                            <div class="btn_container"><button class="btn picker-link">COTIZÁ AHORA</button></div>
-                        </h2>
-                    </div>
-                    <div>
-                        <div class="can"><img src="./images/car.png" alt=""></div>
-                    </div>
-                </div>
+      <div class="tituloysubtitulo">
+        <h2>Cotizador online</h2>
+        <h1>PASO <strong>1 DE 3</strong></h1></div>
+      <section id="cotizar" class="cotizar-section">
+      
+         <div class="container">
+          <!-- Paso 1 --> 
+           
+          <div id="step-1" class="step active">
+           
+            <div class="switch-container">
+              <span class="switch-label-left" onclick="toggleSwitch(false)"
+                >PERSONA</span
+              >
+              <label class="toggle-switch">
+                <input type="checkbox" />
+                <span class="switch-slider"></span>
+              </label>
+              <span class="switch-label-right" onclick="toggleSwitch(true)"
+                >EMPRESA</span
+              >
             </div>
-            <div class="container">
-                <div class="steps">
-                    <div><mark>1</mark>
-                        <div>
-                            <h3>CALCULÁ</h3>
-                            <p>EL CRÉDITO PRENDARIO<br class="onlymobile"><br>CON NUESTRA <br
-                                    class="onlymobile">CALCULADORA <br>ONLINE</p>
-                        </div>
-                    </div>
-                    <div class="divisor"></div>
-                    <div class="second"><mark>2</mark>
-                        <div>
-                            <h3>COTIZÁ</h3>
-                            <p>PARA ACCEDER A LA<br class="onlymobile"><br>FINANCIACIÓN<br class="onlymobile"><br>EN EL
-                                ACTO</p>
-                        </div>
-                    </div>
-                    <div class="divisor"></div>
-                    <div><mark>3</mark>
-                        <div>
-                            <h3>LISTO!</h3>
-                            <p>FIRMÁ EL CRÉDITO Y <br class="onlymobile">EN 48 HS. <br>TENÉS EL DINERO<br
-                                    class="onlymobile"><br>ACREDITADO</p>
-                        </div>
-                    </div>
+            <div class="dni-container">
+              <input
+                type="text"
+                class="dni-input"
+                placeholder="DNI del solicitante"
+              />
+              <div class="search-icon-container" onclick="showDropdown()">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    id="Vector"
+                    d="M13.77,12.666,11.126,10.03A6.158,6.158,0,0,0,12.44,6.22a6.22,6.22,0,1,0-6.22,6.22,6.158,6.158,0,0,0,3.81-1.314l2.636,2.644a.781.781,0,1,0,1.1-1.1ZM1.555,6.22a4.665,4.665,0,1,1,1.366,3.3A4.665,4.665,0,0,1,1.555,6.22Z"
+                    fill="#fff"
+                  />
+                </svg>
+              </div>
+              <!-- Mueve el loader aquí, antes del dropdown-content -->
+              <div
+                id="loader-smiley"
+                class="loader-overlay"
+                style="display: none"
+              >
+                <svg
+                  role="img"
+                  aria-label="Mouth and eyes come from 9:00 and rotate clockwise into position, right eye blinks, then all parts rotate and merge into 3:00"
+                  class="smiley"
+                  viewBox="0 0 128 128"
+                  width="128px"
+                  height="128px"
+                >
+                  <defs>
+                    <clipPath id="smiley-eyes">
+                      <circle
+                        class="smiley__eye1"
+                        cx="64"
+                        cy="64"
+                        r="8"
+                        transform="rotate(-40,64,64) translate(0,-56)"
+                      />
+                      <circle
+                        class="smiley__eye2"
+                        cx="64"
+                        cy="64"
+                        r="8"
+                        transform="rotate(40,64,64) translate(0,-56)"
+                      />
+                    </clipPath>
+                    <linearGradient
+                      id="smiley-grad"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop offset="0%" stop-color="#000" />
+                      <stop offset="100%" stop-color="#fff" />
+                    </linearGradient>
+                    <mask id="smiley-mask">
+                      <rect
+                        x="0"
+                        y="0"
+                        width="128"
+                        height="128"
+                        fill="url(#smiley-grad)"
+                      />
+                    </mask>
+                  </defs>
+                  <g
+                    stroke-linecap="round"
+                    stroke-width="12"
+                    stroke-dasharray="175.93 351.86"
+                  >
+                    <g>
+                      <rect
+                        fill="hsl(193,90%,50%)"
+                        width="128"
+                        height="64"
+                        clip-path="url(#smiley-eyes)"
+                      />
+                      <g fill="none" stroke="hsl(193,90%,50%)">
+                        <circle
+                          class="smiley__mouth1"
+                          cx="64"
+                          cy="64"
+                          r="56"
+                          transform="rotate(180,64,64)"
+                        />
+                        <circle
+                          class="smiley__mouth2"
+                          cx="64"
+                          cy="64"
+                          r="56"
+                          transform="rotate(0,64,64)"
+                        />
+                      </g>
+                    </g>
+                    <g mask="url(#smiley-mask)">
+                      <rect
+                        fill="hsl(223,90%,50%)"
+                        width="128"
+                        height="64"
+                        clip-path="url(#smiley-eyes)"
+                      />
+                      <g fill="none" stroke="hsl(223,90%,50%)">
+                        <circle
+                          class="smiley__mouth1"
+                          cx="64"
+                          cy="64"
+                          r="56"
+                          transform="rotate(180,64,64)"
+                        />
+                        <circle
+                          class="smiley__mouth2"
+                          cx="64"
+                          cy="64"
+                          r="56"
+                          transform="rotate(0,64,64)"
+                        />
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+              </div>
+              <div class="dropdown-content hidden">
+                <div class="profile-header">
+                  <img
+                    src="./images/icons/user.svg"
+                    alt="Icono de perfil"
+                    class="profile-icon"
+                  />
+                  <h3 class="profile-name"></h3>
                 </div>
-            </div><canvas id="particle-canvas"></canvas>
+                <div class="inner-box">
+                  <h3 class="inner-box-title">
+                    Posibilidad de gestión del crédito
+                  </h3>
+                  <div class="credit-viability-bar">
+                    <div class="credit-indicator"></div>
+                  </div>
+                  <h4 class="credit-status-title credit-status-title-verde">
+                    EVALUACIÓN POSITIVA
+                  </h4>
+                  <h4
+                    class="credit-status-title credit-status-title-amarillo"
+                    style="display: none; color: #ffdf00"
+                  >
+                    SUJETO A REVISIÓN
+                  </h4>
+                  <p class="credit-status-subtitle">
+                    Es posible que el crédito se apruebe
+                  </p>
+                </div>
+                <button
+                  class="change-applicant-button"
+                  onclick="hideDropdown()"
+                >
+                  <span>Cambiar solicitante</span>
+                </button>
+              </div>
+            </div>
+            <div class="confidentiality-text">
+              Los datos solicitados son confidenciales y no se van a almacenar
+              en ninguna base de datos.<br /><br />Al avanzar, el usuario acepta
+              los <strong>Términos y Condiciones de Servicio.</strong>
+            </div>
+            <div class="navigation-buttons">
+              <button class="back-button hidden" onclick="goToStep(1)"></button>
+              <button class="next-button" onclick="goToStep(2)">
+                <span class="next-text">Siguiente</span>
+                <img
+                  src="./images/icons/flecha.svg"
+                  alt="flecha"
+                  class="next-arrow"
+                />
+              </button>
+            </div>
+          </div>
+
+          <!-- Paso 2 -->
+          <div id="step-2" class="step hidden">
+            <div class="contenedor-padre">
+            <div class="options-container">
+              <!-- Nuevo contenedor de opciones para Categoría -->
+              <div class="custom-options-container">
+                <div
+                  class="custom-options-placeholder"
+                  onclick="toggleCustomOptions('categoria-options')"
+                >
+                  Categoría
+                </div>
+                <div class="custom-options-extra hidden"></div>
+                <!-- Nuevo div -->
+                <div class="custom-options-wrapper">
+                  <div id="categoria-options" class="custom-options hidden">
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Autos y Pickups', 'categoria-options')"
+                    >
+                      <img
+                        src="./images/icons/auto.svg"
+                        alt="Autos y Pickups"
+                        class="option-icon"
+                      />
+                      Autos y Pickups
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Motos', 'categoria-options')"
+                    >
+                      <img
+                        src="./images/icons/moto.svg"
+                        alt="Motos"
+                        class="option-icon"
+                      />
+                      Motos
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Utilitarios', 'categoria-options')"
+                    >
+                      <img
+                        src="./images/icons/pickup1.svg"
+                        alt="Utilitarios"
+                        class="option-icon"
+                      />
+                      Utilitarios / SC / Furgon
+                    </div>
+                    <div
+                      class="custom-option"
+                      onclick="selectCustomOption('Camiones', 'categoria-options')"
+                    >
+                      <img
+                        src="./images/icons/camion.svg"
+                        alt="Camiones"
+                        class="option-icon"
+                      />
+                      Camiones
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+
+              <!-- Nuevo contenedor de opciones para Año -->
+              <div class="custom-options-container">
+                <div
+                  class="custom-options-placeholder"
+                  onclick="toggleCustomOptions('anio-options')"
+                >
+                  Año
+                </div>
+                <div class="custom-options-extra hidden"></div>
+                <!-- Nuevo div -->
+                <div class="custom-options-wrapper">
+                  <div id="anio-options" class="custom-options hidden">
+                    <div class="custom-option" onclick="selectCustomOption('2025', 'anio-options')">2025</div>
+                    <div class="custom-option" onclick="selectCustomOption('2024', 'anio-options')">2024</div>
+                    <div class="custom-option" onclick="selectCustomOption('2023', 'anio-options')">2023</div>
+                    <div class="custom-option" onclick="selectCustomOption('2022', 'anio-options')">2022</div>
+                    <div class="custom-option" onclick="selectCustomOption('2021', 'anio-options')">2021</div>
+                    <div class="custom-option" onclick="selectCustomOption('2020', 'anio-options')">2020</div>
+                    <div class="custom-option" onclick="selectCustomOption('2019', 'anio-options')">2019</div>
+                    <div class="custom-option" onclick="selectCustomOption('2018', 'anio-options')">2018</div>
+                    <div class="custom-option" onclick="selectCustomOption('2017', 'anio-options')">2017</div>
+                    <div class="custom-option" onclick="selectCustomOption('2016', 'anio-options')">2016</div>
+                    <div class="custom-option" onclick="selectCustomOption('2015', 'anio-options')">2015</div>
+                    <div class="custom-option" onclick="selectCustomOption('2014', 'anio-options')">2014</div>
+                    <div class="custom-option" onclick="selectCustomOption('2013', 'anio-options')">2013</div>
+                    <div class="custom-option" onclick="selectCustomOption('2012', 'anio-options')">2012</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nuevo contenedor de opciones para Marca -->
+              <div class="custom-options-container">
+                <div
+                  class="custom-options-placeholder"
+                  onclick="toggleCustomOptions('marca-options')"
+                >
+                  Marca
+                </div>
+                <div class="custom-options-extra hidden"></div>
+                <!-- Nuevo div -->
+                <div class="custom-options-wrapper">
+                  <div id="marca-options" class="custom-options hidden">
+                    <div class="custom-search-container hidden">
+                      <!-- Nuevo buscador -->
+                      <img src="./images/icons/lupita.svg" alt="Buscar" />
+                      <input
+                        type="text"
+                        placeholder="Buscar marca..."
+                        oninput="filterOptions('marca-options', this.value)"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nuevo contenedor de opciones para Modelo -->
+              <div class="custom-options-container">
+                <div
+                  class="custom-options-placeholder"
+                  onclick="toggleCustomOptions('modelo-options')"
+                >
+                  Modelo
+                </div>
+                <div class="custom-options-extra hidden"></div>
+                <!-- Nuevo div -->
+                <div class="custom-options-wrapper">
+                  <div id="modelo-options" class="custom-options hidden">
+                    <div class="custom-search-container hidden">
+                      <!-- Nuevo buscador -->
+                      <img src="./images/icons/lupita.svg" alt="Buscar" />
+                      <input
+                        type="text"
+                        placeholder="Buscar modelo..."
+                        oninput="filterOptions('modelo-options', this.value)"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="navigation-buttons">
+              <button class="back-button" onclick="goToStep(1)">
+                <img
+                  src="./images/icons/FlechaNegra.svg"
+                  alt="flecha"
+                  class="next-arrow"
+                />
+              </button>
+              <button class="next-button" onclick="goToStep(3)">
+                <span class="next-text">Siguiente</span>
+                <img
+                  src="./images/icons/flecha.svg"
+                  alt="flecha"
+                  class="next-arrow"
+                />
+              </button>
+            </div>
+          </div>
+
+          <!-- Paso 3 -->
+          <div id="step-3" class="step hidden">
+            <div class="container-step3">
+              <div class="vehicle-summary">
+                <img id="vehicle-logo" src="" alt="Logo de la marca" />
+                <div class="vehicle-details">
+                  <h3 id="vehicle-brand">Marca</h3>
+                  <p id="vehicle-model">Modelo</p>
+                  <p id="vehicle-year">Año</p>
+                </div>
+              </div>
+              <!-- Select de productos con clase específica -->
+              <div
+                id="product-select-container"
+                class="custom-options-container product-select"
+              >
+                <div
+                  class="custom-options-placeholder"
+                  onclick="toggleCustomOptions('product-options')"
+                >
+                  Seleccionar Producto
+                </div>
+                <div class="custom-options-extra hidden"></div>
+                <div class="custom-options-wrapper">
+                  <div id="product-options" class="custom-options hidden">
+                    <!-- Opciones dinámicas o estáticas -->
+                    
+                  </div>
+                </div>
+              </div>
+              <!-- Nuevo div debajo del select de productos -->
+              <div class="custom-summary">
+                <h3 class="custom-summary-title">Máximo a financiar</h3>
+                <span class="custom-summary-currency"></span>
+                <span class="custom-summary-amount">Seleccioná producto</span>
+              </div>
+              <div class="custom-summary-input">
+                <input
+                  type="number"
+                  class="net-finance-input"
+                  placeholder="Monto neto a financiar"
+                />
+                
+              </div>
+             
+            </div>
+            <p class="min-amount-text"></p>
+            <div class="navigation-buttons">
+              <button class="back-button" onclick="goToStep(2)">
+                <img
+                  src="./images/icons/FlechaNegra.svg"
+                  alt="flecha"
+                  class="next-arrow"
+                />
+              </button>
+              <button class="next-button" onclick="goToStep(4)">
+                <span class="next-text">Siguiente</span>
+                <img
+                  src="./images/icons/flecha.svg"
+                  alt="flecha"
+                  class="next-arrow"
+                />
+              </button>
+            </div>
+          </div>
+
+          <!-- Paso 4 - Nueva pantalla para cotización estimada -->
+          <div id="step-4" class="step hidden">
+            <div class="container-step4-desktop">
+              <div>
+                <div class="vehicle-summary">
+                  <img id="vehicle-logo-step4" src="" alt="Logo de la marca" />
+                  <div class="vehicle-details">
+                    <h3 id="vehicle-brand-step4">Marca</h3>
+                    <p id="vehicle-model-step4">Modelo</p>
+                    <p id="vehicle-year-step4">Año</p>
+                  </div>
+                </div>
+                <div class="custom-summary custom-summary-step4">
+                  <h3 class="custom-summary-title">Monto neto a financiar</h3>
+                  <span class="custom-summary-currency">$</span>
+                  <span
+                    id="custom-summary-amount-step4"
+                    class="custom-summary-amount"
+                    >0</span
+                  >
+                  <div
+                    id="selected-product-step4"
+                    class="selected-product"
+                  ></div>
+                </div>
+                
+              </div>
+              <div>
+               <div class="scrollable-container">
+                   <div class="scrollable-item" onclick="selectCuota(this)">
+                    <span class="scrollable-text">12 CUOTAS</span>
+                    <span class="scrollable-value">$1.455.555</span>
+                   </div>
+                   <div class="scrollable-item" onclick="selectCuota(this)">
+                    <span class="scrollable-text">18 CUOTAS</span>
+                    <span class="scrollable-value">$754.589</span>
+                   </div>
+                    <div class="scrollable-item" onclick="selectCuota(this)">
+                    <span class="scrollable-text">24 CUOTAS</span>
+                    <span class="scrollable-value">$452.245</span>
+                   </div>
+                   <!-- SOLO para la opción de 36 cuotas: layout especial en 2 columnas -->
+                   <div
+                    class="scrollable-item scrollable-item-36"
+                    onclick="selectCuota(this)"
+                   >
+                    <div class="scrollable-item-36-left">
+                      <div class="cuota-label-mas-elegida-inside">
+                        <svg
+                          id="Grupo_2619"
+                          data-name="Grupo 2619"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="7.748"
+                          height="7.42"
+                          viewBox="0 0 7.748 7.42"
+                          style="vertical-align: middle"
+                        >
+                          <g id="Grupo_2618" data-name="Grupo 2618">
+                            <path
+                              id="Trazado_780"
+                              data-name="Trazado 780"
+                              d="M5.136,2.323l2.278.2a.417.417,0,0,1,.221.694l-1.7,1.5a.648.648,0,0,0,.032.249c.116.6.392,1.373.445,1.951a.41.41,0,0,1-.567.47L3.92,6.237l-.057-.013L1.918,7.38a.411.411,0,0,1-.584-.463c.06-.653.4-1.43.475-2.091a.228.228,0,0,0,0-.109l-1.7-1.5a.417.417,0,0,1,.242-.7l2.257-.2L3.49.261A.411.411,0,0,1,4.24.229Z"
+                              fill="#fec008"
+                            />
+                          </g>
+                        </svg>
+                        <span class="cuota-label-text-inside">MÁS ELEGIDA</span>
+                      </div>
+                      <span class="scrollable-text">36 CUOTAS</span>
+                    </div>
+                    <span class="scrollable-value">$254.784</span>
+                   </div>
+                   <div class="scrollable-item" onclick="selectCuota(this)">
+                    <span class="scrollable-text">48 CUOTAS</span>
+                    <span class="scrollable-value">$125.500</span>
+                   </div>
+                  
+                   <div class="mensaje4">
+                    <p id="select-cuota-message" class="hidden">
+                      Seleccioná una opción para poder cotizar
+                    </p>
+                   </div>
+                   <div class="cuota-info-container">
+                    <button class="cuota-info-btn" onclick="document.getElementById('cuota-info-tooltip').classList.toggle('active')" title="Información de la cuota">?</button>
+                      <div id="cuota-info-tooltip" class="cuota-info-tooltip">
+                       CUOTA PROMEDIO TNA vigente a la fecha, sujeto a calificación del solicitante en cada entidad bancaria con las que opera LEVER SRL. No incluye impuestos de SELLOS DE PRENDA, ni SEGURO del bien.
+                      </div>
+                   </div>
+                   
+               </div>
+               
+             </div>
+              
+            </div>
+            
+            <div class="navigation-buttons">
+              <button class="back-button" onclick="goToStep(3)">
+                <img
+                  src="./images/icons/FlechaNegra.svg"
+                  alt="flecha"
+                  class="next-arrow"
+                />
+                <span class="back-text">Modificar</span>
+              </button>
+              <button class="share-button">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="18"
+                  viewBox="0 0 16 18"
+                >
+                  <g
+                    id="Grupo_2606"
+                    data-name="Grupo 2606"
+                    transform="translate(-161.74 -654.288)"
+                  >
+                    <circle
+                      id="Elipse_9"
+                      data-name="Elipse 9"
+                      cx="3"
+                      cy="3"
+                      r="3"
+                      transform="translate(161.74 660.288)"
+                      fill="#25d39d"
+                    />
+                    <circle
+                      id="Elipse_10"
+                      data-name="Elipse 10"
+                      cx="3"
+                      cy="3"
+                      r="3"
+                      transform="translate(171.74 654.288)"
+                      fill="#25d39d"
+                    />
+                    <circle
+                      id="Elipse_11"
+                      data-name="Elipse 11"
+                      cx="3"
+                      cy="3"
+                      r="3"
+                      transform="translate(171.74 666.288)"
+                      fill="#25d39d"
+                    />
+                    <line
+                      id="Línea_14"
+                      data-name="Línea 14"
+                      y1="6.966"
+                      x2="9.288"
+                      transform="translate(165.483 656.709)"
+                      fill="none"
+                      stroke="#25d39d"
+                      stroke-width="2"
+                    />
+                    <line
+                      id="Línea_15"
+                      data-name="Línea 15"
+                      x2="9.288"
+                      y2="6.966"
+                      transform="translate(165.483 663.288)"
+                      fill="none"
+                      stroke="#25d39d"
+                      stroke-width="2"
+                    />
+                  </g>
+                </svg>
+              </button>
+              <button class="next-button" id="cotizar-ahora-btn">
+                <span class="next-text">Avanzar</span>
+                <img
+                  src="./images/icons/flecha.svg"
+                  alt="flecha"
+                  class="next-arrow"
+                />
+              </button>
+            </div>
+          </div>
         </section>
-        <section id="nosotros">
-            <div class="container">
-                <div class="bubbles">
-                    <div class="bubble bubble01">
-                        <div><mark class="odometer animated fadeIn" data-value="1474"></mark>
-                            <p><strong>CRÉDITOS</strong></p>
-                            <p>OTORGADOS EN<br>DOS AÑOS</p>
-                        </div>
-                    </div>
-                    <div class="bubble bubble02">
-                        <div><mark class="odometer animated fadeIn" data-value="28"></mark>
-                            <p><strong>AÑOS</strong></p>
-                            <p>DE EXPERIENCIA<br>EN EL SECTOR</p>
-                        </div>
-                    </div>
-                    <div class="bubble bubble03">
-                        <div>
-                            <p>OPERAMOS EN</p><mark class="odometer animated fadeIn" data-value="3"></mark>
-                            <p><strong>PROVINCIAS</strong></p>
-                        </div>
-                    </div>
-                    <div class="bubble bubble04">
-                        <div><mark class="odometer animated fadeIn" data-value="76"></mark>
-                            <p><strong>AGENCIAS</strong></p>
-                            <p>OPERAN CON<br>NOSOTROS</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container wrapped">
-                <div class="videos-container"><button id="prev-video" class="videocontrol"></button> <button
-                        id="next-video" class="videocontrol"></button></div>
-                <div class="videos">
-                    <div><a href="#" class="video_thumb" data-video="1"><img src="./images/videos/01.svg" alt=""></a>
-                    </div>
-                    <div><a href="#" class="video_thumb" data-video="2"><img src="./images/videos/02.svg" alt=""></a>
-                    </div>
-                    <div><a href="#" class="video_thumb" data-video="3"><img src="./images/videos/03.svg" alt=""></a>
-                    </div>
-                </div>
-            </div>
-            <div class="videowrap"><label class="closebox"><img src="./images/icons/close.svg" alt="close btn"></label>
-                <div class="video-container"><iframe id="video" frameborder="0" allowfullscreen autoplay
-                        muted="muted"></iframe></div>
-            </div>
-        </section>
-        <section id="contacto">
-            <div class="container wrap center">
-                <h2 class="title">CONTACTANOS <strong>AHORA</strong></h2><a
-                    href="https://wa.me/+5493417049138?text=Buenas%20tardes%2C%20busco%20informaci%C3%B3n%20para%20obtener%20financiaci%C3%B3n%20con%20Lever"
-                    class="btn" target="_blank">Enviar Mensaje</a>
-            </div>
-        </section>
-        <footer>
-            <div class="container center">
-                <div class="not-center"><img src="./images/logos/lever.svg" class="logo" width="226px" height="50px"
-                        alt="Lever Technology"></div>
-                <div>
-                    <nav class="menu" itemprop="mainEntityOfPage" itemscope
-                        itemtype="http://schema.org/SiteNavigationElement">
-                        <ul>
-                            <li><a href="#" itemprop="url" class="scroller outline" data-text="Inicio"
-                                    data-url="#inicio"><span itemprop="name">Inicio</span></a></li>
-                            <li><a href="#" itemprop="url" class="scroller outline" data-text="Nosotros"
-                                    data-url="#nosotros"><span itemprop="name">Nosotros</span></a></li>
-                            <li><a href="#" itemprop="url" class="scroller outline" data-text="Contacto"
-                                    data-url="#contacto"><span itemprop="name">Contacto</span></a></li>
-                            <li><a href="#" itemprop="url" class="scroller outline" data-text="Cotizar"
-                                    data-url="#contacto"><span itemprop="name">Cotizar</span></a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="not-center">
-                    <div class="social"><a href="https://www.instagram.com/lever_srl/" target="_blank"><img
-                                src="./images/social/instagram.svg" alt=""></a><a
-                            href="https://www.linkedin.com/company/leversrl" target="_blank"><img
-                                src="./images/social/linkedin.svg" alt=""></a><a
-                            href="https://www.youtube.com/@LeverCreditosPrendarios" target="_blank"><img
-                                src="./images/social/youtube.svg" alt=""></a></div>
-                </div>
-            </div>
-        </footer>
+      
     </main>
-    <script defer="defer" src="https://github.hubspot.com/odometer/odometer.js"></script>
-    <script defer="defer" src="./js/app.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <footer class="footer">
+      <div class="footer-icons"><button class="inicio-button" href=""  onclick="limpiarFormularioPantalla1();resetearFormulariosPantalla2();limpiarFormularioPantalla3();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
+        <img
+          src="./images/icons/inicio1.svg"
+          alt="inicio icon"
+          class="inicio-icon"
+        />
+        <span class="inicio-text">Inicio</span>
+      </button>
+      <button class="new-button"  onclick="limpiarFormularioPantalla1();resetearFormulariosPantalla2();limpiarFormularioPantalla3();goToStep(1);window.scrollTo(0,0);document.body.classList.remove('nosotros-cotizar-activo');document.querySelectorAll('main > section').forEach(function(sec){sec.classList.add('hidden');});document.getElementById('cotizar').classList.remove('hidden');">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="19"
+          height="19"
+          viewBox="0 0 19 19"
+        >
+          <g
+            id="Grupo_2"
+            data-name="Grupo 2"
+            transform="translate(-150 -733.5)"
+          >
+            <line
+              id="Línea_1"
+              data-name="Línea 1"
+              y2="17"
+              transform="translate(159.5 734.5)"
+              fill="none"
+              stroke="#15224f"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+            <line
+              id="Línea_2"
+              data-name="Línea 2"
+              y2="17"
+              transform="translate(168 743) rotate(90)"
+              fill="none"
+              stroke="#15224f"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+          </g>
+        </svg>
+      </button>
+      <button class="another-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="26"
+          viewBox="0 0 25 26"
+        >
+          <g
+            id="Grupo_2608"
+            data-name="Grupo 2608"
+            transform="translate(-201 -28.221)"
+          >
+            <rect
+              id="Rectángulo_794"
+              data-name="Rectángulo 794"
+              width="8"
+              height="18"
+              transform="translate(202 32.221)"
+              fill="none"
+              stroke="#A0A0A0"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+            <rect
+              id="Rectángulo_795"
+              data-name="Rectángulo 795"
+              width="8"
+              height="18"
+              transform="translate(217 32.221)"
+              fill="none"
+              stroke="#A0A0A0"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+            <line
+              id="Línea_16"
+              data-name="Línea 16"
+              y2="24"
+              transform="translate(213.5 29.221)"
+              fill="none"
+              stroke="#A0A0A0"
+              stroke-linecap="round"
+              stroke-width="2"
+            />
+          </g>
+        </svg>
+      </button>
+      <!-- Nuevo botón agregado -->
+      <button class="message-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24.249"
+          height="21.59"
+          viewBox="0 0 19.249 16.59"
+        >
+          <g
+            id="Grupo_6"
+            data-name="Grupo 6"
+            transform="translate(-318.376 -734.981)"
+          >
+            <path
+              id="Trazado_6"
+              data-name="Trazado 6"
+              d="M245.5,735.981v11.1h13.764l3.485,3.485v-14.59Z"
+              transform="translate(73.876)"
+              fill="none"
+              stroke="#A0A0A0"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+            <g id="Grupo_5" data-name="Grupo 5" transform="translate(0 0.775)">
+              <line
+                id="Línea_6"
+                data-name="Línea 6"
+                x2="9"
+                transform="translate(323.5 739.5)"
+                fill="none"
+                stroke="#A0A0A0"
+                stroke-linecap="round"
+                stroke-width="1"
+              />
+              <line
+                id="Línea_7"
+                data-name="Línea 7"
+                x2="5"
+                transform="translate(323.5 742.5)"
+                fill="none"
+                stroke="#A0A0A0"
+                stroke-linecap="round"
+                stroke-width="1"
+              />
+            </g>
+          </g>
+        </svg>
+      </button>
+    </div>
+    </footer>
+
+    <!-- Botón flotante inferior derecho -->
+    <button class="floating-action-btn" aria-label="Acción rápida"
+      onclick="window.open('https://wa.me/5493417049138?text=Hola%2C%20me%20contacto%20desde%20la%20web%2C%20necesito%20ayuda...','_blank'); return false;">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="29.255"
+        height="25.053"
+        viewBox="0 0 29.255 25.053"
+      >
+        <g id="Grupo_6" data-name="Grupo 6" transform="translate(1 1)">
+          <path
+            id="Trazado_6"
+            data-name="Trazado 6"
+            d="M245.5,735.98v17.547h21.749l5.506,5.506V735.98Z"
+            transform="translate(-245.5 -735.98)"
+            fill="none"
+            stroke="#fff"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <g
+            id="Grupo_5"
+            data-name="Grupo 5"
+            transform="translate(6.517 6.786)"
+          >
+            <line
+              id="Línea_6"
+              data-name="Línea 6"
+              x2="14.221"
+              fill="none"
+              stroke="#fff"
+              stroke-linecap="round"
+              stroke-width="1"
+            />
+            <line
+              id="Línea_7"
+              data-name="Línea 7"
+              x2="7.901"
+              transform="translate(0 4.74)"
+              fill="none"
+              stroke="#fff"
+              stroke-linecap="round"
+              stroke-width="1"
+            />
+          </g>
+        </g>
+      </svg>
+    </button>
+
+    <!-- Loader Smiley HTML (hidden by default) -->
+    <div id="loader-smiley" class="loader-overlay" style="display: none">
+      <svg
+        role="img"
+        aria-label="Mouth and eyes come from 9:00 and rotate clockwise into position, right eye blinks, then all parts rotate and merge into 3:00"
+        class="smiley"
+        viewBox="0 0 128 128"
+        width="128px"
+        height="128px"
+      >
+        <defs>
+          <clipPath id="smiley-eyes">
+            <circle
+              class="smiley__eye1"
+              cx="64"
+              cy="64"
+              r="8"
+              transform="rotate(-40,64,64) translate(0,-56)"
+            />
+            <circle
+              class="smiley__eye2"
+              cx="64"
+              cy="64"
+              r="8"
+              transform="rotate(40,64,64) translate(0,-56)"
+            />
+          </clipPath>
+          <linearGradient id="smiley-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#000" />
+            <stop offset="100%" stop-color="#fff" />
+          </linearGradient>
+          <mask id="smiley-mask">
+            <rect
+              x="0"
+              y="0"
+              width="128"
+              height="128"
+              fill="url(#smiley-grad)"
+            />
+          </mask>
+        </defs>
+        <g
+          stroke-linecap="round"
+          stroke-width="12"
+          stroke-dasharray="175.93 351.86"
+        >
+          <g>
+            <rect
+              fill="hsl(193,90%,50%)"
+              width="128"
+              height="64"
+              clip-path="url(#smiley-eyes)"
+            />
+            <g fill="none" stroke="hsl(193,90%,50%)">
+              <circle
+                class="smiley__mouth1"
+                cx="64"
+                cy="64"
+                r="56"
+                transform="rotate(180,64,64)"
+              />
+              <circle
+                class="smiley__mouth2"
+                cx="64"
+                cy="64"
+                r="56"
+                transform="rotate(0,64,64)"
+              />
+            </g>
+          </g>
+          <g mask="url(#smiley-mask)">
+            <rect
+              fill="hsl(223,90%,50%)"
+              width="128"
+              height="64"
+              clip-path="url(#smiley-eyes)"
+            />
+            <g fill="none" stroke="hsl(223,90%,50%)">
+              <circle
+                class="smiley__mouth1"
+                cx="64"
+                cy="64"
+                r="56"
+                transform="rotate(180,64,64)"
+              />
+              <circle
+                class="smiley__mouth2"
+                cx="64"
+                cy="64"
+                r="56"
+                transform="rotate(0,64,64)"
+              />
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
     <script>
-        const API_URL = location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://api.lever.com.ar';
-        console.log('API_URL:', API_URL);
+        // Inicializar transición de entrada para index.html
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('page-transition', 'fade-in');
+        });
     </script>
-    <script>let marcas = document.getElementById("marcas");
-        let modelos = document.getElementById("modelos");
-        let anio = document.getElementById("anio");
-        let precio = null;
-        var valorIngresado = null;
-        let maxAFinanciar;
-     
-        let selectedProduct = "a"; //producto seleccionado por defecto.
-        let showSecondPageMobile = false;
-        let mensaje = '';
-        let mensajeDeError = document.querySelector(".error-msj");
-        let cardCuotaContainer = document.querySelectorAll('.card-cuota');
-
-        let dataWithLogo = [];
-        let accessToken = null;
-
-        //let valorDeMercadoContainer = document.querySelector('.valor-de-mercado');
-        let valorMaxAFinanciarContainer = document.querySelector('.maximo-a-financiar');
-        let montoSolicitadoContainer = document.getElementById('monto-ingresado');
-        let cuotasMobileContainer = document.querySelector('.cuotas-mobile');
-        let cotizarMobileContainer = document.querySelector('.cotizar-mobile');
-        let logoContainer = document.querySelector('.car-logo');
-
-        let btnAvanzar = document.getElementById("btn-avanzar");
-        let btnSelectCar = document.getElementById("btn-seleccionar-vehiculo");
-        let btnSwitchProductValue = document.querySelector('.toggle-switch');
-        let btnCotizarDesktop = document.getElementById("get-quote-btn");
-        let btnCotizarMobile = document.querySelector('.cotizar-btn');
-
-        let initialPage = document.querySelector(".initial-page");
-        let secondPage = document.querySelector(".second-page");
-
-        let loaderIconSelectMarcas = document.getElementById("loader-icon-select-marcas");
-        let loaderIconSelectModelos = document.getElementById("loader-icon-select-modelos");
-
-        let btnVerCuotas = document.querySelector('.ver-cuotas-btn');
-        let btnVolver = document.querySelector('.volver-btn');
-
-        let descripcionAutoContainer = document.querySelector('.descripcion-container__text');
-
-        let ltvData;
-        let minAFinanciar;
-
-        // Cargar datos de la calculadora desde el nuevo endpoint
-        const fetchCalculadoraData = async () => {
-            try {
-                const response = await fetch(`${API_URL}/api/calculadora`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                ltvData = data.productos;
-                minAFinanciar = data.minAFinanciar;
-                console.log('Datos de la calculadora cargados:', { ltvData, minAFinanciar });
-            } catch (error) {
-                console.error('Error al cargar los datos de la calculadora:', error);
-            }
-        };
-
-        // Llamar a fetchCalculadoraData al cargar la página
-        window.onload = async () => {
-            try {
-                await fetchCalculadoraData(); // Cargar los datos desde el nuevo endpoint
-                await setProductInSessionStorage(selectedProduct); // Configurar el producto por defecto
-            } catch (error) {
-                console.error('Error durante la inicialización:', error);
-            }
-        };
-
-        //========================================================================
-
-        const getLogo = (id) => {
-            let element = dataWithLogo.find(element => element.id == id);
-            if (element.logo === null) {
-                //logoContainer.innerHTML = `<img src="./images/logos/generic-logo.png" alt="car-logo">`;
-                logoContainer.parentElement.style.display = 'none';
-                descripcionAutoContainer.style = 'padding-left: 15px !important';
-            } else {
-                logoContainer.innerHTML = `<img src="${element.logo}" alt="car-logo">`;
-            }
-        }
-
-
-        function toTitleCase(str) {
-            // Convierte la cadena a minúsculas y luego divide la cadena en un array de palabras
-            let words = str.toLowerCase().split(" ");
-
-            // Capitaliza la primera letra de cada palabra
-            for (let i = 0; i < words.length; i++) {
-                words[i] = words[i][0].toUpperCase() + words[i].substring(1);
-            }
-
-            // Une las palabras de nuevo en una sola cadena y retorna el resultado
-            return words.join(" ");
-        }
-
-        const sendWhatsAppMessage = () => {
-            let añoWhatsApp = document.querySelector('.año').textContent;
-            let marcaWhatsApp = document.querySelector('.marca').textContent;
-            let modeloWhatsApp = document.querySelector('.modelo').textContent;
-            //let valorDelVehiculoWhatsApp = valorDeMercadoContainer.textContent;
-
-            let maxAFinanciarWhatsApp = valorMaxAFinanciarContainer.textContent;
-            let montoSolicitadoWhatsApp = montoSolicitadoContainer.value.replace(/[\.$]/g, '');
-
-            let productoSolicitado;
-
-            if (selectedProduct == "a") {
-                productoSolicitado = "Seguro en Banco";
-            } else if (selectedProduct == "b") {
-                productoSolicitado = "Seguro liberado";
-            }
-
-            if (montoSolicitadoWhatsApp === null || isNaN(montoSolicitadoWhatsApp) || montoSolicitadoWhatsApp === "") {
-                montoSolicitadoWhatsApp = maxAFinanciarWhatsApp.replace(/\$/g, '');
-            } else if (montoSolicitadoWhatsApp < minAFinanciar) {
-                montoSolicitadoWhatsApp = "El monto solicitado debe ser mayor a 1 millón de pesos";
-            } else {
-                montoSolicitadoWhatsApp = parseInt(montoSolicitadoWhatsApp, 10).toLocaleString('es-AR');
-            }
-
-            //mensaje = `Hola quiero pedir un prestamo con Lever, estos son los datos para el mismo:\n\n- Año: ${añoWhatsApp}\n- Marca: ${marcaWhatsApp}\n- Modelo: ${modeloWhatsApp}\n- Valor del Vehiculo: ${valorDelVehiculoWhatsApp}\n- Máximo a Financiar: ${maxAFinanciarWhatsApp}\n- Monto Solicitado: $${montoSolicitadoWhatsApp}\n- Producto: ${productoSolicitado}\n`;
-
-            mensaje = `Hola quiero pedir un prestamo con Lever, estos son los datos para el mismo:\n\n- Año: ${añoWhatsApp}\n- Marca: ${marcaWhatsApp}\n- Modelo: ${modeloWhatsApp}\n- Máximo a Financiar: ${maxAFinanciarWhatsApp}\n- Monto Solicitado: $${montoSolicitadoWhatsApp}\n- Producto: ${productoSolicitado}\n`;
-
-            window.open(`https://wa.me/+5493417049138?text=${encodeURIComponent(mensaje)}`, '_blank');
-
-        }
-
-        const fetchMarcas = (year) => {
-            loaderIconSelectMarcas.style = "display: block;";
-            accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');
-
-            let body = {
-                year,
-                accessToken,
-                "action": "getBrandsByYear"
-            };
-
-            const opcionesFetch = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
-            };
-
-            marcas.innerHTML = "<option disabled selected>MARCA</option>";
-            modelos.innerHTML = "<option disabled selected>MODELO</option>";
-
-            fetch('php/curl.php', opcionesFetch) // Mantener esta llamada porque es de infoauto
-                .then(res => res.json())
-                .then(data => {
-                    accessToken = localStorage.setItem('accessToken', data.accessToken);
-
-                    data.brands.forEach(element => {
-                        loaderIconSelectMarcas.style = "display: none;";
-                        marcas.innerHTML += "<option value=" + element.id + "> " + element.name + "</option>";
-                    });
-
-                    dataWithLogo = data.brands;
-                });
-        }
-
-        const fetchModelos = (idMarca, year) => {
-            loaderIconSelectModelos.style = "display: block;";
-            accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');
-
-            let body = {
-                idMarca,
-                year,
-                accessToken,
-                "action": "getModelsByBrand"
-            };
-
-            const opcionesFetch = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
-            };
-
-            modelos.innerHTML = "<option disabled selected>MODELO</option>";
-
-            fetch('php/curl.php', opcionesFetch) // Mantener esta llamada porque es de infoauto
-                .then(res => res.json())
-                .then(data => {
-                    accessToken = localStorage.setItem('accessToken', data.accessToken);
-
-                    data.models.forEach(element => {
-                        loaderIconSelectModelos.style = "display: none;";
-                        modelos.innerHTML += "<option value=" + element.codia + "> " + element.modelo + "</option>";
-                    });
-                });
-
-            getLogo(idMarca);
-        }
-
-        const fetchPriceCar = (codia, year) => {
-            accessToken = isTokenExpired(localStorage.getItem('accessToken')) || '' ? null : localStorage.getItem('accessToken');
-
-            let body = {
-                codia,
-                year,
-                accessToken,
-                "action": "getPriceByCodia"
-            };
-
-            const opcionesFetch = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
-            };
-
-            fetch('php/curl.php', opcionesFetch) // Mantener esta llamada porque es de infoauto
-                .then(res => res.json())
-                .then(data => {
-                    precio = data.price;
-
-                    if (year === "2011" || year === "2010") {
-                        valorMaxAFinanciarContainer.innerHTML = "Consultanos";
-                        montoSolicitadoContainer.value = '';
-                        montoSolicitadoContainer.disabled = true; // Bloquear el campo de capital a financiar
-                        btnCotizarDesktop.classList.add('disabled');
-                        btnCotizarMobile.classList.add('disabled');
-                        document.querySelectorAll(`.cuota-valor`).forEach((element) => {
-                            element.innerText = '--';
-                        });
-                        btnSwitchProductValue.classList.add('disabled'); // Bloquear el switch
-                        document.querySelector('#switch-input').disabled = true; // Deshabilitar el checkbox
-                    } else if (ltvData[selectedProduct] && ltvData[selectedProduct].ltv[year]) {
-                        maxAFinanciar = precio * ltvData[selectedProduct].ltv[year];
-                        console.log('LTV leído:', ltvData[selectedProduct].ltv[year]);
-                        valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
-                        setDeafaultFinancingValues();
-                        montoSolicitadoContainer.disabled = false; // Habilitar el campo de capital a financiar
-                        btnSwitchProductValue.classList.remove('disabled'); // Habilitar el switch
-                        document.querySelector('#switch-input').disabled = false; // Habilitar el checkbox
-                    } else {
-                        console.error('No se encontró LTV para el producto o año seleccionado.');
-                    }
-                });
-        }
-
-        //Establece el valor por defecto de las cuotas cuando se muestra el secondPage
-        const setDeafaultFinancingValues = () => {
-            //let datos = JSON.parse(sessionStorage.getItem('data'));
-
-            // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[12].interest), 12, datos.plazos[12].fee);
-            // if(selectedProduct === "a") {
-            //     desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[18].interest), 18, datos.plazos[18].fee);
-            // }
-            // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[24].interest), 24, datos.plazos[24].fee);
-            // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[36].interest), 36, datos.plazos[36].fee);
-            // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[48].interest), 48, datos.plazos[48].fee);
-            // desglosarCuotas(maxAFinanciar, parseFloat(datos.plazos[60].interest), 60, datos.plazos[60].fee);
-            document.querySelectorAll(`.cuota-valor`).forEach((element) => {
-                element.innerText = '--';
-            });
-            cardCuotaContainer.forEach((element) => {
-                element.style.width = '16%';
-            });
-        }
-
-        // Actualizar setFinancingValues para usar ltvData directamente
-        const setFinancingValues = () => {
-            try {
-                if (anio.value === "2011" || anio.value === "2010") {
-                    valorMaxAFinanciarContainer.innerHTML = "Consultar";
-                    montoSolicitadoContainer.value = '';
-                    montoSolicitadoContainer.disabled = true; // Bloquear el campo de capital a financiar
-                    btnCotizarDesktop.classList.add('disabled');
-                    btnCotizarMobile.classList.add('disabled');
-                    document.querySelectorAll(`.cuota-valor`).forEach((element) => {
-                        element.innerText = '--';
-                    });
-                    return;
-                }
-
-                const productoSeleccionado = ltvData[selectedProduct];
-                if (!productoSeleccionado) {
-                    console.error('No se encontraron datos válidos para el producto seleccionado.');
-                    return;
-                }
-
-                const plazos = productoSeleccionado.plazos;
-                maxAFinanciar = precio * productoSeleccionado.ltv[anio.value];
-                console.log('LTV leído:', productoSeleccionado.ltv[anio.value]);
-
-                valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
-
-                if (valorIngresado === null || isNaN(valorIngresado) || valorIngresado === "" || valorIngresado > maxAFinanciar) {
-                    mensajeDeError.style = "display: none";
-                    document.querySelectorAll(`.cuota-valor`).forEach((element) => {
-                        element.innerText = '--';
-                    });
-                } else if (!isNaN(valorIngresado) && valorIngresado <= maxAFinanciar) {
-                    [12, 24, 36, 48, 60].forEach(plazo => {
-                        if (plazos[plazo]) {
-                            desglosarCuotas(valorIngresado, parseFloat(plazos[plazo].interest), plazo, plazos[plazo].fee);
-                        } else {
-                            console.warn(`No se encontraron datos para el plazo ${plazo}`);
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Error al calcular los valores de financiación:', error);
-            }
-        };
-
-        // Corregir desglosarCuotas para manejar datos directamente
-        const desglosarCuotas = (montoPrincipal, tasaInteresAnual, plazo, feeValor) => {
-            if (montoPrincipal >= minAFinanciar) {
-                mensajeDeError.style = "display: none";
-                montoSolicitadoContainer.classList.remove("error-active");
-                btnCotizarDesktop.classList.remove('disabled');
-                btnCotizarMobile.classList.remove('disabled');
-
-                const interesMensual = (tasaInteresAnual / 100) / 12;
-                const comision = montoPrincipal * (feeValor * 1.21);
-                let saldo = montoPrincipal + comision;
-                const cuotaMensual = calcularCuota(saldo, tasaInteresAnual, plazo);
-                let basePromedio = 0;
-
-                for (let i = 1; i <= plazo; i++) {
-                    const interesCuota = saldo * interesMensual;
-                    const iva = interesCuota * 0.21;
-                    const capitalCuota = cuotaMensual - interesCuota;
-                    const cuotaConIva = cuotaMensual + iva;
-                    saldo -= capitalCuota;
-
-                    basePromedio += cuotaConIva;
-                }
-
-                const cuotaPromedio = basePromedio / plazo;
-                const cuotaPromedioFormateada = parseFloat(cuotaPromedio.toFixed(0)).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
-                document.querySelectorAll(`.financiacion-en-${plazo}`).forEach((element) => {
-                    element.innerHTML = `<span>$</span>${cuotaPromedioFormateada}`;
-                });
-
-            } else if (montoPrincipal < minAFinanciar) {
-                mensajeDeError.innerText = `El valor ingresado debe ser mayor a $${minAFinanciar.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-                mensajeDeError.style = "display: inline-block";
-                montoSolicitadoContainer.classList.add("error-active");
-                btnCotizarDesktop.classList.add('disabled');
-                btnCotizarMobile.classList.add('disabled');
-
-                document.querySelectorAll(`.financiacion-en-${plazo}`).forEach((element) => {
-                    element.innerText = '--';
-                });
-            }
-        };
-
-        // Actualizar setProductInSessionStorage para usar ltvData directamente
-        const setProductInSessionStorage = async (selectedProduct) => {
-            try {
-                const productoSeleccionado = ltvData[selectedProduct];
-                if (!productoSeleccionado) {
-                    console.error(`Producto ${selectedProduct} no encontrado en los datos cargados.`);
-                    return;
-                }
-
-                console.log('Producto seleccionado configurado:', productoSeleccionado);
-            } catch (error) {
-                console.error('Error al procesar los datos del producto:', error);
-            }
-        };
-
-        const calcularCuota = (montoPrincipal, tasaInteresAnual, plazo) => {
-            const interesMensual = (tasaInteresAnual / 100) / 12;
-            const factor = Math.pow(1 + interesMensual, plazo);
-            const cuotaMensual = montoPrincipal * interesMensual * factor / (factor - 1);
-            return cuotaMensual;
-        };
-
-
-        const setTextSelectCar = () => {
-            if (window.innerWidth > 767) {
-                btnSelectCar.innerText = "SELECCIONAR OTRO VEHICULO";
-            } else {
-                btnSelectCar.innerText = "MODIFICAR VEHICULO";
-            }
-
-            window.addEventListener('resize', () => {
-                if (window.innerWidth > 767) {
-                    btnSelectCar.innerText = "SELECCIONAR OTRO VEHICULO";
-                } else {
-                    btnSelectCar.innerText = "MODIFICAR VEHICULO";
-                }
-            });
-        }
-
-        showPageMobileWhitOutfinancing = () => {
-            montoSolicitadoContainer.classList.remove("input-second-page-mobile");
-
-            cuotasMobileContainer.style = "display: none";
-            cotizarMobileContainer.style = "display: none";
-            document.querySelector(".monto-a-financiar-mobile").style = "display: none";
-
-            btnVerCuotas.style = "display: inline;";
-
-            document.querySelector(".ver-cuotas").style = "display: flex";
-            document.querySelector(".max-financiar").style = "display: flex";
-        }
-
-        const resetValues = () => {
-            secondPage.classList.add("hidden");
-            initialPage.classList.remove("hidden");
-            btnAvanzar.disabled = true;
-            marcas.innerHTML = "<option disabled selected>MARCA</option>";
-            modelos.innerHTML = "<option disabled selected>MODELO</option>";
-            anio.selectedIndex = 0;
-            dataWithLogo = [];
-            selectedProduct = "a";
-            valorMaxAFinanciarContainer.innerHTML = "<span class='loader-container'><img class='loader-icon' src='./images/icons/loader.svg' alt='loader'></span>";
-            montoSolicitadoContainer.value = '';
-            montoSolicitadoContainer.classList.remove("error-active");
-            btnCotizarDesktop.classList.remove('disabled');
-            btnCotizarMobile.classList.remove('disabled');
-            logoContainer.parentElement.style.display = 'flex';
-            descripcionAutoContainer.style = 'padding-left: 0px !important';
-            document.querySelectorAll(".cuota-valor").forEach((element) => {
-                element.innerHTML = "<img class='loader-icon' src='./images/icons/loader.svg' alt='loader'>";
-            });
-            document.querySelector('input[type="checkbox"]').checked = false;
-            setProductInSessionStorage("a");
-            mensajeDeError.style = "display: none";
-        }
-
-        //========================================================================
-
-        const fetchProductsFromDB = async () => {
-            try {
-                const response = await fetch('php/curl.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'getProductsFromDB' })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log('Productos obtenidos de la base de datos:', data.productos);
-
-                // Actualizar sessionStorage con los datos obtenidos
-                sessionStorage.setItem('productosDB', JSON.stringify(data.productos));
-            } catch (error) {
-                console.error('Error al obtener productos de la base de datos:', error);
-            }
-        };
-
-        // Llamar a fetchLtvAndMinAFinanciar al cargar la página
-        window.onload = async () => {
-            try {
-                await fetchCalculadoraData(); // Cargar los datos desde el nuevo endpoint
-                await setProductInSessionStorage(selectedProduct); // Configurar el producto por defecto
-            } catch (error) {
-                console.error('Error durante la inicialización:', error);
-            }
-        };
-
-        setTextSelectCar();
-
-        //========================================================================
-
-        anio.addEventListener("change", () => {
-            fetchMarcas(anio.value);
-        });
-
-        marcas.addEventListener("change", () => {
-            fetchModelos(marcas.value, anio.value);
-        });
-
-        modelos.addEventListener("change", () => {
-            btnAvanzar.disabled = false;
-        });
-
-        //botón página inicial.
-        btnAvanzar.addEventListener('click', (event) => {
-            event.preventDefault();
-            fetchPriceCar(modelos.value, anio.value);
-            let marcaFormateada = toTitleCase(marcas.options[marcas.selectedIndex].text);
-
-            document.querySelector(".año").innerHTML = `<span>${anio.options[anio.selectedIndex].text}</span>`;
-            document.querySelector(".marca").innerText = marcaFormateada;
-            document.querySelector(".modelo").innerText = modelos.options[modelos.selectedIndex].text;
-
-            secondPage.classList.remove("hidden");
-            showSecondPageMobile = false;
-            initialPage.classList.add("hidden");
-
-            if (window.innerWidth > 767) {
-                btnVerCuotas.style = "display: none !important;";
-            }
-
-        })
-
-        // Corregir btnSwitchProductValue para manejar datos directamente
-        btnSwitchProductValue.addEventListener('click', async function () {
-            if (anio.value === "2011" || anio.value === "2010") {
-                return; // Bloquear el cambio de producto en los años 2010 y 2011
-            }
-
-            const checkbox = this.querySelector('input[type="checkbox"]');
-            checkbox.checked = !checkbox.checked;
-
-            selectedProduct = checkbox.checked ? "b" : "a";
-
-            // Mostrar el LTV del producto seleccionado incluso si no se ha ingresado un capital
-            if (precio) {
-                maxAFinanciar = precio * ltvData[selectedProduct].ltv[anio.value];
-                valorMaxAFinanciarContainer.innerHTML = `<span>$</span>${maxAFinanciar.toLocaleString('es-AR')}`;
-            }
-
-            // Validar si el campo de "capital a financiar" está vacío antes de calcular las cuotas
-            if (montoSolicitadoContainer.value.trim() === '') {
-                document.querySelectorAll(`.cuota-valor`).forEach((element) => {
-                    element.innerText = '--';
-                });
-                return;
-            }
-
-            // Validar si el capital a financiar supera el máximo permitido
-            if (valorIngresado > maxAFinanciar) {
-                mensajeDeError.innerText = "No puede superar el máximo a financiar";
-                mensajeDeError.style = "display: inline-block";
-                document.querySelectorAll(`.cuota-valor`).forEach((element) => {
-                    element.innerText = '--';
-                });
-                return;
-            }
-
-            setFinancingValues();
-        });
-
-        btnSelectCar.addEventListener('click', (event) => {
-            event.preventDefault();
-            resetValues();
-            document.querySelector(".calculadora-container").style = "height: auto; overflow-y: hidden";
-
-            showPageMobileWhitOutfinancing()
-
-        });
-
-        btnCotizarDesktop.addEventListener('click', (event) => {
-            event.preventDefault();
-            if (montoSolicitadoContainer.value.length === 0) {
-                montoSolicitadoContainer.classList.add("error-active");
-            } else {
-                sendWhatsAppMessage();
-            }
-        });
-
-        btnCotizarMobile.addEventListener('click', (event) => {
-            event.preventDefault();
-            if (montoSolicitadoContainer.value.length === 0) {
-                montoSolicitadoContainer.classList.add("error-active");
-            } else {
-                sendWhatsAppMessage();
-            }
-        });
-
-        btnVerCuotas.addEventListener('click', () => {
-            showSecondPageMobile = true;
-
-            montoSolicitadoContainer.classList.add("input-second-page-mobile");
-
-            // Ocultar el botón
-            document.querySelector(".ver-cuotas").style = "display: none";
-            document.querySelector(".monto-a-financiar-mobile").style = "display: inline-block";
-
-            // Mostrar los contenedores
-            cuotasMobileContainer.style = "display: inline-block";
-            cotizarMobileContainer.style = "display: flex";
-
-            // Adaptar la calculadora al tamaño de la pantalla con scroll vertical.
-            document.querySelector(".calculadora-container").style = "height: 97dvh; overflow-y: scroll";
-        });
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 767) {
-                cuotasMobileContainer.style = "display: none !important;";
-                cotizarMobileContainer.style = "display: none !important;";
-                btnVerCuotas.style = "display: none;";
-                document.querySelector(".monto-a-financiar-mobile").style = "display: none";
-                montoSolicitadoContainer.classList.remove("input-second-page-mobile");
-                document.querySelector(".calculadora-container").style = "height: auto; overflow-y: hidden";
-
-            } else if (window.innerWidth <= 767 && showSecondPageMobile) {
-                cuotasMobileContainer.style = "display: inline-block;";
-                cotizarMobileContainer.style = "display: flex;";
-                document.querySelector(".monto-a-financiar-mobile").style = "display: inline-block";
-                montoSolicitadoContainer.classList.add("input-second-page-mobile");
-                document.querySelector(".calculadora-container").style = "height: 97dvh; overflow-y: scroll";
-            } else if (window.innerWidth <= 767 && !showSecondPageMobile) {
-                btnVerCuotas.style = "display: inline;";
-                document.querySelector(".monto-a-financiar-mobile").style = "display: none";
-            }
-        });
-
-
-        btnVolver.addEventListener('click', () => {
-            showSecondPageMobile = false;
-
-            showPageMobileWhitOutfinancing();
-
-            // Adaptar la calculadora al tamaño de la pantalla con scroll vertical.
-            document.querySelector(".calculadora-container").style = "height: auto; overflow-y: hidden";
-        });
-
-        montoSolicitadoContainer.addEventListener('input', function () {
-            let valorSinFormato = this.value.replace(/[\.$]/g, '');
-            valorIngresado = parseInt(valorSinFormato, 10);
-
-            if (valorIngresado > maxAFinanciar) {
-                valorIngresado = maxAFinanciar;
-            }
-
-            if (!isNaN(valorIngresado)) {
-                const productoSeleccionado = ltvData[selectedProduct];
-                if (!productoSeleccionado) {
-                    console.error('No se encontraron datos válidos para el producto seleccionado.');
-                    return;
-                }
-
-                const plazos = productoSeleccionado.plazos;
-
-                let valorFormateado = valorIngresado.toLocaleString('es-AR');
-                this.value = '$' + valorFormateado;
-
-                [12, 24, 36, 48, 60].forEach(plazo => {
-                    if (plazos[plazo]) {
-                        desglosarCuotas(valorIngresado, parseFloat(plazos[plazo].interest), plazo, plazos[plazo].fee);
-                    } else {
-                        console.warn(`No se encontraron datos para el plazo ${plazo}`);
-                    }
-                });
-            } else if (this.value === '') {
-                btnCotizarDesktop.classList.remove('disabled');
-                btnCotizarMobile.classList.remove('disabled');
-                mensajeDeError.style = "display: none";
-                montoSolicitadoContainer.classList.remove("error-active");
-                document.querySelectorAll(`.cuota-valor`).forEach((element) => {
-                    element.innerText = '--';
-                });
-            }
-        });
-
-        function isTokenExpired(token) {
-            if (token) {
-                // Dividir el token en sus tres partes (header, payload, signature)
-                const tokenParts = token.split('.');
-
-                if (tokenParts.length !== 3) {
-                    // Si el token no tiene tres partes, no es un JWT válido
-                    return true;
-                }
-
-                // Decodificar la parte del payload que contiene los datos del token
-                const payload = JSON.parse(atob(tokenParts[1]));
-
-                // Extraer el tiempo de expiración (exp)
-                const exp = payload.exp;
-
-                if (!exp) {
-                    // Si no existe la propiedad exp en el token, considerar que ha expirado
-                    return true;
-                }
-
-                // Obtener el tiempo actual en segundos desde el epoch
-                const now = Math.floor(Date.now() / 1000);
-
-                // Verificar si el token ha expirado
-                return now >= exp;
-            } else {
-                return true
-            }
-        }</script>
-</body>
-
+    <script src="cotizar.js"></script>
+    <!-- Agregar html2canvas desde CDN antes del cierre de </body> -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://github.hubspot.com/odometer/themes/odometer-theme-default.css"
+    />
+    <script src="https://github.hubspot.com/odometer/odometer.js"></script>
+    <!-- MODAL SELECCIÓN DE PERSONA POR DNI -->
+    <div id="modal-personas-dni" class="modal-overlay hidden" style="display:none;">
+      <div class="modal-content" >
+        <div class="modal-title" >Seleccioná la persona correcta</div>
+        <div class="modal-subtitle" >
+          Se encontraron varias personas con el mismo DNI.<br>
+          Elegí a quién corresponde la consulta:
+        </div>
+        <div class="clients-list" id="modal-personas-list" >
+          <!-- Aquí se insertan los botones de personas dinámicamente -->
+        </div>
+        <button class="modal-close-btn" id="modal-personas-close" >Cancelar</button>
+      </div>
+    </div>
+
+  </body>
 </html>

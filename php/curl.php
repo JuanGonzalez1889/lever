@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ERROR | E_PARSE); // Solo errores graves, no warnings/notices
 class InfoAuto
 {
     public $token;
@@ -7,7 +8,8 @@ class InfoAuto
     public $username;
     public $password;
 
-    public function setApiType($categoria) {
+    public function setApiType($categoria)
+    {
         $cat = strtolower(trim($categoria));
         // Si contiene "moto" en cualquier parte, es moto
         if (strpos($cat, 'moto') !== false) {
@@ -105,8 +107,6 @@ class InfoAuto
             }
         }
 
-
-
         curl_close($ch);
     }
 
@@ -142,22 +142,40 @@ class InfoAuto
         return $yearSelected;
     }
 
-    public function getBrandsByYear($year, $access_token)
+    // --- MODIFICADO: getBrandsByYear acepta $features ---
+    public function getBrandsByYear($year, $access_token, $features = [])
     {
         $apiType = $this->apiType;
-        if ($year == date('Y')) {
-            $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/?query_mode=matching&list_price=true&page=1&page_size=100";
-        } else {
-            $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/?query_mode=matching&price_at=$year&page=1&page_size=100";
-        }
 
-        // Access token obtenido en el paso anterior
-        //$access_token = $this->token;
+        // Detectar si es motos y año actual
+        $isMotos = ($apiType === "motorcycles");
+        $isActualYear = ($year == date('Y'));
+
+        $baseUrl = "https://api.infoauto.com.ar/{$apiType}/pub/brands/?query_mode=matching";
+
+        if ($isMotos && $isActualYear) {
+            $baseUrl .= "&list_price=true";
+        } elseif ($isMotos) {
+            $baseUrl .= "&prices_from=$year&prices_to=$year";
+        } else {
+            $baseUrl .= "&prices_from=$year&prices_to=$year";
+            // Solo para autos/camiones agregamos features
+            if (!empty($features)) {
+                foreach ($features as $f) {
+                    if ($f) {
+                        $baseUrl .= "&feature_3=" . urlencode($f);
+                    }
+                }
+            }
+        }
+        $baseUrl .= "&page=1&page_size=100";
+        // LOG: Ver la URL final y los features
+        file_put_contents(__DIR__ . '/log_infoauto_url.txt', date('c') . " URL: $baseUrl\nFeatures: " . json_encode($features) . "\n", FILE_APPEND);
 
         // Iniciar una sesión cURL
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_URL, $baseUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Authorization: Bearer ' . $access_token
@@ -185,7 +203,8 @@ class InfoAuto
         }
     }
 
-    public function getModelsByBrand($id, $anio, $access_token)
+    // --- MODIFICADO: getModelsByBrand acepta $features ---
+    public function getModelsByBrand($id, $anio, $access_token, $features = [])
     {
         $apiType = $this->apiType;
         $carsDescriptionList = [];
@@ -195,10 +214,17 @@ class InfoAuto
 
         while (true) {
             if ($anio == date('Y')) {
-                $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/$id/models/?query_mode=matching&list_price=true&page=$page&page_size=$page_size";
+                $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/$id/models/?query_mode=matching&list_price=true";
             } else {
-                $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/$id/models/?query_mode=matching&price_at=$anio&page=$page&page_size=$page_size";
+                $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/$id/models/?query_mode=matching&price_at=$anio";
             }
+            // Agregar features
+            if (!empty($features)) {
+                foreach ($features as $f) {
+                    $url .= "&feature_3=" . urlencode($f);
+                }
+            }
+            $url .= "&page=$page&page_size=$page_size";
 
             // Iniciar una sesión cURL
             $ch = curl_init();
@@ -274,7 +300,10 @@ class InfoAuto
             $price = null;
 
             if ($year == date('Y')) {
-                $price = $price_info['list_price'];
+                // Verificar si existe la clave 'list_price'
+                $price = (isset($price_info['list_price']) && is_numeric($price_info['list_price']))
+                    ? $price_info['list_price']
+                    : 0;
             } else {
                 if (is_array($price_info)) {
                     foreach ($price_info as $item) {
@@ -287,6 +316,43 @@ class InfoAuto
             }
             file_put_contents($logFile, $logPrefix . "PRICE FOUND: " . ($price ? $price * 1000 : 0) . "\n", FILE_APPEND);
             echo json_encode(['accessToken' => $access_token, 'price' => ($price ? $price * 1000 : 0)], TRUE);
+        }
+        curl_close($ch);
+    }
+
+    public function getFeaturesByCodia($codia, $access_token)
+    {
+        $apiType = $this->apiType;
+        $url = "https://api.infoauto.com.ar/{$apiType}/pub/models/{$codia}/features/";
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . $access_token
+        ));
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        } else {
+            $features = json_decode($response, true);
+            // Filtrar solo la feature "Tipo de vehículo"
+            $tipoVehiculo = null;
+            if (is_array($features)) {
+                foreach ($features as $f) {
+                    if (
+                        isset($f['description']) &&
+                        strtolower($f['description']) === 'tipo de vehículo'
+                    ) {
+                        $tipoVehiculo = $f;
+                        break;
+                    }
+                }
+            }
+            // Devolver solo la feature encontrada (o null si no existe)
+            echo json_encode($tipoVehiculo);
         }
         curl_close($ch);
     }
@@ -405,7 +471,8 @@ if ($conn->connect_error) {
 }
 
 // Función para obtener datos de la base de datos
-function getDatabaseData($query) {
+function getDatabaseData($query)
+{
     global $conn;
     $result = $conn->query($query);
 
@@ -423,6 +490,7 @@ function getDatabaseData($query) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $datos = file_get_contents('php://input');
     $data = json_decode($datos, TRUE);
+
     $access_token = $data['accessToken'] ?? null;
     $categoria = $data['categoria'] ?? 'autos'; // autos, utilitarios, motos
 
@@ -460,24 +528,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $access_token = $a->token;
     }
 
-    //$a->login();
-
     if (json_last_error() === JSON_ERROR_NONE) {
         // Acceder a los datos
         $year = $data['year'] ?? '';
         $action = $data['action'] ?? '';
         $id = $data['idMarca'] ?? '';
         $codia = $data['codia'] ?? '';
+        $features = $data['features'] ?? [];
 
         switch ($action) {
             case "getBrandsByYear":
-                $a->getBrandsByYear($year, $access_token);
+                $a->getBrandsByYear($year, $access_token, $features);
                 break;
             case "getModelsByBrand":
-                $a->getModelsByBrand($id, $year, $access_token);
+                $a->getModelsByBrand($id, $year, $access_token, $features);
                 break;
             case "getPriceByCodia":
                 $a->getPriceByCodia($codia, $year, $access_token);
+                break;
+            case "getFeaturesByCodia":
+                $a->getFeaturesByCodia($codia, $access_token);
                 break;
             case "getLtvAndMinAFinanciar":
                 // Estas acciones ya no son necesarias
@@ -488,7 +558,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Error al decodificar los datos JSON.";
     }
 
-    //echo json_decode($_POST[""], TRUE);
     die();
 }
 
@@ -502,7 +571,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['endpoint'])) {
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Authorization: Bearer ' . $accessToken,
     ]);
- 
+
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
