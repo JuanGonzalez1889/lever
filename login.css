@@ -1,0 +1,716 @@
+body {
+    background: #282840;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: Montserrat, sans-serif;
+}
+
+#login-modal {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(40, 40, 64, 0.18);
+    padding: 40px 32px 32px 32px;
+    min-width: 245px;
+    text-align: center;
+    height: 339px;
+}
+
+.login-box h2 {
+    color: #282840;
+    margin-bottom: 18px;
+    font-weight: 700;
+}
+
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.logo-container img {
+    width: 102px;
+}
+
+/* Google Fonts Link */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Resetting default styling and setting font-family */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+
+/* Login form styling */
+.login_form {
+    width: 100%;
+    max-width: 375px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 41px 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.login_form h3 {
+    font-size: 20px;
+    text-align: center;
+}
+
+/* Google & Apple button styling */
+
+.login_form .login_option {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login_form .login_option .option {
+    width: calc(206% / 2 - 13px);
+}
+
+.login_form .login_option .option a {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: #F8F8FB;
+    border: 1px solid #DADAF2;
+    border-radius: 5px;
+    margin: 34px 0 24px 0;
+    text-decoration: none;
+    color: #171645;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.login_form .login_option .option a:hover {
+    background: #ededf5;
+}
+
+.login_form .login_option .option a img {
+    max-width: 25px;
+}
+
+.login_form p {
+    text-align: center;
+    font-weight: 500;
+}
+
+.login_form .separator {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+/* Login option separator styling */
+.login_form .separator span {
+    background: #fff;
+    z-index: 1;
+    padding: 0 10px;
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    margin: 0;
+    text-align: center;
+}
+
+.login_form .separator::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    height: 1px;
+    background: #C2C2C2;
+    display: block;
+}
+
+form .input_box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+    margin-top: 22px;
+}
+
+/* Input field styling */
+form .input_box input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #DADAF2;
+    outline: none;
+    background: #F8F8FB;
+    font-size: 17px;
+    padding: 0px 20px;
+    transition: 0.2s ease;
+}
+
+form .input_box input:focus {
+    border-color: #626cd6;
+}
+
+form .input_box .password_title {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+form .input_box {
+    position: relative;
+}
+
+a {
+    text-decoration: none;
+    color: #626cd6;
+    font-weight: 500;
+    margin-top: 11px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Login button styling */
+form button {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background: #2adc9f;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 31px;
+    margin-bottom: 28px;
+    transition: 0.3s ease;
+}
+
+form button:hover {
+    background: #00f09c;
+}
+
+
+/* Modal overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal content */
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2em 2em 1.5em 2em;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    max-width: 350px;
+    width: 90vw;
+    position: relative;
+    animation: modalIn 0.2s;
+}
+
+@keyframes modalIn {
+    from {
+        transform: translateY(-40px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #222;
+}
+
+.modal-message {
+    margin-top: 1em;
+    font-size: 1em;
+    min-height: 1.2em;
+}
+
+.btn-primary {
+    color: #fff;
+    border: none;
+    padding: 0.7em 1.5em;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 1em;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #00f09c;
+}
+
+@media (max-width: 1024px) {
+    .login_form {
+        width: 100%;
+        max-width: 375px;
+        background: #fff;
+        border-radius: 6px;
+        padding: 41px 30px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+}
+
+
+
+@media (max-width: 600px) {
+    body {
+        padding: 0;
+        min-height: 100vh;
+        background: #282840;
+    }
+
+    .login_form {
+        width: 95vw !important;
+        max-width: 98vw !important;
+        min-width: 0 !important;
+        margin: 0 auto !important;
+        border-radius: 8px;
+        padding: 18px 2vw 18px 2vw;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+        height: auto;
+    }
+
+    .logo-container img {
+        width: 80px;
+    }
+
+    .login_form .login_option {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .login_form .login_option .option {
+        width: 100%;
+    }
+
+    .login_form .login_option .option a {
+        margin: 18px 0 10px 0;
+        font-size: 15px;
+        height: 38px;
+    }
+
+    .login_form .separator {
+        margin-bottom: 18px;
+    }
+
+    form .input_box label {
+        margin-top: 14px;
+        font-size: 15px;
+    }
+
+    form .input_box input {
+        font-size: 15px;
+        height: 36px;
+        padding: 0 12px;
+    }
+
+    form button {
+        margin-top: 18px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        height: 38px;
+    }
+
+    .sign_up {
+        font-size: 14px;
+    }
+
+    .modal-content {
+        padding: 1.2em 0.7em 1em 0.7em;
+        max-width: 63vw;
+    }
+}
+
+.register-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100vw;
+    background: #282840;
+}
+
+.register-left {
+    flex: 1.1;
+    background: #171645;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+.register-left-content {
+    max-width: 350px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 32px 24px;
+    margin-top: 66px;
+}
+
+.register-left-content h1 {
+    font-size: 4.2em;
+    font-weight: 700;
+    margin-bottom: 22px;
+    line-height: 1.1;
+    margin-top: 4rem;
+    width: 128%;
+}
+
+.register-left-content p {
+    font-size: 2.0em;
+    margin-bottom: 32px;
+    color: #bdbdf2;
+    width: 105%;
+}
+
+.register-illustration {
+    width: 100%;
+    max-width: 260px;
+    margin-top: 24px;
+    display: block;
+}
+
+.register-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #282840;
+    min-width: 0;
+}
+
+/* Responsive para mobile */
+@media (max-width: 900px) {
+
+    .login_form {
+        width: 90%;
+        margin-top: 10px;
+        max-width: 375px;
+        background: #fff;
+        border-radius: 6px;
+        padding: 41px 30px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .register-container {
+        flex-direction: column;
+    }
+
+    .register-left,
+    .register-right {
+        flex: unset;
+        width: 100vw;
+        min-width: 0;
+    }
+
+    .register-left-content {
+        max-width: 95vw;
+        text-align: center;
+        padding: 20px 0vw 0 4vw;
+        height: 180px;
+    }
+
+    .register-left-content h1 {
+        font-size: 32px;
+        margin-top: 1.5rem;
+        width: 100%;
+    }
+
+    .register-left-content p {
+        font-size: 18px;
+        margin-bottom: 18px;
+        width: 100%;
+    }
+
+    .register-illustration {
+        display: none;
+    }
+
+    .register-right {
+        padding-bottom: 32px;
+    }
+}
+
+
+/* efecto del auto moviendose */
+@keyframes car-move {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    60% {
+        transform: translateY(-14px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.register-illustration {
+    animation: car-move 2.2s cubic-bezier(0.4, 0.8, 0.6, 1) infinite;
+}
+
+
+
+/* efecto del auto arrancando */
+@keyframes car-drive-away {
+    0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+
+    60% {
+        transform: translateY(-30px) scale(1.1) rotate(-5deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-250px) translateX(180px) scale(1.3) rotate(-12deg);
+        opacity: 0;
+    }
+}
+
+.register-illustration.drive-away {
+    animation: car-drive-away 1.1s cubic-bezier(0.7, 0.1, 1, 0.3) forwards;
+}
+
+@media (max-width: 900px) {
+    .register-container {
+        flex-direction: column;
+    }
+
+    .register-left,
+    .register-right {
+        flex: unset;
+        width: 100vw;
+        min-width: 0;
+    }
+
+    .register-left-content {
+        max-width: 98vw;
+        width: 95vw;
+        text-align: center;
+        padding: 18px 2vw 0 2vw;
+        margin: 0 auto;
+        height: auto;
+    }
+
+    .register-right {
+        padding-bottom: 32px;
+    }
+}
+
+@media (max-width: 600px) {
+    .register-left-content h1 {
+        font-size: 2em;
+        margin-top: 1.5rem;
+        width: 100%;
+    }
+
+    .register-left-content p {
+        font-size: 1em;
+        margin-bottom: 18px;
+        width: 100%;
+    }
+
+    .register-illustration {
+        display: none;
+    }
+
+    .register-left-content {
+        max-width: 99vw;
+        width: 97vw;
+        padding: 12px 1vw 0 1vw;
+        margin: 0 auto;
+        height: auto;
+    }
+}
+
+
+
+.smiley__eye1,
+.smiley__eye2 {
+    animation: smiley-eye-move 1.6s cubic-bezier(.77, 0, .18, 1) infinite alternate;
+}
+
+.smiley__eye2 {
+    animation-delay: .2s;
+}
+
+@keyframes smiley-eye-move {
+    0% {
+        transform: rotate(-40deg) translateY(-56px);
+    }
+
+    50% {
+        transform: rotate(0deg) translateY(-56px);
+    }
+
+    100% {
+        transform: rotate(40deg) translateY(-56px);
+    }
+}
+
+.smiley__mouth1,
+.smiley__mouth2 {
+    stroke-dasharray: 175.93 351.86;
+    animation: smiley-mouth-move 1.6s cubic-bezier(.77, 0, .18, 1) infinite alternate;
+}
+
+.smiley__mouth2 {
+    animation-delay: .2s;
+}
+
+@keyframes smiley-mouth-move {
+    0% {
+        stroke-dashoffset: 175.93;
+    }
+
+    50% {
+        stroke-dashoffset: 0;
+    }
+
+    100% {
+        stroke-dashoffset: -175.93;
+    }
+}
+
+.loader-overlay {
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgb(20 23 50 / 63%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.smiley__eye1,
+.smiley__eye2 {
+    animation: smiley-eye-move 1.6s cubic-bezier(.77, 0, .18, 1) infinite alternate;
+}
+
+.smiley__eye2 {
+    animation-delay: .2s;
+}
+
+@keyframes smiley-eye-move {
+    0% {
+        transform: rotate(-40deg) translateY(-56px);
+    }
+
+    50% {
+        transform: rotate(0deg) translateY(-56px);
+    }
+
+    100% {
+        transform: rotate(40deg) translateY(-56px);
+    }
+}
+
+.smiley__mouth1,
+.smiley__mouth2 {
+    stroke-dasharray: 175.93 351.86;
+    animation: smiley-mouth-move 1.6s cubic-bezier(.77, 0, .18, 1) infinite alternate;
+}
+
+.smiley__mouth2 {
+    animation-delay: .2s;
+}
+
+@keyframes smiley-mouth-move {
+    0% {
+        stroke-dashoffset: 175.93;
+    }
+
+    50% {
+        stroke-dashoffset: 0;
+    }
+
+    100% {
+        stroke-dashoffset: -175.93;
+    }
+}
+
+/* Animación de puntos para el texto */
+.loader-text {
+    margin-top: 18px;
+    font-size: 1.4em;
+    color: #2adc9f;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.loader-dots span {
+    animation: blink 1.4s infinite both;
+    font-weight: bold;
+}
+
+.loader-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+
+    0%,
+    80%,
+    100% {
+        opacity: 0.2;
+    }
+
+    40% {
+        opacity: 1;
+    }
+}

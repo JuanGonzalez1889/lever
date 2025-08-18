@@ -1,0 +1,449 @@
+body.modal-login-blur {
+    overflow: hidden;
+}
+
+/* Overlay */
+.modal-login-overlay {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal content */
+.modal-login-content {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    max-width: 350px;
+    width: 90vw;
+    position: relative;
+    animation: modalIn 0.2s;
+    text-align: center;
+}
+
+@keyframes modalIn {
+    from {
+        transform: translateY(-40px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-login-close {
+    position: absolute;
+    top: 12px;
+    right: -35px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #000;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-login-close:hover {
+    color: #222;
+}
+
+.modal-login-form-container {
+    width: 100%;
+    max-width: 375px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 41px 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    margin: 0 auto;
+}
+
+.modal-login-logo-container img {
+    width: 102px;
+    margin-bottom: 18px;
+}
+
+.modal-login-options {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.modal-login-option {
+    width: 100%;
+}
+
+.modal-login-google-btn {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: #F8F8FB;
+    border: 1px solid #DADAF2;
+    border-radius: 5px;
+    margin: 34px 0 24px 0;
+    text-decoration: none;
+    color: #171645;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.modal-login-google-btn:hover {
+    background: #ededf5;
+}
+
+.modal-login-google-icon {
+    display: flex;
+    align-items: center;
+}
+
+.modal-login-separator {
+    position: relative;
+    margin-bottom: 24px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.modal-login-separator span {
+    background: #fff;
+    z-index: 1;
+    padding: 0 10px;
+    position: relative;
+    font-size: 15px;
+}
+
+.modal-login-separator::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    height: 1px;
+    background: #C2C2C2;
+    display: block;
+}
+
+.modal-login-input-box {
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.modal-login-input-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+    margin-top: 22px;
+}
+
+.modal-login-input-box input {
+    width: 87%;
+    height: 40px;
+    border: 1px solid #DADAF2;
+    outline: none;
+    background: #F8F8FB;
+    font-size: 17px;
+    padding: 0px 20px;
+    transition: 0.2s ease;
+}
+
+.modal-login-input-box input:focus {
+    border-color: #626cd6;
+}
+
+.modal-login-password-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-login-forgot-link {
+    color: #626cd6;
+    font-weight: 500;
+    font-size: 13px;
+    margin-top: 0;
+    text-decoration: none;
+}
+
+.modal-login-forgot-link:hover {
+    text-decoration: underline;
+}
+
+.modal-login-btn-primary {
+    width: 43%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background: #2adc9f;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 31px;
+    margin-bottom: 28px;
+    transition: 0.3s ease;
+}
+
+.modal-login-btn-primary:hover {
+    background: #00f09c;
+}
+
+.modal-login-sign-up {
+    font-size: 14px;
+    text-align: center;
+}
+
+.modal-login-sign-up a {
+    color: #626cd6;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.modal-login-sign-up a:hover {
+    text-decoration: underline;
+}
+
+.modal-login-error {
+    color: red;
+    margin-top: 10px;
+    display: none;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .modal-login-content {
+        padding: 1.2em 0.7em 1em 0.7em;
+        max-width: 95vw;
+    }
+
+    .modal-login-forgot-link {
+        color: #626cd6;
+        font-weight: 500;
+        font-size: 12px;
+        margin-top: 0;
+        text-decoration: none;
+        margin-right: 11px;
+    }
+
+    .modal-login-close {
+        position: absolute;
+        top: 28px;
+        right: 22px;
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        color: #000;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .modal-login-form-container {
+        width: 86vw !important;
+        max-width: 97vw !important;
+        min-width: 0 !important;
+        margin-left: -5px;
+        padding: 18px 2vw 18px 2vw;
+        border-radius: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    }
+
+    .modal-login-logo-container img {
+        width: 80px;
+    }
+
+    .modal-login-google-btn {
+        margin: 18px 10px 10px 13px;
+        font-size: 15px;
+        height: 38px;
+        width: 92%;
+    }
+
+    .modal-login-separator {
+        margin-bottom: 18px;
+    }
+
+    .modal-login-input-box label {
+        margin-top: 14px;
+        font-size: 15px;
+        margin-left: 17px;
+    }
+
+    .modal-login-input-box input {
+        font-size: 15px;
+        padding: 0 12px;
+        width: 85%;
+        height: 40px;
+        border: 1px solid #DADAF2;
+        outline: none;
+        background: #F8F8FB;
+        font-size: 17px;
+        transition: 0.2s ease;
+        margin-left: 13px;
+
+    }
+
+    .modal-login-btn-primary {
+        margin-top: 18px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        height: 38px;
+    }
+}
+
+/* Modal Olvide - clases únicas */
+.modal-overlay-olvide {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content-olvide {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2em 2em 1.5em 2em;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    max-width: 350px;
+    width: 90vw;
+    position: relative;
+    animation: modalIn 0.2s;
+    text-align: center;
+}
+
+.modal-close-olvide {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close-olvide:hover {
+    color: #222;
+}
+
+.modal-title-olvide {
+    font-size: 21px;
+    margin-bottom: 9px;
+}
+
+.modal-desc-olvide {
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 18px;
+}
+
+.input_box_olvide {
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.label-olvide {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+    margin-top: 22px;
+}
+
+.input-olvide {
+    width: 88%;
+    height: 40px;
+    border: 1px solid #DADAF2;
+    outline: none;
+    background: #F8F8FB;
+    font-size: 17px;
+    padding: 0px 20px;
+    transition: 0.2s ease;
+}
+
+.input-olvide:focus {
+    border-color: #626cd6;
+}
+
+.btn-primary-olvide {
+    width: 56%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background: #2adc9f;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 31px;
+    margin-bottom: 28px;
+    transition: 0.3s ease;
+}
+
+.btn-primary-olvide:hover {
+    background: #00f09c;
+}
+
+.modal-message-olvide {
+    color: red;
+    margin-top: 10px;
+    display: none;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .modal-content-olvide {
+        padding: 1.2em 0.7em 1em 0.7em;
+        max-width: 95vw;
+    }
+
+    .label-olvide {
+        margin-top: 14px;
+        font-size: 15px;
+    }
+
+    .input-olvide {
+        font-size: 15px;
+        height: 36px;
+        padding: 0 12px;
+        width: 90%;
+    }
+
+    .btn-primary-olvide {
+        font-size: 13px;
+        height: 38px;
+    }
+}
+#user-icon-header {
+    transition: background 0.2s, box-shadow 0.2s;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+#user-icon-header:hover svg path {
+    fill: #2adc9f;
+    /* Cambia el color del SVG al hacer hover */
+    transition: fill 0.2s;
+}

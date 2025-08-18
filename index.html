@@ -8,15 +8,167 @@
     <link rel="stylesheet" href="cotizar.css" />
     <link rel="stylesheet" href="cotizarTabletDesktop.css" />
     <link rel="stylesheet" href="pantallasChicas.css" />
+    <link rel="stylesheet" href="loginModal.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+/* MODAL OVERLAY Y CONTENT IGUAL QUE LOGIN.CSS */
+body.modal-bloqueado > *:not(.modal-overlay-perfil) {
+  pointer-events: none !important;
+  user-select: none !important;
+  /* Opcional: puedes agregar un filtro para dar feedback visual */
+  /* filter: blur(1px); */
+}
+body.modal-bloqueado {
+  overflow: hidden;
+}
 
+@keyframes modalIn {
+    from {
+        transform: translateY(-40px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-overlay-perfil {
+    pointer-events: auto;
+}
+body.modal-bloqueado {
+    overflow: hidden;
+}
+.modal-close:hover {
+    color: #222;
+}
+.modal-message {
+    margin-top: 1em;
+    font-size: 1em;
+    min-height: 1.2em;
+}
+.btn-primary {
+    color: #fff;
+    border: none;
+    padding: 0.7em 1.5em;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 1em;
+    background: #2adc9f;
+    transition: background 0.2s;
+}
+.btn-primary:hover {
+    background: #00f09c;
+}
+.input_box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+    margin-top: 22px;
+    text-align: left;
+    margin-left: 13px;
+}
+.input_box input {
+    width: 81%;
+    height: 40px;
+    border: 1px solid #DADAF2;
+    outline: none;
+    background: #F8F8FB;
+    font-size: 17px;
+    padding: 0px 20px;
+    transition: 0.2s ease;
+    margin-bottom: 8px;
+}
+.input_box input:focus {
+    border-color: #626cd6;
+}
+@media (max-width: 600px) {
+   
+    
+    .input_box label {
+        margin-top: 14px;
+        font-size: 15px;
+    }
+    .input_box input {
+        font-size: 15px;
+        height: 36px;
+        padding: 0 12px;
+        width: 90%;
+    }
+    .btn-primary {
+        font-size: 13px;
+        height: 38px;
+        margin-left: 84px;
+    }
+}
+
+.modal-overlay-perfil {
+    display: flex !important;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+.modal-content-perfil {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2em 2em 1.5em 2em;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    max-width: 350px;
+    width: 90vw;
+    position: relative;
+    text-align: center;
+    animation: modalIn 0.2s;
+}
+@media (max-width: 600px) {
+    .modal-content-perfil {
+        padding: 1.2em 0.7em 1em 0.7em;
+        max-width: 88vw;
+    }
+}
+/* loginModal.css o tu CSS principal */
+.search-icon-container.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
+
+</style>
+<script>
+  
+  // Si no hay usuario logueado, redirige a login.html
+   console.log("Script de redirección cargado");
+  
+</script>
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap"
       rel="stylesheet"
     />
-    
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     
   </head>
   <body>
+    <!-- Popup de login Google -->
+
+    <canvas id="particle-canvas"></canvas>
     <header>
       <div class="container header-container">
         <div itemprop="logo" class="logo-container">
@@ -77,6 +229,27 @@
             </span>
             <span class="desktop-nosotros-btn-text">Nosotros</span>
           </button>
+          <img
+            src="./images/cerrarSesion.svg" 
+            alt="Cerrar sesión" 
+            id="cerrar-sesion-btn-header"
+            style="width:33px; height:40px; cursor:pointer;     margin-right: 42px;
+            margin-left: -16px; filter: invert(59%) sepia(94%) saturate(477%) hue-rotate(104deg) brightness(97%) contrast(92%);"
+          />
+
+          <span id="user-icon-header" style="display:none; cursor:pointer;     margin-right: 32px;">
+             <!-- SVG de usuario -->
+             <svg xmlns="http://www.w3.org/2000/svg" width="60" height="48" viewBox="0 0 48 48" fill="none" style="
+               margin-left: -29px;
+               margin-top: -4px;
+               ">
+               <path fill-rule="evenodd" clip-rule="evenodd" d="M24 42C33.9411 42 42 33.9411 42 24C42 14.0589 33.9411 6 24 6C14.0589 6 6 14.0589 6 24C6 33.9411 14.0589 42 24 42ZM24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" fill="#fff"/>
+               <path d="M12 35.6309C12 34.5972 12.772 33.7241 13.7995 33.6103C21.515 32.7559 26.5206 32.8325 34.218 33.6287C35.2324 33.7337 36 34.5918 36 35.6116C36 36.1807 35.7551 36.7275 35.3262 37.1014C26.2414 45.0195 21.0488 44.9103 12.6402 37.1087C12.2306 36.7286 12 36.1897 12 35.6309Z" fill="#fff"/>
+               <path fill-rule="evenodd" clip-rule="evenodd" d="M34.1151 34.6234C26.4784 33.8334 21.5449 33.7587 13.9095 34.6042C13.3954 34.6612 13 35.1002 13 35.6309C13 35.9171 13.1187 36.1885 13.3204 36.3757C17.4879 40.2423 20.6461 41.9887 23.7333 41.9999C26.8309 42.0113 30.1592 40.2783 34.6691 36.3476C34.8767 36.1667 35 35.8964 35 35.6116C35 35.0998 34.6154 34.6752 34.1151 34.6234ZM13.6894 32.6164C21.4852 31.7531 26.5628 31.8315 34.3209 32.6341C35.8495 32.7922 37 34.0838 37 35.6116C37 36.465 36.6336 37.2884 35.9832 37.8553C31.4083 41.8426 27.598 44.0141 23.726 43.9999C19.8435 43.9857 16.2011 41.7767 11.9601 37.8418C11.3425 37.2688 11 36.4624 11 35.6309C11 34.0943 12.1487 32.787 13.6894 32.6164Z" fill="#fff"/>
+               <path d="M32 20C32 24.4183 28.4183 28 24 28C19.5817 28 16 24.4183 16 20C16 15.5817 19.5817 12 24 12C28.4183 12 32 15.5817 32 20Z" fill="#fff"/>
+               <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C27.3137 26 30 23.3137 30 20C30 16.6863 27.3137 14 24 14C20.6863 14 18 16.6863 18 20C18 23.3137 20.6863 26 24 26ZM24 28C28.4183 28 32 24.4183 32 20C32 15.5817 28.4183 12 24 12C19.5817 12 16 15.5817 16 20C16 24.4183 19.5817 28 24 28Z" fill="#fff"/>
+             </svg>
+             </span>
         </div>
         <a href="#" class="hamburguer" id="hamburguer-menu"
           ><span>Menu</span></a
@@ -121,6 +294,28 @@
               ><span itemprop="name">Contacto</span></a
             > 
           </li>
+          <li>
+            <img
+            src="./images/cerrarSesion.svg" 
+            alt="Cerrar sesión" 
+            id="cerrar-sesion-btn-menu"
+            style="width:33px; height:40px; cursor:pointer; filter: invert(59%) sepia(94%) saturate(477%) hue-rotate(104deg) brightness(97%) contrast(92%);"
+          />
+          </li>
+          <li>
+  <span id="user-icon-menu" style="display:none; cursor:pointer; margin-top: -68px;">
+    <!-- SVG de usuario -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 48 48" fill="none">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M24 42C33.9411 42 42 33.9411 42 24C42 14.0589 33.9411 6 24 6C14.0589 6 6 14.0589 6 24C6 33.9411 14.0589 42 24 42ZM24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" fill="#fff"/>
+      <path d="M12 35.6309C12 34.5972 12.772 33.7241 13.7995 33.6103C21.515 32.7559 26.5206 32.8325 34.218 33.6287C35.2324 33.7337 36 34.5918 36 35.6116C36 36.1807 35.7551 36.7275 35.3262 37.1014C26.2414 45.0195 21.0488 44.9103 12.6402 37.1087C12.2306 36.7286 12 36.1897 12 35.6309Z" fill="#fff"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M34.1151 34.6234C26.4784 33.8334 21.5449 33.7587 13.9095 34.6042C13.3954 34.6612 13 35.1002 13 35.6309C13 35.9171 13.1187 36.1885 13.3204 36.3757C17.4879 40.2423 20.6461 41.9887 23.7333 41.9999C26.8309 42.0113 30.1592 40.2783 34.6691 36.3476C34.8767 36.1667 35 35.8964 35 35.6116C35 35.0998 34.6154 34.6752 34.1151 34.6234ZM13.6894 32.6164C21.4852 31.7531 26.5628 31.8315 34.3209 32.6341C35.8495 32.7922 37 34.0838 37 35.6116C37 36.465 36.6336 37.2884 35.9832 37.8553C31.4083 41.8426 27.598 44.0141 23.726 43.9999C19.8435 43.9857 16.2011 41.7767 11.9601 37.8418C11.3425 37.2688 11 36.4624 11 35.6309C11 34.0943 12.1487 32.787 13.6894 32.6164Z" fill="#fff"/>
+      <path d="M32 20C32 24.4183 28.4183 28 24 28C19.5817 28 16 24.4183 16 20C16 15.5817 19.5817 12 24 12C28.4183 12 32 15.5817 32 20Z" fill="#fff"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M24 26C27.3137 26 30 23.3137 30 20C30 16.6863 27.3137 14 24 14C20.6863 14 18 16.6863 18 20C18 23.3137 20.6863 26 24 26ZM24 28C28.4183 28 32 24.4183 32 20C32 15.5817 28.4183 12 24 12C19.5817 12 16 15.5817 16 20C16 24.4183 19.5817 28 24 28Z" fill="#fff"/>
+    </svg>
+  </span>
+  <span id="user-icon-header" ...> ... </span>
+<div id="google-one-tap-anchor" style="position:relative;"></div>
+</li>
         </ul> 
         <!-- Botón de cerrar menú hamburguesa (cruz) -->
         <a href="#" class="close-menu" id="close-menu" aria-label="Cerrar menú">
@@ -163,7 +358,7 @@
                 class="dni-input"
                 placeholder="DNI del solicitante"
               />
-              <div class="search-icon-container" onclick="showDropdown()">
+              <div class="search-icon-container">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
@@ -513,6 +708,12 @@
                   <h3 id="vehicle-brand">Marca</h3>
                   <p id="vehicle-model">Modelo</p>
                   <p id="vehicle-year">Año</p>
+                  <div id="leyenda-uso-particular-mobile" class="leyenda-uso-particular" style="display:none; color:#d00; font-weight:bold;">
+                      NO USO COMERCIAL
+                    </div>
+                  <div id="leyenda-uso-particular" style="display:none; color:#d00; font-weight:bold;">
+                NO USO COMERCIAL
+                </div>
                 </div>
               </div>
               <!-- Select de productos con clase específica -->
@@ -535,6 +736,7 @@
                 </div>
               </div>
               <!-- Nuevo div debajo del select de productos -->
+              
               <div class="custom-summary">
                 <h3 class="custom-summary-title">Máximo a financiar</h3>
                 <span class="custom-summary-currency"></span>
@@ -542,13 +744,15 @@
               </div>
               <div class="custom-summary-input">
                 <input
-                  type="number"
+                 type="text"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
                   class="net-finance-input"
                   placeholder="Monto neto a financiar"
                 />
                 
               </div>
-             
+              
             </div>
             <p class="min-amount-text"></p>
             <div class="navigation-buttons">
@@ -580,6 +784,10 @@
                     <h3 id="vehicle-brand-step4">Marca</h3>
                     <p id="vehicle-model-step4">Modelo</p>
                     <p id="vehicle-year-step4">Año</p>
+                    <div id="leyenda-uso-particular-mobile-step4" class="leyenda-uso-particular" style="display:none; color:#d00; font-weight:bold;">
+                      NO USO COMERCIAL
+                    </div>
+                    
                   </div>
                 </div>
                 <div class="custom-summary custom-summary-step4">
@@ -595,7 +803,16 @@
                     class="selected-product"
                   ></div>
                 </div>
-                
+
+                <div class="cuota-info-desktop-text">
+                   <strong>CUOTA PROMEDIO TNA</strong> vigente a la fecha, sujeto a calificación del solicitante en cada entidad bancaria con las que opera <strong>LEVER SRL</strong>. No incluye impuestos de <strong>SELLOS DE PRENDA</strong>, ni <strong>SEGURO</strong> del bien.
+                 </div>
+                <div id="leyenda-uso-particular-step4" class="leyenda-uso-particular" style="display:none; color:#d00; font-weight:bold; font-size: 22px;
+                       margin-left: 6px;
+                       margin-top: 14px;
+                       margin-bottom: -51px;">
+                    NO USO COMERCIAL
+                </div>
               </div>
               <div>
                <div class="scrollable-container">
@@ -657,7 +874,9 @@
                       <div id="cuota-info-tooltip" class="cuota-info-tooltip">
                        CUOTA PROMEDIO TNA vigente a la fecha, sujeto a calificación del solicitante en cada entidad bancaria con las que opera LEVER SRL. No incluye impuestos de SELLOS DE PRENDA, ni SEGURO del bien.
                       </div>
+                      
                    </div>
+                   
                    
                </div>
                
@@ -993,12 +1212,12 @@
         >
           <g>
             <rect
-              fill="hsl(193,90%,50%)"
+              fill="#2ADC9F"
               width="128"
               height="64"
               clip-path="url(#smiley-eyes)"
             />
-            <g fill="none" stroke="hsl(193,90%,50%)">
+            <g fill="none" stroke="#2ADC9F">
               <circle
                 class="smiley__mouth1"
                 cx="64"
@@ -1017,12 +1236,12 @@
           </g>
           <g mask="url(#smiley-mask)">
             <rect
-              fill="hsl(223,90%,50%)"
+              fill="#2ADC9F"
               width="128"
               height="64"
               clip-path="url(#smiley-eyes)"
             />
-            <g fill="none" stroke="hsl(223,90%,50%)">
+            <g fill="none" stroke="#2ADC9F">
               <circle
                 class="smiley__mouth1"
                 cx="64"
@@ -1042,12 +1261,161 @@
         </g>
       </svg>
     </div>
+
+    <!-- Modal de login (oculto por defecto) -->
+<div id="modal-login-overlay" class="modal-login-overlay" style="display:none;">
+  <div class="modal-login-content">
+    <button type="button" class="modal-login-close" id="cerrar-modal-login">&times;</button>
+    <div class="modal-login-form-container">
+      <form id="modal-login-form" class="modal-login-form">
+        <h2 class="modal-login-title" style="margin-bottom: 18px;font-weight: 700;color: #15224f;font-size: 1.3em;letter-spacing: 3.5px;">
+  INICIAR SESIÓN PARA CONTINUAR
+</h2>
+        <div class="modal-login-options">
+          <div class="modal-login-option">
+            <a href="#" id="modal-google-login-btn" class="modal-login-google-btn">
+              <span class="modal-login-google-icon">
+                <!-- Google SVG -->
+                <svg width="24" height="24" viewBox="0 0 16 16" fill="none">
+                  <g clip-path="url(#clip0_643_9687)">
+                    <path d="M8.00018 3.16667C9.18018 3.16667 10.2368 3.57333 11.0702 4.36667L13.3535 2.08333C11.9668 0.793333 10.1568 0 8.00018 0C4.87352 0 2.17018 1.79333 0.853516 4.40667L3.51352 6.47C4.14352 4.57333 5.91352 3.16667 8.00018 3.16667Z" fill="#EA4335"></path>
+                    <path d="M15.66 8.18335C15.66 7.66002 15.61 7.15335 15.5333 6.66669H8V9.67335H12.3133C12.12 10.66 11.56 11.5 10.72 12.0667L13.2967 14.0667C14.8 12.6734 15.66 10.6134 15.66 8.18335Z" fill="#4285F4"></path>
+                    <path d="M3.51 9.53001C3.35 9.04668 3.25667 8.53334 3.25667 8.00001C3.25667 7.46668 3.34667 6.95334 3.51 6.47001L0.85 4.40668C0.306667 5.48668 0 6.70668 0 8.00001C0 9.29334 0.306667 10.5133 0.853333 11.5933L3.51 9.53001Z" fill="#FBBC05"></path>
+                    <path d="M8.0001 16C10.1601 16 11.9768 15.29 13.2968 14.0633L10.7201 12.0633C10.0034 12.5467 9.0801 12.83 8.0001 12.83C5.91343 12.83 4.14343 11.4233 3.5101 9.52667L0.850098 11.59C2.1701 14.2067 4.87343 16 8.0001 16Z" fill="#34A853"></path>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_643_9687">
+                      <rect width="16" height="16" fill="white"></rect>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </span>
+              <span>Ingresá con Google</span>
+            </a>
+          </div>
+        </div>
+        <p class="modal-login-separator"><span>O ingresá con tu cuenta</span></p>
+        <div class="modal-login-input-box">
+          <label for="modal-email">Correo</label>
+          <input type="email" id="modal-email" required />
+        </div>
+        <div class="modal-login-input-box">
+          <div class="modal-login-password-title">
+            <label for="modal-password">Contraseña</label>
+            <a href="#" id="abrir-modal-olvide" class="modal-login-forgot-link">¿Olvidaste tu contraseña?</a>
+          </div>
+          <input type="password" id="modal-password" required />
+        </div>
+        <button type="submit" class="modal-login-btn-primary">Iniciar sesión</button>
+        <p class="modal-login-sign-up">¿No tienes una cuenta? <a href="register.html">Regístrate</a></p>
+        <div id="modal-login-error" class="modal-login-error" style="display:none;"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal para recuperación de contraseña -->
+<div id="modal-olvide" class="modal-overlay-olvide" style="display:none;">
+  <div class="modal-content-olvide">
+    <button type="button" class="modal-close-olvide" id="cerrar-modal-olvide">&times;</button>
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail-check h-12 w-12 text-[#626CD6] dark:text-white" style="display:block;margin:0 auto 1em auto;">
+      <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8"></path>
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+      <path d="m16 19 2 2 4-4"></path>
+    </svg>
+    <h3 class="modal-title-olvide">¿Olvidaste tu contraseña?</h3>
+    <span class="modal-desc-olvide">Ingresa tu correo electrónico y te enviaremos instrucciones para restablecerla.</span>
+    <form id="form-olvide">
+      <div class="input_box_olvide">
+        <label for="olvide-email" class="label-olvide">Correo electrónico</label>
+        <input type="email" id="olvide-email" class="input-olvide" required />
+      </div>
+      <button type="submit" class="btn-primary-olvide">Enviar instrucciones</button>
+    </form>
+    <div id="olvide-mensaje" class="modal-message-olvide"></div>
+  </div>
+</div>
+
     <script>
-        // Inicializar transición de entrada para index.html
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.classList.add('page-transition', 'fade-in');
-        });
-    </script>
+
+function mostrarModalCompletarPerfil(email) {
+  // Elimina cualquier modal anterior
+  const anterior = document.getElementById("modal-completar-perfil");
+  if (anterior) anterior.remove();
+
+// Bloquea interacción con el fondo
+  document.body.classList.add("modal-bloqueado");
+
+  // Crea el modal con la misma estructura y clases
+  const modal = document.createElement("div");
+ modal.className = "modal-overlay-perfil";
+ modal.id = "modal-completar-perfil";
+ modal.innerHTML = `
+  <div class="modal-content-perfil">
+    
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-plus" style="display:block;margin:0 auto 1em auto;">
+        <circle cx="12" cy="8" r="5"></circle>
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+       
+      </svg>
+      <h3 style="font-size: 21px; margin-bottom: 9px;">Completa tu perfil</h3>
+      <span style="opacity: 0.7;">Por favor, ingresa los siguientes datos por ÚNICA VEZ para continuar:</span>
+      <form id="form-completar-perfil" style="margin-top:1em;">
+        <div class="input_box">
+          <label for="agencia">Agencia</label>
+          <input type="text" id="agencia" required />
+        </div>
+        <div class="input_box">
+          <label for="telefono">Teléfono</label>
+          <input type="text" id="telefono" required />
+        </div>
+        <button type="submit" class="btn-primary">Guardar y continuar</button>
+        <div id="completar-perfil-mensaje" class="modal-message"></div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  
+
+  document.getElementById("form-completar-perfil").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const agencia = document.getElementById("agencia").value.trim();
+    const telefono = document.getElementById("telefono").value.trim();
+
+    fetch(window.APP_CONFIG.API_URL + "/api/completarPerfilGoogle", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, agencia, telefono })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const msg = document.getElementById("completar-perfil-mensaje");
+      if (data.success) {
+        msg.textContent = "¡Perfil actualizado!";
+        msg.style.color = "green";
+        setTimeout(() => {
+          modal.remove();
+          document.body.classList.remove("modal-bloqueado");
+          location.reload();
+        }, 800);
+      } else {
+        msg.textContent = data.message || "Error al actualizar";
+        msg.style.color = "red";
+      }
+    })
+    .catch(() => {
+      const msg = document.getElementById("completar-perfil-mensaje");
+      msg.textContent = "Error de conexión";
+      msg.style.color = "red";
+    });
+  });
+}
+
+</script>
+    
+    <script src="config.js"></script>
     <script src="cotizar.js"></script>
     <!-- Agregar html2canvas desde CDN antes del cierre de </body> -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -1056,6 +1424,7 @@
       href="https://github.hubspot.com/odometer/themes/odometer-theme-default.css"
     />
     <script src="https://github.hubspot.com/odometer/odometer.js"></script>
+    <script src="js/app.min.js"></script>
     <!-- MODAL SELECCIÓN DE PERSONA POR DNI -->
     <div id="modal-personas-dni" class="modal-overlay hidden" style="display:none;">
       <div class="modal-content" >
@@ -1070,6 +1439,297 @@
         <button class="modal-close-btn" id="modal-personas-close" >Cancelar</button>
       </div>
     </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+  const btns = [
+    document.getElementById("cerrar-sesion-btn-header"),
+    document.getElementById("cerrar-sesion-btn-menu")
+  ];
+  btns.forEach(btn => {
+    if (btn) {
+      btn.addEventListener("click", function () {
+        // Llama al logout del backend
+        fetch(window.APP_CONFIG.API_URL + "/api/logout", {
+          method: "POST",
+          credentials: "include"
+        }).finally(() => {
+          sessionStorage.removeItem("user_email");
+          // Redirige a index.html para mostrar el modal de login
+          window.location.href = "index.html";
+        });
+      });
+    }
+  });
+});
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  // Cerrar modal login
+  document.getElementById("cerrar-modal-login").onclick = function () {
+    document.getElementById("modal-login-overlay").style.display = "none";
+    document.body.classList.remove("modal-login-blur");
+// Limpia el input de DNI
+  document.querySelector('.dni-input').value = "";
+
+  // Deshabilita la lupa y aplica el estilo gris
+  const lupa = document.querySelector('.search-icon-container');
+  lupa.classList.add('disabled');
+  lupa.style.pointerEvents = "none";
+  lupa.style.opacity = "0.5";
+    
+  };
+
+  // Login con Google
+  document.getElementById("modal-google-login-btn").onclick = function (e) {
+    e.preventDefault();
+    window.location.href = API_BASE.replace('/api','') + '/auth/google';
+  };
+
+  // Login con email/contraseña
+  document.getElementById("modal-login-form").onsubmit = function (e) {
+    e.preventDefault();
+    const email = document.getElementById("modal-email").value.trim();
+    const password = document.getElementById("modal-password").value;
+    fetch(`${API_BASE}/loginAgencias`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+      credentials: "include"
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById("modal-login-overlay").style.display = "none";
+          document.body.classList.remove("modal-login-blur");
+          // Opcional: guardar email en sessionStorage
+          sessionStorage.setItem("user_email", data.user.email);
+          // Avanzar a paso 2
+          goToStep(2);
+        } else {
+          const err = document.getElementById("modal-login-error");
+          err.textContent = data.message || "Credenciales incorrectas";
+          err.style.display = "block";
+        }
+      })
+      .catch(() => {
+        const err = document.getElementById("modal-login-error");
+        err.textContent = "Error de conexión";
+        err.style.display = "block";
+      });
+  };
+});
+
+document.addEventListener("DOMContentLoaded", async function () {
+  const userIcon = document.getElementById("user-icon-header");
+  const cerrarSesionBtn = document.getElementById("cerrar-sesion-btn-header");
+
+  // Chequear sesión al cargar la web
+  const res = await fetch(`${API_BASE}/check-session`, { credentials: "include" });
+  const data = await res.json();
+
+  if (data.success) {
+    // Usuario logueado: mostrar botón cerrar sesión, ocultar icono usuario
+    if (cerrarSesionBtn) cerrarSesionBtn.style.display = "inline-block";
+    if (userIcon) userIcon.style.display = "none";
+  } else {
+    // No logueado: mostrar icono usuario, ocultar cerrar sesión
+    if (cerrarSesionBtn) cerrarSesionBtn.style.display = "none";
+    if (userIcon) userIcon.style.display = "inline-block";
+  }
+
+  // Al hacer click en el icono usuario, mostrar modal login
+  if (userIcon) {
+    userIcon.onclick = function () {
+      document.getElementById("modal-login-overlay").style.display = "flex";
+      document.body.classList.add("modal-login-blur");
+    };
+  }
+});
+document.addEventListener("DOMContentLoaded", async function () {
+  const userIconHeader = document.getElementById("user-icon-header");
+  const cerrarSesionBtnHeader = document.getElementById("cerrar-sesion-btn-header");
+  const userIconMenu = document.getElementById("user-icon-menu");
+  const cerrarSesionBtnMenu = document.getElementById("cerrar-sesion-btn-menu");
+
+  // Chequear sesión al cargar la web
+  const res = await fetch(`${API_BASE}/check-session`, { credentials: "include" });
+  const data = await res.json();
+
+  if (data.success) {
+    // Usuario logueado: mostrar botón cerrar sesión, ocultar icono usuario
+    if (cerrarSesionBtnHeader) cerrarSesionBtnHeader.style.display = "inline-block";
+    if (userIconHeader) userIconHeader.style.display = "none";
+    if (cerrarSesionBtnMenu) cerrarSesionBtnMenu.style.display = "inline-block";
+    if (userIconMenu) userIconMenu.style.display = "none";
+  } else {
+    // No logueado: mostrar icono usuario, ocultar cerrar sesión
+    if (cerrarSesionBtnHeader) cerrarSesionBtnHeader.style.display = "none";
+    if (userIconHeader) userIconHeader.style.display = "inline-block";
+    if (cerrarSesionBtnMenu) cerrarSesionBtnMenu.style.display = "none";
+    if (userIconMenu) userIconMenu.style.display = "inline-block";
+  }
+
+  // Al hacer click en el icono usuario del header o menú, mostrar modal login
+  if (userIconHeader) {
+    userIconHeader.onclick = function () {
+      document.getElementById("modal-login-overlay").style.display = "flex";
+      document.body.classList.add("modal-login-blur");
+    };
+  }
+  if (userIconMenu) {
+  userIconMenu.onclick = function () {
+    document.getElementById("modal-login-overlay").style.display = "flex";
+    document.body.classList.add("modal-login-blur");
+    // Cierra el menú hamburguesa automáticamente
+    const menu = document.getElementById("menu");
+    menu.classList.add("hidden");
+    menu.classList.remove("mobile-active"); // <-- Esto es lo que faltaba
+    document.getElementById("menu-overlay").classList.remove("active");
+  };
+}
+});
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") {
+    const modal = document.getElementById("modal-login-overlay");
+    if (modal && modal.style.display === "flex") {
+      modal.style.display = "none";
+      document.body.classList.remove("modal-login-blur");
+      // Limpia el input de DNI
+      const dniInput = document.querySelector('.dni-input');
+      if (dniInput) dniInput.value = "";
+      // Deshabilita la lupa y aplica el estilo gris
+      const lupa = document.querySelector('.search-icon-container');
+      if (lupa) {
+        lupa.classList.add('disabled');
+        lupa.style.pointerEvents = "none";
+        lupa.style.opacity = "0.5";
+      }
+    }
+  }
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Abrir modal
+  const abrirOlvide = document.getElementById("abrir-modal-olvide");
+  if (abrirOlvide) {
+    abrirOlvide.addEventListener("click", function(e) {
+      e.preventDefault();
+      document.getElementById("modal-login-overlay").style.display = "none";
+      document.getElementById("modal-olvide").style.display = "flex";
+      document.getElementById("olvide-mensaje").style.display = "none";
+      document.getElementById("form-olvide").reset();
+    });
+  }
+
+  // Cerrar modal
+  const cerrarOlvide = document.getElementById("cerrar-modal-olvide");
+  if (cerrarOlvide) {
+    cerrarOlvide.addEventListener("click", function() {
+      document.getElementById("modal-olvide").style.display = "none";
+      document.body.classList.remove("modal-login-blur");
+    });
+  }
+
+  // Enviar solicitud de recuperación
+  const formOlvide = document.getElementById("form-olvide");
+  if (formOlvide) {
+    formOlvide.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("olvide-email").value.trim();
+      fetch(`${API_BASE}/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          const msg = document.getElementById("olvide-mensaje");
+          msg.style.display = "block";
+          msg.style.color = data.success ? "green" : "red";
+          msg.textContent = data.message || (data.success ? "Te enviamos un correo para recuperar tu contraseña." : "No se pudo enviar el correo.");
+          if (data.success) formOlvide.reset();
+        })
+        .catch(() => {
+          const msg = document.getElementById("olvide-mensaje");
+          msg.style.display = "block";
+          msg.style.color = "red";
+          msg.textContent = "Error de conexión";
+        });
+    });
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Mostrar One Tap solo si NO hay sesión
+  fetch(`${API_BASE}/check-session`, { credentials: "include" })
+    .then(res => res.json())
+    .then(data => {
+      if (!data.success) {
+        // Inicializa Google One Tap
+        window.googleOneTapInitialized = false;
+        window.initGoogleOneTap = function() {
+          if (window.googleOneTapInitialized) return;
+          window.googleOneTapInitialized = true;
+          google.accounts.id.initialize({
+            client_id: "323307585746-4vkqpvd70tnv1ck54r941fqoo2j1ivq2.apps.googleusercontent.com",
+            callback: handleGoogleCredentialResponse,
+          });
+          google.accounts.id.prompt(notification => {}, {
+            parentId: "google-one-tap-anchor"
+          });
+        };
+        // Espera a que el script de Google esté listo
+        if (window.google && google.accounts && google.accounts.id) {
+          window.initGoogleOneTap();
+        } else {
+          window.addEventListener("google-loaded", window.initGoogleOneTap);
+        }
+      }
+    });
+
+  // Oculta One Tap si el usuario abre el modal de login manualmente
+  const userIconHeader = document.getElementById("user-icon-header");
+  if (userIconHeader) {
+    userIconHeader.onclick = function () {
+      document.getElementById("modal-login-overlay").style.display = "flex";
+      document.body.classList.add("modal-login-blur");
+      if (window.google && google.accounts && google.accounts.id) {
+        google.accounts.id.cancel();
+      }
+    };
+  }
+});
+
+// Maneja la respuesta de Google One Tap
+function handleGoogleCredentialResponse(response) {
+  fetch(`${API_BASE}/google-one-tap`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credential: response.credential }),
+    credentials: "include"
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        window.location.reload();
+      } else {
+        alert("No se pudo iniciar sesión con Google.");
+      }
+    });
+}
+
+// Notifica cuando el script de Google está listo
+window.onload = function() {
+  if (window.google && google.accounts && google.accounts.id) {
+    window.dispatchEvent(new Event("google-loaded"));
+  }
+};
+</script>
+</body>
 
   </body>
+  
 </html>

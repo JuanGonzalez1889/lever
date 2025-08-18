@@ -13,6 +13,34 @@ body {
     background-color: #f4f4f4;
 }
 
+#particle-canvas {
+    position: fixed;
+    top: -14px;
+    left: 0;
+    width: 162vw;
+    height: 93vh;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#leyenda-uso-particular {
+    font-size: 10px;
+    display: none;
+}
+
+#leyenda-uso-particular-mobile {
+    display: block ;
+}
+
+#leyenda-uso-particular-step4 {
+    display: none;
+}
+
+#leyenda-uso-particular-mobile-step4 {
+    /* NO uses !important aquí */
+    display: block;
+}
+
 .desktop-header-buttons {
     display: none;
 }
@@ -615,19 +643,19 @@ body.contacto-activo footer {
 
 /* Solo las líneas del loader en verde, fondo sin verde */
 .loader-overlay .smiley>g>g>rect {
-    fill: #06b312 !important;
+    fill: #2ADC9F !important;
 }
 
 .loader-overlay .smiley>g>g>g,
 .loader-overlay .smiley>g>g>g>circle,
 .loader-overlay .smiley>g>g>g>rect {
     fill: none !important;
-    stroke: #06b312 !important;
+    stroke: #2ADC9F !important;
 }
 
 .loader-overlay .smiley>g>g>g>circle,
 .loader-overlay .smiley>g>g>g>rect {
-    stroke: #06b312 !important;
+    stroke: #2ADC9F !important;
 }
 
 /* Asegura que el fondo del SVG nunca sea verde */
@@ -2923,14 +2951,15 @@ body.modal-open {
     box-shadow: 0 2px 8px rgba(40, 216, 158, 0.07);
     transition: background 0.2s;
     position: relative;
+    display: block;
 }
 
 .cuota-info-tooltip {
     display: none;
     position: absolute;
     width: 220px;
-    transform: translateX(-45%);
-    bottom: 31%;
+    transform: translateX(-4%);
+    bottom: 23%;
     background: #28d89e;
     color: #fff;
     border-radius: 12px;
@@ -2951,4 +2980,8 @@ body.modal-open {
 .selected-bold {
     font-weight: bold !important;
     color: #222 !important;
+}
+
+.cuota-info-desktop-text {
+    display: none;
 }

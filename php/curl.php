@@ -204,7 +204,7 @@ class InfoAuto
     }
 
     // --- MODIFICADO: getModelsByBrand acepta $features ---
-    public function getModelsByBrand($id, $anio, $access_token, $features = [])
+    public function getModelsByBrand($id, $anio, $access_token, $features = [], $categoria = '')
     {
         $apiType = $this->apiType;
         $carsDescriptionList = [];
@@ -218,12 +218,35 @@ class InfoAuto
             } else {
                 $url = "https://api.infoauto.com.ar/{$apiType}/pub/brands/$id/models/?query_mode=matching&price_at=$anio";
             }
-            // Agregar features
-            if (!empty($features)) {
-                foreach ($features as $f) {
+
+            // --- Agregar features según la categoría ---
+            if (strtolower($categoria) === "utilitarios") {
+                $featuresUtilitarios = ["SPE", "FUA", "FUB", "MBU", "PKA", "PKB"];
+                foreach ($featuresUtilitarios as $f) {
                     $url .= "&feature_3=" . urlencode($f);
                 }
+            } elseif (
+                strtolower($categoria) === "autos y pickup" ||
+                strtolower($categoria) === "autos y pickups" || strtolower($categoria) === "Autos y Pickups"
+            ) {
+                $featuresAutosPickups = ["CAB", "CUP", "JEE", "MIV", "PB4", "RUR", "SED", "WAG", "WA4", "VAN"];
+                foreach ($featuresAutosPickups as $f) {
+                    $url .= "&feature_3=" . urlencode($f);
+                }
+            } elseif (strtolower($categoria) === "camiones") {
+                $featuresCamiones = ["LIV", "PES", "COL"];
+                foreach ($featuresCamiones as $f) {
+                    $url .= "&feature_3=" . urlencode($f);
+                }
+            } else {
+                // Si hay features personalizados, agregalos
+                if (!empty($features)) {
+                    foreach ($features as $f) {
+                        $url .= "&feature_3=" . urlencode($f);
+                    }
+                }
             }
+
             $url .= "&page=$page&page_size=$page_size";
 
             // Iniciar una sesión cURL
@@ -252,6 +275,7 @@ class InfoAuto
                 $carsDescriptionList[] = [
                     'modelo' => $model['description'],
                     'codia' => $model['codia']
+                    // No consultes tipoVehiculo aquí
                 ];
             }
 
@@ -264,7 +288,6 @@ class InfoAuto
 
         echo json_encode(['accessToken' => $access_token, 'models' => $carsDescriptionList], TRUE);
     }
-
     public function getPriceByCodia($codia, $year, $access_token)
     {
         $apiType = $this->apiType;
@@ -380,6 +403,8 @@ class InfoAuto
     }
 }
 
+
+
 // --- INICIO: Clase para InfoExperto ---
 class InfoExperto
 {
@@ -457,18 +482,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization");
 
-// Configuración de conexión a la base de datos
-$host = 'localhost';
-$user = 'root';
-$password = '';
-$database = 'leverSRL';
-
-$conn = new mysqli($host, $user, $password, $database);
-
-// Verificar conexión
-if ($conn->connect_error) {
-    die("Error de conexión a la base de datos: " . $conn->connect_error);
-}
 
 // Función para obtener datos de la base de datos
 function getDatabaseData($query)
@@ -541,7 +554,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $a->getBrandsByYear($year, $access_token, $features);
                 break;
             case "getModelsByBrand":
-                $a->getModelsByBrand($id, $year, $access_token, $features);
+                $a->getModelsByBrand($id, $year, $access_token, $features, $categoria);
                 break;
             case "getPriceByCodia":
                 $a->getPriceByCodia($codia, $year, $access_token);

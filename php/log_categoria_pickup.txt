@@ -1,0 +1,63 @@
+[2025-07-29 20:37:25] Tipo:  | Cabina:  | Features: ["CAB","WA4","WAG","CUP","JEE","MIV","PKB","PB4","RUR","SED"]
+[2025-07-29 20:37:29] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:37:37] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:37:37] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:39:06] Tipo:  | Cabina:  | Features: ["CAB","WA4","WAG","CUP","JEE","MIV","PKB","PB4","RUR","SED"]
+[2025-07-29 20:39:10] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:39:18] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:39:18] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:39:25] Tipo:  | Cabina:  | Features: ["CAB","WA4","WAG","CUP","JEE","MIV","PKB","PB4","RUR","SED"]
+[2025-07-29 20:39:29] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:39:36] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:39:36] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:39:42] Tipo:  | Cabina:  | Features: ["CAB","WA4","WAG","CUP","JEE","MIV","PKB","PB4","RUR","SED"]
+[2025-07-29 20:39:48] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:39:55] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:39:56] Tipo:  | Cabina:  | Features: []
+[2025-07-29 20:47:37] FEATURES: ["CAB","WA4","WAG","CUP","JEE","MIV","PKB","PB4","RUR","SED"]
+[2025-07-29 20:47:37] Categoría calculada: utilitario
+[2025-07-29 20:47:40] FEATURES: []
+[2025-07-29 20:47:40] Categoría calculada: null
+[2025-07-29 20:47:46] FEATURES: []
+[2025-07-29 20:47:46] Categoría calculada: null
+[2025-07-29 20:47:46] FEATURES: []
+[2025-07-29 20:47:46] Categoría calculada: null
+[2025-07-29 20:49:58] FEATURES: ["CAB","WA4","WAG","CUP","JEE","MIV","PKB","PB4","RUR","SED"]
+[2025-07-29 20:49:58] Categoría calculada: utilitario
+[2025-07-29 20:49:58] Categoría final usada: utilitario
+[2025-07-29 20:49:59] FEATURES: ["CAB","WA4","WAG","CUP","JEE","MIV","PKB","PB4","RUR","SED"]
+[2025-07-29 20:49:59] Categoría calculada: utilitario
+[2025-07-29 20:49:59] Categoría final usada: utilitario
+[2025-07-29 20:50:03] FEATURES: []
+[2025-07-29 20:50:03] Categoría calculada: null
+[2025-07-29 20:50:03] Categoría final usada: autos
+[2025-07-29 20:50:09] FEATURES: []
+[2025-07-29 20:50:09] Categoría calculada: null
+[2025-07-29 20:50:09] Categoría final usada: Autos y Pickup
+[2025-07-29 20:50:09] FEATURES: []
+[2025-07-29 20:50:09] Categoría calculada: null
+[2025-07-29 20:50:09] Categoría final usada: Autos y Pickup
+[2025-07-29 20:53:54] FEATURES: ["CAB","WA4","WAG","CUP","JEE","MIV","PKB","PB4","RUR","SED"]
+[2025-07-29 20:53:54] Categoría calculada: utilitario
+[2025-07-29 20:53:54] Categoría final usada: utilitario
+[2025-07-29 20:53:58] FEATURES: []
+[2025-07-29 20:53:58] Categoría calculada: null
+[2025-07-29 20:53:58] Categoría final usada: autos
+[2025-07-29 20:54:07] FEATURES: []
+[2025-07-29 20:54:07] Categoría calculada: null
+[2025-07-29 20:54:07] Categoría final usada: Autos y Pickup
+[2025-07-29 20:54:08] FEATURES: []
+[2025-07-29 20:54:08] Categoría calculada: null
+[2025-07-29 20:54:08] Categoría final usada: Autos y Pickup
+[2025-07-29 20:54:55] FEATURES: ["CAB","WA4","WAG","CUP","JEE","MIV","PKB","PB4","RUR","SED"]
+[2025-07-29 20:54:55] Categoría calculada: utilitario
+[2025-07-29 20:54:55] Categoría final usada: utilitario
+[2025-07-29 20:55:01] FEATURES: []
+[2025-07-29 20:55:01] Categoría calculada: null
+[2025-07-29 20:55:01] Categoría final usada: autos
+[2025-07-29 20:55:08] FEATURES: []
+[2025-07-29 20:55:08] Categoría calculada: null
+[2025-07-29 20:55:08] Categoría final usada: Autos y Pickup
+[2025-07-29 20:55:09] FEATURES: []
+[2025-07-29 20:55:09] Categoría calculada: null
+[2025-07-29 20:55:09] Categoría final usada: Autos y Pickup

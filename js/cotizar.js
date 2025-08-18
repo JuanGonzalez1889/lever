@@ -1,5 +1,4 @@
 // --- Declarar accessToken global al inicio ---
-console.log("cotizar.js cargado");
 let accessToken = null;
 window.productosData = [];
 window.segmentosData = [];
@@ -13,25 +12,34 @@ const API_BASE =
 fetch(`${API_BASE}/productos-con-segmento`)
   .then((res) => res.json())
   .then((data) => {
-    window.productosData = data;
-    // Opcional: armar segmentos únicos
-    window.segmentosData = Array.from(
-      new Map(
-        data.map((item) => [
-          item.segmento_id,
-          { id: item.segmento_id, nombre: item.segmento_nombre },
-        ])
-      ).values()
-    );
+    if (Array.isArray(data)) {
+      window.productosData = data;
+      data.map((producto) => {
+        /* ... */
+      });
+    } else {
+      window.productosData = [];
+      console.error("Error: productos-con-segmento no devolvió un array", data);
+      // Opcional: muestra un mensaje de error en la UI
+    }
+  })
+  .catch((err) => {
+    window.productosData = [];
+    console.error("Error al obtener productos-con-segmento", err);
   });
 
 fetch(`${API_BASE}/data`)
   .then((res) => res.json())
   .then((data) => {
-    window.ltvData = data.productos;
+    if (Array.isArray(data)) {
+      // tu lógica normal
+    } else {
+      console.error("Error: /api/data no devolvió un array", data);
+    }
+  })
+  .catch((err) => {
+    console.error("Error al obtener /api/data", err);
   });
-// Variable global para guardar el precio del vehículo
-window.precioVehiculo = null;
 
 // --- FUNCIÓN GLOBAL PARA LIMPIAR FORMULARIO DE PANTALLA 1 ---
 // IMPORTANTE: Definir como función global en el ámbito window
@@ -102,34 +110,6 @@ window.limpiarFormularioPantalla1 = function () {
   console.log("Formulario de pantalla 1 limpiado correctamente");
 };
 
-let nombreAgencia = "";
-
-fetch(`${API_BASE}/check-session`, { credentials: "include" })
-  .then((res) => res.json())
-  .then((data) => {
-    if (data.success && data.user && data.user.agencia) {
-      nombreAgencia = data.user.agencia;
-    }
-  });
-
-function obtenerNombreAgencia() {
-  // Si ya lo tenemos, devolvemos resolved
-  if (nombreAgencia && nombreAgencia.trim() !== "") {
-    return Promise.resolve(nombreAgencia);
-  }
-  // Si no, lo pedimos al backend
-  return fetch("/api/check-session", { credentials: "include" })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.success && data.user && data.user.agencia) {
-        nombreAgencia = data.user.agencia;
-        return nombreAgencia;
-      }
-      return "";
-    })
-    .catch(() => "");
-}
-
 function toggleMenu() {
   const menu = document.getElementById("menu");
   menu.classList.toggle("hidden");
@@ -191,8 +171,7 @@ function hideDropdown() {
   searchIcon.style.display = "flex";
 }
 
-async function finalizeCotizacion() {
-  await obtenerNombreAgencia();
+function finalizeCotizacion() {
   const solicitante = sessionStorage.getItem("solicitante_nombre") || "";
   const solicitanteDoc = sessionStorage.getItem("solicitante_dni") || "";
   const producto = document
@@ -249,9 +228,6 @@ async function finalizeCotizacion() {
   // Obtener el estado de viabilidad global (de tu lógica)
 
   let mensaje = `¡Hola! Quiero avanzar con la cotización:\n\n`;
-  if (nombreAgencia && nombreAgencia.trim() !== "") {
-    mensaje += `Agencia: ${nombreAgencia}\n`;
-  }
   if (solicitante) mensaje += `Solicitante: ${solicitante}\n`;
   if (solicitanteDoc) mensaje += `DNI/CUIT: ${solicitanteDoc}\n`;
   if (categoria) mensaje += `Categoría: ${categoria}\n`; // <-- AQUÍ
@@ -1553,9 +1529,6 @@ document.addEventListener("DOMContentLoaded", () => {
   shareBtn.addEventListener("click", async (e) => {
     e.preventDefault();
 
-    // Esperar a tener el nombre de la agencia antes de armar la imagen
-    await obtenerNombreAgencia();
-
     const updateCustomSummaryStep4 = () => {
       const inputElement = document.querySelector(".net-finance-input");
       if (!inputElement) return;
@@ -1566,7 +1539,6 @@ document.addEventListener("DOMContentLoaded", () => {
         formattedAmount || "0";
     };
     updateCustomSummaryStep4();
-
     // Seleccionar los elementos a compartir
     const vehicleSummary = document.querySelector("#step-4 .vehicle-summary");
     const customSummary = document.querySelector(
@@ -1584,53 +1556,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Crear un contenedor temporal para la imagen
     const tempDiv = document.createElement("div");
-
-    // --- NUEVO BLOQUE: Header con agencia (izq) y fecha (der) ---
-    const headerRow = document.createElement("div");
-    headerRow.style.display = "flex";
-    headerRow.style.justifyContent = "space-between";
-    headerRow.style.alignItems = "center";
-    headerRow.style.width = "100%";
-    headerRow.style.marginBottom = "8px";
-    headerRow.style.position = "relative";
-
-    // Agencia (izquierda)
-    const agenciaDiv = document.createElement("div");
-    agenciaDiv.textContent =
-      nombreAgencia && nombreAgencia.trim() !== "" ? nombreAgencia : "";
-    agenciaDiv.style.fontWeight = "bold";
-    agenciaDiv.style.fontSize = "13px";
-    agenciaDiv.style.color = "#888";
-    agenciaDiv.style.background = "rgba(255,255,255,0.85)";
-    agenciaDiv.style.padding = "2px 10px";
-    agenciaDiv.style.borderRadius = "8px";
-    agenciaDiv.style.maxWidth = "60%";
-    agenciaDiv.style.overflow = "hidden";
-    agenciaDiv.style.textOverflow = "ellipsis";
-    agenciaDiv.style.whiteSpace = "nowrap";
-
-    // Fecha (derecha)
     const fechaDiv = document.createElement("div");
     const fecha = new Date();
     const opciones = { day: "2-digit", month: "2-digit", year: "numeric" };
     fechaDiv.textContent = fecha.toLocaleDateString("es-AR", opciones);
+    fechaDiv.style.position = "absolute";
+    fechaDiv.style.top = "18px";
+    fechaDiv.style.right = "32px";
     fechaDiv.style.fontSize = "13px";
     fechaDiv.style.color = "#888";
     fechaDiv.style.fontWeight = "bold";
     fechaDiv.style.background = "rgba(255,255,255,0.85)";
     fechaDiv.style.padding = "2px 10px";
     fechaDiv.style.borderRadius = "8px";
-    fechaDiv.style.maxWidth = "40%";
-    fechaDiv.style.overflow = "hidden";
-    fechaDiv.style.textOverflow = "ellipsis";
-    fechaDiv.style.whiteSpace = "nowrap";
-
-    headerRow.appendChild(agenciaDiv);
-    headerRow.appendChild(fechaDiv);
-    tempDiv.appendChild(headerRow);
-
-    // --- FIN HEADER ---
-
+    fechaDiv.style.zIndex = "10";
+    tempDiv.appendChild(fechaDiv);
     tempDiv.style.background = "#fff";
     tempDiv.style.padding = "32px 0 24px 0";
     tempDiv.style.borderRadius = "24px";
@@ -1670,7 +1610,6 @@ document.addEventListener("DOMContentLoaded", () => {
     tituloDiv.style.alignItems = "center";
     tituloDiv.style.margin = "0 0 18px 0";
     tituloDiv.style.gap = "6px";
-
     const span1 = document.createElement("span");
     span1.textContent = "COTIZACIÓN";
     span1.style.fontSize = "24px";
@@ -1752,9 +1691,9 @@ document.addEventListener("DOMContentLoaded", () => {
           el.style.padding = "0";
           el.style.textAlign = "left";
           el.style.color = "#222";
-          el.style.wordBreak = "break-word";
-          el.style.whiteSpace = "normal";
-          el.style.overflowWrap = "break-word";
+          el.style.wordBreak = "break-word"; // <-- Agrega esto
+          el.style.whiteSpace = "normal"; // <-- Y esto
+          el.style.overflowWrap = "break-word"; // <-- Y esto
         });
         const h3 = detailsClone.querySelector("h3");
         if (h3) {
@@ -1773,6 +1712,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
+      // Limpiar el contenido y agregar detalles alineados
       clone.innerHTML = "";
       if (detailsClone) clone.appendChild(detailsClone);
 
@@ -1780,7 +1720,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function cloneSummaryStyled(node) {
-      // Clona el nodo base
       const clone = node.cloneNode(true);
       clone.className = "";
       clone.style.background = "#fff";
@@ -1869,23 +1808,22 @@ document.addEventListener("DOMContentLoaded", () => {
       clone
         .querySelectorAll(".custom-summary-amount, .custom-summary-currency")
         .forEach((el) => el.remove());
-
-      // --- BLOQUE SEPARADO: Producto seleccionado ---
-      const producto =
-        document.getElementById("selected-product-step4")?.textContent || "";
-      if (producto && producto !== "Seleccionar Producto") {
-        const prodTitle = document.createElement("div");
-        prodTitle.textContent = "Producto seleccionado";
-        prodTitle.style.width = "320px";
-        prodTitle.style.maxWidth = "320px";
-        prodTitle.style.margin = "14px 0 0 24px";
-        prodTitle.style.fontWeight = "bold";
-        prodTitle.style.fontSize = "16px";
-        prodTitle.style.textAlign = "center";
-        prodTitle.style.alignSelf = "center";
-        prodTitle.style.padding = "0px 0px";
-        clone.appendChild(prodTitle);
-
+      const prodTitle = document.createElement("div");
+      prodTitle.textContent = "Producto seleccionado";
+      prodTitle.style.width = "320px";
+      prodTitle.style.maxWidth = "320px";
+      prodTitle.style.margin = "14px 0 0 24px";
+      prodTitle.style.fontWeight = "bold";
+      prodTitle.style.fontSize = "16px";
+      prodTitle.style.textAlign = "center";
+      prodTitle.style.alignSelf = "center";
+      prodTitle.style.padding = "0px 0px";
+      clone.appendChild(prodTitle);
+      // Producto
+      const prod = clone.querySelector(".selected-product");
+      if (prod) {
+        // Eliminar el producto del clon para evitar duplicados
+        prod.remove();
         // Crear un bloque para el producto alineado al centro
         const prodBlock = document.createElement("div");
         prodBlock.style.display = "flex";
@@ -1902,13 +1840,12 @@ document.addEventListener("DOMContentLoaded", () => {
         prodBlock.style.width = "fit-content";
         prodBlock.style.alignSelf = "center";
         prodBlock.style.textAlign = "center";
-        prodBlock.textContent = producto;
+        prodBlock.textContent = prod.textContent;
         clone.appendChild(prodBlock);
       }
-
       return clone;
     }
-
+    // Clonar los elementos con estilos fieles al diseño original y alineados
     if (vehicleSummary) tempDiv.appendChild(cloneStyled(vehicleSummary));
     if (customSummary) tempDiv.appendChild(cloneSummaryStyled(customSummary));
 
@@ -1919,11 +1856,12 @@ document.addEventListener("DOMContentLoaded", () => {
       cuotasDiv.style.flexDirection = "column";
       cuotasDiv.style.width = "320px";
       cuotasDiv.style.maxWidth = "320px";
-      cuotasDiv.style.margin = "12px 0 0 0";
-      cuotasDiv.style.alignItems = "flex-start";
+      cuotasDiv.style.margin = "12px 0 0 0"; // <-- Solo margen superior, sin auto
+      cuotasDiv.style.alignItems = "flex-start"; // <-- Alinea los hijos a la izquierda
 
       cuotaItems.forEach((item) => {
         const clone = item.cloneNode(true);
+        // Copiar la clase 'selected' si corresponde
         if (item.classList.contains("selected")) {
           clone.classList.add("selected");
         }
@@ -1938,6 +1876,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clone.style.padding = "3px 18px";
         clone.style.fontWeight = "bold";
         clone.style.fontSize = "18px";
+        // Si es la seleccionada, remarcar
         if (item === cuotaSeleccionada) {
           clone.style.background = "#28D89E";
           clone.style.color = "#fff";
@@ -1949,6 +1888,7 @@ document.addEventListener("DOMContentLoaded", () => {
             valueClone.style.fontWeight = "bold";
           }
         }
+        // Copiar el valor de la cuota (por si no se actualizó)
         const valueOriginal = item.querySelector(".scrollable-value");
         const valueClone = clone.querySelector(".scrollable-value");
         if (valueOriginal && valueClone) {
@@ -1964,6 +1904,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tempDiv.style.left = "-9999px";
     document.body.appendChild(tempDiv);
 
+    // --- Agregar leyenda de uso particular si corresponde ---
     const leyendaStep4Desktop = document.getElementById(
       "leyenda-uso-particular-step4"
     );
@@ -1993,7 +1934,6 @@ document.addEventListener("DOMContentLoaded", () => {
       leyendaClone.style.textAlign = "center";
       tempDiv.appendChild(leyendaClone);
     }
-
     // Esperar a que las imágenes base64 estén cargadas antes de capturar
     await Promise.all(
       Array.from(tempDiv.querySelectorAll("img")).map(
@@ -2310,40 +2250,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Al hacer click en la lupa, mostrar popup y consultar InfoExperto
-if (searchIcon) {
-  searchIcon.addEventListener("click", async () => {
-    const res = await fetch(`${API_BASE}/check-session`, {
-      credentials: "include",
-    });
-    const data = await res.json();
-    if (!data.success) {
-      document.getElementById("modal-login-overlay").style.display = "flex";
-      document.body.classList.add("modal-login-blur");
-      return;
-    }
-    showDropdown();
-    consultarInfoExperto();
-  });
-}
-
-if (dniInput) {
-  dniInput.addEventListener("keydown", async (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const res = await fetch(`${API_BASE}/check-session`, {
-        credentials: "include",
-      });
-      const data = await res.json();
-      if (!data.success) {
-        document.getElementById("modal-login-overlay").style.display = "flex";
-        document.body.classList.add("modal-login-blur");
-        return;
-      }
+  if (searchIcon) {
+    searchIcon.addEventListener("click", () => {
       showDropdown();
       consultarInfoExperto();
-    }
-  });
-}
+    });
+  }
+
+  // Al presionar Enter en el input, consultar InfoExperto y mostrar popup
+  if (dniInput) {
+    dniInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        showDropdown();
+        consultarInfoExperto();
+      }
+    });
+  }
 
   // Si cambia el switch, limpiar el campo y el nombre
   switchInput.addEventListener("change", () => {
@@ -2911,259 +2834,259 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // --- INTEGRAR LA LÓGICA DEL MODAL EN consultarInfoExperto ---
-// document.addEventListener("DOMContentLoaded", () => {
-//   // ...existing code...
-//   const switchInput = document.querySelector(".toggle-switch input");
-//   const dniInput = document.querySelector(".dni-input");
-//   const profileName = document.querySelector(".profile-name");
-//   const dropdownContent = document.querySelector(".dropdown-content");
-//   const searchIcon = document.querySelector(".search-icon-container");
+document.addEventListener("DOMContentLoaded", () => {
+  // ...existing code...
+  const switchInput = document.querySelector(".toggle-switch input");
+  const dniInput = document.querySelector(".dni-input");
+  const profileName = document.querySelector(".profile-name");
+  const dropdownContent = document.querySelector(".dropdown-content");
+  const searchIcon = document.querySelector(".search-icon-container");
 
-//   // Helper para saber si está en modo CUIT o DNI
-//   function isCuitMode() {
-//     return switchInput.checked;
-//   }
+  // Helper para saber si está en modo CUIT o DNI
+  function isCuitMode() {
+    return switchInput.checked;
+  }
 
-//   // Lógica para consultar InfoExperto al hacer click en la lupa o presionar Enter
-//   async function consultarInfoExperto() {
-//     const valor = dniInput.value.trim();
-//     if (!valor) return;
+  // Lógica para consultar InfoExperto al hacer click en la lupa o presionar Enter
+  async function consultarInfoExperto() {
+    const valor = dniInput.value.trim();
+    if (!valor) return;
 
-//     profileName.textContent = "Buscando...";
+    profileName.textContent = "Buscando...";
 
-//     const loader = document.getElementById("loader-smiley");
-//     if (loader) loader.style.display = "flex";
+    const loader = document.getElementById("loader-smiley");
+    if (loader) loader.style.display = "flex";
 
-//     let body = { infoexperto: true };
-//     if (isCuitMode()) {
-//       body.cuit = valor;
-//       body.tipo = "normal";
-//     } else {
-//       body.dni = valor;
-//       body.tipo = "normal";
-//     }
+    let body = { infoexperto: true };
+    if (isCuitMode()) {
+      body.cuit = valor;
+      body.tipo = "normal";
+    } else {
+      body.dni = valor;
+      body.tipo = "normal";
+    }
 
-//     try {
-//       console.log("Enviando consulta a InfoExperto con body:", body);
-//       const res = await fetch("php/curl.php", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(body),
-//       });
-//       const data = await res.json();
-//       console.log("Respuesta de InfoExperto:", data);
+    try {
+      console.log("Enviando consulta a InfoExperto con body:", body);
+      const res = await fetch("php/curl.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      console.log("Respuesta de InfoExperto:", data);
 
-//       // --- DETECTAR VARIAS PERSONAS Y MOSTRAR MODAL ---
-//       let personas = [];
-//       // 1. Chequear si data.data.informe.personas existe y tiene más de 1
-//       if (
-//         data &&
-//         data.data &&
-//         data.data.informe &&
-//         Array.isArray(data.data.informe.personas) &&
-//         data.data.informe.personas.length > 1
-//       ) {
-//         personas = data.data.informe.personas;
-//       }
-//       // 2. Chequear si data.data.datos existe y tiene más de 1 (caso alternativo)
-//       else if (
-//         data &&
-//         data.data &&
-//         Array.isArray(data.data.datos) &&
-//         data.data.datos.length > 1
-//       ) {
-//         personas = data.data.datos.map((p) => ({
-//           nombreCompleto:
-//             p.nombre_completo ||
-//             p.nombreCompleto ||
-//             p.nombre ||
-//             p.razonSocial ||
-//             p.razon_social ||
-//             "",
-//           dni: p.numero_documento || p.dni || "",
-//           cuit: p.cuit || "",
-//           ...p,
-//         }));
-//       }
+      // --- DETECTAR VARIAS PERSONAS Y MOSTRAR MODAL ---
+      let personas = [];
+      // 1. Chequear si data.data.informe.personas existe y tiene más de 1
+      if (
+        data &&
+        data.data &&
+        data.data.informe &&
+        Array.isArray(data.data.informe.personas) &&
+        data.data.informe.personas.length > 1
+      ) {
+        personas = data.data.informe.personas;
+      }
+      // 2. Chequear si data.data.datos existe y tiene más de 1 (caso alternativo)
+      else if (
+        data &&
+        data.data &&
+        Array.isArray(data.data.datos) &&
+        data.data.datos.length > 1
+      ) {
+        personas = data.data.datos.map((p) => ({
+          nombreCompleto:
+            p.nombre_completo ||
+            p.nombreCompleto ||
+            p.nombre ||
+            p.razonSocial ||
+            p.razon_social ||
+            "",
+          dni: p.numero_documento || p.dni || "",
+          cuit: p.cuit || "",
+          ...p,
+        }));
+      }
 
-//       if (personas.length > 1) {
-//         console.log(
-//           "Se detectaron varias personas para el mismo DNI (modal):",
-//           personas
-//         );
-//         if (loader) loader.style.display = "none";
-//         mostrarModalPersonasDNI(personas, function (persona, nombreMostrado) {
-//           if (profileName) profileName.textContent = nombreMostrado;
-//           if (persona.dni || persona.numero_documento)
-//             sessionStorage.setItem(
-//               "solicitante_dni",
-//               persona.dni || persona.numero_documento
-//             );
-//           if (nombreMostrado)
-//             sessionStorage.setItem("solicitante_nombre", nombreMostrado);
-//           showDropdown();
-//           if (loader) loader.style.display = "none";
-//         });
-//         return;
-//       }
+      if (personas.length > 1) {
+        console.log(
+          "Se detectaron varias personas para el mismo DNI (modal):",
+          personas
+        );
+        if (loader) loader.style.display = "none";
+        mostrarModalPersonasDNI(personas, function (persona, nombreMostrado) {
+          if (profileName) profileName.textContent = nombreMostrado;
+          if (persona.dni || persona.numero_documento)
+            sessionStorage.setItem(
+              "solicitante_dni",
+              persona.dni || persona.numero_documento
+            );
+          if (nombreMostrado)
+            sessionStorage.setItem("solicitante_nombre", nombreMostrado);
+          showDropdown();
+          if (loader) loader.style.display = "none";
+        });
+        return;
+      }
 
-//       // Si hay solo una persona, flujo normal
-//       if (
-//         data &&
-//         data.data &&
-//         data.data.informe &&
-//         Array.isArray(data.data.informe.personas) &&
-//         data.data.informe.personas.length === 1
-//       ) {
-//         const persona = data.data.informe.personas[0];
-//         profileName.textContent =
-//           persona.nombreCompleto ||
-//           persona.nombre ||
-//           persona.razonSocial ||
-//           persona.razon_social ||
-//           "Sin nombre";
-//         if (persona.dni) sessionStorage.setItem("solicitante_dni", persona.dni);
-//         if (profileName.textContent)
-//           sessionStorage.setItem("solicitante_nombre", profileName.textContent);
-//         if (loader) loader.style.display = "none";
-//         // --- SOLO mostrar informe.bcra ---
-//         if (data && data.data && data.data.informe && data.data.informe.bcra) {
-//           console.log("informe.bcra:", data.data.informe.bcra);
-//         }
+      // Si hay solo una persona, flujo normal
+      if (
+        data &&
+        data.data &&
+        data.data.informe &&
+        Array.isArray(data.data.informe.personas) &&
+        data.data.informe.personas.length === 1
+      ) {
+        const persona = data.data.informe.personas[0];
+        profileName.textContent =
+          persona.nombreCompleto ||
+          persona.nombre ||
+          persona.razonSocial ||
+          persona.razon_social ||
+          "Sin nombre";
+        if (persona.dni) sessionStorage.setItem("solicitante_dni", persona.dni);
+        if (profileName.textContent)
+          sessionStorage.setItem("solicitante_nombre", profileName.textContent);
+        if (loader) loader.style.display = "none";
+        // --- SOLO mostrar informe.bcra ---
+        if (data && data.data && data.data.informe && data.data.informe.bcra) {
+          console.log("informe.bcra:", data.data.informe.bcra);
+        }
 
-//         if (loader) loader.style.display = "none";
+        if (loader) loader.style.display = "none";
 
-//         // Mostrar entidades y situaciones (periodo/situacion/monto)
-//         let bcraDatos = [];
-//         if (
-//           data &&
-//           data.data &&
-//           data.data.informe &&
-//           data.data.informe.bcra &&
-//           Array.isArray(data.data.informe.bcra.datos)
-//         ) {
-//           bcraDatos = data.data.informe.bcra.datos;
-//         }
-//         if (Array.isArray(bcraDatos)) {
-//           bcraDatos.forEach((entidad) => {
-//             const nombreEntidad =
-//               entidad.nombre || entidad.entidad || "Entidad desconocida";
-//             if (Array.isArray(entidad.deudas)) {
-//               entidad.deudas.forEach((deuda) => {
-//                 if (deuda.periodo && deuda.situacion) {
-//                   console.log(
-//                     `[BCRA] Entidad: ${nombreEntidad} | Periodo: ${
-//                       deuda.periodo
-//                     } | Situación: ${deuda.situacion} | Monto: ${
-//                       deuda.monto || "-"
-//                     }`
-//                   );
-//                 }
-//               });
-//             }
-//           });
-//         }
-//         showDropdown();
-//         return;
-//       }
-//       // Alternativa: si data.data.datos tiene solo una persona
-//       if (
-//         data &&
-//         data.data &&
-//         Array.isArray(data.data.datos) &&
-//         data.data.datos.length === 1
-//       ) {
-//         const persona = data.data.datos[0];
-//         const nombreMostrado =
-//           persona.nombre_completo ||
-//           persona.nombreCompleto ||
-//           persona.nombre ||
-//           persona.razonSocial ||
-//           persona.razon_social ||
-//           "Sin nombre";
-//         profileName.textContent = nombreMostrado;
-//         if (persona.dni || persona.numero_documento)
-//           sessionStorage.setItem(
-//             "solicitante_dni",
-//             persona.dni || persona.numero_documento
-//           );
-//         if (nombreMostrado)
-//           sessionStorage.setItem("solicitante_nombre", nombreMostrado);
-//         if (loader) loader.style.display = "none";
-//         // --- SOLO mostrar informe.bcra si existe ---
-//         if (data && data.data && data.data.informe && data.data.informe.bcra) {
-//           console.log("informe.bcra:", data.data.informe.bcra);
-//         }
-//         let bcraDatos = [];
-//         if (
-//           data &&
-//           data.data &&
-//           data.data.informe &&
-//           data.data.informe.bcra &&
-//           Array.isArray(data.data.informe.bcra.datos)
-//         ) {
-//           bcraDatos = data.data.informe.bcra.datos;
-//         }
-//         if (Array.isArray(bcraDatos)) {
-//           bcraDatos.forEach((entidad) => {
-//             const nombreEntidad =
-//               entidad.nombre || entidad.entidad || "Entidad desconocida";
-//             if (Array.isArray(entidad.deudas)) {
-//               entidad.deudas.forEach((deuda) => {
-//                 if (deuda.periodo && deuda.situacion) {
-//                   console.log(
-//                     `[BCRA] Entidad: ${nombreEntidad} | Periodo: ${
-//                       deuda.periodo
-//                     } | Situación: ${deuda.situacion} | Monto: ${
-//                       deuda.monto || "-"
-//                     }`
-//                   );
-//                 }
-//               });
-//             }
-//           });
-//         }
-//         showDropdown();
-//         return;
-//       }
+        // Mostrar entidades y situaciones (periodo/situacion/monto)
+        let bcraDatos = [];
+        if (
+          data &&
+          data.data &&
+          data.data.informe &&
+          data.data.informe.bcra &&
+          Array.isArray(data.data.informe.bcra.datos)
+        ) {
+          bcraDatos = data.data.informe.bcra.datos;
+        }
+        if (Array.isArray(bcraDatos)) {
+          bcraDatos.forEach((entidad) => {
+            const nombreEntidad =
+              entidad.nombre || entidad.entidad || "Entidad desconocida";
+            if (Array.isArray(entidad.deudas)) {
+              entidad.deudas.forEach((deuda) => {
+                if (deuda.periodo && deuda.situacion) {
+                  console.log(
+                    `[BCRA] Entidad: ${nombreEntidad} | Periodo: ${
+                      deuda.periodo
+                    } | Situación: ${deuda.situacion} | Monto: ${
+                      deuda.monto || "-"
+                    }`
+                  );
+                }
+              });
+            }
+          });
+        }
+        showDropdown();
+        return;
+      }
+      // Alternativa: si data.data.datos tiene solo una persona
+      if (
+        data &&
+        data.data &&
+        Array.isArray(data.data.datos) &&
+        data.data.datos.length === 1
+      ) {
+        const persona = data.data.datos[0];
+        const nombreMostrado =
+          persona.nombre_completo ||
+          persona.nombreCompleto ||
+          persona.nombre ||
+          persona.razonSocial ||
+          persona.razon_social ||
+          "Sin nombre";
+        profileName.textContent = nombreMostrado;
+        if (persona.dni || persona.numero_documento)
+          sessionStorage.setItem(
+            "solicitante_dni",
+            persona.dni || persona.numero_documento
+          );
+        if (nombreMostrado)
+          sessionStorage.setItem("solicitante_nombre", nombreMostrado);
+        if (loader) loader.style.display = "none";
+        // --- SOLO mostrar informe.bcra si existe ---
+        if (data && data.data && data.data.informe && data.data.informe.bcra) {
+          console.log("informe.bcra:", data.data.informe.bcra);
+        }
+        let bcraDatos = [];
+        if (
+          data &&
+          data.data &&
+          data.data.informe &&
+          data.data.informe.bcra &&
+          Array.isArray(data.data.informe.bcra.datos)
+        ) {
+          bcraDatos = data.data.informe.bcra.datos;
+        }
+        if (Array.isArray(bcraDatos)) {
+          bcraDatos.forEach((entidad) => {
+            const nombreEntidad =
+              entidad.nombre || entidad.entidad || "Entidad desconocida";
+            if (Array.isArray(entidad.deudas)) {
+              entidad.deudas.forEach((deuda) => {
+                if (deuda.periodo && deuda.situacion) {
+                  console.log(
+                    `[BCRA] Entidad: ${nombreEntidad} | Periodo: ${
+                      deuda.periodo
+                    } | Situación: ${deuda.situacion} | Monto: ${
+                      deuda.monto || "-"
+                    }`
+                  );
+                }
+              });
+            }
+          });
+        }
+        showDropdown();
+        return;
+      }
 
-//       // ...existing lógica para mostrar nombre, BCRA, etc...
-//       // ...NO mostrar el informe completo aquí...
-//       // ...existing code...
-//     } catch (err) {
-//       profileName.textContent = "Error";
-//       if (loader) loader.style.display = "none";
-//       console.error("Error consultando InfoExperto:", err);
-//     } finally {
-//       if (loader) loader.style.display = "none";
-//     }
-//   }
+      // ...existing lógica para mostrar nombre, BCRA, etc...
+      // ...NO mostrar el informe completo aquí...
+      // ...existing code...
+    } catch (err) {
+      profileName.textContent = "Error";
+      if (loader) loader.style.display = "none";
+      console.error("Error consultando InfoExperto:", err);
+    } finally {
+      if (loader) loader.style.display = "none";
+    }
+  }
 
-//   // Al hacer click en la lupa, mostrar popup y consultar InfoExperto
-//   if (searchIcon) {
-//     searchIcon.addEventListener("click", () => {
-//       showDropdown();
-//       consultarInfoExperto();
-//     });
-//   }
+  // Al hacer click en la lupa, mostrar popup y consultar InfoExperto
+  if (searchIcon) {
+    searchIcon.addEventListener("click", () => {
+      showDropdown();
+      consultarInfoExperto();
+    });
+  }
 
-//   // Al presionar Enter en el input, consultar InfoExperto y mostrar popup
-//   if (dniInput) {
-//     dniInput.addEventListener("keydown", (e) => {
-//       if (e.key === "Enter") {
-//         e.preventDefault();
-//         showDropdown();
-//         consultarInfoExperto();
-//       }
-//     });
-//   }
+  // Al presionar Enter en el input, consultar InfoExperto y mostrar popup
+  if (dniInput) {
+    dniInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        showDropdown();
+        consultarInfoExperto();
+      }
+    });
+  }
 
-//   // Si cambia el switch, limpiar el campo y el nombre
-//   switchInput.addEventListener("change", () => {
-//     dniInput.value = "";
-//     profileName.textContent = "";
-//   });
-// });
+  // Si cambia el switch, limpiar el campo y el nombre
+  switchInput.addEventListener("change", () => {
+    dniInput.value = "";
+    profileName.textContent = "";
+  });
+});
 
 // --- NUEVO: Resetear pantalla 2 al volver desde el botón BACK de pantalla 3 ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -3239,20 +3162,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const step1Button = document.querySelector("#step-1 .next-button");
   if (step1Button) {
     const originalOnClick = step1Button.onclick;
-    step1Button.onclick = async function (e) {
-      e.preventDefault();
-
-      // Chequear sesión antes de avanzar
-      const res = await fetch(`${API_BASE}/check-session`, { credentials: "include" });
-      const data = await res.json();
-      if (!data.success) {
-        // Mostrar modal login y bloquear fondo
-        document.getElementById("modal-login-overlay").style.display = "flex";
-        document.body.classList.add("modal-login-blur");
-        return; // No avanza
-      }
-
-      // Si está logueado, avanza normalmente
+    step1Button.onclick = function (e) {
       if (typeof originalOnClick === "function") {
         originalOnClick.call(this, e);
       }
@@ -4155,10 +4065,16 @@ function actualizarProductosPorCategoria(categoria) {
     null;
 
   // Filtrar productos por segmento_id
-  const productosFiltrados = window.productosData.filter(
-    (prod) => prod.segmento_id == segmentoId
-  );
-
+  let productosFiltrados = [];
+  if (Array.isArray(window.productosData)) {
+    productosFiltrados = window.productosData.filter(
+      (prod) => prod.segmento_id == segmentoId
+    );
+  } else {
+    console.error("window.productosData no es un array", window.productosData);
+    // Opcional: muestra mensaje de error en la UI
+    productosFiltrados = [];
+  }
   // --- AGRUPAR POR nombre + segmento_id + banco ---
   const productosUnicos = [];
   const clavesVistas = new Set();
@@ -5086,19 +5002,19 @@ document.addEventListener("click", function (e) {
 });
 
 function onGoogleSignIn(response) {
-  fetch("http://localhost:5000/api/google-login", {
+  fetch(`${API_BASE}/google-login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ token: response.credential }),
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data); // <-- Agrega esto
       if (data.success) {
-        // Login exitoso
-        window.location.href = "index.html";
+        sessionStorage.setItem("user_email", data.user.email);
+        document.getElementById("login-modal").style.display = "none";
+        document.querySelector("main").style.display = "block";
       } else {
-        alert(data.message || "Error con Google");
+        alert("Error al iniciar sesión con Google");
       }
     });
 }

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Validación de correo | Lever</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { background: #f6f8fc; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    .email-container {
+      max-width: 420px; margin: 40px auto; background: #fff; border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(40,40,64,0.08); padding: 32px 24px 28px 24px; text-align: center;
+    }
+    .logo { font-size:2em;font-weight:bold;color:#2adc9f;margin-bottom:18px; }
+    h2 { color: #282840; font-size: 1.4em; margin-bottom: 10px; }
+    p { color: #444; font-size: 1.05em; margin-bottom: 28px; }
+    .btn {
+      display: inline-block; background: #2adc9f; color: #fff !important; text-decoration: none;
+      padding: 13px 32px; border-radius: 6px; font-weight: bold; font-size: 1.1em; margin-bottom: 18px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #00f09c; }
+    .footer { color: #aaa; font-size: 0.95em; margin-top: 32px; }
+  </style>
+</head>
+<body>
+  <div class="email-container" id="validacion-container">
+    <div class="logo">LEVER</div>
+    <h2 id="titulo-validacion">Validando tu correo...</h2>
+    <p id="mensaje-validacion">Por favor espera un momento.</p>
+    <button id="btn-ir-login" class="btn" style="display:none;">Ir al inicio de sesión</button>
+    <div class="footer">
+      © Lever
+    </div>
+  </div>
+  <script src="config.js"></script>
+  <script>
+    // Obtiene el token de la URL
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    fetch(window.APP_CONFIG.API_URL + "/api/validar-email?token=" + encodeURIComponent(token))
+      .then(res => res.json())
+      .then(data => {
+        const titulo = document.getElementById("titulo-validacion");
+        const mensaje = document.getElementById("mensaje-validacion");
+        const btn = document.getElementById("btn-ir-login");
+        if (data.success) {
+          titulo.textContent = "¡Correo validado!";
+          mensaje.textContent = "Tu cuenta fue activada correctamente. Ya puedes iniciar sesión.";
+          btn.style.display = "inline-block";
+        } else {
+          titulo.textContent = "Error al validar";
+          mensaje.textContent = data.message || "El enlace no es válido o ya fue utilizado.";
+        }
+      })
+      .catch(() => {
+        document.getElementById("titulo-validacion").textContent = "Error de conexión";
+        document.getElementById("mensaje-validacion").textContent = "No se pudo validar tu correo. Intenta más tarde.";
+      });
+
+    document.getElementById("btn-ir-login").onclick = function() {
+      window.location.href = "login.html";
+    };
+  </script>
+</body>
+</html>

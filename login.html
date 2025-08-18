@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión | Lever</title>
+  <link rel="stylesheet" href="login.css" />
+  <script>
+  window.location.href = "index.html";
+</script>
+  <script>
+function onGoogleSignIn(response) {
+  fetch(window.APP_CONFIG.API_URL + "/api/google-login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token: response.credential }),
+    credentials: "include"
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      if (data.success) {
+        // Guarda el email en sessionStorage si lo necesitas
+        sessionStorage.setItem("user_email", data.user.email);
+        window.location.href = "index.html";
+      } else {
+        alert(data.message || "Error con Google");
+      }
+    });
+}
+</script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  
+</head>
+<body>
+   <canvas id="particle-canvas"></canvas>
+  <div class="login_form">
+    <!-- Login form container -->
+    <form id="login-form">
+      <div itemprop="logo" class="logo-container">
+          <a href="" onclick=""
+            ><img src="./images/logos/lever.svg" alt="Lever Technology"
+          /></a>
+        </div>
+
+      <div class="login_option">
+        <!-- Google button -->
+       <div class="option">
+  <a href="#" id="google-login-btn" style="display: flex; align-items: center; gap: 8px;">
+    <span class="Button-visual Button-leadingVisual" style="display: flex; align-items: center;">
+      <svg width="24" height="24" viewBox="0 0 16 16" fill="none">
+        <g clip-path="url(#clip0_643_9687)">
+          <path d="M8.00018 3.16667C9.18018 3.16667 10.2368 3.57333 11.0702 4.36667L13.3535 2.08333C11.9668 0.793333 10.1568 0 8.00018 0C4.87352 0 2.17018 1.79333 0.853516 4.40667L3.51352 6.47C4.14352 4.57333 5.91352 3.16667 8.00018 3.16667Z" fill="#EA4335"></path>
+          <path d="M15.66 8.18335C15.66 7.66002 15.61 7.15335 15.5333 6.66669H8V9.67335H12.3133C12.12 10.66 11.56 11.5 10.72 12.0667L13.2967 14.0667C14.8 12.6734 15.66 10.6134 15.66 8.18335Z" fill="#4285F4"></path>
+          <path d="M3.51 9.53001C3.35 9.04668 3.25667 8.53334 3.25667 8.00001C3.25667 7.46668 3.34667 6.95334 3.51 6.47001L0.85 4.40668C0.306667 5.48668 0 6.70668 0 8.00001C0 9.29334 0.306667 10.5133 0.853333 11.5933L3.51 9.53001Z" fill="#FBBC05"></path>
+          <path d="M8.0001 16C10.1601 16 11.9768 15.29 13.2968 14.0633L10.7201 12.0633C10.0034 12.5467 9.0801 12.83 8.0001 12.83C5.91343 12.83 4.14343 11.4233 3.5101 9.52667L0.850098 11.59C2.1701 14.2067 4.87343 16 8.0001 16Z" fill="#34A853"></path>
+        </g>
+        <defs>
+          <clipPath id="clip0_643_9687">
+            <rect width="16" height="16" fill="white"></rect>
+          </clipPath>
+        </defs>
+      </svg>
+    </span>
+    <span>Ingresá con Google</span>
+  </a>
+</div>
+
+        <!-- Apple button -->
+        <!-- <div class="option">
+          <a href="#">
+            <img src="./images/a.jpg" alt="Apple" />
+            <span>Apple</span>
+          </a>
+        </div> -->
+      </div>
+
+      <!-- Login option separator -->
+      <p class="separator">
+        <span> O ingresá con tu cuenta</span>
+      </p>
+
+      <!-- Email input box -->
+      <div class="input_box">
+        <label for="email">Correo</label>
+        <input type="email" id="email" placeholder="" required />
+      </div>
+
+      <!-- Paswwrod input box -->
+      <div class="input_box">
+        <div class="password_title">
+          <label for="password">Contraseña</label>
+          <a href="#" id="abrir-modal-olvide">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <input type="password" id="password" placeholder="" required />
+      </div>
+          
+       <!-- Login button -->
+      <button type="submit">Iniciar sesión</button>
+
+      <p class="sign_up">¿No tienes una cuenta? <a href="register.html">Regístrate</a></p>
+    </form>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="js/app.min.js"></script>
+  
+<script>
+console.log("Script de login cargado");
+
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("login-form");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      console.log("Enviando login...");
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      fetch(window.APP_CONFIG.API_URL + "/api/loginAgencias", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            sessionStorage.setItem("user_email", data.user.email);
+            window.location.href = "index.html";
+          } else {
+            alert(data.message || "Credenciales incorrectas");
+          }
+        })
+        .catch((err) => {
+          console.error("Error de conexión:", err);
+          alert("Error de conexión");
+        });
+    });
+  } else {
+    console.error("No se encontró el formulario de login");
+  }
+});
+</script>
+<div id="g_id_onload"
+  data-client_id="323307585746-4vkqpvd70tnv1ck54r941fqoo2j1ivq2.apps.googleusercontent.com"
+  data-callback="onGoogleSignIn"
+  data-auto_prompt="false">
+</div>
+<div class="g_id_signin" data-type="standard" style="display:none"></div>
+
+<!-- Modal para recuperación de contraseña -->
+<div id="modal-olvide" class="modal-overlay">
+  <div class="modal-content">
+    <button type="button" class="modal-close" id="cerrar-modal-olvide">&times;</button>
+    <!-- SVG agregado aquí -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail-check h-12 w-12 text-[#626CD6] dark:text-white" style="display:block;margin:0 auto 1em auto;">
+      <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8"></path>
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+      <path d="m16 19 2 2 4-4"></path>
+    </svg>
+    <h3 style="
+    font-size: 21px; margin-bottom: 9px;
+">¿Olvidaste tu contraseña?</h3>
+<span style="
+    opacity: 0.7;">Ingresa tu correo electrónico y te enviaremos instrucciones para restablecerla.</span>
+
+    <form id="form-olvide">
+      <div class="input_box">
+        <label for="olvide-email">Correo electrónico</label>
+        <input type="email" id="olvide-email" placeholder="" required />
+      </div>
+      <button type="submit" class="btn-primary">Enviar instrucciones</button>
+    </form>
+    <div id="olvide-mensaje" class="modal-message"></div>
+  </div>
+</div>
+<script src="config.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Mostrar modal
+  document.getElementById("abrir-modal-olvide").addEventListener("click", function(e) {
+    e.preventDefault();
+    document.getElementById("modal-olvide").style.display = "flex";
+    document.getElementById("olvide-mensaje").style.display = "none";
+    document.getElementById("form-olvide").reset();
+  });
+
+  // Cerrar modal
+  document.getElementById("cerrar-modal-olvide").addEventListener("click", function() {
+    document.getElementById("modal-olvide").style.display = "none";
+  });
+
+  // Enviar solicitud de recuperación
+  document.getElementById("form-olvide").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const email = document.getElementById("olvide-email").value.trim();
+    fetch(window.APP_CONFIG.API_URL + "/api/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        const msg = document.getElementById("olvide-mensaje");
+        msg.style.display = "block";
+        msg.style.color = data.success ? "green" : "red";
+        msg.textContent = data.message;
+        if (data.success) document.getElementById("form-olvide").reset();
+      })
+      .catch(() => {
+        const msg = document.getElementById("olvide-mensaje");
+        msg.style.display = "block";
+        msg.style.color = "red";
+        msg.textContent = "Error de conexión";
+      });
+  });
+});
+</script>
+
+<script>
+document.getElementById('google-login-btn').addEventListener('click', function(e) {
+  e.preventDefault();
+  // Redirige en la misma ventana
+  window.location.href = window.APP_CONFIG.API_URL + '/auth/google';
+});
+</script>
+
+</body>
+</html>

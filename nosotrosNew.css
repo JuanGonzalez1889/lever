@@ -6,6 +6,16 @@ body {
     min-height: 100vh;
 }
 
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+}
+
 .container.header-container {
     max-width: 83%;
     margin: 0 auto;

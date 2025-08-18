@@ -9,8 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <canvas id="particle-canvas"></canvas>
     <header>
-      <div class="container header-container">
+       
+       <div class="container header-container">
         <div itemprop="logo" class="logo-container">
             <a href="index.html" onclick=""
               ><img src="./images/logos/lever.svg" alt="Lever Technology"
@@ -194,6 +196,9 @@
     </main>
     <script src="https://github.hubspot.com/odometer/odometer.js"></script>
     <link rel="stylesheet" href="https://github.hubspot.com/odometer/themes/odometer-theme-default.css" />
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="js/app.min.js"></script>
+    <script src="config.js"></script>
     <script>
       // Forzar formato sin separador de miles
       if (window.Odometer) {
