@@ -748,27 +748,32 @@ passport.use(
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
     },
     async (accessToken, refreshToken, profile, done) => {
-      // Aquí puedes buscar/crear el usuario en tu base de datos
-      // Ejemplo simple:
-      const email = profile.emails[0].value;
-      let user = await db.getAgenciaUserByEmail(email);
-      if (!user) {
-        await db.createAgenciaUser({
-          nombre_completo: profile.displayName,
-          email,
-          password: null,
-          agencia: "",
-          telefono: "",
-          google_id: profile.id,
-          email_validado: 1, // <-- ¡Esto valida automáticamente el email!
-          email_token: null, // <-- AGREGA ESTO para asegurar el orden
-        });
-        user = await db.getAgenciaUserByEmail(email);
+      try {
+        console.log("GOOGLE CALLBACK PROFILE:", profile);
+        const email = profile.emails[0].value;
+        let user = await db.getAgenciaUserByEmail(email);
+        if (!user) {
+          await db.createAgenciaUser({
+            nombre_completo: profile.displayName,
+            email,
+            password: null,
+            agencia: "",
+            telefono: "",
+            google_id: profile.id,
+            email_validado: 1,
+            email_token: null,
+          });
+          user = await db.getAgenciaUserByEmail(email);
+        }
+        return done(null, user);
+      } catch (err) {
+        console.error("ERROR EN GOOGLE CALLBACK:", err);
+        return done(err);
       }
-      return done(null, user);
     }
   )
 );
+
 
 app.get(
   "/auth/google",
