@@ -6,9 +6,18 @@ const session = require("express-session");
 const mysql = require("mysql");
 const path = require("path");
 const nodemailer = require("nodemailer");
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const getEmailTemplate = require("./emailTemplate");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+app.use(express.static(path.join(__dirname, ".."))); // Sirve todo lo de /lever
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
+
 
 console.log("NODE_ENV:", process.env.NODE_ENV); // Verificar que se está utilizando el .env
 console.log("DB_HOST:", process.env.DB_HOST); // Verificar que se está utilizando el .env
@@ -32,11 +41,27 @@ db.connect((err) => {
 app.use(bodyParser.json());
 
 const allowedOrigins = [
+  process.env.CLIENT_URL,
   "https://www.lever.com.ar",
   "https://lever.com.ar",
   "http://localhost:3000",
   "http://localhost:5000",
+  "http://localhost",
 ];
+
+// Buscar usuario de agencia por email
+db.getAgenciaUserByEmail = function (email) {
+  return new Promise((resolve, reject) => {
+    db.query(
+      "SELECT * FROM agencias_users WHERE email = ?",
+      [email],
+      (err, results) => {
+        if (err) return reject(err);
+        resolve(results[0]);
+      }
+    );
+  });
+};
 
 app.use(
   cors({
@@ -59,12 +84,15 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: true, // <-- Para desarrollo local, debe ser false
+      secure: false, // <-- Para desarrollo local, debe ser false
       httpOnly: true,
       sameSite: "lax",
     },
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Endpoint para manejar el login desde la base de datos
 app.post("/api/login", (req, res) => {
@@ -107,16 +135,6 @@ app.post("/api/login", (req, res) => {
           .json({ success: false, message: "Internal Server Error" });
       }
 
-      /*   if (!isMatch) {
-            console.log(5);
-            return res
-              .status(401)
-              .json({
-                success: false,
-                message: "Invalid username or password",
-              });
-          }*/
-
       // Guardar la sesión del usuario
       req.session.username = username;
       res.json({ success: true });
@@ -124,49 +142,14 @@ app.post("/api/login", (req, res) => {
   });
 });
 
-// Endpoint para registrar nuevos usuarios (opcional)
-/*app.post('/api/register', (req, res) => {
-    const { username, password } = req.body;
 
-    // Encriptar la contraseña antes de guardarla
-    const bcrypt = require('bcrypt');
-    const saltRounds = 10;
-
-    bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
-        if (err) {
-            console.error('Error hashing password:', err);
-            return res.status(500).json({ success: false, message: 'Internal Server Error' });
-        }
-
-        const query = `
-            INSERT INTO users (username, password)
-            VALUES (?, ?)
-        `;
-
-        db.query(query, [username, hashedPassword], (err, result) => {
-            if (err) {
-                console.error('Error inserting user:', err);
-                return res.status(500).json({ success: false, message: 'Internal Server Error' });
-            }
-
-            res.json({ success: true });
-        });
-    });
-});*/
-/*ESTO POR EL MOMENTO NO LO VOY A USAR YA QUE NO TENGO UNA VISTA DE REGISTRO Y POR EL MOMENTO NO LA NECESITO*/
 
 app.post("/api/logout", (req, res) => {
   req.session.destroy();
   res.json({ success: true });
 });
 
-app.get("/api/check-session", (req, res) => {
-  /*   if (req.session.username) {
-        res.json({ success: true });
-    } else {
-        res.status(401).json({ success: false });
-    } */
-});
+
 app.get("/api/segmentos", (req, res) => {
   db.query("SELECT id, nombre FROM segmentos", (err, results) => {
     if (err) {
@@ -416,20 +399,20 @@ app.post("/api/data", (req, res) => {
     Promise.all(ltvPromises).then(resolve).catch(reject);
   });
 
- const updateBanco = new Promise((resolve, reject) => {
-   if (banco !== undefined && productoIdPrincipal) {
-     const updateBancoQuery = `
+  const updateBanco = new Promise((resolve, reject) => {
+    if (banco !== undefined && productoIdPrincipal) {
+      const updateBancoQuery = `
       UPDATE productos SET banco = ?
       WHERE id = ?
     `;
-     db.query(updateBancoQuery, [banco, productoIdPrincipal], (err) => {
-       if (err) return reject(err);
-       resolve();
-     });
-   } else {
-     resolve();
-   }
- });
+      db.query(updateBancoQuery, [banco, productoIdPrincipal], (err) => {
+        if (err) return reject(err);
+        resolve();
+      });
+    } else {
+      resolve();
+    }
+  });
 
   // Ejecutar primero el delete y después el resto
   Promise.all([
@@ -720,10 +703,12 @@ app.post("/api/featuresCategoria", (req, res) => {
 
 // Configuración de Nodemailer
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: process.env.EMAIL_HOST,
+  port: Number(process.env.EMAIL_PORT),
+  secure: process.env.EMAIL_SECURE === "true", // true para 465 (SSL)
   auth: {
-    user: "leverweb25@gmail.com", // Tu correo electrónico
-    pass: "bvzw qlcz fwcx idkp", // Reemplaza con la contraseña de aplicación generada
+    user: process.env.EMAIL_FROM,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -733,8 +718,8 @@ app.post("/api/contact", (req, res) => {
 
   // Configuración del correo
   const mailOptions = {
-    from: email,
-    to: "leverweb25@gmail.com", // Cambia esto al correo donde quieres recibir los mensajes
+    from: process.env.EMAIL_FROM,
+    to: email, // Cambia esto al correo donde quieres recibir los mensajes
     subject: `Nuevo mensaje de contacto de ${name}`,
     text: `Nombre: ${name}\nCorreo: ${email}\nTeléfono: ${phone}\n\nMensaje:\n${message}`,
   };
@@ -748,6 +733,379 @@ app.post("/api/contact", (req, res) => {
     console.log("Correo enviado:", info.response);
     res.status(200).json({ message: "Correo enviado correctamente" });
   });
+});
+
+
+
+// Configura tu clientID y clientSecret de Google OAuth
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      // Aquí puedes buscar/crear el usuario en tu base de datos
+      // Ejemplo simple:
+      const email = profile.emails[0].value;
+      let user = await db.getAgenciaUserByEmail(email);
+      if (!user) {
+        await db.createAgenciaUser({
+          nombre_completo: profile.displayName,
+          email,
+          password: null,
+          agencia: "",
+          telefono: "",
+          google_id: profile.id,
+          email_validado: 1, // <-- ¡Esto valida automáticamente el email!
+          email_token: null, // <-- AGREGA ESTO para asegurar el orden
+        });
+        user = await db.getAgenciaUserByEmail(email);
+      }
+      return done(null, user);
+    }
+  )
+);
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+  })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login.html" }),
+  (req, res) => {
+    // Guarda la sesión
+    req.session.agencia_email = req.user.email;
+    req.session.agencia_nombre = req.user.agencia; // <--- NUEVO
+    // Redirige al home o donde quieras
+    res.redirect(process.env.REDIRECT_URL); // <--- usa la variable de entorno
+  }
+);
+
+app.post("/api/loginAgencias", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await db.getAgenciaUserByEmail(email);
+  if (!user || !user.password) {
+    return res.json({ success: false, message: "Credenciales incorrectas" });
+  }
+  const validPass = await bcrypt.compare(password, user.password);
+  if (!validPass) {
+    return res.json({ success: false, message: "Credenciales incorrectas" });
+  }
+
+  // Validación de correo
+  if (!user.email_validado) {
+    return res.json({
+      success: false,
+      message: "Debes validar tu correo antes de ingresar. Revisa tu email.",
+    });
+  }
+
+  req.session.agencia_email = user.email;
+  req.session.agencia_nombre = user.agencia; // <--- NUEVO
+  res.json({ success: true, user: { email: user.email } });
+});
+
+const bcrypt = require("bcrypt"); // Instala con npm install bcrypt
+
+app.post("/api/registerAgencias", async (req, res) => {
+  console.log("BODY recibido en /api/registerAgencias:", req.body);
+  const { nombre_completo, email, password, agencia, telefono } = req.body;
+  const user = await db.getAgenciaUserByEmail(email);
+  if (user) {
+    return res.json({
+      success: false,
+      message: "El correo ya está registrado",
+    });
+  }
+  const hash = await bcrypt.hash(password, 10);
+  const email_token = crypto.randomBytes(32).toString("hex");
+
+  await db.createAgenciaUser({
+    nombre_completo,
+    email,
+    password: hash,
+    agencia,
+    telefono,
+    email_token,
+  });
+
+  // Enviar email de validación
+  const link = `${process.env.CLIENT_URL.replace(
+    /\/$/,
+    ""
+  )}/validar-email.html?token=${email_token}`;
+  const html = getEmailTemplate({
+    titulo: "Valida tu correo",
+    mensaje: `Hola ${nombre_completo},<br>Por favor valida tu correo haciendo clic en el botón de abajo.`,
+    texto_boton: "Validar mi correo",
+    link,
+  });
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: "Valida tu correo en Lever",
+    html,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error enviando email de validación:", error);
+      return res.json({
+        success: false,
+        message: "No se pudo enviar el correo de validación.",
+      });
+    }
+    res.json({
+      success: true,
+      message: "Registro exitoso. Revisa tu correo para validar la cuenta.",
+    });
+  });
+});
+
+// Actualiza la función:
+db.createAgenciaUser = function ({
+  nombre_completo,
+  email,
+  password,
+  agencia,
+  telefono,
+  google_id = null,
+  email_token = null,
+  email_validado = 0, // <-- por defecto 0, pero Google pasa 1
+}) {
+  return new Promise((resolve, reject) => {
+    db.query(
+      "INSERT INTO agencias_users (nombre_completo, email, password, agencia, telefono, google_id, email_validado, email_token) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        nombre_completo,
+        email,
+        password,
+        agencia,
+        telefono,
+        google_id,
+        email_validado,
+        email_token,
+      ],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      }
+    );
+  });
+};
+
+// Agrega este endpoint para validar el email:
+app.get("/api/validar-email", async (req, res) => {
+  const { token } = req.query;
+  if (!token) return res.json({ success: false, message: "Token inválido" });
+  db.query(
+    "SELECT * FROM agencias_users WHERE email_token = ?",
+    [token],
+    (err, results) => {
+      if (err || !results.length)
+        return res.json({
+          success: false,
+          message: "Token inválido o expirado",
+        });
+      db.query(
+        "UPDATE agencias_users SET email_validado = 1, email_token = NULL WHERE email_token = ?",
+        [token],
+        (err2) => {
+          if (err2)
+            return res.json({
+              success: false,
+              message: "Error validando el correo",
+            });
+          res.json({
+            success: true,
+            message:
+              "Tu cuenta fue activada correctamente. Ya puedes iniciar sesión.",
+          });
+        }
+      );
+    }
+  );
+});
+
+app.get("/api/check-session", async (req, res) => {
+  let email = req.session.agencia_email || req.session.username;
+  if (!email) return res.status(401).json({ success: false });
+
+  try {
+    const user = await db.getAgenciaUserByEmail(email); // Debe ser una promesa
+    if (!user) return res.status(401).json({ success: false });
+
+    const necesitaCompletarPerfil =
+      user.google_id && (!user.agencia || !user.telefono);
+    res.json({
+      success: true,
+      user: {
+        email: user.email,
+        agencia: user.agencia,
+        telefono: user.telefono,
+        google_id: user.google_id,
+        nombre_completo: user.nombre_completo,
+      },
+      necesitaCompletarPerfil,
+    });
+  } catch (e) {
+    res.status(500).json({ success: false, message: "Error interno" });
+  }
+});
+
+app.post("/api/completarPerfilGoogle", async (req, res) => {
+  const { email, agencia, telefono } = req.body;
+  db.query(
+    "UPDATE agencias_users SET agencia = ?, telefono = ? WHERE email = ?",
+    [agencia, telefono, email],
+    (err, result) => {
+      if (err)
+        return res.json({ success: false, message: "Error al actualizar" });
+      res.json({ success: true });
+    }
+  );
+});
+
+const crypto = require("crypto");
+
+// Debes tener nodemailer configurado como ya lo tienes
+
+// Guardar los tokens en memoria (para demo, en producción usa una tabla)
+const resetTokens = {};
+
+app.post("/api/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  // Buscar usuario en agencias_users
+  const user = await db.getAgenciaUserByEmail(email);
+  if (!user) {
+    return res.json({
+      success: false,
+      message: "Si el correo existe, recibirás instrucciones.",
+    });
+  }
+  // Generar token único
+  const token = crypto.randomBytes(32).toString("hex");
+  // Guardar token y expiración (1 hora)
+  resetTokens[token] = { email, expires: Date.now() + 3600 * 1000 };
+
+  // Enviar email con el enlace
+  const resetUrl = `${process.env.CLIENT_URL.replace(
+    /\/$/,
+    ""
+  )}/reset-password.html?token=${token}`;
+  const html = getEmailTemplate({
+    titulo: "Restablece tu contraseña",
+    mensaje: `Hola,<br>Haz clic en el botón para crear una nueva contraseña para tu cuenta.`,
+    texto_boton: "Restablecer contraseña",
+    link: resetUrl,
+  });
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: "Recuperación de contraseña - Lever",
+    html,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error enviando email de recuperación:", error);
+      return res.json({
+        success: false,
+        message: "No se pudo enviar el correo.",
+      });
+    }
+    res.json({
+      success: true,
+      message: "Si el correo existe, recibirás instrucciones.",
+    });
+  });
+});
+
+app.post("/api/reset-password", async (req, res) => {
+  const { token, password } = req.body;
+  const data = resetTokens[token];
+  if (!data || data.expires < Date.now()) {
+    return res.json({
+      success: false,
+      message: "El enlace es inválido o expiró.",
+    });
+  }
+  const email = data.email;
+  const hash = await bcrypt.hash(password, 10);
+  // Actualizar contraseña en agencias_users
+  db.query(
+    "UPDATE agencias_users SET password = ? WHERE email = ?",
+    [hash, email],
+    (err, result) => {
+      if (err) {
+        console.error("Error actualizando contraseña:", err);
+        return res.json({
+          success: false,
+          message: "No se pudo actualizar la contraseña.",
+        });
+      }
+      // Eliminar el token usado
+      delete resetTokens[token];
+      res.json({
+        success: true,
+        message: "Contraseña actualizada correctamente.",
+      });
+    }
+  );
+});
+
+const { OAuth2Client } = require("google-auth-library");
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+app.post("/api/google-one-tap", async (req, res) => {
+  const { credential } = req.body;
+  if (!credential)
+    return res.json({ success: false, message: "Token inválido" });
+
+  try {
+    // Verifica el token de Google
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+    const nombre_completo = payload.name;
+    const google_id = payload.sub;
+
+    // Busca o crea el usuario en tu base de datos
+    let user = await db.getAgenciaUserByEmail(email);
+    if (!user) {
+      await db.createAgenciaUser({
+        nombre_completo,
+        email,
+        password: null,
+        agencia: "",
+        telefono: "",
+        google_id,
+        email_validado: 1,
+        email_token: null,
+      });
+      user = await db.getAgenciaUserByEmail(email);
+    }
+
+    // Guarda la sesión
+    req.session.agencia_email = user.email;
+    req.session.agencia_nombre = user.agencia;
+
+    res.json({ success: true, user: { email: user.email } });
+  } catch (e) {
+    console.error("Error en Google One Tap:", e);
+    res.json({
+      success: false,
+      message: "No se pudo validar el token de Google",
+    });
+  }
 });
 
 app.listen(PORT, () => {
