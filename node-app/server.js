@@ -13,6 +13,8 @@ const getEmailTemplate = require("./emailTemplate");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.set("trust proxy", 1);
+
 app.use(express.static(path.join(__dirname, ".."))); // Sirve todo lo de /lever
 
 passport.serializeUser((user, done) => done(null, user));
@@ -84,7 +86,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false, // <-- Para desarrollo local, debe ser false
+      secure: true, // <-- Para desarrollo local, debe ser false
       httpOnly: true,
       sameSite: "lax",
     },
