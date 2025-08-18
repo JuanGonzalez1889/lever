@@ -1109,7 +1109,12 @@ app.post("/api/google-one-tap", async (req, res) => {
     });
   }
 });
-
+app.use((err, req, res, next) => {
+  console.error("ERROR GLOBAL:", err);
+  res
+    .status(500)
+    .json({ success: false, message: err.message || "Internal Server Error" });
+});
 app.listen(PORT, "127.0.0.1", () => {
   console.log(`Server is running on http://127.0.0.1:${PORT}`);
 });
