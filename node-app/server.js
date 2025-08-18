@@ -17,8 +17,14 @@ app.set("trust proxy", 1);
 
 app.use(express.static(path.join(__dirname, ".."))); // Sirve todo lo de /lever
 
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
+passport.serializeUser((user, done) => {
+  console.log("SERIALIZE USER:", user);
+  done(null, user);
+});
+passport.deserializeUser((obj, done) => {
+  console.log("DESERIALIZE USER:", obj);
+  done(null, obj);
+});
 
 
 console.log("NODE_ENV:", process.env.NODE_ENV); // Verificar que se está utilizando el .env
@@ -785,13 +791,16 @@ app.get(
 
 app.get(
   "/auth/google/callback",
+  (req, res, next) => {
+    console.log("LLEGA A /auth/google/callback");
+    next();
+  },
   passport.authenticate("google", { failureRedirect: "/login.html" }),
   (req, res) => {
-    // Guarda la sesión
+    console.log("AUTENTICADO GOOGLE, USER:", req.user);
     req.session.agencia_email = req.user.email;
-    req.session.agencia_nombre = req.user.agencia; // <--- NUEVO
-    // Redirige al home o donde quieras
-    res.redirect(process.env.REDIRECT_URL); // <--- usa la variable de entorno
+    req.session.agencia_nombre = req.user.agencia;
+    res.redirect(process.env.REDIRECT_URL);
   }
 );
 
