@@ -157,6 +157,11 @@ app.post("/api/logout", (req, res) => {
   res.json({ success: true });
 });
 
+app.all("/api/logout/", (req, res) => {
+  req.session.destroy(() => {
+    res.json({ success: true });
+  });
+});
 
 app.get("/api/segmentos", (req, res) => {
   db.query("SELECT id, nombre FROM segmentos", (err, results) => {
