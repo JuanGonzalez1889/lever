@@ -21,7 +21,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Dashboard.css"; // Importar el archivo CSS personalizado
 import Cotizador from "./Cotizador"; // Importar el nuevo componente Cotizador
-
+import UsuariosAgencias from "./UsuariosAgencias";
 //const API_URL = "https://api.lever.com.ar" // para PRODUCCION
 
 const API_URL = process.env.REACT_APP_API_URL; // para LOCAL
@@ -889,6 +889,10 @@ function Dashboard() {
                 <Book className="me-2" />
                 Instructivos
               </Nav.Link>
+              <Nav.Link as={Link} to="/dashboard/usuarios-agencias">
+                <Book className="me-2" />
+                Usuarios Agencias
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
           <Nav className="flex-column mt-auto">
@@ -905,6 +909,7 @@ function Dashboard() {
           <Route path="cotizar" element={<Cotizador />} />
           <Route path="operaciones" element={<Operaciones />} />
           <Route path="instructivos" element={<Instructivos />} />
+          <Route path="usuarios-agencias" element={<UsuariosAgencias />} />
         </Routes>
       </div>
     </div>
