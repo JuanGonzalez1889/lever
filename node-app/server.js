@@ -9,6 +9,7 @@ const nodemailer = require("nodemailer");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const getEmailTemplate = require("./emailTemplate");
+const logoPath = path.join(__dirname, "logo-lever.png");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,7 +26,6 @@ passport.deserializeUser((obj, done) => {
   console.log("DESERIALIZE USER:", obj);
   done(null, obj);
 });
-
 
 console.log("NODE_ENV:", process.env.NODE_ENV); // Verificar que se está utilizando el .env
 console.log("DB_HOST:", process.env.DB_HOST); // Verificar que se está utilizando el .env
@@ -92,9 +92,10 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false, // <-- Para desarrollo local, debe ser false
+      secure: false, // true en producción con HTTPS
       httpOnly: true,
       sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 1, // 1 hora
     },
   })
 );
@@ -149,8 +150,6 @@ app.post("/api/login", (req, res) => {
     });
   });
 });
-
-
 
 app.post("/api/logout", (req, res) => {
   req.session.destroy();
@@ -748,8 +747,6 @@ app.post("/api/contact", (req, res) => {
   });
 });
 
-
-
 // Configura tu clientID y clientSecret de Google OAuth
 passport.use(
   new GoogleStrategy(
@@ -785,7 +782,6 @@ passport.use(
   )
 );
 
-
 app.get(
   "/auth/google",
   passport.authenticate("google", {
@@ -800,7 +796,9 @@ app.get(
     console.log("LLEGA A /auth/google/callback");
     next();
   },
-  passport.authenticate("google", { failureRedirect: "/login.html" }),
+  passport.authenticate("google", {
+    failureRedirect: process.env.REDIRECT_URL,
+  }),
   (req, res) => {
     console.log("AUTENTICADO GOOGLE, USER:", req.user);
     req.session.agencia_email = req.user.email;
@@ -1134,6 +1132,138 @@ app.use((err, req, res, next) => {
     .status(500)
     .json({ success: false, message: err.message || "Internal Server Error" });
 });
+
+app.get("/api/admin/usuarios", (req, res) => {
+  db.query(
+    "SELECT id, nombre_completo, email, agencia, telefono, created_at FROM agencias_users ORDER BY created_at DESC",
+    (err, results) => {
+      if (err) {
+        console.error("Error fetching usuarios:", err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Error fetching usuarios" });
+      }
+      res.json(results);
+    }
+  );
+});
+
+const ExcelJS = require("exceljs");
+
+// Función para enviar el reporte semanal
+async function enviarReporteUsuariosSemana(req, res) {
+  try {
+    db.query(
+      `SELECT nombre_completo, email, agencia, created_at
+       FROM agencias_users
+       WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+       ORDER BY created_at DESC`,
+      async (err, rows) => {
+        if (err) {
+          console.error(
+            "Error consultando usuarios para el reporte semanal:",
+            err
+          );
+          if (res) return res.status(500).json({ success: false, error: err });
+          return;
+        }
+        if (!rows.length) {
+          console.log("No hay usuarios nuevos esta semana.");
+          if (res)
+            return res.json({
+              success: true,
+              message: "No hay usuarios nuevos esta semana.",
+            });
+          return;
+        }
+
+        // Crear el Excel primero
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Usuarios Semana");
+
+        // Agregar imagen al workbook
+        const imageId = workbook.addImage({
+          filename: logoPath,
+          extension: "png", // o 'jpeg' según tu archivo
+        });
+        worksheet.addImage(imageId, {
+          tl: { col: 0, row: 0 },
+          ext: { width: 200, height: 40 },
+        });
+
+        // Agregar 2 filas vacías antes del header (header en la fila 3)
+        worksheet.addRow([]);
+        worksheet.addRow([]);
+
+        // Agregar header manualmente en la fila 6
+        worksheet.addRow(["Nombre", "Email", "Agencia", "Fecha"]);
+
+        // Agregar los datos
+        rows.forEach((u) => {
+          worksheet.addRow([
+            u.nombre_completo || "",
+            u.email || "",
+            u.agencia || "",
+            u.created_at
+              ? u.created_at.toISOString().slice(0, 19).replace("T", " ")
+              : "",
+          ]);
+        });
+
+        // (Opcional) Ajustar el ancho de columnas manualmente:
+        worksheet.getColumn(1).width = 30;
+        worksheet.getColumn(2).width = 30;
+        worksheet.getColumn(3).width = 30;
+        worksheet.getColumn(4).width = 22;
+
+        // Guardar el Excel en memoria
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        // Enviar el mail con el Excel adjunto
+        transporter.sendMail(
+          {
+            from: `"Lever Notificaciones" <${process.env.EMAIL_FROM}>`,
+            to: "alejandro.amado@lever.com.ar, sandro.pippo@lever.com.ar, juan.gonzalez@lever.com.ar",
+            subject: "Usuarios registrados esta semana",
+            text: "Adjunto encontrarás el listado de usuarios registrados esta semana.",
+            attachments: [
+              {
+                filename: "usuarios_semana.xlsx",
+                content: buffer,
+                contentType:
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              },
+            ],
+          },
+          (error, info) => {
+            if (error) {
+              console.error("Error enviando reporte semanal:", error);
+              if (res) return res.status(500).json({ success: false, error });
+            } else {
+              console.log(
+                "Reporte semanal de usuarios enviado:",
+                info.response
+              );
+              if (res)
+                return res.json({
+                  success: true,
+                  message: "Reporte enviado",
+                  info: info.response,
+                });
+            }
+          }
+        );
+      }
+    );
+  } catch (err) {
+    console.error("Error en el envío manual:", err);
+    if (res) return res.status(500).json({ success: false, error: err });
+  }
+}
+
+// Endpoint temporal para probar manualmente
+//app.get("/api/test-reporte-usuarios", enviarReporteUsuariosSemana);
+
 app.listen(PORT, "127.0.0.1", () => {
   console.log(`Server is running on http://127.0.0.1:${PORT}`);
 });
