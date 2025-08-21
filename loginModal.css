@@ -435,7 +435,17 @@ body.modal-login-blur {
         font-size: 13px;
         height: 38px;
     }
+
+    .modal-login-title {
+        margin-bottom: 28px;
+        font-weight: 700;
+        color: #15224f;
+        font-size: 1.1em;
+        letter-spacing: 3.5px;
+        margin-left: 53px;
+    }
 }
+
 #user-icon-header {
     transition: background 0.2s, box-shadow 0.2s;
     border-radius: 50%;

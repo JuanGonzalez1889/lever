@@ -33573,3 +33573,26 @@ PARSED: Array
 
 [2025-08-13 20:08:21] codia: 30147 | year: 2025 | apiType: cars
 PRICE FOUND: 102610000
+[2025-08-20 18:56:28] codia: 1180013 | year: 2024 | apiType: cars
+URL: https://api.infoauto.com.ar/cars/pub/models/1180013/prices/
+RESPONSE: [{"price":32400,"year":2024},{"price":34100,"year":2025}]
+
+[2025-08-20 18:56:28] codia: 1180013 | year: 2024 | apiType: cars
+PARSED: Array
+(
+    [0] => Array
+        (
+            [price] => 32400
+            [year] => 2024
+        )
+
+    [1] => Array
+        (
+            [price] => 34100
+            [year] => 2025
+        )
+
+)
+
+[2025-08-20 18:56:28] codia: 1180013 | year: 2024 | apiType: cars
+PRICE FOUND: 32400000

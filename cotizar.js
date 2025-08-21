@@ -3317,6 +3317,16 @@ if (typeof originalSelectCustomOption === "function") {
 // --- NUEVO: Resetear selects dependientes al cambiar la categoría ---
 document.addEventListener("DOMContentLoaded", () => {
   const categoriaOptions = document.getElementById("categoria-options");
+
+  if (categoriaOptions) {
+    Array.from(categoriaOptions.children).forEach((option) => {
+      const texto = option.textContent.trim().toLowerCase();
+      if (texto === "camiones" || texto === "motos") {
+        option.style.display = "none"; // Solo ocultar, no eliminar
+        // Para volver a mostrar, solo sacá esta línea
+      }
+    });
+  }
   const anioOptions = document.getElementById("anio-options");
 
   if (categoriaOptions && anioOptions) {

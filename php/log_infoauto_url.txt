@@ -1184,3 +1184,5 @@ Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
 Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
 2025-08-13T20:08:18+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
 Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-20T18:56:25+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]

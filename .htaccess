@@ -1,3 +1,5 @@
+
+
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresByType text/css "access plus 1 hour"
@@ -9,3 +11,5 @@
         Header set Cache-Control "max-age=3600, must-revalidate"
     </FilesMatch>
 </IfModule>
+
+RewriteEngine On
