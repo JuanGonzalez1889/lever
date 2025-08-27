@@ -1148,6 +1148,14 @@ app.get("/api/admin/usuarios", (req, res) => {
   );
 });
 
+const cron = require("node-cron");
+
+// Ejecutar hoy a las 14:00 (hora del servidor)
+cron.schedule("0 18 * * 5", () => {
+  console.log("Enviando reporte semanal de usuarios (Viernes 18:00)...");
+  enviarReporteUsuariosSemana();
+});
+
 const ExcelJS = require("exceljs");
 
 // Función para enviar el reporte semanal
