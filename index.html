@@ -12,7 +12,7 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
 /* MODAL OVERLAY Y CONTENT IGUAL QUE LOGIN.CSS */
-body.modal-bloqueado > *:not(.modal-overlay-perfil) {
+body.modal-bloqueado > *:not(.modal-overlay-perfil):not(.modal-seguro-liberado-overlay) {
   pointer-events: none !important;
   user-select: none !important;
   /* Opcional: puedes agregar un filtro para dar feedback visual */
@@ -1781,8 +1781,201 @@ window.toggleSwitch = function(isEmpresa) {
 };
 
 </script>
-</body>
 
-  </body>
+<!-- Modal requisitos "Seguro Liberado - Fija" -->
+<!-- Modal requisitos "Seguro Liberado - Fija" -->
+<div id="modal-seguro-liberado" class="modal-seguro-liberado-overlay" style="display:none;">
+  <div class="modal-seguro-liberado-content">
+    <button type="button" class="modal-seguro-liberado-close" id="cerrar-modal-seguro-liberado" aria-label="Cerrar">&times;</button>
+    <img src="./images/form.svg" alt="Formulario" class="modal-seguro-liberado-svg" style="width:54px;height:54px;display:block;margin:0 auto 1em auto;">
+    <h3 class="modal-seguro-liberado-title">Documentación necesaria</h3>
+    <span class="modal-seguro-liberado-desc">Para carga y resolución del crédito es necesario tener:</span>
+    <ul class="modal-seguro-liberado-list">
+  <li><span class="dot"></span><b>Foto DNI frente y dorso</b></li>
+  <li><span class="dot"></span><b>Estado civil</b></li>
+  <li><span class="dot"></span><b>Email real</b></li>
+  <li><span class="dot"></span><b>Celular real</b></li>
+  <li><span class="dot"></span><b>Foto título frente y dorso</b></li>
+</ul>
+    <button class="modal-seguro-liberado-btn" id="aceptar-modal-seguro-liberado">Entendido</button>
+  </div>
+</div>
+
+<style>
+/* Modal Seguro Liberado - Fija (estilo igual a olvide contraseña) */
+.modal-seguro-liberado-overlay {
+  display: none;
+  position: fixed;
+  z-index: 3000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(20,30,40,0.55);
+  align-items: center;
+  justify-content: center;
+}
+.modal-seguro-liberado-content {
+  background: #fff;
+  border-radius: 18px;
+  padding: 2.5em 2.2em 2em 2.2em;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  max-width: 343px;
+  width: 94vw;
+  position: relative;
+  text-align: center;
+  font-family: 'Montserrat', Arial, sans-serif;
+  animation: modalIn 0.22s;
+}
+.modal-seguro-liberado-svg {
+  margin-bottom: 1em;
+}
+.modal-seguro-liberado-title {
+  font-size: 1.35em;
+  color: #15224f;
+  margin-bottom: 0.4em;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.modal-seguro-liberado-desc {
+  color: #666;
+  font-size: 1em;
+  margin-bottom: 1.2em;
+  display: block;
+}
+.modal-seguro-liberado-list {
+  text-align: left;
+  font-size: 1em;
+  color: #222;
+  margin-bottom: 1.7em;
+  padding-left: 0;
+  list-style: none;
+}
+.modal-seguro-liberado-list li {
+  margin-bottom: 0.8em;
+  font-weight: 500;
+  padding-left: 0.2em;
+}
+.modal-seguro-liberado-btn {
+  width: 100%;
+  font-size: 1.08em;
+  padding: 0.85em 0;
+  border-radius: 8px;
+  background: #2adc9f;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 2px 12px rgba(42,220,159,0.07);
+  transition: background 0.18s;
+  margin-top: 0.5em;
+}
+.modal-seguro-liberado-list .dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #2adc9f;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.modal-seguro-liberado-btn:hover {
+  background: #00f09c;
+}
+.modal-seguro-liberado-close {
+  position: absolute;
+  top: 13px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.7em;
+  color: #b0b0b0;
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 2;
+}
+.modal-seguro-liberado-close:hover {
+  color: #222;
+}
+@media (max-width: 600px) {
+  .modal-seguro-liberado-content {
+    padding: 1.2em 1.7em 1.1em 1.7em;
+    max-width: 60vw;
+  }
+  .modal-seguro-liberado-title {
+    font-size: 1em;
+  }
+  .modal-seguro-liberado-list {
+    font-size: 0.98em;
+  }
+}
+</style>
+
+<script>
+(function() {
+  let modalMostrado = false;
+
+  function mostrarModalSeguroLiberado() {
+    if (modalMostrado) return;
+    const modal = document.getElementById("modal-seguro-liberado");
+    if (modal) {
+      modal.style.display = "flex";
+      document.body.classList.add("modal-bloqueado");
+      modalMostrado = true;
+    }
+  }
+  function cerrarModalSeguroLiberado() {
+    const modal = document.getElementById("modal-seguro-liberado");
+    if (modal) modal.style.display = "none";
+    document.body.classList.remove("modal-bloqueado");
+  }
+
+  // Espera a que el DOM esté listo para asignar los listeners
+  document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("cerrar-modal-seguro-liberado").onclick = cerrarModalSeguroLiberado;
+    document.getElementById("aceptar-modal-seguro-liberado").onclick = cerrarModalSeguroLiberado;
+  });
+
+  // Hookea goToStep solo para el paso 4
+  if (window.goToStep) {
+    const originalGoToStep = window.goToStep;
+    window.goToStep = function(step) {
+      originalGoToStep.apply(this, arguments);
+      if (step === 4) {
+        setTimeout(function() {
+          const producto = document.getElementById("selected-product-step4");
+          if (
+            producto &&
+            producto.textContent &&
+            producto.textContent.toLowerCase().includes("seguro liberado") &&
+            producto.textContent.toLowerCase().includes("fija")
+          ) {
+            modalMostrado = false; // Permite mostrarlo de nuevo si vuelve a paso 4
+            mostrarModalSeguroLiberado();
+          }
+        }, 200);
+      }
+    };
+  }
+
+  // Si ya está en paso 4 al cargar (por recarga)
+  document.addEventListener("DOMContentLoaded", function() {
+    if (
+      document.getElementById("step-4") &&
+      !document.getElementById("step-4").classList.contains("hidden")
+    ) {
+      setTimeout(function() {
+        const producto = document.getElementById("selected-product-step4");
+        if (
+          producto &&
+          producto.textContent &&
+          producto.textContent.toLowerCase().includes("seguro liberado") &&
+          producto.textContent.toLowerCase().includes("fija")
+        ) {
+          modalMostrado = false;
+          mostrarModalSeguroLiberado();
+        }
+      }, 200);
+    }
+  });
+})();
+</script>
+</body>
   
 </html>

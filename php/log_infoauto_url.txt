@@ -1186,3 +1186,53 @@ Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
 Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
 2025-08-20T18:56:25+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
 Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T19:47:55+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T19:53:40+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T20:22:37+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T20:24:06+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T20:24:39+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T20:28:10+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2023&prices_to=2023&feature_3=PKB&feature_3=SPE&feature_3=VAN&feature_3=FUA&feature_3=FUB&feature_3=MBU&feature_3=PKA&page=1&page_size=100
+Features: ["PKB","SPE","VAN","FUA","FUB","MBU","PKA"]
+2025-08-27T20:28:27+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T21:28:11+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T21:30:15+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T21:32:41+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T21:38:21+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T22:04:29+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T22:07:29+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T22:13:36+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T22:32:05+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T22:32:19+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2023&prices_to=2023&feature_3=PKB&feature_3=SPE&feature_3=VAN&feature_3=FUA&feature_3=FUB&feature_3=MBU&feature_3=PKA&page=1&page_size=100
+Features: ["PKB","SPE","VAN","FUA","FUB","MBU","PKA"]
+2025-08-27T22:32:27+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T22:42:43+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T22:43:12+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-27T22:45:12+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-28T14:50:34+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2023&prices_to=2023&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-28T14:54:20+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2024&prices_to=2024&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-28T14:56:49+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-28T15:22:24+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
+2025-08-28T15:23:01+02:00 URL: https://api.infoauto.com.ar/cars/pub/brands/?query_mode=matching&prices_from=2025&prices_to=2025&feature_3=CAB&feature_3=CUP&feature_3=JEE&feature_3=MIV&feature_3=PB4&feature_3=RUR&feature_3=SED&feature_3=WAG&feature_3=WA4&page=1&page_size=100
+Features: ["CAB","CUP","JEE","MIV","PB4","RUR","SED","WAG","WA4"]
