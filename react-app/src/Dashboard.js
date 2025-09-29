@@ -860,13 +860,10 @@ function Dashboard() {
    const [rol, setRol] = useState(sessionStorage.getItem("rol") || "empleado");
   const handleLogout = async () => {
     try {
-      await axios.post(
-        `${API_URL}/api/logout`, // Usar la URL global
-        {},
-        { withCredentials: true }
-      );
+      await axios.post(`${API_URL}/api/logout`, {}, { withCredentials: true });
       sessionStorage.removeItem("usuario");
-      window.location.reload();
+      // Redirige a /admin después de cerrar sesión
+      window.location.href = "/admin";
     } catch (error) {
       console.error("Error logging out:", error);
     }
