@@ -91,7 +91,8 @@ app.use(
     cookie: {
       secure: true, // true en producción con HTTPS
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
+      domain: ".lever.com.ar",
       maxAge: 1000 * 60 * 60 * 8, // 8 horas
     },
   })
