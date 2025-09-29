@@ -79,8 +79,18 @@ function App() {
         />
 
         {/* El resto del dashboard sí requiere sesión */}
-        <Route path="/admin" element={<Login />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/admin"
+          element={
+            <Login
+              onLogin={() => {
+                setIsAuthenticated(true);
+                setSessionExpired(false);
+              }}
+            />
+          }
+        />
+      
         <Route
           path="/dashboard/*"
           element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
