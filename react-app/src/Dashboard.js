@@ -862,8 +862,8 @@ function Dashboard() {
     try {
       await axios.post(`${API_URL}/api/logout`, {}, { withCredentials: true });
       sessionStorage.removeItem("usuario");
-      // Redirige a /admin después de cerrar sesión
-      window.location.href = "/admin";
+      // Redirige a /login después de cerrar sesión
+      window.location.href = "/login";
     } catch (error) {
       console.error("Error logging out:", error);
     }
