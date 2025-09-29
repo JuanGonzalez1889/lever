@@ -10,13 +10,12 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const getEmailTemplate = require("./emailTemplate");
 const logoPath = path.join(__dirname, "logo-lever.png");
+const moment = require("moment-timezone");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.set("trust proxy", 1);
-
-app.use(express.static(path.join(__dirname, ".."))); // Sirve todo lo de /lever
 
 passport.serializeUser((user, done) => {
   console.log("SERIALIZE USER:", user);
@@ -45,8 +44,6 @@ db.connect((err) => {
   }
   console.log("Connected to the database");
 });
-
-app.use(bodyParser.json());
 
 const allowedOrigins = [
   process.env.CLIENT_URL,
@@ -90,66 +87,68 @@ app.use(
   session({
     secret: "secret-key",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
-      secure: false, // true en producción con HTTPS
+      secure: true, // true en producción con HTTPS
       httpOnly: true,
       sameSite: "lax",
-      maxAge: 1000 * 60 * 60 * 1, // 1 hora
+      maxAge: 1000 * 60 * 60 * 8, // 8 horas
     },
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(bodyParser.json());
 
-// Endpoint para manejar el login desde la base de datos
-app.post("/api/login", (req, res) => {
-  const { username, password } = req.body;
-  console.log(username, password);
-  const query = `
-        SELECT username, password
-        FROM users
-        WHERE username = ?
-    `;
-
-  db.query(query, [username], (err, results) => {
-    if (err) {
-      console.error("Error fetching user:", err);
-      return res
-        .status(500)
-        .json({ success: false, message: "Internal Server Error" });
-    }
-    console.log(1);
-
-    if (results.length === 0) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid username or password" });
-    }
-    console.log(2);
-
-    const user = results[0];
-    console.log(user);
-
-    // Verificar la contraseña (asumiendo que está encriptada con bcryptjs)
-    const bcrypt = require("bcryptjs");
-    bcrypt.compare(password, user.password, (err, isMatch) => {
-      console.log(3);
-      if (err) {
-        console.log(4);
-        console.error("Error comparing passwords:", err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Internal Server Error" });
-      }
-
-      // Guardar la sesión del usuario
-      req.session.username = username;
-      res.json({ success: true });
-    });
-  });
+app.get("/api/check-session", (req, res) => {
+  console.log("CHECK SESSION:", req.session);
+  if (req.session && req.session.username) {
+    return res.json({ success: true, username: req.session.username });
+  }
+  res.json({ success: false });
 });
+
+// === PON ESTE BLOQUE AQUÍ ===
+if (process.env.NODE_ENV !== "production") {
+  // SOLO en desarrollo: siempre loguea como admin
+  app.post("/api/login", (req, res) => {
+    req.session.username = "admin";
+    console.log("LOGIN SESSION:", req.session);
+    return res.json({ success: true });
+  });
+} else {
+  // Endpoint para manejar el login desde la base de datos
+ app.post("/api/login", (req, res) => {
+   const { username, password } = req.body;
+   const query = `
+    SELECT username, password, rol
+    FROM users
+    WHERE username = ?
+  `;
+
+   db.query(query, [username], (err, results) => {
+     if (err) {
+       return res.json({ success: false, message: "Error de base de datos" });
+     }
+     if (!results.length) {
+       return res.json({ success: false, message: "Usuario no encontrado" });
+     }
+     const user = results[0];
+     // Verifica la contraseña con bcrypt
+     require("bcryptjs").compare(password, user.password, (err, isMatch) => {
+       if (err || !isMatch) {
+         return res.json({ success: false, message: "Contraseña incorrecta" });
+       }
+       req.session.username = user.username;
+       req.session.rol = user.rol;
+       return res.json({
+         success: true,
+         username: user.username,
+         rol: user.rol,
+       });
+     });
+   });
+ });
+}
 
 app.post("/api/logout", (req, res) => {
   req.session.destroy();
@@ -1148,6 +1147,17 @@ app.get("/api/admin/usuarios", (req, res) => {
   );
 });
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(express.static(path.join(__dirname, ".."))); // Sirve todo lo de /lever
+
+app.use((req, res, next) => {
+  console.log("COOKIE DE SESIÓN:", req.headers.cookie);
+  console.log("SESSION DATA:", req.session);
+  next();
+});
+
 const cron = require("node-cron");
 
 // Ejecutar hoy a las 14:00 (hora del servidor)
@@ -1271,6 +1281,498 @@ async function enviarReporteUsuariosSemana(req, res) {
 
 // Endpoint temporal para probar manualmente
 //app.get("/api/test-reporte-usuarios", enviarReporteUsuariosSemana);
+
+//////////////////////////
+//AGENCIAS PANEL INTERNO
+//////////////////////////
+
+app.get("/api/agencias", (req, res) => {
+  db.query("SELECT * FROM agencias", (err, rows) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true, agencias: rows });
+  });
+});
+
+// Agregar agencia
+app.post("/api/agencias", (req, res) => {
+  const {
+    nombre,
+    agencia,
+    agente,
+    comision,
+    telefono,
+    localidad,
+    domicilio,
+    provincia,
+    sellado,
+    observaciones,
+  } = req.body;
+  db.query(
+    "INSERT INTO agencias (nombre, agencia, agente, comision, telefono, localidad, domicilio, provincia, sellado, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [
+      nombre,
+      agencia,
+      agente,
+      comision,
+      telefono,
+      localidad,
+      domicilio,
+      provincia,
+      sellado,
+      observaciones,
+    ],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Editar agencia
+app.put("/api/agencias/:id", (req, res) => {
+  const {
+    nombre,
+    agencia,
+    agente,
+    comision,
+    telefono,
+    localidad,
+    domicilio,
+    provincia,
+    sellado,
+    observaciones,
+  } = req.body;
+  db.query(
+    "UPDATE agencias SET nombre=?, agencia=?, agente=?, comision=?, telefono=?, localidad=?, domicilio=?, provincia=?, sellado=?, observaciones=? WHERE id=?",
+    [
+      nombre,
+      agencia,
+      agente,
+      comision,
+      telefono,
+      localidad,
+      domicilio,
+      provincia,
+      sellado,
+      observaciones,
+      req.params.id,
+    ],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Eliminar agencia
+app.delete("/api/agencias/:id", (req, res) => {
+  db.query("DELETE FROM agencias WHERE id=?", [req.params.id], (err) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true });
+  });
+});
+
+// Listar agentes
+app.get("/api/agentes", (req, res) => {
+  db.query("SELECT * FROM agentes", (err, rows) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true, agentes: rows });
+  });
+});
+
+// Agregar agente
+app.post("/api/agentes", (req, res) => {
+  console.log("BODY RECIBIDO:", req.body);
+  const { nombre } = req.body;
+  if (!nombre)
+    return res.status(400).json({ success: false, error: "Falta nombre" });
+  db.query("INSERT INTO agentes (nombre) VALUES (?)", [nombre], (err) => {
+    if (err) return res.status(500).json({ success: false, error: err });
+    res.json({ success: true });
+  });
+});
+
+// Listar provincias
+app.get("/api/provincias", (req, res) => {
+  db.query("SELECT * FROM provincias", (err, rows) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true, provincias: rows });
+  });
+});
+
+// Listar localidades por provincia
+app.get("/api/localidades", (req, res) => {
+  const { provincia_id } = req.query;
+  db.query(
+    "SELECT * FROM localidades WHERE provincia_id = ?",
+    [provincia_id],
+    (err, rows) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true, localidades: rows });
+    }
+  );
+});
+
+// Listar bancos
+app.get("/api/bancos", (req, res) => {
+  db.query("SELECT * FROM bancos ORDER BY prioridad ASC", (err, rows) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true, bancos: rows });
+  });
+});
+
+// Agregar banco
+app.post("/api/bancos", (req, res) => {
+  const { nombre, prioridad } = req.body;
+  db.query(
+    "INSERT INTO bancos (nombre, prioridad) VALUES (?, ?)",
+    [nombre, prioridad || 0],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Editar banco
+app.put("/api/bancos/:id", (req, res) => {
+  const { nombre, prioridad } = req.body;
+  db.query(
+    "UPDATE bancos SET nombre = ?, prioridad = ? WHERE id = ?",
+    [nombre, prioridad, req.params.id],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+// Eliminar banco
+app.delete("/api/bancos/:id", (req, res) => {
+  db.query("DELETE FROM bancos WHERE id = ?", [req.params.id], (err) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true });
+  });
+});
+
+// Listar productos de un banco
+app.get("/api/productos_bancos", (req, res) => {
+  const { banco_id } = req.query;
+  if (banco_id) {
+    db.query(
+      "SELECT * FROM productos_bancos WHERE banco_id = ?",
+      [banco_id],
+      (err, rows) => {
+        if (err) return res.json({ success: false, error: err });
+        res.json({ success: true, productos: rows });
+      }
+    );
+  } else {
+    db.query("SELECT * FROM productos_bancos", (err, rows) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true, productos: rows });
+    });
+  }
+});
+
+// Agregar producto
+app.post("/api/productos_bancos", (req, res) => {
+  const { banco_id, nombre, tipo_credito } = req.body;
+  db.query(
+    "INSERT INTO productos_bancos (banco_id, nombre, tipo_credito) VALUES (?, ?, ?)",
+    [banco_id, nombre, tipo_credito],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Editar producto
+app.put("/api/productos_bancos/:id", (req, res) => {
+  const { nombre, tipo_credito } = req.body;
+  db.query(
+    "UPDATE productos_bancos SET nombre = ?, tipo_credito = ? WHERE id = ?",
+    [nombre, tipo_credito, req.params.id],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Eliminar producto
+app.delete("/api/productos_bancos/:id", (req, res) => {
+  db.query(
+    "DELETE FROM productos_bancos WHERE id = ?",
+    [req.params.id],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Listar plazos de un producto
+app.get("/api/banco_plazos", (req, res) => {
+  const { producto_banco_id } = req.query;
+  db.query(
+    "SELECT * FROM banco_plazos WHERE producto_banco_id = ?",
+    [producto_banco_id],
+    (err, rows) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true, plazos: rows });
+    }
+  );
+});
+
+// Agregar plazo
+app.post("/api/banco_plazos", (req, res) => {
+  const { producto_banco_id, plazo, tna, comision } = req.body;
+  db.query(
+    "INSERT INTO banco_plazos (producto_banco_id, plazo, tna, comision) VALUES (?, ?, ?, ?)",
+    [producto_banco_id, plazo, tna, comision],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Editar plazo
+app.put("/api/banco_plazos/:id", (req, res) => {
+  const { plazo, tna, comision } = req.body;
+  db.query(
+    "UPDATE banco_plazos SET plazo = ?, tna = ?, comision = ? WHERE id = ?",
+    [plazo, tna, comision, req.params.id],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Eliminar plazo
+app.delete("/api/banco_plazos/:id", (req, res) => {
+  db.query("DELETE FROM banco_plazos WHERE id = ?", [req.params.id], (err) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true });
+  });
+});
+
+// Eliminar todos los plazos de un producto
+app.delete("/api/banco_plazos/producto/:producto_banco_id", (req, res) => {
+  db.query(
+    "DELETE FROM banco_plazos WHERE producto_banco_id = ?",
+    [req.params.producto_banco_id],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Eliminar todos los LTV de un producto
+app.delete("/api/config_ltv/producto/:producto_banco_id", (req, res) => {
+  db.query(
+    "DELETE FROM config_ltv WHERE producto_banco_id = ?",
+    [req.params.producto_banco_id],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Listar LTV de un producto
+app.get("/api/config_ltv", (req, res) => {
+  const { producto_banco_id } = req.query;
+  db.query(
+    "SELECT * FROM config_ltv WHERE producto_banco_id = ?",
+    [producto_banco_id],
+    (err, rows) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true, ltvs: rows });
+    }
+  );
+});
+
+// Agregar LTV
+app.post("/api/config_ltv", (req, res) => {
+  const { producto_banco_id, anio, ltv } = req.body;
+  db.query(
+    "INSERT INTO config_ltv (producto_banco_id, anio, ltv) VALUES (?, ?, ?)",
+    [producto_banco_id, anio, ltv],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Editar LTV
+app.put("/api/config_ltv/:id", (req, res) => {
+  const { anio, ltv } = req.body;
+  db.query(
+    "UPDATE config_ltv SET anio = ?, ltv = ? WHERE id = ?",
+    [anio, ltv, req.params.id],
+    (err) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Eliminar LTV
+app.delete("/api/config_ltv/:id", (req, res) => {
+  db.query("DELETE FROM config_ltv WHERE id = ?", [req.params.id], (err) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true });
+  });
+});
+
+app.get("/api/config-ltv", (req, res) => {
+  db.query("SELECT * FROM config_ltv", (err, rows) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true, ltvs: rows });
+  });
+});
+
+app.get("/api/config-bancos", (req, res) => {
+  db.query("SELECT * FROM bancos", (err, rows) => {
+    if (err) return res.json({ success: false, error: err });
+    // Devuelve un objeto con id como clave
+    const config = {};
+    rows.forEach((b) => {
+      config[b.id] = {
+        tna: b.tna,
+        comision: b.comision,
+        tipo_credito: b.tipo_credito,
+      };
+    });
+    res.json({ success: true, config });
+  });
+});
+
+app.get("/api/config-bancos-plazos", (req, res) => {
+  db.query("SELECT * FROM banco_plazos", (err, rows) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true, config: rows });
+  });
+});
+
+app.get("/api/interno/productos", (req, res) => {
+  db.query("SELECT * FROM productos", (err, rows) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json(rows);
+  });
+});
+
+app.get("/api/interno/ltv", (req, res) => {
+  db.query("SELECT * FROM ltv", (err, rows) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json(rows);
+  });
+});
+
+// Registrar una cotización
+app.post("/api/cotizaciones", (req, res) => {
+  const {
+    cliente_dni,
+    cliente_nombre,
+    cliente_apellido,
+    agencia,
+    producto,
+    monto,
+    usuario,
+    vehiculo_marca,
+    vehiculo_modelo,
+    vehiculo_anio,
+    vehiculo_precio,
+    persona,
+    sellado,
+    observaciones,
+    cotizacion_original_id,
+    sexo,
+  } = req.body;
+
+  // Guarda la fecha en la zona horaria de Buenos Aires
+  const fecha = moment()
+    .tz("America/Argentina/Buenos_Aires")
+    .format("YYYY-MM-DD HH:mm:ss");
+
+  db.query(
+    `INSERT INTO cotizaciones (
+      fecha, cliente_dni, cliente_nombre, cliente_apellido, agencia, producto, monto, usuario,
+      vehiculo_marca, vehiculo_modelo, vehiculo_anio, vehiculo_precio, persona, sellado, observaciones, cotizacion_original_id, sexo
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      fecha,
+      cliente_dni,
+      cliente_nombre,
+      cliente_apellido,
+      agencia,
+      producto,
+      monto,
+      usuario,
+      vehiculo_marca,
+      vehiculo_modelo,
+      vehiculo_anio,
+      vehiculo_precio,
+      persona,
+      sellado,
+      observaciones,
+      cotizacion_original_id ? Number(cotizacion_original_id) : null,
+      sexo || "",
+    ],
+    (err, result) => {
+      if (err) return res.status(500).json({ success: false, error: err });
+      res.json({ success: true, id: result.insertId });
+
+      if (cotizacion_original_id) {
+        db.query("UPDATE cotizaciones SET recotizado = 1 WHERE id = ?", [
+          cotizacion_original_id,
+        ]);
+      }
+    }
+  );
+});
+
+// Listar cotizaciones
+app.get("/api/cotizaciones", (req, res) => {
+  db.query("SELECT * FROM cotizaciones ORDER BY fecha DESC", (err, rows) => {
+    if (err) return res.status(500).json({ success: false, error: err });
+    res.json({ success: true, cotizaciones: rows });
+  });
+});
+
+// Obtener cotización por ID
+app.get("/api/cotizaciones/:id", (req, res) => {
+  db.query(
+    "SELECT * FROM cotizaciones WHERE id = ?",
+    [req.params.id],
+    (err, rows) => {
+      if (err) return res.status(500).json({ success: false, error: err });
+      if (!rows.length)
+        return res
+          .status(404)
+          .json({ success: false, message: "No encontrada" });
+      res.json({ success: true, cotizacion: rows[0] });
+    }
+  );
+});
+
+app.post("/api/cotizaciones/observacion", (req, res) => {
+  const { id, observaciones } = req.body;
+  db.query(
+    "UPDATE cotizaciones SET observaciones = ? WHERE id = ?",
+    [observaciones, id],
+    (err) => {
+      if (err) return res.status(500).json({ success: false });
+      res.json({ success: true });
+    }
+  );
+});
+
 
 app.listen(PORT, "127.0.0.1", () => {
   console.log(`Server is running on http://127.0.0.1:${PORT}`);
