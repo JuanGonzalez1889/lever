@@ -1,9 +1,31 @@
+html,
+body,
+#root,
+.content,
+.main-content,
+.sidebar,
+.card,
+.table,
+.form-control,
+.btn,
+input,
+select,
+textarea,
+label,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Roboto', Arial, sans-serif !important;
+}
+
 body {
     background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
     opacity: 1;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
 }
 
 .sidebar {
@@ -13,10 +35,10 @@ body {
     top: 0;
     left: 0;
     background-color: #0e152c !important;
-    padding-top: 20px;
+    padding-top: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .navbar .container {
@@ -26,7 +48,8 @@ body {
     justify-content: space-between;
     flex-direction: column;
     height: 100%;
-    padding-bottom: 2rem; /* Agregar margen inferior */
+    padding-bottom: 2rem;
+    /* Agregar margen inferior */
 }
 
 button {
@@ -44,8 +67,8 @@ button {
 
 .sidebar .nav-link {
     color: #fff;
-    font-size: 1.2rem;
-    padding: 10px 20px;
+    font-size: 1rem;
+    padding: 7px 16px;
 }
 
 .sidebar .nav-link:hover {
@@ -54,12 +77,12 @@ button {
 }
 
 .sidebar .navbar-brand {
-    font-size: 1.5rem;
-    color: #fff;
+    font-size: 2.2rem;
+    color: #25d39d;
     text-align: center;
     width: 100%;
-    margin-bottom: 7rem;
-    margin-top: 2rem;
+    margin-bottom: 3rem;
+    margin-top: 1rem;
 }
 
 .main-content {
@@ -69,6 +92,13 @@ button {
     width: calc(100% - 250px);
     /* Ajustar el ancho para que ocupe el espacio restante */
     background: transparent linear-gradient(205deg, #49495D 0%, #282840 47%, #25253D 100%) 0% 0% no-repeat padding-box;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px);
+    min-width: 0;
 }
 
 .content {
@@ -82,28 +112,80 @@ button {
     margin-top: 0.8rem;
 }
 
-/* Estilos para dispositivos móviles */
-@media (max-width: 768px) {
+.logout-btn{
+    margin-left: 0px;
+}
+
+@media (max-width: 992px) and (min-width: 769px) {
     .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
+        width: 250px;
+        min-width: 250px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 1000;
+        overflow-y: auto;
+        padding-bottom: 0;
     }
 
     .main-content {
-        margin-left: 0;
-        width: 100%;
+        margin-left: 250px !important;
+        padding-top: 20px;
+        width: calc(100% - 250px);
     }
 
     .navbar .container {
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-bottom: 2rem;
+    }
+
+    .sidebar .nav-link {
+        padding: 7px 16px;
+        text-align: left;
+    }
+
+    .sidebar-user {
+        display: flex !important;
+    }
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100vw;
+        min-width: 0;
+        position: relative;
+        /* Cambia de fixed a relative */
+        height: auto;
+        z-index: 1000;
+        overflow-y: visible;
+        padding-bottom: 0;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding-top: 20px;
+        /* Mucho menos espacio arriba */
+        width: 100vw;
+    }
+
+    .navbar .container {
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-bottom: 1rem;
     }
 
     .sidebar .nav-link {
         padding: 10px;
         text-align: center;
     }
+
+    .navbar-collapse {
+        flex-basis: 0%;
+    }
+
 
     .sidebar .navbar-brand {
         margin-bottom: 1rem;
@@ -134,7 +216,22 @@ button {
         height: 3rem;
         text-align: center;
     }
+
+    .sidebar-user {
+        display: none !important;
+    }
+
+    .logout-btn {
+        margin-left: 36px !important;
+    }
 }
+
 .dropdown-toggle::after {
     display: none;
+}
+
+
+.logout-btn {
+    margin-top: 2.5rem !important;
+    margin-bottom: 0.5rem !important;
 }

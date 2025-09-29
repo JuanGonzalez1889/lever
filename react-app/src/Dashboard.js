@@ -10,7 +10,10 @@ import {
   Modal,
   Form,
 } from "react-bootstrap";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaFileInvoiceDollar, FaWarehouse } from "react-icons/fa";
+import { CiBank } from "react-icons/ci";
+import { MdOutlineAttachMoney } from "react-icons/md";
+import { HiUsers } from "react-icons/hi2";
 import {
   House,
   Calculator,
@@ -22,6 +25,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Dashboard.css"; // Importar el archivo CSS personalizado
 import Cotizador from "./Cotizador"; // Importar el nuevo componente Cotizador
 import UsuariosAgencias from "./UsuariosAgencias";
+import ConfiguracionBancos from "./ConfiguracionBancos";
+import Bancos from "./Bancos";
+import Agencias from "./Agencias";
+import Cotizaciones from "./Cotizaciones";
+import { FaRegCircleUser } from "react-icons/fa6";
+
 //const API_URL = "https://api.lever.com.ar" // para PRODUCCION
 
 const API_URL = process.env.REACT_APP_API_URL; // para LOCAL
@@ -47,6 +56,7 @@ function Tablero() {
   const [newProductName, setNewProductName] = useState(""); // Estado para el nuevo nombre del producto
   const [segmentos, setSegmentos] = useState([]);
   console.log("API_URL (Tablero):", API_URL); // Verificar la URL
+  const [rol, setRol] = useState(sessionStorage.getItem("rol") || "empleado");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -844,6 +854,10 @@ function Instructivos() {
 }
 
 function Dashboard() {
+  const [usuario, setUsuario] = useState(
+    sessionStorage.getItem("usuario") || "Usuario"
+  );
+   const [rol, setRol] = useState(sessionStorage.getItem("rol") || "empleado");
   const handleLogout = async () => {
     try {
       await axios.post(
@@ -851,10 +865,30 @@ function Dashboard() {
         {},
         { withCredentials: true }
       );
+      sessionStorage.removeItem("usuario");
       window.location.reload();
     } catch (error) {
       console.error("Error logging out:", error);
     }
+  };
+
+  useEffect(() => {
+    const actualizarUsuario = () => {
+      setUsuario(sessionStorage.getItem("usuario") || "Usuario");
+    };
+
+    window.addEventListener("storage", actualizarUsuario);
+    // También actualiza al montar
+    actualizarUsuario();
+
+    return () => {
+      window.removeEventListener("storage", actualizarUsuario);
+    };
+  }, []);
+
+  const [expanded, setExpanded] = useState(false);
+  const handleNavClick = () => {
+    if (window.innerWidth <= 768) setExpanded(false);
   };
 
   return (
@@ -862,54 +896,163 @@ function Dashboard() {
       <Navbar
         bg="dark"
         variant="dark"
-        expand="lg"
+        expand="md"
+        expanded={expanded}
+        onToggle={setExpanded}
         className="flex-column sidebar"
       >
         <Container className="d-flex flex-column h-100">
-          <Navbar.Brand href="#">LEVER</Navbar.Brand>
+          <Navbar.Brand
+            href="/dashboard"
+            style={{
+              width: 120,
+              height: "auto",
+              display: "block",
+              margin: "0 auto",
+            }}
+          >
+            LEVER
+          </Navbar.Brand>
+
+          <div
+            className="sidebar-user"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              paddingBottom: "67px",
+            }}
+          >
+            <FaRegCircleUser
+              size={38}
+              color="#fff"
+              style={{ marginBottom: 8 }}
+            />
+            <span
+              style={{
+                color: "#fff",
+                fontSize: "1.1rem",
+                textAlign: "center",
+              }}
+            >
+              {usuario}
+            </span>
+          </div>
+          <hr
+            style={{
+              width: "100%",
+              border: "none",
+              borderTop: "2px solid #ffffffff",
+              margin: "0px 0px 5px",
+            }}
+          />
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="flex-grow-1">
             <Nav
               className="flex-column flex-grow-1"
-              style={{ marginBottom: "16rem" }}
+              style={{ marginBottom: "10rem" }}
             >
-              <Nav.Link as={Link} to="/dashboard/tablero">
+              {/* Ítems para ambos roles */}
+              <Nav.Link
+                as={Link}
+                to="/dashboard/tablero"
+                onClick={handleNavClick}
+              >
                 <House className="me-2" />
                 Tablero
               </Nav.Link>
-              <Nav.Link as={Link} to="/dashboard/cotizar">
+              <Nav.Link
+                as={Link}
+                to="/dashboard/cotizar"
+                onClick={handleNavClick}
+              >
                 <Calculator className="me-2" />
                 Cotizar
               </Nav.Link>
-              <Nav.Link as={Link} to="/dashboard/operaciones">
+              <Nav.Link
+                as={Link}
+                to="/dashboard/operaciones"
+                onClick={handleNavClick}
+              >
                 <Briefcase className="me-2" />
                 Operaciones
               </Nav.Link>
-              <Nav.Link as={Link} to="/dashboard/instructivos">
-                <Book className="me-2" />
-                Instructivos
+              <Nav.Link
+                as={Link}
+                to="/dashboard/cotizaciones"
+                onClick={handleNavClick}
+              >
+                <FaFileInvoiceDollar className="me-2" />
+                Cotizaciones
               </Nav.Link>
-              <Nav.Link as={Link} to="/dashboard/usuarios-agencias">
-                <Book className="me-2" />
+              <Nav.Link
+                as={Link}
+                to="/dashboard/usuarios-agencias"
+                onClick={handleNavClick}
+              >
+                <HiUsers className="me-2" />
                 Usuarios Agencias
+              </Nav.Link>
+              {/* Ítems solo para admin */}
+              {rol === "admin" && (
+                <>
+                  <Nav.Link
+                    as={Link}
+                    to="/dashboard/config-bancos"
+                    onClick={handleNavClick}
+                  >
+                    <MdOutlineAttachMoney className="me-2" />
+                    Configuración Productos
+                  </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/dashboard/bancos-tipo-credito"
+                    onClick={handleNavClick}
+                  >
+                    <CiBank className="me-2" />
+                    Configuración Bancos
+                  </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/dashboard/agencias"
+                    onClick={handleNavClick}
+                  >
+                    <FaWarehouse className="me-2" />
+                    Agencias
+                  </Nav.Link>
+                </>
+              )}
+              {/* Botón cerrar sesión dentro del menú */}
+              <Nav.Link
+                className="logout-btn"
+                onClick={handleLogout}
+                style={{
+                  textAlign: "left",
+                  width: "100%",
+                  paddingLeft: 13,
+                  marginLeft: 0,
+                  marginTop: "3rem",
+                }}
+              >
+                <BoxArrowRight className="me-2" />
+                Cerrar Sesión
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
-          <Nav className="flex-column mt-auto">
-            <Nav.Link onClick={handleLogout}>
-              <BoxArrowRight className="me-2" />
-              Cerrar Sesión
-            </Nav.Link>
-          </Nav>
         </Container>
       </Navbar>
       <div className="main-content">
         <Routes>
           <Route path="tablero" element={<Tablero />} />
+          <Route path="cotizador" element={<Cotizador />} />{" "}
           <Route path="cotizar" element={<Cotizador />} />
           <Route path="operaciones" element={<Operaciones />} />
+          <Route path="cotizaciones" element={<Cotizaciones />} />
           <Route path="instructivos" element={<Instructivos />} />
           <Route path="usuarios-agencias" element={<UsuariosAgencias />} />
+          <Route path="config-bancos" element={<ConfiguracionBancos />} />
+          <Route path="bancos-tipo-credito" element={<Bancos />} />
+          <Route path="agencias" element={<Agencias />} />
         </Routes>
       </div>
     </div>

@@ -1,3 +1,26 @@
+html,
+body,
+#root,
+.content,
+.main-content,
+.sidebar,
+.card,
+.table,
+.form-control,
+.btn,
+input,
+select,
+textarea,
+label,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Roboto', Arial, sans-serif !important;
+}
+
 .cotizador-form {
     display: flex;
     flex-direction: column;
@@ -47,9 +70,11 @@ select {
     height: 59px;
     font-size: 1rem;
 }
-.mb-4{
+
+.mb-4 {
     color: white !important;
 }
+
 button {
     padding: 10px 20px;
     background-color: #0e152c;
@@ -97,30 +122,40 @@ ul li {
     background-color: #0e152c;
     color: #ffffff;
 }
+
 .small-table-text-plazo {
     font-size: 0.95rem;
     background-color: #0e152c !important;
     color: #ffffff !important;
 }
+
 .react-select__control {
     border-radius: 30px !important;
     min-height: 59px !important;
     height: 59px !important;
     font-family: 'Montserrat', sans-serif;
     font-size: 1rem;
+    width: 300px !important;
+    /* Cambiá el valor según lo que necesites */
+    min-width: 120px !important;
+    max-width: 100% !important;
 }
+
 .react-select__value-container {
     height: 59px !important;
     padding: 0 1rem !important;
 }
+
 .react-select__input-container {
     margin: 0 !important;
     padding: 0 !important;
 }
+
 .react-select__indicator,
 .react-select__indicators {
     height: 59px !important;
 }
+
 .react-select__menu {
     border-radius: 24px !important;
     box-shadow: 0 4px 24px rgba(40, 216, 158, 0.13);
@@ -147,10 +182,269 @@ ul li {
     background-color: #e6f9f3 !important;
     color: #0e152c !important;
 }
-@media (min-width: 768px) {
-    .col-md-6 {
-        flex: 0 0 auto;
-        width: 59%;
-        margin-left: -8rem;
-    }
+
+
+
+.card {
+    border-radius: 24px !important;
+}
+
+input,
+select,
+.btn {
+    border-radius: 16px !important;
+}
+
+.table th,
+.table td {
+    vertical-align: middle !important;
+}
+
+.table {
+    border-radius: 16px !important;
+    overflow: hidden;
+}
+
+.table th,
+.table td {
+    vertical-align: middle !important;
+}
+
+.btn,
+.form-select,
+.form-control {
+    border-radius: 16px !important;
+}
+
+.modal-content {
+    border-radius: 24px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Asegura que el menú del Dropdown siempre esté por encima del resto */
+.dropdown-menu {
+    z-index: 2000 !important;
+}
+
+/* Si usas react-bootstrap, también puedes reforzar el modal */
+.modal {
+    z-index: 1050 !important;
+}
+
+/* Fondo general y tarjetas */
+body {
+    background: linear-gradient(135deg, #232342 0%, #1a1a2e 100%);
+}
+
+.card {
+    border-radius: 24px !important;
+    box-shadow: 0 4px 24px rgba(35, 35, 66, 0.10);
+    background: #fff;
+    border: none;
+}
+
+/* Labels modernos */
+.card-body .form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #232342;
+    letter-spacing: 0.02em;
+}
+
+/* Inputs y selects modernos */
+.card-body .form-control,
+.card-body .react-select__control {
+    height: 52px;
+    min-height: 52px;
+    font-size: 1.08rem;
+    border-radius: 18px;
+    padding-left: 18px;
+    padding-right: 18px;
+    border: 1.5px solid #e6e6f0;
+    background: #f7f8fa;
+    transition: border 0.2s;
+    box-shadow: 0 2px 8px rgba(35, 35, 66, 0.04);
+}
+
+.card-body .form-control:focus,
+.card-body .react-select__control--is-focused {
+    border-color: #22d99e;
+    background: #fff;
+    outline: none;
+}
+
+/* Select react-select */
+.card-body .react-select__value-container {
+    height: 52px;
+    min-height: 52px;
+    font-size: 0.8rem;
+    padding: 0 18px;
+}
+
+.card-body .react-select__single-value,
+.card-body .react-select__option {
+    font-size: 1.08rem;
+}
+
+.card-body .react-select__option--is-selected {
+    background-color: #22d99e !important;
+    color: #fff !important;
+}
+
+.card-body .react-select__option--is-focused {
+    background-color: #e6f9f3 !important;
+    color: #232342 !important;
+}
+
+/* Espaciado entre grupos */
+.card-body .row,
+.card-body .form-row {
+    margin-bottom: 22px;
+    gap: 22px;
+}
+
+/* Botón moderno */
+.btn,
+button {
+    border-radius: 18px !important;
+    padding: 12px 32px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #0000 0%, #232342 100%);
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(35, 35, 66, 0.08);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover,
+button:hover {
+    background: linear-gradient(90deg, #232342 0%, #06284d 100%);
+    box-shadow: 0 4px 16px rgba(35, 35, 66, 0.14);
+}
+
+/* Bordes y radios para selects e inputs */
+input,
+select,
+.btn,
+.form-control,
+.form-select {
+    border-radius: 18px !important;
+}
+
+/* Sombra y fondo para tablas */
+.table {
+    border-radius: 18px !important;
+    overflow: hidden;
+    background: #f7f8fa;
+    box-shadow: 0 2px 8px rgba(35, 35, 66, 0.04);
+}
+
+.table th,
+.table td {
+    vertical-align: middle !important;
+    font-size: 1.02rem;
+    padding: 14px 10px;
+}
+
+/* Mejorar el aspecto de los títulos de las tarjetas */
+.card-header {
+    background: linear-gradient(90deg, #232342 0%, #1a1a2e 100%);
+    color: #fff !important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border: none;
+    text-align: center;
+    padding: 16px 0;
+}
+
+/* Espaciado general */
+.container {
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
+/* Elimina color blanco forzado en títulos */
+.mb-4 {
+    color: inherit !important;
+}
+
+.col-md-4 {
+    width: 30%;
+}
+
+.col-md-3 {
+    width: 31%;
+}
+
+.table-maximos-netos th,
+.table-maximos-netos td {
+    font-size: 0.98rem;
+    padding: 4px 17px !important;
+    background: none !important;
+    border: none !important;
+}
+
+.table-maximos-netos {
+    background: #f7f8fa !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    margin-bottom: 0 !important;
+}
+
+#select-banco .react-select__single-value {
+    color: #232342 !important;
+    opacity: 1 !important;
+}
+
+#select-banco .react-select__placeholder {
+    color: #232342 !important;
+    opacity: 1 !important;
+}
+
+.btn {
+    color: #fff !important;
+}
+
+.react-select__menu {
+    overflow-x: hidden !important;
+}
+
+.react-select__menu-list {
+    overflow-x: hidden !important;
+}
+
+#precio-vehiculo {
+    border: 0.5px solid #ff0000;
+    font-size: 31px;
+    text-align: left;
+    width: 75%;
+}
+
+#select-agencia {
+    width: 100%;
+
+}
+
+.react-select__single-value,
+.react-select__placeholder {
+    font-size: 0.8rem !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+}
+
+.react-select__menu {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    left: 0 !important;
+    box-sizing: border-box !important;
+}
+.react-select__control,
+.react-select__menu {
+    width: 300px !important;
 }

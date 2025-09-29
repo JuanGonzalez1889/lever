@@ -1,305 +1,546 @@
-import React, { useState } from 'react';
-import { Button, Table, Modal, Dropdown, Form } from 'react-bootstrap';
-import { ThreeDotsVertical } from 'react-bootstrap-icons';
-
-// Datos de ejemplo (puedes reemplazar por fetch a backend)
-const agenciasEjemplo = [
-  {
-    id: 1,
-    vendedor: "Juan Gonzalez",
-    agencia: "Agencia Centro",
-    agente: "Eze Gomez",
-    localidad: "Rosario",
-    provincia: "Buenos Aires",
-    domicilio: "Av. Corrientes 1234",
-    comision: "5%",
-    sellado: "Sí",
-    telefono: "11-1234-5678",
-    zona: "Norte",
-  },
-  {
-    id: 2,
-    vendedor: "Vanesa Montes",
-    agencia: "Agencia Sur",
-    agente: "Eze Gomez",
-    localidad: "Rosario",
-    provincia: "Buenos Aires",
-    domicilio: "Calle 50 456",
-    comision: "4%",
-    sellado: "No",
-    telefono: "221-567-8901",
-    zona: "Sur",
-  },
-  {
-    id: 3,
-    vendedor: "Joel Venturini",
-    agencia: "Agencia Norte",
-    agente: "Eze Gomez",
-    localidad: "Rosario",
-    provincia: "Buenos Aires",
-    domicilio: "Calle 50 456",
-    comision: "4%",
-    sellado: "No",
-    telefono: "221-567-8901",
-    zona: "Sur",
-  },
-  {
-    id: 4,
-    vendedor: "La PINA",
-    agencia: "Agencia Este",
-    agente: "Eze Gomez",
-    localidad: "Rosario",
-    provincia: "Buenos Aires",
-    domicilio: "Calle 50 456",
-    comision: "4%",
-    sellado: "No",
-    telefono: "221-567-8901",
-    zona: "Sur",
-  },
-  {
-    id: 5,
-    vendedor: "Leandro Billone",
-    agencia: "Agencia Oeste",
-    agente: "Eze Gomez",
-    localidad: "Venado Tuerto",
-    provincia: "Buenos Aires",
-    domicilio: "Calle 50 456",
-    comision: "4%",
-    sellado: "No",
-    telefono: "221-567-8901",
-    zona: "Sur",
-  },
-  {
-    id: 6,
-    vendedor: "Jose Briones",
-    agencia: "Agencia Sur",
-    agente: "Eze Gomez",
-    localidad: "Santa Fe",
-    provincia: "Buenos Aires",
-    domicilio: "Calle 50 456",
-    comision: "4%",
-    sellado: "No",
-    telefono: "221-567-8901",
-    zona: "Sur",
-  },
-  // ...más agencias
-];
+import React, { useEffect, useState } from "react";
+import { Button, Table, Modal, Dropdown, Form } from "react-bootstrap";
+import { ThreeDotsVertical } from "react-bootstrap-icons";
+import axios from "axios";
 
 function Agencias() {
-    const [agencias, setAgencias] = useState(agenciasEjemplo);
-    const [showModal, setShowModal] = useState(false);
-    const [agenciaSeleccionada, setAgenciaSeleccionada] = useState(null);
-    const [editando, setEditando] = useState(false);
-    const [agenciaEdit, setAgenciaEdit] = useState(null);
+  const [agencias, setAgencias] = useState([]);
+  const [agentes, setAgentes] = useState([]);
+  const [provincias, setProvincias] = useState([]);
+  const [localidades, setLocalidades] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [agenciaSeleccionada, setAgenciaSeleccionada] = useState(null);
+  const [editando, setEditando] = useState(false);
+  const [agenciaEdit, setAgenciaEdit] = useState(null);
+  const [nuevoAgente, setNuevoAgente] = useState("");
+  const [showNuevoModal, setShowNuevoModal] = useState(false);
+  const [nuevaAgencia, setNuevaAgencia] = useState({
+    nombre: "",
+    agencia: "",
+    agente: "",
+    comision: "",
+    telefono: "",
+    localidad: "",
+    provincia: "",
+    domicilio: "",
+    sellado: "SI",
+    observaciones: "",
+  });
+  const [localidadesNueva, setLocalidadesNueva] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URL; // para LOCAL
 
-    // Nuevo estado para activar/inactivar
-    const [estadoAgencias, setEstadoAgencias] = useState(
-        agenciasEjemplo.reduce((acc, ag) => ({ ...acc, [ag.id]: true }), {})
+  useEffect(() => {
+    axios.get(`${API_URL}/api/agencias`).then((res) => {
+      if (res.data.success) setAgencias(res.data.agencias);
+    });
+    axios.get(`${API_URL}/api/agentes`).then((res) => {
+      if (res.data.success) setAgentes(res.data.agentes);
+    });
+    axios.get(`${API_URL}/api/provincias`).then((res) => {
+      if (res.data.success) setProvincias(res.data.provincias);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (agenciaEdit && agenciaEdit.provincia) {
+      const provinciaObj = provincias.find(
+        (p) => p.nombre === agenciaEdit.provincia
+      );
+      if (provinciaObj) {
+        axios
+          .get(`${API_URL}/api/localidades?provincia_id=${provinciaObj.id}`)
+          .then((res) => {
+            if (res.data.success) setLocalidades(res.data.localidades);
+          });
+      }
+    }
+  }, [agenciaEdit?.provincia, provincias]);
+
+  useEffect(() => {
+    if (nuevaAgencia.provincia) {
+      const provinciaObj = provincias.find(
+        (p) => p.nombre === nuevaAgencia.provincia
+      );
+      if (provinciaObj) {
+        axios
+          .get(`${API_URL}/api/localidades?provincia_id=${provinciaObj.id}`)
+          .then((res) => {
+            if (res.data.success) setLocalidadesNueva(res.data.localidades);
+          });
+      }
+    }
+  }, [nuevaAgencia.provincia, provincias]);
+
+  const handleVerMas = (agencia) => {
+    setAgenciaSeleccionada(agencia);
+    setEditando(false);
+    setShowModal(true);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+    setAgenciaSeleccionada(null);
+    setEditando(false);
+    setAgenciaEdit(null);
+    setLocalidades([]);
+  };
+
+  const handleEditar = () => {
+    setAgenciaEdit({ ...agenciaSeleccionada });
+    setEditando(true);
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setAgenciaEdit((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleGuardar = async () => {
+    await axios.put(`${API_URL}/api/agencias/${agenciaEdit.id}`, agenciaEdit);
+    setAgencias((prev) =>
+      prev.map((a) => (a.id === agenciaEdit.id ? { ...agenciaEdit } : a))
     );
+    setAgenciaSeleccionada({ ...agenciaEdit });
+    setEditando(false);
+    setAgenciaEdit(null);
+  };
 
-    const handleVerMas = (agencia) => {
-        setAgenciaSeleccionada(agencia);
-        setEditando(false);
-        setShowModal(true);
-    };
+  const handleAddAgente = async () => {
+    if (nuevoAgente) {
+      await axios.post(`${API_URL}/api/agentes`, { nombre: nuevoAgente });
+      setNuevoAgente("");
+      const res = await axios.get(`${API_URL}/api/agentes`);
+      if (res.data.success) setAgentes(res.data.agentes);
+    }
+  };
 
-    const handleClose = () => {
-        setShowModal(false);
-        setAgenciaSeleccionada(null);
-        setEditando(false);
-    };
+  // NUEVA AGENCIA
+  const handleNuevaChange = (e) => {
+    const { name, value } = e.target;
+    setNuevaAgencia((prev) => ({ ...prev, [name]: value }));
+  };
 
-    const handleEditar = () => {
-        setAgenciaEdit({ ...agenciaSeleccionada });
-        setEditando(true);
-    };
+  const handleGuardarNueva = async () => {
+    await axios.post(`${API_URL}/api/agencias`, nuevaAgencia);
+    setShowNuevoModal(false);
+    setNuevaAgencia({
+      nombre: "",
+      agencia: "",
+      agente: "",
+      comision: "",
+      telefono: "",
+      localidad: "",
+      provincia: "",
+      domicilio: "",
+      sellado: "SI",
+      observaciones: "",
+    });
+    axios.get(`${API_URL}/api/agencias`).then((res) => {
+      if (res.data.success) setAgencias(res.data.agencias);
+    });
+  };
 
-    const handleEditChange = (e) => {
-        const { name, value } = e.target;
-        setAgenciaEdit(prev => ({ ...prev, [name]: value }));
-    };
+  return (
+    <div className="content">
+      <h1>Agencias</h1>
+      <Button
+        variant="success"
+        className="mb-3"
+        onClick={() => setShowNuevoModal(true)}
+      >
+        + Nueva agencia
+      </Button>
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Agencia</th>
+            <th>Agente</th>
+            <th>Localidad</th>
+            <th>Provincia</th>
+            <th>Domicilio</th>
+            <th>Comisión</th>
+            <th>Sellado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {agencias.map((agencia) => (
+            <tr key={agencia.id}>
+              <td>{agencia.id}</td>
+              <td>{agencia.nombre}</td>
+              <td>{agencia.agencia}</td>
+              <td>{agencia.agente}</td>
+              <td>{agencia.localidad}</td>
+              <td>{agencia.provincia}</td>
+              <td>{agencia.domicilio}</td>
+              <td>{agencia.comision}%</td>
+              <td>{agencia.sellado}</td>
+              <td style={{ textAlign: "center" }}>
+                <button
+                  className="btn btn-light"
+                  style={{
+                    borderRadius: 16,
+                    padding: "4px 10px",
+                    marginTop: 1,
+                    width: "48%",
+                  }}
+                  onClick={() => handleVerMas(agencia)}
+                  title="Ver más datos de agencia"
+                >
+                  <span style={{ fontSize: 22, color: "white" }}>⋮</span>
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
 
-    const handleGuardar = () => {
-        setAgencias(prev =>
-            prev.map(a => a.id === agenciaEdit.id ? { ...agenciaEdit } : a)
-        );
-        setAgenciaSeleccionada({ ...agenciaEdit });
-        setEditando(false);
-    };
+      {/* Modal de edición/ver más */}
+      <Modal
+        show={showModal}
+        onHide={handleClose}
+        centered
+        dialogClassName="modal-agencia-ancha"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {editando ? "Editar agencia" : "Datos completos de la agencia"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {agenciaSeleccionada && !editando && (
+            <div>
+              <p>
+                <strong>ID:</strong> {agenciaSeleccionada.id}
+              </p>
+              <p>
+                <strong>Nombre:</strong> {agenciaSeleccionada.nombre}
+              </p>
+              <p>
+                <strong>Agencia:</strong> {agenciaSeleccionada.agencia}
+              </p>
+              <p>
+                <strong>Agente:</strong> {agenciaSeleccionada.agente}
+              </p>
+              <p>
+                <strong>Localidad:</strong> {agenciaSeleccionada.localidad}
+              </p>
+              <p>
+                <strong>Provincia:</strong> {agenciaSeleccionada.provincia}
+              </p>
+              <p>
+                <strong>Domicilio:</strong> {agenciaSeleccionada.domicilio}
+              </p>
+              <p>
+                <strong>Comisión:</strong> {agenciaSeleccionada.comision}%
+              </p>
+              <p>
+                <strong>Sellado:</strong> {agenciaSeleccionada.sellado}
+              </p>
+              <p>
+                <strong>Teléfono:</strong> {agenciaSeleccionada.telefono}
+              </p>
+              <p>
+                <strong>Observaciones:</strong>{" "}
+                {agenciaSeleccionada.observaciones}
+              </p>
+            </div>
+          )}
+          {editando && agenciaEdit && (
+            <Form>
+              <Form.Group className="mb-2">
+                <Form.Label>Nombre</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="nombre"
+                  value={agenciaEdit.nombre}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Agencia</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="agencia"
+                  value={agenciaEdit.agencia}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Agente</Form.Label>
+                <Form.Select
+                  name="agente"
+                  value={agenciaEdit.agente}
+                  onChange={handleEditChange}
+                >
+                  <option value="">Seleccione agente</option>
+                  {agentes.map((a) => (
+                    <option key={a.id} value={a.nombre}>
+                      {a.nombre}
+                    </option>
+                  ))}
+                </Form.Select>
+                <Form.Control
+                  type="text"
+                  value={nuevoAgente}
+                  onChange={(e) => setNuevoAgente(e.target.value)}
+                  placeholder="Nuevo agente"
+                  className="mt-1"
+                />
+                <Button size="sm" className="mt-1" onClick={handleAddAgente}>
+                  Agregar agente
+                </Button>
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Comisión (%)</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="comision"
+                  value={agenciaEdit.comision}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Provincia</Form.Label>
+                <Form.Select
+                  name="provincia"
+                  value={agenciaEdit.provincia}
+                  onChange={handleEditChange}
+                >
+                  <option value="">Seleccione provincia</option>
+                  {provincias.map((p) => (
+                    <option key={p.id} value={p.nombre}>
+                      {p.nombre}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Localidad</Form.Label>
+                <Form.Select
+                  name="localidad"
+                  value={agenciaEdit.localidad}
+                  onChange={handleEditChange}
+                >
+                  <option value="">Seleccione localidad</option>
+                  {localidades.map((l) => (
+                    <option key={l.id} value={l.nombre}>
+                      {l.nombre}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Domicilio</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="domicilio"
+                  value={agenciaEdit.domicilio}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Sellado</Form.Label>
+                <Form.Select
+                  name="sellado"
+                  value={agenciaEdit.sellado}
+                  onChange={handleEditChange}
+                >
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Teléfono</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="telefono"
+                  value={agenciaEdit.telefono}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Observaciones</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  name="observaciones"
+                  value={agenciaEdit.observaciones}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+            </Form>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          {!editando && (
+            <>
+              <Button variant="primary" onClick={handleEditar}>
+                Editar agencia
+              </Button>
+              <Button variant="secondary" onClick={handleClose}>
+                Cerrar
+              </Button>
+            </>
+          )}
+          {editando && (
+            <>
+              <Button variant="success" onClick={handleGuardar}>
+                Guardar
+              </Button>
+              <Button variant="secondary" onClick={handleClose}>
+                Cancelar
+              </Button>
+            </>
+          )}
+        </Modal.Footer>
+      </Modal>
 
-    // Activar/Inactivar agencia
-    const handleToggleEstado = (id) => {
-        setEstadoAgencias(prev => ({
-            ...prev,
-            [id]: !prev[id]
-        }));
-    };
-
-    return (
-        <div className="content">
-            <h1>Agencias</h1>
-            <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Vendedor</th>
-                        <th>Agencia</th>
-                        <th>Agente</th>
-                        <th>Localidad</th>
-                        <th>Sellado</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {agencias.map((agencia) => (
-                        <tr key={agencia.id}>
-                            <td>{agencia.id}</td>
-                            <td>{agencia.vendedor}</td>
-                            <td>{agencia.agencia}</td>
-                            <td>{agencia.agente}</td>
-                            <td>{agencia.localidad}</td>
-                            <td>{agencia.sellado}</td>
-                            <td style={{ textAlign: 'center' }}>
-                                <Dropdown align="end">
-                                    <Dropdown.Toggle
-                                        as="span"
-                                        style={{
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            border: 'none',
-                                            background: 'none',
-                                            padding: 0,
-                                            boxShadow: 'none'
-                                        }}
-                                    >
-                                        <ThreeDotsVertical size={22} />
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item onClick={() => handleVerMas(agencia)}>
-                                            Ver más datos de agencia...
-                                        </Dropdown.Item>
-                                        <Dropdown.Item onClick={() => handleToggleEstado(agencia.id)}>
-                                            {estadoAgencias[agencia.id] ? 'Inactivar' : 'Activar'}
-                                        </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
-
-            <Modal show={showModal} onHide={handleClose} centered dialogClassName="modal-agencia-ancha">
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        {editando ? 'Editar agencia' : 'Datos completos de la agencia'}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {agenciaSeleccionada && !editando && (
-                        <div>
-                            <p><strong>ID:</strong> {agenciaSeleccionada.id}</p>
-                            <p><strong>Vendedor:</strong> {agenciaSeleccionada.vendedor}</p>
-                            <p><strong>Agencia:</strong> {agenciaSeleccionada.agencia}</p>
-                            <p><strong>Agente:</strong> {agenciaSeleccionada.agente}</p>
-                            <p><strong>Localidad:</strong> {agenciaSeleccionada.localidad}</p>
-                            <p><strong>Provincia:</strong> {agenciaSeleccionada.provincia}</p>
-                            <p><strong>Domicilio:</strong> {agenciaSeleccionada.domicilio}</p>
-                            <p><strong>Comisión:</strong> {agenciaSeleccionada.comision}</p>
-                            <p><strong>Sellado:</strong> {agenciaSeleccionada.sellado}</p>
-                            <p><strong>Teléfono:</strong> {agenciaSeleccionada.telefono}</p>
-                            <p><strong>Zona:</strong> {agenciaSeleccionada.zona}</p>
-                        </div>
-                    )}
-                    {editando && agenciaEdit && (
-                        <Form>
-                            <Form.Group className="mb-2">
-                                <Form.Label>ID</Form.Label>
-                                <Form.Control type="text" name="id" value={agenciaEdit.id} disabled />
-                            </Form.Group>
-                            <Form.Group className="mb-2">
-                                <Form.Label>Vendedor</Form.Label>
-                                <Form.Control type="text" name="vendedor" value={agenciaEdit.vendedor} onChange={handleEditChange} />
-                            </Form.Group>
-                            <Form.Group className="mb-2">
-                                <Form.Label>Agencia</Form.Label>
-                                <Form.Control type="text" name="agencia" value={agenciaEdit.agencia} onChange={handleEditChange} />
-                            </Form.Group>
-                            <Form.Group className="mb-2">
-                                <Form.Label>Agente</Form.Label>
-                                <Form.Control type="text" name="agente" value={agenciaEdit.agente} onChange={handleEditChange} />
-                            </Form.Group>
-                            <Form.Group className="mb-2">
-                                <Form.Label>Localidad</Form.Label>
-                                <Form.Control type="text" name="localidad" value={agenciaEdit.localidad} onChange={handleEditChange} />
-                            </Form.Group>
-                            <Form.Group className="mb-2">
-                                <Form.Label>Provincia</Form.Label>
-                                <Form.Control type="text" name="provincia" value={agenciaEdit.provincia} onChange={handleEditChange} />
-                            </Form.Group>
-                            <Form.Group className="mb-2">
-                                <Form.Label>Domicilio</Form.Label>
-                                <Form.Control type="text" name="domicilio" value={agenciaEdit.domicilio} onChange={handleEditChange} />
-                            </Form.Group>
-                            <Form.Group className="mb-2">
-                                <Form.Label>Comisión</Form.Label>
-                                <Form.Control type="text" name="comision" value={agenciaEdit.comision} onChange={handleEditChange} />
-                            </Form.Group>
-                            <Form.Group className="mb-2">
-                                <Form.Label>Sellado</Form.Label>
-                                <Form.Select
-                                    name="sellado"
-                                    value={agenciaEdit.sellado}
-                                    onChange={handleEditChange}
-                                >
-                                    <option value="Sí">Sí</option>
-                                    <option value="No">No</option>
-                                </Form.Select>
-                            </Form.Group>
-                            <Form.Group className="mb-2">
-                                <Form.Label>Zona</Form.Label>
-                                <Form.Select
-                                    name="zona"
-                                    value={agenciaEdit.zona}
-                                    onChange={handleEditChange}
-                                >
-                                    <option value="zona 1">zona 1</option>
-                                    <option value="zona 2">zona 2</option>
-                                    <option value="zona 3">zona 3</option>
-                                    <option value="zona 4">zona 4</option>
-                                    <option value="zona 5">zona 5</option>
-                                </Form.Select>
-                            </Form.Group>
-                        </Form>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    {!editando && (
-                        <>
-                            <Button variant="primary" onClick={handleEditar}>
-                                Editar agencia
-                            </Button>
-                            <Button variant="secondary" onClick={handleClose}>
-                                Cerrar
-                            </Button>
-                        </>
-                    )}
-                    {editando && (
-                        <>
-                            <Button variant="success" onClick={handleGuardar}>
-                                Guardar
-                            </Button>
-                            <Button variant="secondary" onClick={handleClose}>
-                                Cancelar
-                            </Button>
-                        </>
-                    )}
-                </Modal.Footer>
-            </Modal>
-        </div>
-    );
+      {/* Modal de nueva agencia */}
+      <Modal
+        show={showNuevoModal}
+        onHide={() => setShowNuevoModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Nueva agencia</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-2">
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control
+                type="text"
+                name="nombre"
+                value={nuevaAgencia.nombre}
+                onChange={handleNuevaChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Agencia</Form.Label>
+              <Form.Control
+                type="text"
+                name="agencia"
+                value={nuevaAgencia.agencia}
+                onChange={handleNuevaChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Agente</Form.Label>
+              <Form.Select
+                name="agente"
+                value={nuevaAgencia.agente}
+                onChange={handleNuevaChange}
+              >
+                <option value="">Seleccione agente</option>
+                {agentes.map((a) => (
+                  <option key={a.id} value={a.nombre}>
+                    {a.nombre}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control
+                type="text"
+                value={nuevoAgente}
+                onChange={(e) => setNuevoAgente(e.target.value)}
+                placeholder="Nuevo agente"
+                className="mt-1"
+              />
+              <Button size="sm" className="mt-1" onClick={handleAddAgente}>
+                Agregar agente
+              </Button>
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Comisión (%)</Form.Label>
+              <Form.Control
+                type="number"
+                name="comision"
+                value={nuevaAgencia.comision}
+                onChange={handleNuevaChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Provincia</Form.Label>
+              <Form.Select
+                name="provincia"
+                value={nuevaAgencia.provincia}
+                onChange={handleNuevaChange}
+              >
+                <option value="">Seleccione provincia</option>
+                {provincias.map((p) => (
+                  <option key={p.id} value={p.nombre}>
+                    {p.nombre}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Localidad</Form.Label>
+              <Form.Select
+                name="localidad"
+                value={nuevaAgencia.localidad}
+                onChange={handleNuevaChange}
+              >
+                <option value="">Seleccione localidad</option>
+                {localidadesNueva.map((l) => (
+                  <option key={l.id} value={l.nombre}>
+                    {l.nombre}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Domicilio</Form.Label>
+              <Form.Control
+                type="text"
+                name="domicilio"
+                value={nuevaAgencia.domicilio}
+                onChange={handleNuevaChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Sellado</Form.Label>
+              <Form.Select
+                name="sellado"
+                value={nuevaAgencia.sellado}
+                onChange={handleNuevaChange}
+              >
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Teléfono</Form.Label>
+              <Form.Control
+                type="text"
+                name="telefono"
+                value={nuevaAgencia.telefono}
+                onChange={handleNuevaChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Observaciones</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="observaciones"
+                value={nuevaAgencia.observaciones}
+                onChange={handleNuevaChange}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleGuardarNueva}>
+            Guardar
+          </Button>
+          <Button variant="secondary" onClick={() => setShowNuevoModal(false)}>
+            Cancelar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
 }
 
 export default Agencias;

@@ -1,0 +1,14 @@
+@media (max-width: 768px) {
+    .table-scroll {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .table-scroll table {
+        min-width: 600px;
+        /* O el ancho que necesites para mostrar todas las columnas */
+        width: max-content;
+        display: block;
+        white-space: nowrap;
+    }
+}
