@@ -7,6 +7,7 @@ import CuadroCredito from "./CuadroCredito";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Cotizador() {
   const [year, setYear] = useState("");
@@ -46,6 +47,7 @@ function Cotizador() {
   const [tipoCredito, setTipoCredito] = useState("");
   const [configLtv, setConfigLtv] = useState([]);
   const [nombreArchivoPDF, setNombreArchivoPDF] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/api/config-ltv`).then((res) => {
@@ -116,7 +118,7 @@ function Cotizador() {
     };
 
     try {
-       cotizacion.usuario = sessionStorage.getItem("usuario");
+      cotizacion.usuario = sessionStorage.getItem("usuario");
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/cotizaciones`,
         cotizacion
@@ -254,7 +256,7 @@ function Cotizador() {
             setPrecio(cot.vehiculo_precio || "");
             setTipoPersona(cot.persona || "");
             setCobroSellado(cot.sellado || "");
-            setClienteSexo(cot.sexo || ""); 
+            setClienteSexo(cot.sexo || "");
             setBancoSeleccionado(cot.banco || "");
             setProductoSeleccionado(cot.producto || "");
             setCapital(cot.monto || "");
@@ -568,7 +570,13 @@ function Cotizador() {
 
   const [ltvsPorBanco, setLtvsPorBanco] = useState({});
   const [tasasPorBanco, setTasasPorBanco] = useState({});
-
+  const productosConLtv = productos.filter((producto) =>
+    configLtv.some(
+      (l) =>
+        String(l.producto_banco_id) === String(producto.id) &&
+        String(l.anio) === String(year)
+    )
+  );
   useEffect(() => {
     async function fetchTableroInterno() {
       try {
@@ -1083,6 +1091,7 @@ function Cotizador() {
         ? nombreArchivoPDF.trim().replace(/\s+/g, "_") + ".pdf"
         : `Cotizacion_${clienteNombre}_${clienteApellido}.pdf`;
     doc.save(nombreArchivo);
+    navigate("/dashboard");
   };
 
   const maxAFinanciar = calcularMaxAFinanciarPorLTV(
@@ -1302,35 +1311,37 @@ function Cotizador() {
             >
               <thead>
                 <tr>
-                  {productos.map((producto) => (
-                    <th
-                      key={producto.id}
-                      style={{
-                        background: "none",
-                        color: "#232342",
-                        fontWeight: 600,
-                        padding: "4px 0",
-                      }}
-                    >
-                      {producto.nombre}
-                    </th>
-                  ))}
+                  {productosConLtv.map((producto) => {
+                    const bancoObj = bancos.find(
+                      (b) => String(b.id) === String(producto.banco_id)
+                    );
+                    return (
+                      <th
+                        key={producto.id}
+                        style={{
+                          background: "none",
+                          color: "#232342",
+                          fontWeight: 600,
+                          padding: "4px 0",
+                        }}
+                      >
+                        <div>{producto.nombre}</div>
+                        <div style={{ color: "#888", fontSize: "0.9em" }}>
+                          {bancoObj ? bancoObj.nombre : ""}
+                        </div>
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  {productos.map((producto) => {
+                  {productosConLtv.map((producto) => {
                     const maxNeto = calcularMaxAFinanciarPorLTV(
                       precio,
                       producto.id,
                       year,
                       configLtv
-                    );
-                    // Buscar el LTV para este producto y año
-                    const ltvObj = configLtv.find(
-                      (l) =>
-                        String(l.producto_banco_id) === String(producto.id) &&
-                        String(l.anio) === String(year)
                     );
                     return (
                       <td
