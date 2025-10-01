@@ -128,6 +128,7 @@ if (process.env.NODE_ENV !== "production") {
     FROM users
     WHERE username = ?
   `;
+  
 
    db.query(query, [username], (err, results) => {
      if (err) {
