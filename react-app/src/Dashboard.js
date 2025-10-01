@@ -56,7 +56,7 @@ function Tablero() {
   const [newProductName, setNewProductName] = useState(""); // Estado para el nuevo nombre del producto
   const [segmentos, setSegmentos] = useState([]);
   console.log("API_URL (Tablero):", API_URL); // Verificar la URL
-  const [rol, setRol] = useState(sessionStorage.getItem("rol") || "empleado");
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -858,6 +858,25 @@ function Dashboard() {
     sessionStorage.getItem("usuario") || "Usuario"
   );
    const [rol, setRol] = useState(sessionStorage.getItem("rol") || "empleado");
+   useEffect(() => {
+     axios
+       .get(`${API_URL}/api/check-session-admin`, { withCredentials: true })
+       .then((response) => {
+         if (response.data.success && response.data.user) {
+           setUsuario(response.data.user.username);
+           setRol(response.data.user.rol);
+           sessionStorage.setItem("usuario", response.data.user.username);
+           sessionStorage.setItem("rol", response.data.user.rol);
+         } else {
+           setUsuario("Usuario");
+           setRol("empleado");
+         }
+       })
+       .catch(() => {
+         setUsuario("Usuario");
+         setRol("empleado");
+       });
+   }, []);
   const handleLogout = async () => {
     try {
       await axios.post(`${API_URL}/api/logout`, {}, { withCredentials: true });

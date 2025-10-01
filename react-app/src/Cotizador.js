@@ -298,10 +298,14 @@ function Cotizador() {
 
   const tna = tnaYComision ? tnaYComision.tna : "";
   const comision = tnaYComision ? tnaYComision.comision : "";
+  const PHP_API_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost/lever/php/curl.php"
+      : "https://lever.com.ar/php/curl.php";
 
   const fetchMarcas = async (year) => {
     try {
-      const response = await axios.post("http://localhost/lever/php/curl.php", {
+      const response = await axios.post(PHP_API_URL, {
         year,
         action: "getBrandsByYear",
       });
@@ -313,7 +317,7 @@ function Cotizador() {
 
   const fetchModelos = async (idMarca, year) => {
     try {
-      const response = await axios.post("http://localhost/lever/php/curl.php", {
+      const response = await axios.post(PHP_API_URL, {
         idMarca,
         year,
         action: "getModelsByBrand",
@@ -326,7 +330,7 @@ function Cotizador() {
 
   const fetchPriceCar = async (codia, year) => {
     try {
-      const response = await axios.post("http://localhost/lever/php/curl.php", {
+      const response = await axios.post(PHP_API_URL, {
         codia,
         year,
         action: "getPriceByCodia",

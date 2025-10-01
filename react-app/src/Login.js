@@ -13,7 +13,7 @@ function Login({ onLogin }) {
   // Redirige automáticamente si ya hay sesión activa
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/check-session`, { withCredentials: true }) 
+      .get(`${API_URL}/api/check-session-admin`, { withCredentials: true }) 
       .then((res) => {
         if (res.data && res.data.success) {
           sessionStorage.setItem("usuario", res.data.username);

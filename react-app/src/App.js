@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/check-session`, {
+        const response = await fetch(`${API_URL}/api/check-session-admin`, {
           credentials: "include",
         });
         if (response.status === 200) {
