@@ -99,25 +99,27 @@ app.use(
 
 app.use(bodyParser.json());
 
-app.get("/api/check-session", (req, res) => {
-  console.log("CHECK SESSION:", req.session);
-  if (req.session && req.session.agencia_email) {
-    return res.json({ success: true, email: req.session.agencia_email });
-  } else {
-    console.log("No hay sesión activa");
-    console.log("SESSION DATA:", req.session.agencia_email);
-  }
-  res.json({ success: false });
-});
+// app.get("/api/check-session", (req, res) => {
+//   console.log("CHECK SESSION:", req.session);
+//   if (req.session && req.session.agencia_email) {
+//     return res.json({ success: true, email: req.session.agencia_email });
+//   } else {
+//     console.log("No hay sesión activa");
+//     console.log("SESSION DATA:", req.session.agencia_email);
+//   }
+//   res.json({ success: false });
+// });
 
+// SOLO en desarrollo: loguea con el usuario ingresado
 if (process.env.NODE_ENV !== "production") {
-  // SOLO en desarrollo: siempre loguea como admin
   app.post("/api/login", (req, res) => {
-    req.session.username = "admin";
+    const { username } = req.body;
+    req.session.username = username;
+    req.session.rol = "admin"; // o busca el rol en la base si querés
     console.log("LOGIN SESSION:", req.session);
-    return res.json({ success: true });
+    return res.json({ success: true, username, rol: "admin" });
   });
-} else {
+}else {
   // Endpoint para manejar el login desde la base de datos
  app.post("/api/login", (req, res) => {
    const { username, password } = req.body;
@@ -151,6 +153,30 @@ if (process.env.NODE_ENV !== "production") {
    });
  });
 }
+
+// Validar sesión para el panel admin
+app.get("/api/check-session-admin", async (req, res) => {
+  const username = req.session.username;
+  if (!username) return res.status(401).json({ success: false });
+
+  db.query(
+    "SELECT username, rol FROM users WHERE username = ?",
+    [username],
+    (err, results) => {
+      if (err || !results.length) {
+        return res.status(401).json({ success: false });
+      }
+      const user = results[0];
+      res.json({
+        success: true,
+        user: {
+          username: user.username,
+          rol: user.rol,
+        },
+      });
+    }
+  );
+});
 
 app.post("/api/logout", (req, res) => {
   req.session.destroy();
