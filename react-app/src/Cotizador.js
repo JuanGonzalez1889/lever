@@ -148,7 +148,7 @@ function Cotizador() {
     const fetchMinAFinanciar = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/files/calculadora.txt"
+          `${process.env.REACT_APP_API_URL}/files/calculadora.txt`
         );
         const data = response.data;
         setMinAFinanciar(data.minAFinanciar.valor);
@@ -298,10 +298,11 @@ function Cotizador() {
 
   const tna = tnaYComision ? tnaYComision.tna : "";
   const comision = tnaYComision ? tnaYComision.comision : "";
+const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchMarcas = async (year) => {
     try {
-      const response = await axios.post("http://localhost/lever/php/curl.php", {
+      const response = await axios.post(`${API_URL}/files/calculadora.txt`, {
         year,
         action: "getBrandsByYear",
       });
@@ -313,7 +314,7 @@ function Cotizador() {
 
   const fetchModelos = async (idMarca, year) => {
     try {
-      const response = await axios.post("http://localhost/lever/php/curl.php", {
+      const response = await axios.post(`${API_URL}/files/calculadora.txt`, {
         idMarca,
         year,
         action: "getModelsByBrand",
@@ -326,7 +327,7 @@ function Cotizador() {
 
   const fetchPriceCar = async (codia, year) => {
     try {
-      const response = await axios.post("http://localhost/lever/php/curl.php", {
+      const response = await axios.post(`${API_URL}/files/calculadora.txt`, {
         codia,
         year,
         action: "getPriceByCodia",
