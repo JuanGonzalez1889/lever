@@ -302,10 +302,10 @@ const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchMarcas = async (year) => {
     try {
-      const response = await axios.post(`${API_URL}/files/calculadora.txt`, {
-        year,
-        action: "getBrandsByYear",
-      });
+     const response = await axios.post(`${API_URL}/php/curl.php`, {
+       year,
+       action: "getBrandsByYear",
+     });
       setMarcas(response.data.brands);
     } catch (error) {
       console.error("Error fetching marcas:", error);
@@ -314,7 +314,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchModelos = async (idMarca, year) => {
     try {
-      const response = await axios.post(`${API_URL}/files/calculadora.txt`, {
+      const response = await axios.post(`${API_URL}/php/curl.php`, {
         idMarca,
         year,
         action: "getModelsByBrand",
@@ -327,7 +327,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchPriceCar = async (codia, year) => {
     try {
-      const response = await axios.post(`${API_URL}/files/calculadora.txt`, {
+      const response = await axios.post(`${API_URL}/php/curl.php`, {
         codia,
         year,
         action: "getPriceByCodia",
