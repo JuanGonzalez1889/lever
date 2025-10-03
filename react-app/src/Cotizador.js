@@ -117,6 +117,24 @@ function Cotizador() {
       }),
     };
 
+    if (
+      !clienteNombre.trim() ||
+      !clienteApellido.trim() ||
+      !clienteDni.trim() ||
+      !agencia.trim() ||
+      !clienteSexo.trim() ||
+      !tipoPersona.trim() ||
+      !cobroSellado.trim() ||
+      !bancoSeleccionado ||
+      !productoSeleccionado ||
+      !capital.trim()
+    ) {
+      alert(
+        "Por favor, complete todos los campos obligatorios antes de descargar el PDF."
+      );
+      return;
+    }
+
     try {
       cotizacion.usuario = sessionStorage.getItem("usuario");
       const res = await axios.post(
@@ -562,13 +580,18 @@ function Cotizador() {
       whiteSpace: "nowrap",
       padding: "8px 12px",
     }),
-    menu: (provided) => ({
-      ...provided,
-      maxHeight: 180,
-    }),
     menuList: (provided) => ({
       ...provided,
       maxHeight: 180,
+      overflowY: "auto",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      whiteSpace: "normal",
+      overflow: "visible",
+      textOverflow: "unset",
+      maxWidth: "100%",
+      wordBreak: "break-word",
     }),
   };
 
@@ -682,10 +705,13 @@ function Cotizador() {
     const doc = new jsPDF("l", "pt", "a4");
 
     // Obtener tipo de crédito del banco seleccionado
-    const bancoObj = bancos.find(
-      (b) => String(b.id) === String(productoSeleccionado)
+    const productoObj = productos.find(
+      (p) => String(p.id) === String(productoSeleccionado)
     );
-    const tipoCredito = bancoObj ? bancoObj.tipo_credito : "";
+    const bancoObj = bancos.find(
+      (b) => String(b.id) === String(productoObj?.banco_id)
+    );
+    const tipoCredito = productoObj ? productoObj.tipo_credito : "";
     const marcaObj = marcas.find((m) => String(m.id) === String(marca));
     const modeloObj = modelos.find((m) => String(m.codia) === String(modelo));
 
@@ -700,10 +726,43 @@ function Cotizador() {
     const headerHeight = 60;
     const headerY = 40;
 
-    // Mitad izquierda: texto
+    const abreviacionesBancos = {
+      ICBC: "IC",
+      COLUMBIA: "CO",
+      GALICIA: "GA",
+      SANTANDER: "SA",
+      SUPERVIELLE: "SP",
+      SUPERVILLE: "SP",
+    };
+
+    const bancoAbrev =
+      bancoObj && bancoObj.nombre
+        ? abreviacionesBancos[bancoObj.nombre.trim().toUpperCase()] || ""
+        : "";
+
+    // 1. Dibuja el fondo blanco primero
     doc.setFillColor(255, 255, 255); // azul claro
     doc.setDrawColor(0, 0, 0); // borde negro
     doc.rect(40, headerY, pageWidth / 2 - 40, headerHeight, "DF"); // "DF" = fill & stroke
+
+    // Mitad izquierda: abreviación del banco
+    if (bancoAbrev) {
+      doc.setFontSize(11);
+      doc.setTextColor(35, 35, 66);
+      doc.setFont("helvetica", "bold");
+      doc.text(bancoAbrev, 50, headerY + 17); // Ajusta la posición vertical si lo necesitas
+    }
+
+    // Mitad izquierda: texto principal
+    doc.setFontSize(15);
+    doc.setTextColor(35, 35, 66);
+    doc.setFont("helvetica", "bold");
+    doc.text(textoCredito, 50, headerY + headerHeight / 2 + 7);
+
+    // Mitad izquierda: texto
+    doc.setFillColor(255, 255, 255); // azul claro
+    doc.setDrawColor(0, 0, 0); // borde negro
+
     doc.setFontSize(15);
     doc.setTextColor(35, 35, 66);
     doc.setFont("helvetica", "bold");
@@ -722,6 +781,25 @@ function Cotizador() {
       headerY + headerHeight / 2 + 12,
       { align: "center" }
     );
+
+    // Si el banco es ICBC, agrega la leyenda debajo del texto principal
+    if (
+      bancoObj &&
+      bancoObj.nombre &&
+      bancoObj.nombre.trim().toUpperCase() === "ICBC"
+    ) {
+      doc.setFontSize(12);
+      doc.setTextColor(255, 0, 0); // Rojo para destacar
+      doc.setFont("helvetica", "bold");
+      doc.text(
+        "SIMULACIÓN - REQUIERE APROBACIÓN",
+        50,
+        headerY + headerHeight / 2 + 25 // 18px debajo del texto principal
+      );
+      doc.setTextColor(35, 35, 66); // Vuelve al color original
+      doc.setFontSize(15);
+      doc.setFont("helvetica", "bold");
+    }
 
     // Datos principales
     const datosPrincipales = [
@@ -1068,9 +1146,34 @@ function Cotizador() {
     doc.text("www.lever.com.ar", 40 + colWidth + 10, notaY + 32, {
       align: "left",
     });
+    // Texto especial ICBC debajo de las condiciones y SISTEMA FRANCÉS
+    if (
+      bancoObj &&
+      bancoObj.nombre &&
+      bancoObj.nombre.trim().toUpperCase() === "ICBC"
+    ) {
+      const textoICBC =
+        "SEGURO LIBERADO - ENDOSAR A FAVOR DE BANCO ICBC\n" +
+        "Opciones: La Caja, Federación Patronal, San Cristobal, Mapfre, Provincia Seguros, La Meridional, Zurich, Berkley, Allianz, La Segunda";
+
+      // Calcula la posición debajo del bloque de condiciones
+      const extraY = notaY + fondoHeight + 10;
+      const extraHeight = 40;
+
+      doc.setFillColor(35, 35, 66); // fondo azul oscuro
+      doc.rect(40, extraY, pageWidth - 80, extraHeight, "F");
+
+      doc.setFontSize(11);
+      doc.setTextColor(0, 222, 159); // verde
+      doc.setFont("helvetica", "bold");
+      doc.text(textoICBC, pageWidth / 2, extraY + 18, {
+        align: "center",
+        maxWidth: pageWidth - 100,
+      });
+    }
 
     // Texto UVA con fondo azul oscuro (solo si corresponde)
-    if (tipoCredito === "UVA") {
+    if (tipoCredito && tipoCredito.trim().toUpperCase() === "UVA") {
       const textoUVA =
         "EL CAPITAL OTORGADO EN $ SE CONVERTIRÁ A SU EQUIVALENTE EN UVAs A LA FECHA DE LIQUIDACIÓN Y QUEDARÁ DEFINIDO\n" +
         "CANTIDAD DE UVAs A PAGAR POR CUOTA: CADA CUOTA RESULTARÁ DE MULTIPLICAR LOS UVAs CORRESPONDIENTES\n" +
@@ -1095,7 +1198,6 @@ function Cotizador() {
         ? nombreArchivoPDF.trim().replace(/\s+/g, "_") + ".pdf"
         : `Cotizacion_${clienteNombre}_${clienteApellido}.pdf`;
     doc.save(nombreArchivo);
-    navigate("/dashboard");
   };
 
   const maxAFinanciar = calcularMaxAFinanciarPorLTV(
