@@ -48,6 +48,13 @@ function Cotizador() {
   const [configLtv, setConfigLtv] = useState([]);
   const [nombreArchivoPDF, setNombreArchivoPDF] = useState("");
   const navigate = useNavigate();
+  const [capitalBruto, setCapitalBruto] = useState("");
+  const [capitalNetoCalculado, setCapitalNetoCalculado] = useState("");
+  const [capitalSolicitadoNeto, setCapitalSolicitadoNeto] = useState("");
+  const [usarFiador, setUsarFiador] = useState(false);
+  const [fiadorNombre, setFiadorNombre] = useState("");
+  const [fiadorApellido, setFiadorApellido] = useState("");
+  const [fiadorDni, setFiadorDni] = useState("");
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/api/config-ltv`).then((res) => {
@@ -88,7 +95,8 @@ function Cotizador() {
   }
   const handleDescargarPDF = async () => {
     const params = new URLSearchParams(location.search);
-    const cotizacionOriginalId = params.get("id"); // <-- AGREGA ESTA LÍNEA
+    const cotizacionOriginalId = params.get("id");
+    const nombreArchivoPDF = generarNombrePDF();
 
     const productoObj = productos.find(
       (p) => String(p.id) === String(productoSeleccionado)
@@ -101,9 +109,10 @@ function Cotizador() {
       cliente_dni: clienteDni,
       cliente_nombre: clienteNombre,
       cliente_apellido: clienteApellido,
+      sexo: clienteSexo,
       agencia: agencia,
       producto: productoObj ? productoObj.nombre : productoSeleccionado,
-      monto: capital,
+      monto: capitalSolicitadoNeto,
       usuario: "usuario_logueado",
       vehiculo_marca: marcaObj ? marcaObj.name : marca, // <-- nombre de la marca
       vehiculo_modelo: modeloObj ? modeloObj.modelo : modelo, // <-- nombre del modelo
@@ -111,6 +120,9 @@ function Cotizador() {
       vehiculo_precio: precio,
       persona: tipoPersona,
       sellado: cobroSellado,
+      fiador_nombre: usarFiador ? fiadorNombre : "",
+      fiador_apellido: usarFiador ? fiadorApellido : "",
+      fiador_dni: usarFiador ? fiadorDni : "",
       observaciones: "",
       ...(cotizacionOriginalId && {
         cotizacion_original_id: cotizacionOriginalId,
@@ -118,16 +130,16 @@ function Cotizador() {
     };
 
     if (
-      !clienteNombre.trim() ||
-      !clienteApellido.trim() ||
-      !clienteDni.trim() ||
-      !agencia.trim() ||
-      !clienteSexo.trim() ||
-      !tipoPersona.trim() ||
-      !cobroSellado.trim() ||
+      !String(clienteNombre).trim() ||
+      !String(clienteApellido).trim() ||
+      !String(clienteDni).trim() ||
+      !String(agencia).trim() ||
+      !String(clienteSexo).trim() ||
+      !String(tipoPersona).trim() ||
+      !String(cobroSellado).trim() ||
       !bancoSeleccionado ||
       !productoSeleccionado ||
-      !capital.trim()
+      !String(capitalSolicitadoNeto).trim()
     ) {
       alert(
         "Por favor, complete todos los campos obligatorios antes de descargar el PDF."
@@ -157,8 +169,8 @@ function Cotizador() {
     { value: "exento", label: "Exento" },
   ];
   const agenciasLista = agenciasDb.map((a) => ({
-    value: a.agencia,
-    label: a.agencia,
+    value: a.agencia, // solo la agencia como valor
+    label: `${a.agencia} || ${a.nombre}`, // mostrar agencia y nombre en el select
     sellado: a.sellado,
   }));
 
@@ -270,11 +282,19 @@ function Cotizador() {
             setCapital(cot.monto || "");
             setMarca(cot.vehiculo_marca || "");
             setModelo(cot.vehiculo_modelo || "");
-            setYear(cot.vehiculo_anio || "");
-            setPrecio(cot.vehiculo_precio || "");
+            setYear("");
+            setPrecio("");
             setTipoPersona(cot.persona || "");
             setCobroSellado(cot.sellado || "");
-            setClienteSexo(cot.sexo || "");
+            let sexoValue = "";
+            if (cot.sexo === "masculino" || cot.sexo === "femenino") {
+              sexoValue = cot.sexo;
+            } else if (cot.sexo === "física") {
+              sexoValue = "masculino";
+            } else if (cot.sexo === "jurídica") {
+              sexoValue = "femenino";
+            }
+            setClienteSexo(sexoValue);
             setBancoSeleccionado(cot.banco || "");
             setProductoSeleccionado(cot.producto || "");
             setCapital(cot.monto || "");
@@ -285,6 +305,75 @@ function Cotizador() {
         });
     }
   }, [location.search]);
+
+  function generarNombrePDF() {
+    // Buscar el modelo seleccionado en el array de modelos
+    let modeloNombre = "";
+    const modeloObj = modelos.find((m) => String(m.codia) === String(modelo));
+    if (modeloObj && modeloObj.modelo) {
+      modeloNombre = modeloObj.modelo;
+    }
+    // Palabras que requieren más de una palabra en el nombre corto
+    const especiales = [
+      "A",
+      "E",
+      "C",
+      "G",
+      "CLA",
+      "CLE",
+      "GLA",
+      "GLC",
+      "GLB",
+      "GLS",
+      "AMG",
+      "EQA",
+      "EQE",
+      "GT",
+      "S",
+      "SL",
+      "SLK",
+      "SLC",
+      "SLS",
+      "X",
+      "X1",
+      "X2",
+      "X3",
+      "Z",
+      "MD",
+      "M",
+      "ML",
+      "MY",
+      "MX",
+      "Q",
+      "P",
+      "R",
+      "P-UP",
+      "PICK-UP",
+      "DF",
+      "TD",
+      "TDI",
+      "TSI",
+      "H6",
+      "SERIE",
+      "HD",
+      "N",
+      "K",
+    ];
+    let modeloCorto = "";
+    if (modeloNombre) {
+      const partes = modeloNombre.split(" ");
+      if (especiales.includes(partes[0].toUpperCase()) && partes.length > 1) {
+        modeloCorto = partes[0] + " " + partes[1];
+      } else {
+        modeloCorto = partes[0];
+      }
+    }
+    let nombre = `${clienteApellido}_${agencia}_${modeloCorto}`;
+    if (tipoCredito && tipoCredito.toUpperCase() === "UVA") {
+      nombre = `UVA_${nombre}`;
+    }
+    return nombre;
+  }
 
   function calcularPromedioCuotaConIVA({
     capitalBruto,
@@ -384,11 +473,11 @@ function Cotizador() {
   };
 
   const handleCotizacion = () => {
-    if (!capital || capital <= 0) {
+    if (!capitalSolicitadoNeto || Number(capitalSolicitadoNeto) <= 0) {
       alert("Por favor, ingrese un capital válido.");
       return;
     }
-    if (capital > maxAFinanciar) {
+    if (Number(capitalSolicitadoNeto) > maxAFinanciar) {
       alert(
         `El capital ingresado excede el máximo a financiar: $${maxAFinanciar.toLocaleString(
           "es-AR"
@@ -396,7 +485,19 @@ function Cotizador() {
       );
       return;
     }
-    const cuotasCalculadas = calcularCuotas(capital, selectedProduct);
+    // Completa el cuadro de capitalPorPlazo con el valor neto al cotizar
+    setCapitalPorPlazo({
+      12: capitalSolicitadoNeto,
+      18: capitalSolicitadoNeto,
+      24: capitalSolicitadoNeto,
+      36: capitalSolicitadoNeto,
+      48: capitalSolicitadoNeto,
+    });
+
+    const cuotasCalculadas = calcularCuotas(
+      capitalSolicitadoNeto,
+      selectedProduct
+    );
     setCuotas(cuotasCalculadas);
     setMostrarOpciones(true);
   };
@@ -1193,10 +1294,7 @@ function Cotizador() {
       });
     }
 
-    const nombreArchivo =
-      nombreArchivoPDF.trim() !== ""
-        ? nombreArchivoPDF.trim().replace(/\s+/g, "_") + ".pdf"
-        : `Cotizacion_${clienteNombre}_${clienteApellido}.pdf`;
+    const nombreArchivo = generarNombrePDF().replace(/\s+/g, "_") + ".pdf";
     doc.save(nombreArchivo);
   };
 
@@ -1206,6 +1304,45 @@ function Cotizador() {
     year,
     configLtv
   );
+
+  // Calcula el máximo neto según el producto/banco seleccionado
+  const productoSeleccionadoObj = productosConLtv.find(
+    (p) => String(p.id) === String(productoSeleccionado)
+  );
+
+  let maximoPermitido = 0;
+  if (productoSeleccionadoObj) {
+    const montoBruto = calcularMaxAFinanciarPorLTV(
+      precio,
+      productoSeleccionadoObj.id,
+      year,
+      configLtv
+    );
+    const found = configBancosPlazos.find(
+      (c) => String(c.producto_banco_id) === String(productoSeleccionadoObj.id)
+    );
+    const comisionBase =
+      found && found.comision ? Number(found.comision) / 100 : 0.08;
+    const comisionConIVA = comisionBase * 1.21;
+    maximoPermitido = montoBruto * (1 - comisionConIVA);
+  }
+
+  useEffect(() => {
+    if (capitalBruto) {
+      const found = configBancosPlazos.find(
+        (c) => String(c.producto_banco_id) === String(productoSeleccionado)
+      );
+      const comisionBase =
+        found && found.comision ? Number(found.comision) / 100 : 0.08;
+      const comisionConIVA = comisionBase * 1.21;
+      const neto = Number(capitalBruto) * (1 - comisionConIVA);
+      setCapitalNetoCalculado(neto);
+      setCapitalSolicitadoNeto(neto); // <-- Actualiza el campo neto automáticamente
+    } else {
+      setCapitalNetoCalculado("");
+      setCapitalSolicitadoNeto("");
+    }
+  }, [capitalBruto, productoSeleccionado, configBancosPlazos]);
 
   return (
     <div className="container mt-4">
@@ -1263,7 +1400,25 @@ function Cotizador() {
               <Select
                 id="select-agencia"
                 classNamePrefix="react-select"
-                styles={customSelectStyles}
+                styles={{
+                  ...customSelectStyles,
+                  option: (provided, state) => ({
+                    ...provided,
+                    fontSize: "0.85rem", // achica la tipografía de las opciones
+                    whiteSpace: "normal",
+                    wordBreak: "break-word",
+                  }),
+                  control: (provided) => ({
+                    ...provided,
+                    fontSize: "0.85rem", // achica la tipografía del input
+                  }),
+                  singleValue: (provided) => ({
+                    ...provided,
+                    fontSize: "0.85rem", // achica la tipografía del valor seleccionado
+                    whiteSpace: "normal",
+                    wordBreak: "break-word",
+                  }),
+                }}
                 options={agenciasLista}
                 value={agenciasLista.find((a) => a.value === agencia) || null}
                 onChange={(option) => {
@@ -1280,9 +1435,103 @@ function Cotizador() {
                 isClearable
               />
             </div>
+            <div className="col-md-4">
+              <label className="form-label">Cobro de SELLADO</label>
+              <input
+                type="text"
+                className="form-control"
+                value={
+                  cobroSellado === "abona"
+                    ? "Abona sellado"
+                    : cobroSellado === "exento"
+                    ? "Exento"
+                    : ""
+                }
+                readOnly
+                style={{
+                  borderRadius: 30,
+                  height: 59,
+                  background: "#f8f9fa",
+                  marginTop: 0,
+                  border: "1px solid #ccc",
+                }}
+              />
+            </div>
           </div>
         </div>
+        <div
+          className="col-12 d-flex justify-content-end align-items-center"
+          style={{ marginTop: -20 }}
+        >
+          <label
+            style={{
+              marginRight: 8,
+              fontWeight: 600,
+              color: "#232342",
+              fontSize: 13,
+              letterSpacing: 1,
+            }}
+          >
+            FIADOR
+          </label>
+          <input
+            type="checkbox"
+            checked={usarFiador}
+            onChange={() => setUsarFiador(!usarFiador)}
+            style={{ width: 22, height: 22, accentColor: "#00de9f" }}
+          />
+        </div>
       </div>
+      {usarFiador && (
+        <div
+          className="card mb-3"
+          style={{ background: "#232342", color: "#fff" }}
+        >
+          <div
+            className="card-header text-center"
+            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+          >
+            FIADOR
+          </div>
+          <div className="card-body">
+            <div className="row mb-3">
+              <div className="col-md-4">
+                <label className="form-label" style={{ color: "#fff" }}>
+                  Nombre del FIADOR
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={fiadorNombre}
+                  onChange={(e) => setFiadorNombre(e.target.value)}
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label" style={{ color: "#fff" }}>
+                  Apellido del FIADOR
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={fiadorApellido}
+                  onChange={(e) => setFiadorApellido(e.target.value)}
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label" style={{ color: "#fff" }}>
+                  DNI del FIADOR
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={fiadorDni}
+                  onChange={(e) => setFiadorDni(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="card mb-3">
         <div className="card-header bg-primary text-white">VEHÍCULO</div>
         <div className="card-body">
@@ -1348,7 +1597,25 @@ function Cotizador() {
               <label className="form-label">Modelo</label>
               <Select
                 classNamePrefix="react-select"
-                styles={customSelectStyles}
+                styles={{
+                  ...customSelectStyles,
+                  option: (provided, state) => ({
+                    ...provided,
+                    fontSize: "0.85rem", // achica la tipografía de las opciones
+                    whiteSpace: "normal",
+                    wordBreak: "break-word",
+                  }),
+                  control: (provided) => ({
+                    ...provided,
+                    fontSize: "0.85rem", // achica la tipografía del input
+                  }),
+                  singleValue: (provided) => ({
+                    ...provided,
+                    fontSize: "0.85rem", // achica la tipografía del valor seleccionado
+                    whiteSpace: "normal",
+                    wordBreak: "break-word",
+                  }),
+                }}
                 options={[
                   {
                     value: "",
@@ -1443,12 +1710,27 @@ function Cotizador() {
               <tbody>
                 <tr>
                   {productosConLtv.map((producto) => {
-                    const maxNeto = calcularMaxAFinanciarPorLTV(
+                    // Monto bruto por LTV
+                    const montoBruto = calcularMaxAFinanciarPorLTV(
                       precio,
                       producto.id,
                       year,
                       configLtv
                     );
+                    // Buscar comisión del producto/plazo
+                    const found = configBancosPlazos.find(
+                      (c) => String(c.producto_banco_id) === String(producto.id)
+                    );
+                    // Comisión base (sin IVA)
+                    const comisionBase =
+                      found && found.comision
+                        ? Number(found.comision) / 100
+                        : 0.08;
+                    // Comisión con IVA
+                    const comisionConIVA = comisionBase * 1.21;
+                    // Máximo neto descontando comisión con IVA
+                    const maxNeto = montoBruto * (1 - comisionConIVA);
+
                     return (
                       <td
                         key={producto.id}
@@ -1466,18 +1748,11 @@ function Cotizador() {
                         <br />
                         <span style={{ color: "#888", fontSize: "0.9em" }}>
                           TNA:{" "}
-                          {(() => {
-                            const found = configBancosPlazos.find(
-                              (c) =>
-                                String(c.producto_banco_id) ===
-                                String(producto.id)
-                            );
-                            return found && found.tna
-                              ? `${Number(found.tna).toLocaleString("es-AR", {
-                                  minimumFractionDigits: 2,
-                                })}%`
-                              : "-";
-                          })()}
+                          {found && found.tna
+                            ? `${Number(found.tna).toLocaleString("es-AR", {
+                                minimumFractionDigits: 2,
+                              })}%`
+                            : "-"}
                         </span>
                       </td>
                     );
@@ -1499,38 +1774,53 @@ function Cotizador() {
                 styles={customSelectStyles}
                 options={[
                   { value: "", label: "Seleccione un banco", isDisabled: true },
-                  ...bancos.map((b) => ({
-                    value: b.id,
-                    label: b.nombre.toUpperCase(),
-                    tipoCredito: b.tipo_credito,
-                  })),
+                  ...bancos
+                    .filter((banco) =>
+                      productos.some(
+                        (producto) =>
+                          String(producto.banco_id) === String(banco.id) &&
+                          configLtv.some(
+                            (ltv) =>
+                              String(ltv.producto_banco_id) ===
+                                String(producto.id) &&
+                              String(ltv.anio) === String(year)
+                          )
+                      )
+                    )
+                    .map((b) => ({
+                      value: b.id,
+                      label: b.nombre.toUpperCase(),
+                      tipoCredito: b.tipo_credito,
+                    })),
                 ]}
                 value={
-                  bancos.length
-                    ? [
-                        {
-                          value: "",
-                          label: "Seleccione un banco",
-                          isDisabled: true,
-                        },
-                        ...bancos.map((b) => ({
-                          value: b.id,
-                          label: b.nombre.toUpperCase(),
-                          tipoCredito: b.tipo_credito,
-                        })),
-                      ].find(
-                        (opt) => String(opt.value) === String(bancoSeleccionado)
+                  bancos
+                    .filter((banco) =>
+                      productos.some(
+                        (producto) =>
+                          String(producto.banco_id) === String(banco.id) &&
+                          configLtv.some(
+                            (ltv) =>
+                              String(ltv.producto_banco_id) ===
+                                String(producto.id) &&
+                              String(ltv.anio) === String(year)
+                          )
                       )
-                    : {
-                        value: "",
-                        label: "Seleccione un banco",
-                        isDisabled: true,
-                      }
+                    )
+                    .map((b) => ({
+                      value: b.id,
+                      label: b.nombre.toUpperCase(),
+                      tipoCredito: b.tipo_credito,
+                    }))
+                    .find(
+                      (b) => String(b.value) === String(bancoSeleccionado)
+                    ) || null
                 }
                 onChange={(option) => {
                   setBancoSeleccionado(option ? option.value : "");
-                  setMostrarOpciones(false);
+                  setProductoSeleccionado(""); // Limpiar producto al cambiar banco
                 }}
+                placeholder="Seleccione un banco"
               />
             </div>
             <div className="col-md-4">
@@ -1590,57 +1880,13 @@ function Cotizador() {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label">Capital solicitado NETO</label>
-              <input
-                type="text"
-                className="form-control"
-                value={
-                  capital !== "" ? Number(capital).toLocaleString("es-AR") : ""
-                }
-                onChange={(e) => {
-                  const raw = e.target.value
-                    .replace(/\./g, "")
-                    .replace(/[^0-9]/g, "");
-                  setCapital(raw);
-                  setCapitalPorPlazo((prev) => {
-                    const todosIguales = Object.values(prev).every(
-                      (v) => v === "" || v === prev[12]
-                    );
-                    if (todosIguales) {
-                      return {
-                        12: raw,
-                        18: raw,
-                        24: raw,
-                        36: raw,
-                        48: raw,
-                      };
-                    }
-                    const nuevo = { ...prev };
-                    [12, 18, 24, 36, 48].forEach((p) => {
-                      if (!prev[p]) nuevo[p] = raw;
-                    });
-                    return nuevo;
-                  });
-                }}
-                style={{ borderRadius: 30, height: 59 }}
-              />
-              {maxAFinanciar > 0 && (
-                <div className="form-text text-danger">
-                  Valor MÁXIMO PERMITIDO: $
-                  {Math.round(maxAFinanciar).toLocaleString("es-AR")}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="row mb-3">
-            <div className="col-md-4">
               <label className="form-label">Tipo de crédito</label>
               <input
                 type="text"
                 className="form-control"
                 value={tipoCredito}
                 readOnly
-                style={{ minHeight: 59, textTransform: "uppercase" }}
+                style={{ textTransform: "uppercase" }}
               />
             </div>
             <div className="col-md-4">
@@ -1660,27 +1906,56 @@ function Cotizador() {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label">Cobro de SELLADO</label>
+              <label className="form-label">Capital Bruto</label>
               <input
                 type="text"
                 className="form-control"
                 value={
-                  cobroSellado === "abona"
-                    ? "Abona sellado"
-                    : cobroSellado === "exento"
-                    ? "Exento"
+                  capitalBruto
+                    ? `${Number(capitalBruto).toLocaleString("es-AR")}`
                     : ""
                 }
-                readOnly
-                style={{
-                  borderRadius: 30,
-                  height: 59,
-                  background: "#f8f9fa",
-                  marginTop: 0,
-                  border: "1px solid #ccc",
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, "");
+                  setCapitalBruto(raw);
                 }}
+                placeholder="Ej: 20000000"
+                style={{ borderRadius: 30, height: 59 }}
               />
+              {capitalNetoCalculado && (
+                <div className="form-text text-success">
+                  *capital máximo neto: $
+                  {Number(capitalNetoCalculado).toLocaleString("es-AR", {
+                    maximumFractionDigits: 2,
+                  })}
+                </div>
+              )}
             </div>
+            <div className="col-md-4">
+              <label className="form-label">Capital solicitado NETO</label>
+              <input
+                type="text"
+                className="form-control"
+                value={
+                  capitalSolicitadoNeto
+                    ? Number(capitalSolicitadoNeto).toLocaleString("es-AR")
+                    : ""
+                }
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, "");
+                  setCapitalSolicitadoNeto(raw);
+                }}
+                style={{ borderRadius: 30, height: 59 }}
+              />
+              {maxAFinanciar > 0 && (
+                <div className="form-text text-danger">
+                  Valor MÁXIMO PERMITIDO: $
+                  {Math.round(maximoPermitido).toLocaleString("es-AR")}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="row mb-3">
             <div className="d-flex justify-content-center mb-4">
               <button
                 type="button"
@@ -2514,17 +2789,9 @@ function Cotizador() {
             </table>
 
             <div className="text-center my-4">
-              <input
-                type="text"
-                className="form-control mb-2"
-                style={{ maxWidth: 350, margin: "0 auto" }}
-                placeholder="Nombre del archivo PDF"
-                value={nombreArchivoPDF}
-                onChange={(e) => setNombreArchivoPDF(e.target.value)}
-              />
               <button
                 className="btn btn-danger btn-lg"
-                onClick={handleDescargarPDF}
+                onClick={() => handleDescargarPDF(generarNombrePDF())}
               >
                 Descargar PDF de la cotización
               </button>

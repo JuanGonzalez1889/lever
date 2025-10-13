@@ -27,6 +27,7 @@ function Agencias() {
     observaciones: "",
   });
   const [localidadesNueva, setLocalidadesNueva] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
   const API_URL = process.env.REACT_APP_API_URL; // para LOCAL
 
   useEffect(() => {
@@ -140,16 +141,41 @@ function Agencias() {
     });
   };
 
+  const agenciasFiltradas = agencias.filter(
+    (a) =>
+      (a.nombre && a.nombre.toLowerCase().includes(busqueda.toLowerCase())) ||
+      (a.agencia && a.agencia.toLowerCase().includes(busqueda.toLowerCase()))
+  );
+
   return (
     <div className="content">
       <h1>Agencias</h1>
-      <Button
-        variant="success"
-        className="mb-3"
-        onClick={() => setShowNuevoModal(true)}
-      >
-        + Nueva agencia
-      </Button>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <Button
+          variant="success"
+          className="me-3"
+          onClick={() => setShowNuevoModal(true)}
+          style={{ minWidth: 180 }}
+        >
+          + Nueva agencia
+        </Button>
+        <input
+          type="text"
+          className="form-control"
+          style={{
+            maxWidth: 252,
+            marginLeft: "auto",
+            marginRight: 0,
+            borderRadius: 30,
+            fontSize: "1.25rem",
+            marginTop: 26,
+
+          }}
+          placeholder="Buscar por nombre o agencia..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      </div>
       <Table striped bordered hover responsive>
         <thead>
           <tr>
@@ -166,7 +192,7 @@ function Agencias() {
           </tr>
         </thead>
         <tbody>
-          {agencias.map((agencia) => (
+          {agenciasFiltradas.map((agencia) => (
             <tr key={agencia.id}>
               <td>{agencia.id}</td>
               <td>{agencia.nombre}</td>

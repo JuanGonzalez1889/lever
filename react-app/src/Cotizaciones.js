@@ -19,6 +19,7 @@ function Cotizaciones() {
   const [filtroProducto, setFiltroProducto] = useState("");
   const [filtroFecha, setFiltroFecha] = useState(""); // formato: "YYYY-MM-DD"
   const [observacionEditada, setObservacionEditada] = useState("");
+  
 
   useEffect(() => {
     axios
@@ -420,6 +421,14 @@ function Cotizaciones() {
               <p>
                 <strong>Usuario:</strong> {cotizacionSeleccionada.usuario}
               </p>
+              {cotizacionSeleccionada.fiador_nombre &&
+                cotizacionSeleccionada.fiador_dni && (
+                  <p>
+                    <b>Fiador:</b> {cotizacionSeleccionada.fiador_nombre}{" "}
+                    {cotizacionSeleccionada.fiador_apellido} (
+                    {cotizacionSeleccionada.fiador_dni})
+                  </p>
+                )}
               <p>
                 <strong>Observaciones:</strong>
                 {cotizacionSeleccionada.observaciones && (
