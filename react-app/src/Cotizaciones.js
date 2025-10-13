@@ -409,7 +409,7 @@ function Cotizaciones() {
                 {cotizacionSeleccionada.vehiculo_anio} ($
                 {cotizacionSeleccionada.vehiculo_precio?.toLocaleString(
                   "es-AR"
-                )}
+                )} 
                 )
               </p>
               <p>
