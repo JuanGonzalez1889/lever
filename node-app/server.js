@@ -1728,6 +1728,9 @@ app.post("/api/cotizaciones", (req, res) => {
     observaciones,
     cotizacion_original_id,
     sexo,
+    fiador_nombre,
+    fiador_apellido,
+    fiador_dni,
   } = req.body;
 
   // Guarda la fecha en la zona horaria de Buenos Aires
@@ -1738,8 +1741,8 @@ app.post("/api/cotizaciones", (req, res) => {
   db.query(
     `INSERT INTO cotizaciones (
       fecha, cliente_dni, cliente_nombre, cliente_apellido, agencia, producto, monto, usuario,
-      vehiculo_marca, vehiculo_modelo, vehiculo_anio, vehiculo_precio, persona, sellado, observaciones, cotizacion_original_id, sexo
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      vehiculo_marca, vehiculo_modelo, vehiculo_anio, vehiculo_precio, persona, sellado, observaciones, cotizacion_original_id, sexo, fiador_nombre, fiador_apellido, fiador_dni
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       fecha,
       cliente_dni,
@@ -1758,6 +1761,9 @@ app.post("/api/cotizaciones", (req, res) => {
       observaciones,
       cotizacion_original_id ? Number(cotizacion_original_id) : null,
       sexo || "",
+      fiador_nombre,
+      fiador_apellido,
+      fiador_dni,
     ],
     (err, result) => {
       if (err) return res.status(500).json({ success: false, error: err });
