@@ -2122,7 +2122,7 @@ function Cotizador() {
                         borderRadius: 30,
                         height: 59,
                         flex: 2, // le da más espacio al input
-                        minWidth: 218, // asegura que no se corte el texto
+                        minWidth: 200, // asegura que no se corte el texto
                         fontSize: "0.8rem", // agranda el texto si querés
                       }}
                     />
