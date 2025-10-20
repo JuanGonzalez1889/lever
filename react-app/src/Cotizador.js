@@ -55,6 +55,41 @@ function Cotizador() {
   const [fiadorNombre, setFiadorNombre] = useState("");
   const [fiadorApellido, setFiadorApellido] = useState("");
   const [fiadorDni, setFiadorDni] = useState("");
+  const [ajusteComision, setAjusteComision] = useState("");
+  const [mostrarAjusteComision, setMostrarAjusteComision] = useState(false);
+
+  useEffect(() => {
+    setMostrarOpciones(false);
+  }, [
+    ajusteComision,
+    capitalSolicitadoNeto,
+    capitalBruto,
+    tipoPersona,
+    productoSeleccionado,
+    bancoSeleccionado,
+    year,
+    marca,
+    modelo,
+    clienteNombre,
+    clienteApellido,
+    clienteDni,
+    agencia,
+    clienteSexo,
+  ]);
+
+  
+  useEffect(() => {
+    // Si ya hay un valor neto, lo replica en todos los plazos
+    if (capitalSolicitadoNeto) {
+      setCapitalPorPlazo({
+        12: capitalSolicitadoNeto,
+        18: capitalSolicitadoNeto,
+        24: capitalSolicitadoNeto,
+        36: capitalSolicitadoNeto,
+        48: capitalSolicitadoNeto,
+      });
+    }
+  }, [ajusteComision, capitalSolicitadoNeto]);
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/api/config-ltv`).then((res) => {
@@ -946,7 +981,11 @@ function Cotizador() {
               Number(c.plazo) === p
           );
           const tna = found ? Number(found.tna) / 100 : 0;
-          const comision = found ? Number(found.comision) / 100 : 0;
+          let comision = found ? Number(found.comision) : 0;
+          if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
+            comision += Number(ajusteComision);
+          }
+          comision = comision / 100;
           const datos = calcularCreditoPrendario({
             capitalNeto: Number(capitalPorPlazo[p]),
             comision: comision,
@@ -973,7 +1012,11 @@ function Cotizador() {
               Number(c.plazo) === p
           );
           const tna = found ? Number(found.tna) / 100 : 0;
-          const comision = found ? Number(found.comision) / 100 : 0;
+          let comision = found ? Number(found.comision) : 0;
+          if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
+            comision += Number(ajusteComision);
+          }
+          comision = comision / 100;
           const datos = calcularCreditoPrendario({
             capitalNeto: Number(capitalPorPlazo[p]),
             comision: comision,
@@ -1001,7 +1044,11 @@ function Cotizador() {
               Number(c.plazo) === p
           );
           const tna = found ? Number(found.tna) / 100 : 0;
-          const comision = found ? Number(found.comision) / 100 : 0;
+          let comision = found ? Number(found.comision) : 0;
+          if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
+            comision += Number(ajusteComision);
+          }
+          comision = comision / 100;
           const datos = calcularCreditoPrendario({
             capitalNeto: Number(capitalPorPlazo[p]),
             comision: comision,
@@ -1028,7 +1075,11 @@ function Cotizador() {
               Number(c.plazo) === p
           );
           const tna = found ? Number(found.tna) / 100 : 0;
-          const comision = found ? Number(found.comision) / 100 : 0;
+          let comision = found ? Number(found.comision) : 0;
+          if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
+            comision += Number(ajusteComision);
+          }
+          comision = comision / 100;
           const datos = calcularCreditoPrendario({
             capitalNeto: Number(capitalPorPlazo[p]),
             comision: comision,
@@ -1294,6 +1345,18 @@ function Cotizador() {
       });
     }
 
+    // Agregar leyenda de fiador si corresponde
+    if (usarFiador && fiadorNombre && fiadorApellido && fiadorDni) {
+      const leyendaFiador = `Sumando como fiador a: ${fiadorNombre} ${fiadorApellido} (DNI:${fiadorDni})`;
+      // Ubica la leyenda debajo del último bloque (ajusta la posición si es necesario)
+      doc.setFontSize(13);
+      doc.setTextColor(35, 35, 66);
+      doc.setFont("helvetica", "bold");
+      // Calcula la posición Y final del PDF
+      const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 70 : 550;
+      doc.text(leyendaFiador, 40, finalY);
+    }
+
     const nombreArchivo = generarNombrePDF().replace(/\s+/g, "_") + ".pdf";
     doc.save(nombreArchivo);
   };
@@ -1337,7 +1400,7 @@ function Cotizador() {
       const comisionConIVA = comisionBase * 1.21;
       const neto = Number(capitalBruto) * (1 - comisionConIVA);
       setCapitalNetoCalculado(neto);
-      setCapitalSolicitadoNeto(neto); // <-- Actualiza el campo neto automáticamente
+      setCapitalSolicitadoNeto(neto);
     } else {
       setCapitalNetoCalculado("");
       setCapitalSolicitadoNeto("");
@@ -1463,29 +1526,77 @@ function Cotizador() {
           className="col-12 d-flex justify-content-end align-items-center"
           style={{ marginTop: -20 }}
         >
-          <label
+          <span
             style={{
               marginRight: 8,
-              fontWeight: 600,
+              marginBottom: 3,
               color: "#232342",
-              fontSize: 13,
-              letterSpacing: 1,
+              fontWeight: 600,
             }}
           >
             FIADOR
+          </span>
+          <label
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={usarFiador}
+              onChange={() => setUsarFiador(!usarFiador)}
+              style={{
+                display: "none",
+              }}
+            />
+            <span
+              style={{
+                display: "inline-block",
+                width: 22,
+                height: 22,
+                borderRadius: "50%",
+                border: "2px solid #00de9f",
+                background: usarFiador ? "#00de9f" : "#fff",
+                transition: "background 0.2s",
+                marginRight: 16,
+                position: "relative",
+              }}
+            >
+              {usarFiador && (
+                <svg
+                  viewBox="0 0 16 16"
+                  style={{
+                    position: "absolute",
+                    top: 2,
+                    left: 1,
+                    width: 16,
+                    height: 16,
+                  }}
+                >
+                  <polyline
+                    points="3,8 7,12 13,4"
+                    stroke="#fff"
+                    strokeWidth="2.5"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </span>
           </label>
-          <input
-            type="checkbox"
-            checked={usarFiador}
-            onChange={() => setUsarFiador(!usarFiador)}
-            style={{ width: 22, height: 22, accentColor: "#00de9f" }}
-          />
         </div>
       </div>
       {usarFiador && (
         <div
           className="card mb-3"
-          style={{ background: "#232342", color: "#fff" }}
+          style={{
+            border: "1px solid #00de9f",
+            background: "#232342",
+            color: "#fff",
+          }}
         >
           <div
             className="card-header text-center"
@@ -1954,6 +2065,134 @@ function Cotizador() {
                 </div>
               )}
             </div>
+
+            <div className="col-md-4">
+              <div
+                style={{
+                  borderRadius: 12,
+                  padding: 12,
+                  marginTop: 8,
+                  background: "#fff",
+                  position: "relative",
+                  minHeight: 56,
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    color: "#232342",
+                    fontSize: 15,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    userSelect: "none",
+                  }}
+                  onClick={() => setMostrarAjusteComision((prev) => !prev)}
+                >
+                  % COMISIÓN OTORGAMIENTO (ajuste)
+                  <span
+                    style={{
+                      marginLeft: 8,
+                      fontSize: 18,
+                      transform: mostrarAjusteComision
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                      transition: "transform 0.2s",
+                    }}
+                  >
+                    ▼
+                  </span>
+                </div>
+                {mostrarAjusteComision && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      flexWrap: "wrap", // permite que los botones bajen si no hay espacio
+                    }}
+                  >
+                    <input
+                      type="number"
+                      className="form-control mt-2"
+                      placeholder="Ej: 1 para sumar, -1 para restar"
+                      value={ajusteComision}
+                      onChange={(e) => setAjusteComision(e.target.value)}
+                      style={{
+                        borderRadius: 30,
+                        height: 59,
+                        flex: 2, // le da más espacio al input
+                        minWidth: 218, // asegura que no se corte el texto
+                        fontSize: "0.8rem", // agranda el texto si querés
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setAjusteComision((prev) =>
+                          String(Number(prev || 0) + 1)
+                        )
+                      }
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: "50%",
+                        background: "#232342",
+                        color: "#fff",
+                        fontWeight: "bold",
+                        fontSize: 22,
+                        border: "none",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+                        margin: 0,
+                        padding: 0,
+                        flex: "0 0 auto", // no crece ni se achica
+                      }}
+                      title="Sumar 1"
+                    >
+                      +
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setAjusteComision((prev) =>
+                          String(Number(prev || 0) - 1)
+                        )
+                      }
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: "50%",
+                        background: "#232342",
+                        color: "#fff",
+                        fontWeight: "bold",
+                        fontSize: 22,
+                        border: "none",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+                        margin: 0,
+                        padding: 0,
+                        flex: "0 0 auto",
+                      }}
+                      title="Restar 1"
+                    >
+                      -
+                    </button>
+                  </div>
+                )}
+                {mostrarAjusteComision && (
+                  <div className="form-text">
+                    Si no completa, se usa la comisión original del producto.
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           <div className="row mb-3">
             <div className="d-flex justify-content-center mb-4">
@@ -2128,7 +2367,14 @@ function Cotizador() {
                         Number(c.plazo) === plazo
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
-                    const comision = found ? Number(found.comision) / 100 : 0;
+                    let comision = found ? Number(found.comision) : 0;
+                    if (
+                      ajusteComision !== "" &&
+                      !isNaN(Number(ajusteComision))
+                    ) {
+                      comision += Number(ajusteComision);
+                    }
+                    comision = comision / 100;
                     const datos = calcularCreditoPrendario({
                       capitalNeto: Number(capitalPorPlazo[plazo]),
                       comision: comision,
@@ -2175,7 +2421,14 @@ function Cotizador() {
                         Number(c.plazo) === plazo
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
-                    const comision = found ? Number(found.comision) / 100 : 0;
+                    let comision = found ? Number(found.comision) : 0;
+                    if (
+                      ajusteComision !== "" &&
+                      !isNaN(Number(ajusteComision))
+                    ) {
+                      comision += Number(ajusteComision);
+                    }
+                    comision = comision / 100;
                     const datos = calcularCreditoPrendario({
                       capitalNeto: Number(capitalPorPlazo[plazo]),
                       comision: comision,
@@ -2226,9 +2479,14 @@ function Cotizador() {
                             Number(c.plazo) === plazo
                         );
                         const tna = found ? Number(found.tna) / 100 : 0;
-                        const comision = found
-                          ? Number(found.comision) / 100
-                          : 0;
+                        let comision = found ? Number(found.comision) : 0;
+                        if (
+                          ajusteComision !== "" &&
+                          !isNaN(Number(ajusteComision))
+                        ) {
+                          comision += Number(ajusteComision);
+                        }
+                        comision = comision / 100;
                         const datos = calcularCreditoPrendario({
                           capitalNeto: Number(capitalPorPlazo[plazo]),
                           comision: comision,
@@ -2283,9 +2541,14 @@ function Cotizador() {
                             Number(c.plazo) === plazo
                         );
                         const tna = found ? Number(found.tna) / 100 : 0;
-                        const comision = found
-                          ? Number(found.comision) / 100
-                          : 0;
+                        let comision = found ? Number(found.comision) : 0;
+                        if (
+                          ajusteComision !== "" &&
+                          !isNaN(Number(ajusteComision))
+                        ) {
+                          comision += Number(ajusteComision);
+                        }
+                        comision = comision / 100;
                         const datos = calcularCreditoPrendario({
                           capitalNeto: Number(capitalPorPlazo[plazo]),
                           comision: comision,
@@ -2340,9 +2603,14 @@ function Cotizador() {
                             Number(c.plazo) === plazo
                         );
                         const tna = found ? Number(found.tna) / 100 : 0;
-                        const comision = found
-                          ? Number(found.comision) / 100
-                          : 0;
+                        let comision = found ? Number(found.comision) : 0;
+                        if (
+                          ajusteComision !== "" &&
+                          !isNaN(Number(ajusteComision))
+                        ) {
+                          comision += Number(ajusteComision);
+                        }
+                        comision = comision / 100;
                         const datos = calcularCreditoPrendario({
                           capitalNeto: Number(capitalPorPlazo[plazo]),
                           comision: comision,
@@ -2432,7 +2700,14 @@ function Cotizador() {
                         Number(c.plazo) === plazo
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
-                    const comision = found ? Number(found.comision) / 100 : 0;
+                    let comision = found ? Number(found.comision) : 0;
+                    if (
+                      ajusteComision !== "" &&
+                      !isNaN(Number(ajusteComision))
+                    ) {
+                      comision += Number(ajusteComision);
+                    }
+                    comision = comision / 100;
                     const datos = calcularCreditoPrendario({
                       capitalNeto: Number(capitalPorPlazo[plazo]),
                       comision: comision,
@@ -2543,7 +2818,14 @@ function Cotizador() {
                         Number(c.plazo) === plazo
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
-                    const comision = found ? Number(found.comision) / 100 : 0;
+                    let comision = found ? Number(found.comision) : 0;
+                    if (
+                      ajusteComision !== "" &&
+                      !isNaN(Number(ajusteComision))
+                    ) {
+                      comision += Number(ajusteComision);
+                    }
+                    comision = comision / 100;
                     const datos = calcularCreditoPrendario({
                       capitalNeto: Number(capitalPorPlazo[plazo]),
                       comision: comision,
@@ -2598,7 +2880,14 @@ function Cotizador() {
                         Number(c.plazo) === plazo
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
-                    const comision = found ? Number(found.comision) / 100 : 0;
+                    let comision = found ? Number(found.comision) : 0;
+                    if (
+                      ajusteComision !== "" &&
+                      !isNaN(Number(ajusteComision))
+                    ) {
+                      comision += Number(ajusteComision);
+                    }
+                    comision = comision / 100;
                     const datos = calcularCreditoPrendario({
                       capitalNeto: Number(capitalPorPlazo[plazo]),
                       comision: comision,
@@ -2656,7 +2945,14 @@ function Cotizador() {
                         Number(c.plazo) === plazo
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
-                    const comision = found ? Number(found.comision) / 100 : 0;
+                    let comision = found ? Number(found.comision) : 0;
+                    if (
+                      ajusteComision !== "" &&
+                      !isNaN(Number(ajusteComision))
+                    ) {
+                      comision += Number(ajusteComision);
+                    }
+                    comision = comision / 100;
                     const datos = calcularCreditoPrendario({
                       capitalNeto: Number(capitalPorPlazo[plazo]),
                       comision: comision,
@@ -2703,7 +2999,14 @@ function Cotizador() {
                           Number(c.plazo) === plazo
                       );
                       const tna = found ? Number(found.tna) / 100 : 0;
-                      const comision = found ? Number(found.comision) / 100 : 0;
+                      let comision = found ? Number(found.comision) : 0;
+                      if (
+                        ajusteComision !== "" &&
+                        !isNaN(Number(ajusteComision))
+                      ) {
+                        comision += Number(ajusteComision);
+                      }
+                      comision = comision / 100;
                       const datos = calcularCreditoPrendario({
                         capitalNeto: Number(capitalPorPlazo[plazo]),
                         comision: comision,
@@ -2777,9 +3080,18 @@ function Cotizador() {
                         found &&
                         found.comision !== undefined &&
                         found.comision !== null
-                          ? `${Number(found.comision).toLocaleString("es-AR", {
-                              minimumFractionDigits: 2,
-                            })}%`
+                          ? (() => {
+                              let comision = Number(found.comision);
+                              if (
+                                ajusteComision !== "" &&
+                                !isNaN(Number(ajusteComision))
+                              ) {
+                                comision += Number(ajusteComision);
+                              }
+                              return `${comision.toLocaleString("es-AR", {
+                                minimumFractionDigits: 2,
+                              })}%`;
+                            })()
                           : "-"}
                       </td>
                     );
@@ -2804,3 +3116,4 @@ function Cotizador() {
 }
 
 export default Cotizador;
+
