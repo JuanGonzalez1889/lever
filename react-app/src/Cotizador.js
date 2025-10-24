@@ -57,6 +57,8 @@ function Cotizador() {
   const [fiadorDni, setFiadorDni] = useState("");
   const [ajusteComision, setAjusteComision] = useState("");
   const [mostrarAjusteComision, setMostrarAjusteComision] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMsg, setModalMsg] = useState("");
 
   useEffect(() => {
     setMostrarOpciones(false);
@@ -149,8 +151,8 @@ function Cotizador() {
       producto: productoObj ? productoObj.nombre : productoSeleccionado,
       monto: capitalSolicitadoNeto,
       usuario: "usuario_logueado",
-      vehiculo_marca: marcaObj ? marcaObj.name : marca, // <-- nombre de la marca
-      vehiculo_modelo: modeloObj ? modeloObj.modelo : modelo, // <-- nombre del modelo
+      vehiculo_marca: marcaObj ? marcaObj.name : marca, 
+      vehiculo_modelo: modeloObj ? modeloObj.modelo : modelo,
       vehiculo_anio: year,
       vehiculo_precio: precio,
       persona: tipoPersona,
@@ -164,39 +166,42 @@ function Cotizador() {
       }),
     };
 
-    if (
-      !String(clienteNombre).trim() ||
-      !String(clienteApellido).trim() ||
-      !String(clienteDni).trim() ||
-      !String(agencia).trim() ||
-      !String(clienteSexo).trim() ||
-      !String(tipoPersona).trim() ||
-      !String(cobroSellado).trim() ||
-      !bancoSeleccionado ||
-      !productoSeleccionado ||
-      !String(capitalSolicitadoNeto).trim()
-    ) {
-      alert(
-        "Por favor, complete todos los campos obligatorios antes de descargar el PDF."
-      );
-      return;
-    }
+   if (
+     !String(clienteNombre).trim() ||
+     !String(clienteApellido).trim() ||
+     !String(clienteDni).trim() ||
+     !String(agencia).trim() ||
+     !String(clienteSexo).trim() ||
+     !String(tipoPersona).trim() ||
+     !String(cobroSellado).trim() ||
+     !bancoSeleccionado ||
+     !productoSeleccionado ||
+     !String(capitalSolicitadoNeto).trim()
+   ) {
+     setModalMsg(
+       "Por favor, complete todos los campos obligatorios antes de descargar el PDF."
+     );
+     setShowModal(true);
+     return;
+   }
 
-    try {
-      cotizacion.usuario = sessionStorage.getItem("usuario");
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/cotizaciones`,
-        cotizacion
-      );
-      if (res.data.success) {
-        handleGenerarPDF();
-      } else {
-        alert("Error al guardar la cotización");
-      }
-    } catch (err) {
-      alert("Error al guardar la cotización");
-      console.error(err);
-    }
+   try {
+     cotizacion.usuario = sessionStorage.getItem("usuario");
+     const res = await axios.post(
+       `${process.env.REACT_APP_API_URL}/api/cotizaciones`,
+       cotizacion
+     );
+     if (res.data.success) {
+       handleGenerarPDF();
+     } else {
+       setModalMsg("Error al guardar la cotización");
+       setShowModal(true);
+     }
+   } catch (err) {
+     setModalMsg("Error al guardar la cotización");
+     setShowModal(true);
+     console.error(err);
+   }
   };
   const cobroSelladoOptions = [
     { value: "", label: "Seleccione una opción", isDisabled: true },
@@ -509,15 +514,17 @@ function Cotizador() {
 
   const handleCotizacion = () => {
     if (!capitalSolicitadoNeto || Number(capitalSolicitadoNeto) <= 0) {
-      alert("Por favor, ingrese un capital válido.");
+      setModalMsg("Por favor, ingrese un capital válido.");
+      setShowModal(true);
       return;
     }
-    if (Number(capitalSolicitadoNeto) > maxAFinanciar) {
-      alert(
-        `El capital ingresado excede el máximo a financiar: $${maxAFinanciar.toLocaleString(
-          "es-AR"
-        )}`
+    if (Number(capitalSolicitadoNeto) > maximoPermitido) {
+      setModalMsg(
+        `El capital ingresado excede el máximo a financiar: $${Math.round(
+          maximoPermitido
+        ).toLocaleString("es-AR")}`
       );
+      setShowModal(true);
       return;
     }
     // Completa el cuadro de capitalPorPlazo con el valor neto al cotizar
@@ -1373,22 +1380,25 @@ function Cotizador() {
     (p) => String(p.id) === String(productoSeleccionado)
   );
 
-  let maximoPermitido = 0;
-  if (productoSeleccionadoObj) {
-    const montoBruto = calcularMaxAFinanciarPorLTV(
-      precio,
-      productoSeleccionadoObj.id,
-      year,
-      configLtv
-    );
-    const found = configBancosPlazos.find(
-      (c) => String(c.producto_banco_id) === String(productoSeleccionadoObj.id)
-    );
-    const comisionBase =
-      found && found.comision ? Number(found.comision) / 100 : 0.08;
-    const comisionConIVA = comisionBase * 1.21;
-    maximoPermitido = montoBruto * (1 - comisionConIVA);
-  }
+ let maximoPermitido = 0;
+ if (productoSeleccionadoObj) {
+   const montoBruto = calcularMaxAFinanciarPorLTV(
+     precio,
+     productoSeleccionadoObj.id,
+     year,
+     configLtv
+   );
+   const found = configBancosPlazos.find(
+     (c) => String(c.producto_banco_id) === String(productoSeleccionadoObj.id)
+   );
+   let comisionBase = found && found.comision ? Number(found.comision) : 8;
+   if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
+     comisionBase += Number(ajusteComision);
+   }
+   comisionBase = comisionBase / 100;
+   const comisionConIVA = comisionBase * 1.21;
+   maximoPermitido = montoBruto * (1 - comisionConIVA);
+ }
 
   useEffect(() => {
     if (capitalBruto) {
@@ -1832,11 +1842,18 @@ function Cotizador() {
                     const found = configBancosPlazos.find(
                       (c) => String(c.producto_banco_id) === String(producto.id)
                     );
-                    // Comisión base (sin IVA)
-                    const comisionBase =
-                      found && found.comision
-                        ? Number(found.comision) / 100
-                        : 0.08;
+                    // Comisión base en %
+                    let comisionBase =
+                      found && found.comision ? Number(found.comision) : 8;
+                    // Aplica el ajuste de comisión si corresponde
+                    if (
+                      ajusteComision !== "" &&
+                      !isNaN(Number(ajusteComision))
+                    ) {
+                      comisionBase += Number(ajusteComision);
+                    }
+                    // Pasa a decimal
+                    comisionBase = comisionBase / 100;
                     // Comisión con IVA
                     const comisionConIVA = comisionBase * 1.21;
                     // Máximo neto descontando comisión con IVA
@@ -3111,9 +3128,82 @@ function Cotizador() {
           </div>
         </div>
       )}
+      {showModal && (
+        <div
+          className="modal fade show"
+          style={{
+            display: "block",
+            background: "rgba(0,0,0,0.4)",
+            zIndex: 9999,
+          }}
+          tabIndex="-1"
+          role="dialog"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div
+                className="modal-header"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "16px 24px 8px 24px",
+                  borderBottom: "1px solid #eee",
+                }}
+              >
+                <h5
+                  className="modal-title"
+                  style={{
+                    margin: 0,
+                    fontWeight: 600,
+                    fontSize: "1.15rem",
+                    color: "#232342",
+                  }}
+                >
+                  Atención
+                </h5>
+                <span
+                  onClick={() => setShowModal(false)}
+                  style={{
+                    cursor: "pointer",
+                    fontSize: 28,
+                    color: "#232342",
+                    marginLeft: 16,
+                    lineHeight: 1,
+                    padding: 0,
+                    background: "none",
+                    border: "none",
+                    outline: "none",
+                    display: "inline-block",
+                  }}
+                  aria-label="Cerrar"
+                  title="Cerrar"
+                  tabIndex={0}
+                  role="button"
+                >
+                  &times;
+                </span>
+              </div>
+              <div className="modal-body">
+                <p>{modalMsg}</p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => setShowModal(false)}
+                >
+                  Aceptar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
 
 export default Cotizador;
 
