@@ -579,6 +579,7 @@ function Cotizador() {
     const cuotaMensual = parseFloat(
       ((saldo * interesMensual * factor) / (factor - 1)).toFixed(2)
     );
+    
     return cuotaMensual;
   };
 
