@@ -30,20 +30,13 @@ console.log("NODE_ENV:", process.env.NODE_ENV); // Verificar que se está utiliz
 console.log("DB_HOST:", process.env.DB_HOST); // Verificar que se está utilizando el .env
 console.log("CLIENT_URL:", process.env.CLIENT_URL); // Verificar que se está utilizando el .env
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error("Error connecting to the database:", err);
-    return;
-  }
-  console.log("Connected to the database");
-});
 
 const allowedOrigins = [
   process.env.CLIENT_URL,
@@ -119,40 +112,39 @@ if (process.env.NODE_ENV !== "production") {
     console.log("LOGIN SESSION:", req.session);
     return res.json({ success: true, username, rol: "admin" });
   });
-}else {
+} else {
   // Endpoint para manejar el login desde la base de datos
- app.post("/api/login", (req, res) => {
-   const { username, password } = req.body;
-   const query = `
+  app.post("/api/login", (req, res) => {
+    const { username, password } = req.body;
+    const query = `
     SELECT username, password, rol
     FROM users
     WHERE username = ?
   `;
-  
 
-   db.query(query, [username], (err, results) => {
-     if (err) {
-       return res.json({ success: false, message: "Error de base de datos" });
-     }
-     if (!results.length) {
-       return res.json({ success: false, message: "Usuario no encontrado" });
-     }
-     const user = results[0];
-     // Verifica la contraseña con bcrypt
-     require("bcryptjs").compare(password, user.password, (err, isMatch) => {
-       if (err || !isMatch) {
-         return res.json({ success: false, message: "Contraseña incorrecta" });
-       }
-       req.session.username = user.username;
-       req.session.rol = user.rol;
-       return res.json({
-         success: true,
-         username: user.username,
-         rol: user.rol,
-       });
-     });
-   });
- });
+    db.query(query, [username], (err, results) => {
+      if (err) {
+        return res.json({ success: false, message: "Error de base de datos" });
+      }
+      if (!results.length) {
+        return res.json({ success: false, message: "Usuario no encontrado" });
+      }
+      const user = results[0];
+      // Verifica la contraseña con bcrypt
+      require("bcryptjs").compare(password, user.password, (err, isMatch) => {
+        if (err || !isMatch) {
+          return res.json({ success: false, message: "Contraseña incorrecta" });
+        }
+        req.session.username = user.username;
+        req.session.rol = user.rol;
+        return res.json({
+          success: true,
+          username: user.username,
+          rol: user.rol,
+        });
+      });
+    });
+  });
 }
 
 // Validar sesión para el panel admin
@@ -233,16 +225,15 @@ function getLastProductIdByName(nombre) {
 
 app.get("/api/data", (req, res) => {
   console.log(req.session);
-  /*if (!req.session.username) {
-        return res.status(401).json({ success: false, message: 'Unauthorized' });
-    }*/
 
   const query = `
-    SELECT p.id AS producto_id, p.nombre AS producto, p.plazo, p.interest, p.fee, p.minfee, p.segmento_id, p.banco, l.year, l.value, l.show, c.minAFinanciar
+    SELECT p.id AS producto_id, p.nombre AS producto, p.plazo, p.interest, p.fee, p.minfee, p.segmento_id, p.banco, p.categorias, l.year, l.value, l.show, c.minAFinanciar
     FROM productos p
-    LEFT JOIN ltv l ON p.id = l.producto_id
+    LEFT JOIN ltv l
+      ON l.producto_id = p.id
+      OR l.producto = p.nombre
     LEFT JOIN configuracion c ON 1=1
-`;
+  `;
 
   db.query(query, (err, results) => {
     if (err) {
@@ -261,9 +252,10 @@ app.get("/api/data", (req, res) => {
           nombre: row.producto,
           segmento_id: row.segmento_id,
           banco: row.banco,
+          categorias: row.categorias,
           plazos: {},
           ltv: {},
-          producto_ids: [], // Para guardar los IDs reales de cada plazo
+          producto_ids: [], 
         };
       }
       // Guardar el ID real de cada plazo (para editar/eliminar)
@@ -393,6 +385,24 @@ app.post("/api/data", (req, res) => {
             segmento_id = VALUES(segmento_id),
             banco = VALUES(banco)
         `;
+
+          // ✅ IMPORTANTE: Convertir explícitamente a número con más precisión
+          const feeValue = fee
+            ? parseFloat(fee.toString().replace(",", "."))
+            : 0;
+          const interestValue = interest
+            ? parseFloat(interest.toString().replace(",", "."))
+            : 0;
+          const minfeeValue = minfee
+            ? parseFloat(minfee.toString().replace(",", "."))
+            : 0;
+
+          console.log("VALORES A GUARDAR:", {
+            fee: feeValue,
+            interest: interestValue,
+            minfee: minfeeValue,
+          });
+
           db.query(
             query,
             [
@@ -545,13 +555,16 @@ app.get("/api/calculadora", (req, res) => {
 });
 
 app.post("/api/new-product", async (req, res) => {
-  const { nombre, minAFinanciar, ltv, plazos, segmento_id, banco } = req.body; // <--- agregá banco
+  const { nombre, minAFinanciar, ltv, plazos, segmento_id, banco, categorias } =
+    req.body; // <--- agregá banco
 
   if (!segmento_id || isNaN(Number(segmento_id)) || Number(segmento_id) === 0) {
     return res
       .status(400)
       .json({ success: false, message: "segmento_id inválido" });
   }
+
+  const categoriasToSave = categorias || "A,B,C";
 
   try {
     // 1. Insertar minAFinanciar en configuracion
@@ -572,12 +585,12 @@ app.post("/api/new-product", async (req, res) => {
     const { interest, fee, minfee } = plazos[primerPlazo];
     const productoId = await new Promise((resolve, reject) => {
       const query = `
-       INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco)
-       VALUES (?, ?, ?, ?, ?, ?, ?)
+       INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
       db.query(
         query,
-        [nombre, primerPlazo, interest, fee, minfee, segmento_id, banco], // <--- agregá banco
+        [nombre, primerPlazo, interest, fee, minfee, segmento_id, banco, categoriasToSave], // <--- agregá banco
         (err, result) => {
           if (err) return reject(err);
           resolve(result.insertId);
@@ -591,12 +604,12 @@ app.post("/api/new-product", async (req, res) => {
       otrosPlazos.map(([plazo, { interest, fee, minfee }]) => {
         return new Promise((resolve, reject) => {
           const query = `
-        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
           db.query(
             query,
-            [nombre, plazo, interest, fee, minfee, segmento_id, banco], // <--- agregá banco
+            [nombre, plazo, interest, fee, minfee, segmento_id, banco, categoriasToSave], // <--- agregá banco
             (err, result) => {
               if (err) return reject(err);
               resolve(result);
@@ -741,15 +754,37 @@ app.post("/api/featuresCategoria", (req, res) => {
   }
 });
 
+// AGREGA ESTE LOG TEMPORAL para verificar que se carguen:
+console.log("📧 EMAIL CONFIG:", {
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: process.env.EMAIL_SECURE,
+  user: process.env.EMAIL_FROM,
+  pass: process.env.EMAIL_PASS ? "***" : "NO CONFIGURADA"
+});
+
+
 // Configuración de Nodemailer
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT),
+  port: parseInt(process.env.EMAIL_PORT, 10),
   secure: process.env.EMAIL_SECURE === "true", // true para 465 (SSL)
   auth: {
     user: process.env.EMAIL_FROM,
     pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false, // permite certificados autofirmados (desarrollo)
+  },
+});
+
+// VERIFICA LA CONEXIÓN AL INICIAR
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Error conectando al servidor SMTP:", error);
+  } else {
+    console.log("✅ Servidor SMTP listo para enviar emails");
+  }
 });
 
 // Ruta para manejar el formulario de contacto
@@ -859,8 +894,15 @@ app.post("/api/loginAgencias", async (req, res) => {
   }
 
   req.session.agencia_email = user.email;
-  req.session.agencia_nombre = user.agencia; // <--- NUEVO
-  res.json({ success: true, user: { email: user.email } });
+  req.session.agencia_nombre = user.agencia;
+  req.session.agencia_categoria = user.categoria;
+  res.json({
+    success: true,
+    user: {
+      email: user.email,
+      categoria: user.categoria,
+    },
+  });
 });
 
 const bcrypt = require("bcrypt"); // Instala con npm install bcrypt
@@ -928,11 +970,12 @@ db.createAgenciaUser = function ({
   telefono,
   google_id = null,
   email_token = null,
-  email_validado = 0, // <-- por defecto 0, pero Google pasa 1
+  email_validado = 0,
+  categoria = "A",
 }) {
   return new Promise((resolve, reject) => {
     db.query(
-      "INSERT INTO agencias_users (nombre_completo, email, password, agencia, telefono, google_id, email_validado, email_token) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO agencias_users (nombre_completo, email, password, agencia, telefono, google_id, email_validado, email_token, categoria) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         nombre_completo,
         email,
@@ -942,6 +985,7 @@ db.createAgenciaUser = function ({
         google_id,
         email_validado,
         email_token,
+        categoria,
       ],
       (err, result) => {
         if (err) return reject(err);
@@ -952,6 +996,7 @@ db.createAgenciaUser = function ({
 };
 
 // Agrega este endpoint para validar el email:
+//al validar el mail, asignar categoria 'A' si no tiene ya una asignada
 app.get("/api/validar-email", async (req, res) => {
   const { token } = req.query;
   if (!token) return res.json({ success: false, message: "Token inválido" });
@@ -965,7 +1010,7 @@ app.get("/api/validar-email", async (req, res) => {
           message: "Token inválido o expirado",
         });
       db.query(
-        "UPDATE agencias_users SET email_validado = 1, email_token = NULL WHERE email_token = ?",
+        "UPDATE agencias_users SET email_validado = 1, email_token = NULL, categoria = COALESCE(categoria, 'A') WHERE email_token = ?", // <--- AGREGAR
         [token],
         (err2) => {
           if (err2)
@@ -1002,6 +1047,7 @@ app.get("/api/check-session", async (req, res) => {
         telefono: user.telefono,
         google_id: user.google_id,
         nombre_completo: user.nombre_completo,
+        categoria: user.categoria,
       },
       necesitaCompletarPerfil,
     });
@@ -1110,6 +1156,186 @@ app.post("/api/reset-password", async (req, res) => {
   );
 });
 
+// Actualizar agencia y teléfono de un usuario (panel admin)
+app.put("/api/admin/usuarios/:id", (req, res) => {
+  const { id } = req.params;
+  const { agencia, telefono } = req.body;
+
+  // Intentamos en las posibles tablas según cómo esté tu esquema
+  const tables = ["agencias_users", "usuarios", "users"];
+
+  const tryUpdate = (idx = 0) => {
+    if (idx >= tables.length) {
+      return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+    }
+    const table = tables[idx];
+    const sql = `UPDATE ${table} SET agencia = ?, telefono = ? WHERE id = ?`;
+    db.query(sql, [agencia || null, telefono || null, id], (err, result) => {
+      if (err) {
+        // Si la tabla no existe o hay error de SQL, probamos la siguiente
+        return tryUpdate(idx + 1);
+      }
+      if (result.affectedRows > 0) {
+        return res.json({ success: true });
+      }
+      // Si no afectó filas, probamos la siguiente tabla
+      return tryUpdate(idx + 1);
+    });
+  };
+
+  tryUpdate();
+});
+
+// Actualizar agencia y teléfono (ya lo tienes, lo dejo de referencia)
+app.put("/api/admin/usuarios/:id", (req, res) => {
+  const { id } = req.params;
+  const { agencia, telefono } = req.body;
+  const tables = ["agencias_users", "usuarios", "users"];
+
+  const tryUpdate = (idx = 0) => {
+    if (idx >= tables.length) return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+    const table = tables[idx];
+    const sql = `UPDATE ${table} SET agencia = ?, telefono = ? WHERE id = ?`;
+    db.query(sql, [agencia || null, telefono || null, id], (err, result) => {
+      if (err) return tryUpdate(idx + 1);
+      if (result.affectedRows > 0) return res.json({ success: true });
+      return tryUpdate(idx + 1);
+    });
+  };
+  tryUpdate();
+});
+
+// Actualizar categoría del usuario
+app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
+  const { id } = req.params;
+  const { categoria } = req.body;
+  const tables = ["agencias_users", "usuarios", "users"];
+
+  const tryUpdate = (idx = 0) => {
+    if (idx >= tables.length) return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+    const table = tables[idx];
+    const sql = `UPDATE ${table} SET categoria = ? WHERE id = ?`;
+    db.query(sql, [categoria || "A", id], (err, result) => {
+      if (err) return tryUpdate(idx + 1);
+      if (result.affectedRows > 0) return res.json({ success: true });
+      return tryUpdate(idx + 1);
+    });
+  };
+  tryUpdate();
+});
+
+// Actualizar email del usuario (y marcar no verificado si existen esos campos)
+app.put("/api/admin/usuarios/:id/email", (req, res) => {
+  const { id } = req.params;
+  const { email } = req.body;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ success: false, message: "Email inválido" });
+  }
+
+  const tables = ["agencias_users", "usuarios", "users"];
+  const tryUpdate = (idx = 0) => {
+    if (idx >= tables.length) return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+    const table = tables[idx];
+
+    // Primero actualiza el email
+    db.query(`UPDATE ${table} SET email = ? WHERE id = ?`, [email, id], (err, result) => {
+      if (err) return tryUpdate(idx + 1);
+      if (result.affectedRows > 0) {
+        // Intentar marcar no verificado (si las columnas existen)
+        const flagsSql = `
+          UPDATE ${table}
+          SET email_verificado = 0, verificado = 0, validado_email = 0, emailVerified = 0
+          WHERE id = ?
+        `;
+        db.query(flagsSql, [id], () => {
+          // Ignorar errores si alguna columna no existe
+          return res.json({ success: true });
+        });
+      } else {
+        return tryUpdate(idx + 1);
+      }
+    });
+  };
+  tryUpdate();
+});
+
+// Reenviar email de verificación
+app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
+  const { id } = req.params;
+  const tables = ["agencias_users", "usuarios", "users"];
+
+  const trySelect = (idx = 0) => {
+    if (idx >= tables.length) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado" });
+    }
+    const table = tables[idx];
+    db.query(
+      `SELECT id, email, nombre_completo AS nombre FROM ${table} WHERE id = ?`,
+      [id],
+      (err, rows) => {
+        if (err || !rows || rows.length === 0) return trySelect(idx + 1);
+
+        const user = rows[0];
+
+        // ✅ GENERAR TOKEN ÚNICO
+        const email_token = crypto.randomBytes(32).toString("hex");
+
+        // ✅ ACTUALIZAR TOKEN EN LA BD
+        db.query(
+          `UPDATE ${table} SET email_token = ? WHERE id = ?`,
+          [email_token, id],
+          (updateErr) => {
+            if (updateErr) {
+              console.error("Error actualizando token:", updateErr);
+              return res
+                .status(500)
+                .json({ success: false, message: "Error al generar token" });
+            }
+
+            const verifyLink = `${process.env.CLIENT_URL.replace(
+              /\/$/,
+              ""
+            )}/validar-email.html?token=${email_token}`;
+            const html = getEmailTemplate({
+              titulo: "Verificación de correo",
+              mensaje: `Hola ${
+                user.nombre || ""
+              }, por favor verifica tu correo haciendo clic en el botón de abajo.`,
+              texto_boton: "Validar mi correo",
+              link: verifyLink,
+            });
+
+            transporter.sendMail(
+              {
+                from: process.env.EMAIL_FROM,
+                to: user.email,
+                subject: "Verificación de correo - Lever",
+                html,
+              },
+              (sendErr) => {
+                if (sendErr) {
+                  console.error("Error enviando verificación:", sendErr);
+                  return res
+                    .status(500)
+                    .json({
+                      success: false,
+                      message: "No se pudo enviar el email",
+                    });
+                }
+                return res.json({ success: true });
+              }
+            );
+          }
+        );
+      }
+    );
+  };
+  trySelect();
+});
+
+
 const { OAuth2Client } = require("google-auth-library");
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -1145,7 +1371,6 @@ app.post("/api/google-one-tap", async (req, res) => {
       });
       user = await db.getAgenciaUserByEmail(email);
     }
-   
 
     // Guarda la sesión
     req.session.agencia_email = user.email;
@@ -1168,16 +1393,133 @@ app.use((err, req, res, next) => {
 });
 
 app.get("/api/admin/usuarios", (req, res) => {
+  const sql = `
+    SELECT
+      id,
+      nombre_completo,
+      email,
+      agencia,
+      telefono,
+      categoria,
+      created_at,
+      email_validado              AS email_verificado,  -- flag para el front
+      email_validado              AS email_validado,
+      0                           AS verificado,
+      0                           AS validado_email
+    FROM agencias_users
+    ORDER BY created_at DESC
+  `;
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching usuarios:", err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error fetching usuarios" });
+    }
+    res.json(results);
+  });
+});
+
+
+// Actualizar categoría de usuario
+app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
+  const { categoria } = req.body;
+  if (!["A", "B", "C"].includes(categoria)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Categoría inválida" });
+  }
+
   db.query(
-    "SELECT id, nombre_completo, email, agencia, telefono, created_at FROM agencias_users ORDER BY created_at DESC",
+    "UPDATE agencias_users SET categoria = ? WHERE id = ?",
+    [categoria, req.params.id],
+    (err, result) => {
+      if (err) {
+        console.error("Error actualizando categoría:", err);
+        return res.status(500).json({ success: false, error: err });
+      }
+      res.json({ success: true });
+    }
+  );
+});
+
+// Obtener productos filtrados por categoría del usuario
+app.get("/api/productos-por-categoria", (req, res) => {
+  const { categoria } = req.query;
+
+  if (!categoria) {
+    return res.status(400).json({
+      success: false,
+      message: "Categoría requerida",
+    });
+  }
+
+  // Buscar productos que contengan la categoría del usuario
+  db.query(
+    `SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco, p.categorias 
+     FROM productos p 
+     LEFT JOIN segmentos s ON p.segmento_id = s.id 
+     WHERE FIND_IN_SET(?, p.categorias) > 0`,
+    [categoria],
     (err, results) => {
       if (err) {
-        console.error("Error fetching usuarios:", err);
+        console.error("Error fetching productos por categoría:", err);
         return res
           .status(500)
-          .json({ success: false, message: "Error fetching usuarios" });
+          .json({ success: false, message: "Error fetching productos" });
       }
       res.json(results);
+    }
+  );
+});
+
+// Actualizar categorías de un producto
+app.put("/api/productos/:id/categorias", (req, res) => {
+  let { categorias } = req.body;
+  console.log(
+    `📝 Actualizando producto ${req.params.id} con categorías: "${categorias}"`
+  ); // <--- AGREGAR
+
+  // Normalizar: permitir string vacío "", y A,B,C en cualquier orden
+  if (categorias === undefined) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Categorías requeridas" });
+  }
+  if (typeof categorias !== "string") {
+    return res
+      .status(400)
+      .json({ success: false, message: "Formato inválido" });
+  }
+
+  categorias = categorias.trim(); // puede quedar "" válido
+
+  // Validar contenido si no está vacío
+  if (categorias.length > 0) {
+    const parts = categorias
+      .split(",")
+      .map((c) => c.trim())
+      .filter(Boolean);
+    const valid = ["A", "B", "C"];
+    // Si hay algo no válido, 400
+    if (parts.some((c) => !valid.includes(c))) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Categorías inválidas" });
+    }
+    // Eliminar duplicados y ordenar opcionalmente
+    categorias = Array.from(new Set(parts)).join(",");
+  }
+
+  db.query(
+    "UPDATE productos SET categorias = ? WHERE id = ?",
+    [categorias, req.params.id],
+    (err, result) => {
+      if (err) {
+        console.error("Error actualizando categorías:", err);
+        return res.status(500).json({ success: false, error: err });
+      }
+      res.json({ success: true });
     }
   );
 });
@@ -1818,3 +2160,51 @@ app.post("/api/cotizaciones/observacion", (req, res) => {
 app.listen(PORT, "127.0.0.1", () => {
   console.log(`Server is running on http://127.0.0.1:${PORT}`);
 });
+
+app.post("/api/operaciones", (req, res) => {
+  const { cod_cotizacion, nombre, apellido, dni, capital, plazo } = req.body;
+
+  const fecha_operacion = new Date(); // Fecha y hora actual
+
+  db.query(
+    `INSERT INTO operaciones (
+      cod_cotizacion, fecha_operacion, nombre, apellido, dni, capital, plazo
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [cod_cotizacion, fecha_operacion, nombre, apellido, dni, capital, plazo],
+    (err, result) => {
+      if (err) return res.status(500).json({ success: false, error: err });
+      res.json({ success: true, id: result.insertId });
+    }
+  );
+});
+
+app.get("/api/operaciones", (req, res) => {
+  db.query(
+    "SELECT * FROM operaciones ORDER BY fecha_operacion DESC",
+    (err, rows) => {
+      if (err) return res.status(500).json({ success: false, error: err });
+      res.json({ success: true, operaciones: rows });
+    }
+  );
+});
+
+app.put("/api/operaciones/:id", (req, res) => {
+  const { id } = req.params;
+  const campos = req.body;
+  const keys = Object.keys(campos);
+  const values = Object.values(campos);
+
+  if (keys.length === 0) return res.json({ success: false });
+
+  const setClause = keys.map((key) => `${key} = ?`).join(", ");
+  db.query(
+    `UPDATE operaciones SET ${setClause} WHERE id = ?`,
+    [...values, id],
+    (err, result) => {
+      if (err) return res.status(500).json({ success: false, error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+
