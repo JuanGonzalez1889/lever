@@ -290,6 +290,7 @@ app.post("/api/data", (req, res) => {
   const segmento_id = productos[selectedProductId]?.segmento_id || null;
   const oldName = productos[selectedProductId]?.nombre || null;
   const banco = productos[selectedProductId]?.banco || null;
+  const categorias = productos[selectedProductId]?.categorias || "A,B,C";
   const productoIds = productos[selectedProductId]?.producto_ids || [];
   const productoIdPrincipal = productoIds[0]; // Usá solo el primero
 
@@ -375,18 +376,18 @@ app.post("/api/data", (req, res) => {
       Object.entries(plazos).map(([plazo, { interest, fee, minfee }], idx) => {
         return new Promise((resolve, reject) => {
           const query = `
-          INSERT INTO productos (id, nombre, plazo, interest, fee, minfee, segmento_id, banco)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO productos (id, nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON DUPLICATE KEY UPDATE
             nombre = VALUES(nombre),
             interest = VALUES(interest),
             fee = VALUES(fee),
             minfee = VALUES(minfee),
             segmento_id = VALUES(segmento_id),
-            banco = VALUES(banco)
+            banco = VALUES(banco),
+            categorias = VALUES(categorias)
         `;
 
-          // ✅ IMPORTANTE: Convertir explícitamente a número con más precisión
           const feeValue = fee
             ? parseFloat(fee.toString().replace(",", "."))
             : 0;
@@ -397,23 +398,18 @@ app.post("/api/data", (req, res) => {
             ? parseFloat(minfee.toString().replace(",", "."))
             : 0;
 
-          console.log("VALORES A GUARDAR:", {
-            fee: feeValue,
-            interest: interestValue,
-            minfee: minfeeValue,
-          });
-
           db.query(
             query,
             [
-              productoIds[idx], // el id correspondiente al plazo
+              productoIds[idx],
               newProductName || productos[productoId].nombre,
               plazo,
-              interest,
-              fee,
-              minfee,
+              interestValue,
+              feeValue,
+              minfeeValue,
               segmento_id,
               banco,
+              categorias, // <--- AGREGAR
             ],
             (err, result) => {
               if (err) return reject(err);
