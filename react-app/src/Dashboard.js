@@ -29,6 +29,8 @@ import ConfiguracionBancos from "./ConfiguracionBancos";
 import Bancos from "./Bancos";
 import Agencias from "./Agencias";
 import Cotizaciones from "./Cotizaciones";
+import Operaciones from "./Operaciones";
+import Prenda from "./Prenda";
 import { FaRegCircleUser } from "react-icons/fa6";
 
 //const API_URL = "https://api.lever.com.ar" // para PRODUCCION
@@ -40,10 +42,12 @@ console.log("API_URL (Dashboard):", API_URL); // Verificar que se está utilizan
 function Tablero() {
   const [data, setData] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedBanco, setSelectedBanco] = useState("");
+  const [selectedSegmento, setSelectedSegmento] = useState("");
   const [products, setProducts] = useState([]);
   const [minAFinanciar, setMinAFinanciar] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [ltv, setLtv] = useState({});
+  const [ltv, setLtv] = useState({}); 
   const [showNewProductModal, setShowNewProductModal] = useState(false); // Nuevo estado para el modal
   const [newProduct, setNewProduct] = useState({
     nombre: "",
@@ -55,8 +59,57 @@ function Tablero() {
   });
   const [newProductName, setNewProductName] = useState(""); // Estado para el nuevo nombre del producto
   const [segmentos, setSegmentos] = useState([]);
-  console.log("API_URL (Tablero):", API_URL); // Verificar la URL
+  const [newProductCategorias, setNewProductCategorias] = useState([
+    "A",
+    "B",
+    "C",
+  ]);
+  // Obtener bancos únicos
+  const bancosUnicos = data
+    ? [...new Set(Object.values(data.productos).map((p) => p.banco))].sort()
+    : [];
 
+  // Obtener segmentos únicos
+  const segmentosUnicos = data
+    ? [...new Set(Object.values(data.productos).map((p) => p.segmento_id))]
+        .map((segId) => {
+          const seg = segmentos.find((s) => s.id === Number(segId));
+          return seg ? { id: seg.id, nombre: seg.nombre } : null;
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.nombre.localeCompare(b.nombre))
+    : [];
+  // Filtrar bancos por segmento seleccionado
+  const bancosPorSegmento = selectedSegmento
+    ? [
+        ...new Set(
+          Object.values(data?.productos || {})
+            .filter((p) => p.segmento_id == selectedSegmento)
+            .map((p) => p.banco)
+        ),
+      ].sort()
+    : [];     
+  // Filtrar productos por banco seleccionado
+  const productosFiltradesPorBanco = selectedBanco
+    ? Object.entries(data?.productos || {})
+        .filter(([_, prod]) => prod.banco === selectedBanco)
+        .map(([key, prod]) => ({ key, nombre: prod.nombre, banco: prod.banco }))
+    : [];
+
+  const handleSelectProduct = (productKey) => {
+    setSelectedProduct(productKey);
+    const producto = data.productos[productKey];
+    if (producto) {
+      setMinAFinanciar(data.minAFinanciar?.toString() || "");
+      setLtv(data.productos?.[productKey]?.ltv || {});
+    }
+  };
+
+  const defaultNewProductYears = [2025, 2024, 2023];
+  const [newProductYears, setNewProductYears] = useState(
+    defaultNewProductYears
+  );
+  console.log("API_URL (Tablero):", API_URL); // Verificar la URL
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,7 +121,12 @@ function Tablero() {
         setData(response.data);
         setProducts(Object.keys(response.data.productos)); // Obtener los nombres de los productos
         setMinAFinanciar(formatNumber(response.data.minAFinanciar));
-        setLtv(response.data.ltv || {});
+        const firstProductKey = Object.keys(response.data.productos || {})[0];
+        setLtv(
+          firstProductKey
+            ? response.data.productos[firstProductKey].ltv || {}
+            : {}
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -94,7 +152,7 @@ function Tablero() {
   };
 
   const handleSave = async () => {
-    // --- CORRECCIÓN: Normalizar el objeto LTV ---
+    // Normalizar LTV
     const updatedLtv = {};
     Object.keys(ltv).forEach((year) => {
       if (typeof ltv[year] === "object") {
@@ -107,25 +165,28 @@ function Tablero() {
       }
     });
 
-    // Usar la clave nueva si cambió el nombre
+    // Clave destino
     const productKeyToSend =
       newProductName && newProductName !== selectedProduct
         ? `${newProductName}__${data.productos[selectedProduct].segmento_id}__${data.productos[selectedProduct].banco}`
         : selectedProduct;
 
+    const categoriasToSend = data.productos[selectedProduct]?.categorias ?? "";
+
     const updatedData = {
-      minAFinanciar: parseInt(minAFinanciar.replace(/\./g, "")),
+      minAFinanciar: parseInt((minAFinanciar || "0").replace(/\./g, "")),
       productos: {
         [productKeyToSend]: {
           ...data.productos[selectedProduct],
-          nombre: newProductName, // Asegurá que el nombre sea el nuevo
+          nombre: newProductName,
           segmento_id: data.productos[selectedProduct].segmento_id,
+          categorias: categoriasToSend, // puede ser ""
         },
       },
       ltv: {
         [productKeyToSend]: updatedLtv,
       },
-      newProductName, // Enviar el nuevo nombre del producto
+      newProductName,
     };
 
     try {
@@ -133,28 +194,35 @@ function Tablero() {
         withCredentials: true,
       });
 
-      // Actualizar el estado local con el nuevo nombre/banco
+      // Guardar categorías específicas en la tabla productos
+      const producto_id = data.productos[selectedProduct].producto_ids[0];
+      await axios.put(
+        `${API_URL}/api/productos/${producto_id}/categorias`,
+        { categorias: categoriasToSend }, // "" permitido
+        { withCredentials: true }
+      );
+
+      // Actualizar estado local
       setData((prevData) => {
         const newProductos = { ...prevData.productos };
+        const current = newProductos[selectedProduct];
         newProductos[productKeyToSend] = {
-          ...newProductos[selectedProduct],
-          nombre: newProductName,
+          ...current,
+          nombre: newProductName || current.nombre,
+          categorias: categoriasToSend,
         };
         if (productKeyToSend !== selectedProduct) {
           delete newProductos[selectedProduct];
         }
-        // ACTUALIZAR products con las nuevas claves
         setProducts(Object.keys(newProductos));
-        return {
-          ...prevData,
-          productos: newProductos,
-        };
+        return { ...prevData, productos: newProductos };
       });
 
-      setSelectedProduct(productKeyToSend); // Actualizar el producto seleccionado
+      setSelectedProduct(productKeyToSend);
       setShowModal(true);
     } catch (error) {
       console.error("Error saving data:", error);
+      alert("Error guardando cambios");
     }
   };
 
@@ -238,9 +306,21 @@ function Tablero() {
         </td>
         <td>
           <Form.Control
-            type="number"
-            value={datos.fee} // Mantener los puntos como separadores decimales
-            onChange={(e) => handleInputChange(e, producto, plazo, "fee")}
+            type="text"
+            placeholder="0.065"
+            value={datos.fee}
+            onChange={(e) => {
+              // Validar que sea un número decimal válido
+              const value = e.target.value.replace(",", ".");
+              if (value === "" || !isNaN(value)) {
+                handleInputChange(
+                  { ...e, target: { ...e.target, value } },
+                  producto,
+                  plazo,
+                  "fee"
+                );
+              }
+            }}
             required
           />
         </td>
@@ -369,7 +449,10 @@ function Tablero() {
         `${API_URL}/api/new-product`,
         {
           ...newProduct,
-          segmento_id: Number(newProduct.segmento_id), // <-- Asegura que sea número
+          segmento_id: Number(newProduct.segmento_id),
+          categorias: newProductCategorias.length
+            ? newProductCategorias.join(",")
+            : "A,B,C",
         },
         { withCredentials: true }
       );
@@ -380,8 +463,11 @@ function Tablero() {
         ltv: {},
         plazos: {},
         segmento_id: "",
+        banco: "",
       });
-      // Recargar los datos
+      setNewProductCategorias(["A", "B", "C"]);
+      setNewProductYears(defaultNewProductYears); // reset años LTV
+      // Recargar datos
       const response = await axios.get(`${API_URL}/api/data`, {
         withCredentials: true,
       });
@@ -390,6 +476,18 @@ function Tablero() {
     } catch (error) {
       console.error("Error saving new product:", error);
     }
+  };
+  const agregarAnoLtvNuevoProducto = () => {
+    const nuevoAno = prompt("Ingrese el nuevo año:");
+    if (!nuevoAno) return;
+    const yearNum = Number(nuevoAno);
+    if (isNaN(yearNum)) {
+      alert("El año debe ser numérico.");
+      return;
+    }
+    setNewProductYears((prev) =>
+      prev.includes(yearNum) ? prev : [...prev, yearNum].sort((a, b) => b - a)
+    );
   };
 
   const eliminarProducto = async () => {
@@ -476,185 +574,417 @@ function Tablero() {
           Eliminar Producto
         </Button>
       )}
+
       <Form id="configForm">
-        <Form.Group controlId="minAFinanciar">
-          <Form.Label>Mínimo a Financiar:</Form.Label>
-          <Form.Control
-            type="text"
-            value={minAFinanciar} // Mantener los puntos como separadores decimales
-            onChange={(e) =>
-              setMinAFinanciar(formatNumber(e.target.value.replace(/\./g, "")))
-            } // Mantener los puntos como separadores decimales
-          />
-        </Form.Group>
-        <Form.Group controlId="selectedProduct">
-          <Form.Label>Seleccionar Producto:</Form.Label>
+        {/* SELECT SEGMENTO */}
+        <Form.Group controlId="selectedSegmento" className="mt-3">
+          <Form.Label>
+            <strong>Seleccionar Segmento:</strong>
+          </Form.Label>
           <Form.Control
             as="select"
-            value={selectedProduct}
-            onChange={handleProductChange}
+            value={selectedSegmento}
+            onChange={(e) => {
+              setSelectedSegmento(e.target.value);
+              setSelectedBanco("");
+              setSelectedProduct("");
+            }}
           >
-            <option value="" disabled>
-              Seleccione un producto
-            </option>
-            {products
-              .filter((productoKey) => data.productos[productoKey])
-              .map((productoKey) => (
-                <option key={productoKey} value={productoKey}>
-                  {data.productos[productoKey].nombre} -{" "}
-                  {data.productos[productoKey].banco}
-                </option>
-              ))}
+            <option value="">-- Selecciona un segmento --</option>
+            {segmentosUnicos.map((seg) => (
+              <option key={seg.id} value={seg.id}>
+                {seg.nombre}
+              </option>
+            ))}
           </Form.Control>
         </Form.Group>
-        {selectedProduct && (
-          <Form.Group controlId="newProductName">
-            <Form.Label>Modificar Nombre del Producto:</Form.Label>
-            <Form.Control
-              type="text"
-              value={newProductName}
-              onChange={(e) => setNewProductName(e.target.value)}
-              required
-            />
-          </Form.Group>
-        )}
 
-        {selectedProduct && (
-          <Form.Group controlId="editProductSegmento">
-            <Form.Label>Modificar segmento:</Form.Label>
+        {/* SELECT BANCO (solo si hay segmento seleccionado) */}
+        {selectedSegmento && (
+          <Form.Group controlId="selectedBanco" className="mt-3">
+            <Form.Label>
+              <strong>Seleccionar Banco:</strong>
+            </Form.Label>
             <Form.Control
               as="select"
-              value={
-                data.productos[selectedProduct]?.segmento_id?.toString() || ""
-              }
+              value={selectedBanco}
               onChange={(e) => {
-                setData((prevData) => ({
-                  ...prevData,
-                  productos: {
-                    ...prevData.productos,
-                    [selectedProduct]: {
-                      ...prevData.productos[selectedProduct],
-                      segmento_id: e.target.value,
-                    },
-                  },
-                }));
+                setSelectedBanco(e.target.value);
+                setSelectedProduct("");
               }}
-              required
             >
-              <option value="">Seleccionar segmento</option>
-              {segmentos.map((seg) => (
-                <option key={seg.id} value={seg.id.toString()}>
-                  {seg.nombre}
+              <option value="">-- Selecciona un banco --</option>
+              {bancosPorSegmento.map((banco) => (
+                <option key={banco} value={banco}>
+                  {banco}
                 </option>
               ))}
             </Form.Control>
           </Form.Group>
         )}
-        {selectedProduct && (
-          <Form.Group controlId="editProductBanco">
-            <Form.Label>Modificar Banco:</Form.Label>
+
+        {/* SELECT PRODUCTO (solo si hay banco seleccionado) */}
+        {selectedBanco && selectedSegmento && (
+          <Form.Group controlId="selectedProduct">
+            <Form.Label>
+              <strong>Seleccionar Producto:</strong>
+            </Form.Label>
             <Form.Control
-              type="text"
-              value={data.productos[selectedProduct]?.banco || ""}
-              onChange={(e) => {
-                setData((prevData) => ({
-                  ...prevData,
-                  productos: {
-                    ...prevData.productos,
-                    [selectedProduct]: {
-                      ...prevData.productos[selectedProduct],
-                      banco: e.target.value,
-                    },
-                  },
-                }));
-              }}
-              required
-            />
+              as="select"
+              value={selectedProduct}
+              onChange={(e) => handleSelectProduct(e.target.value)}
+            >
+              <option value="">-- Selecciona un producto --</option>
+              {productosFiltradesPorBanco.map((prod) => (
+                <option key={prod.key} value={prod.key}>
+                  {prod.nombre}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
         )}
 
+        {/* DETALLES DEL PRODUCTO (solo si hay producto seleccionado) */}
         {selectedProduct && (
-          <div id="productoForm">
-            <h2>
-              Producto {data.productos[selectedProduct]?.nombre?.toUpperCase()}
-            </h2>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Plazo</th>
-                  <th>Interés</th>
-                  <th>Fee</th>
-                  <th>Min Fee</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.productos[selectedProduct]?.plazos &&
-                  Object.keys(
-                    data.productos[selectedProduct]?.plazos || {}
-                  ).map((plazo) =>
-                    generarPlazoHtml(
-                      selectedProduct,
-                      plazo,
-                      data.productos[selectedProduct].plazos[plazo]
-                    )
-                  )}
-              </tbody>
-            </Table>
-            <Button variant="primary" onClick={agregarPlazo}>
-              Agregar Plazo
-            </Button>
-          </div>
-        )}
-        {selectedProduct && (
-          <div id="ltvForm">
-            <h2>LTV por Año para Producto {selectedProduct.toUpperCase()}</h2>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Año</th>
-                  <th>LTV</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(ltv).map((year) => (
-                  <tr key={`${selectedProduct}${year}Ltv`}>
-                    <td>{year}</td>
-                    <td>
-                      <Form.Control
-                        type="number"
-                        value={ltv[year]?.value || ""}
-                        onChange={(e) => handleLtvChange(e, year, "value")}
-                        required
-                      />
-                    </td>
-                    <td
+          <>
+            {/* Mínimo a Financiar - SOLO AQUÍ */}
+            <Form.Group controlId="minAFinanciar" className="mt-3">
+              <Form.Label>
+                <strong>Mínimo a Financiar:</strong>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={minAFinanciar}
+                onChange={(e) =>
+                  setMinAFinanciar(
+                    formatNumber(e.target.value.replace(/\./g, ""))
+                  )
+                }
+              />
+            </Form.Group>
+
+            <Form.Group controlId="newProductName" className="mt-3">
+              <Form.Label>
+                <strong>Modificar Nombre del Producto:</strong>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={newProductName}
+                onChange={(e) => setNewProductName(e.target.value)}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group controlId="editProductSegmento">
+              <Form.Label>
+                <strong>Modificar Segmento:</strong>
+              </Form.Label>
+              <Form.Control
+                as="select"
+                value={
+                  data.productos[selectedProduct]?.segmento_id?.toString() || ""
+                }
+                onChange={(e) => {
+                  setData((prevData) => ({
+                    ...prevData,
+                    productos: {
+                      ...prevData.productos,
+                      [selectedProduct]: {
+                        ...prevData.productos[selectedProduct],
+                        segmento_id: e.target.value,
+                      },
+                    },
+                  }));
+                }}
+                required
+              >
+                <option value="">Seleccionar segmento</option>
+                {segmentos.map((seg) => (
+                  <option key={seg.id} value={seg.id.toString()}>
+                    {seg.nombre}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="editProductBanco">
+              <Form.Label>
+                <strong>Modificar Banco:</strong>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={data.productos[selectedProduct]?.banco || ""}
+                onChange={(e) => {
+                  setData((prevData) => ({
+                    ...prevData,
+                    productos: {
+                      ...prevData.productos,
+                      [selectedProduct]: {
+                        ...prevData.productos[selectedProduct],
+                        banco: e.target.value,
+                      },
+                    },
+                  }));
+                }}
+                required
+              />
+            </Form.Group>
+
+            {/* CATEGORÍAS */}
+            <Form.Group controlId="editProductCategorias" className="mt-3">
+              <Form.Label>
+                <strong>Categorías visibles para:</strong>
+              </Form.Label>
+
+              {(() => {
+                const cats = (data.productos[selectedProduct]?.categorias || "")
+                  .split(",")
+                  .filter(Boolean);
+                const noMostrar = cats.length === 0;
+
+                return (
+                  <>
+                    <div
                       style={{
                         display: "flex",
-                        justifyContent: "center",
+                        gap: "20px",
                         alignItems: "center",
+                        marginBottom: 8,
                       }}
                     >
-                      <FaTimes
-                        color="red"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => eliminarLtv(selectedProduct, year)}
+                      <Form.Check
+                        type="checkbox"
+                        label="Categoría A"
+                        disabled={noMostrar}
+                        checked={
+                          data.productos[selectedProduct]?.categorias?.includes(
+                            "A"
+                          ) || false
+                        }
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setData((prevData) => {
+                            const currentCategorias =
+                              prevData.productos[selectedProduct]?.categorias ||
+                              "";
+                            let newCategorias = currentCategorias
+                              .split(",")
+                              .filter(Boolean);
+
+                            if (checked && !newCategorias.includes("A")) {
+                              newCategorias.push("A");
+                            } else if (!checked) {
+                              newCategorias = newCategorias.filter(
+                                (c) => c !== "A"
+                              );
+                            }
+
+                            return {
+                              ...prevData,
+                              productos: {
+                                ...prevData.productos,
+                                [selectedProduct]: {
+                                  ...prevData.productos[selectedProduct],
+                                  categorias: newCategorias.join(","),
+                                },
+                              },
+                            };
+                          });
+                        }}
                       />
-                    </td>
+
+                      <Form.Check
+                        type="checkbox"
+                        label="Categoría B"
+                        disabled={noMostrar}
+                        checked={
+                          data.productos[selectedProduct]?.categorias?.includes(
+                            "B"
+                          ) || false
+                        }
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setData((prevData) => {
+                            const currentCategorias =
+                              prevData.productos[selectedProduct]?.categorias ||
+                              "";
+                            let newCategorias = currentCategorias
+                              .split(",")
+                              .filter(Boolean);
+
+                            if (checked && !newCategorias.includes("B")) {
+                              newCategorias.push("B");
+                            } else if (!checked) {
+                              newCategorias = newCategorias.filter(
+                                (c) => c !== "B"
+                              );
+                            }
+
+                            return {
+                              ...prevData,
+                              productos: {
+                                ...prevData.productos,
+                                [selectedProduct]: {
+                                  ...prevData.productos[selectedProduct],
+                                  categorias: newCategorias.join(","),
+                                },
+                              },
+                            };
+                          });
+                        }}
+                      />
+
+                      <Form.Check
+                        type="checkbox"
+                        label="Categoría C"
+                        disabled={noMostrar}
+                        checked={
+                          data.productos[selectedProduct]?.categorias?.includes(
+                            "C"
+                          ) || false
+                        }
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setData((prevData) => {
+                            const currentCategorias =
+                              prevData.productos[selectedProduct]?.categorias ||
+                              "";
+                            let newCategorias = currentCategorias
+                              .split(",")
+                              .filter(Boolean);
+
+                            if (checked && !newCategorias.includes("C")) {
+                              newCategorias.push("C");
+                            } else if (!checked) {
+                              newCategorias = newCategorias.filter(
+                                (c) => c !== "C"
+                              );
+                            }
+
+                            return {
+                              ...prevData,
+                              productos: {
+                                ...prevData.productos,
+                                [selectedProduct]: {
+                                  ...prevData.productos[selectedProduct],
+                                  categorias: newCategorias.join(","),
+                                },
+                              },
+                            };
+                          });
+                        }}
+                      />
+                    </div>
+
+                    <Form.Check
+                      type="checkbox"
+                      label="No mostrar este producto"
+                      checked={noMostrar}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setData((prevData) => ({
+                          ...prevData,
+                          productos: {
+                            ...prevData.productos,
+                            [selectedProduct]: {
+                              ...prevData.productos[selectedProduct],
+                              categorias: checked ? "" : "A,B,C",
+                            },
+                          },
+                        }));
+                      }}
+                    />
+                  </>
+                );
+              })()}
+            </Form.Group>
+
+            {/* PLAZOS */}
+            <div id="productoForm" className="mt-4">
+              <h2>
+                Producto{" "}
+                {data.productos[selectedProduct]?.nombre?.toUpperCase()}
+              </h2>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Plazo</th>
+                    <th>Interés</th>
+                    <th>Fee</th>
+                    <th>Min Fee</th>
+                    <th>Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
-            <Button variant="secondary" onClick={agregarAnoLtv}>
-              Agregar Año
-            </Button>
-          </div>
+                </thead>
+                <tbody>
+                  {data.productos[selectedProduct]?.plazos &&
+                    Object.keys(
+                      data.productos[selectedProduct]?.plazos || {}
+                    ).map((plazo) =>
+                      generarPlazoHtml(
+                        selectedProduct,
+                        plazo,
+                        data.productos[selectedProduct].plazos[plazo]
+                      )
+                    )}
+                </tbody>
+              </Table>
+              <Button variant="primary" onClick={agregarPlazo}>
+                Agregar Plazo
+              </Button>
+            </div>
+
+            {/* LTV */}
+            <div id="ltvForm" className="mt-4">
+              <h2>LTV por Año para Producto {selectedProduct.toUpperCase()}</h2>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Año</th>
+                    <th>LTV</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(ltv).map((year) => (
+                    <tr key={`${selectedProduct}${year}Ltv`}>
+                      <td>{year}</td>
+                      <td>
+                        <Form.Control
+                          type="number"
+                          value={ltv[year]?.value || ""}
+                          onChange={(e) => handleLtvChange(e, year, "value")}
+                          required
+                        />
+                      </td>
+                      <td
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <FaTimes
+                          color="red"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => eliminarLtv(selectedProduct, year)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+              <Button variant="secondary" onClick={agregarAnoLtv}>
+                Agregar Año
+              </Button>
+            </div>
+          </>
         )}
-        <Button variant="success" onClick={handleSave}>
+
+        <Button variant="success" onClick={handleSave} className="mt-4">
           Guardar
         </Button>
       </Form>
+
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>¡Cambios guardados exitosamente!</Modal.Title>
@@ -673,6 +1003,7 @@ function Tablero() {
       <Modal
         show={showNewProductModal}
         onHide={() => setShowNewProductModal(false)}
+        size="lg"
       >
         <Modal.Header closeButton>
           <Modal.Title>Nuevo Producto</Modal.Title>
@@ -688,6 +1019,7 @@ function Tablero() {
                 required
               />
             </Form.Group>
+
             <Form.Group controlId="newProductMinAFinanciar">
               <Form.Label>Mínimo a Financiar:</Form.Label>
               <Form.Control
@@ -697,8 +1029,9 @@ function Tablero() {
                 required
               />
             </Form.Group>
+
             <h5>LTV</h5>
-            <Table striped bordered hover>
+            <Table striped bordered hover size="sm">
               <thead>
                 <tr>
                   <th>Año</th>
@@ -707,34 +1040,48 @@ function Tablero() {
                 </tr>
               </thead>
               <tbody>
-                {[
-                  2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016,
-                  2015, 2014, 2013,
-                ].map((year) => (
-                  <tr key={year}>
-                    <td>{year}</td>
-                    <td>
-                      <Form.Control
-                        type="number"
-                        value={newProduct.ltv[year]?.value || ""}
-                        onChange={(e) =>
-                          handleNewProductLtvChange(e, year, "value")
-                        }
-                      />
-                    </td>
-                    <td>
-                      <Form.Check
-                        type="checkbox"
-                        checked={newProduct.ltv[year]?.show || false}
-                        onChange={(e) =>
-                          handleNewProductLtvChange(e, year, "show")
-                        }
-                      />
-                    </td>
-                  </tr>
-                ))}
+                {Array.from(
+                  new Set([
+                    ...newProductYears,
+                    ...Object.keys(newProduct.ltv || {}).map((y) => Number(y)),
+                  ])
+                )
+                  .sort((a, b) => b - a)
+                  .map((year) => (
+                    <tr key={year}>
+                      <td>{year}</td>
+                      <td>
+                        <Form.Control
+                          type="number"
+                          size="sm"
+                          value={newProduct.ltv[year]?.value || ""}
+                          onChange={(e) =>
+                            handleNewProductLtvChange(e, year, "value")
+                          }
+                        />
+                      </td>
+                      <td>
+                        <Form.Check
+                          type="checkbox"
+                          checked={newProduct.ltv[year]?.show || false}
+                          onChange={(e) =>
+                            handleNewProductLtvChange(e, year, "show")
+                          }
+                        />
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </Table>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={agregarAnoLtvNuevoProducto}
+              className="mb-3"
+            >
+              Agregar Año LTV
+            </Button>
+
             <Form.Group controlId="newProductSegmento">
               <Form.Label>Segmento:</Form.Label>
               <Form.Control
@@ -756,6 +1103,7 @@ function Tablero() {
                 ))}
               </Form.Control>
             </Form.Group>
+
             <Form.Group controlId="newProductBanco">
               <Form.Label>Banco:</Form.Label>
               <Form.Control
@@ -765,8 +1113,9 @@ function Tablero() {
                 required
               />
             </Form.Group>
+
             <h5>Plazos</h5>
-            <Table striped bordered hover>
+            <Table striped bordered hover size="sm">
               <thead>
                 <tr>
                   <th>Plazo</th>
@@ -782,6 +1131,7 @@ function Tablero() {
                     <td>
                       <Form.Control
                         type="number"
+                        size="sm"
                         value={newProduct.plazos[plazo]?.interest || ""}
                         onChange={(e) =>
                           handleNewProductPlazoChange(e, plazo, "interest")
@@ -791,6 +1141,7 @@ function Tablero() {
                     <td>
                       <Form.Control
                         type="number"
+                        size="sm"
                         value={newProduct.plazos[plazo]?.fee || ""}
                         onChange={(e) =>
                           handleNewProductPlazoChange(e, plazo, "fee")
@@ -800,6 +1151,7 @@ function Tablero() {
                     <td>
                       <Form.Control
                         type="number"
+                        size="sm"
                         value={newProduct.plazos[plazo]?.minfee || ""}
                         onChange={(e) =>
                           handleNewProductPlazoChange(e, plazo, "minfee")
@@ -810,9 +1162,86 @@ function Tablero() {
                 ))}
               </tbody>
             </Table>
-            <Button variant="secondary" onClick={agregarNuevoPlazo}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={agregarNuevoPlazo}
+              className="mb-3"
+            >
               Agregar Plazo
             </Button>
+
+            <Form.Group
+              controlId="newProductCategorias"
+              className="mt-3 p-3"
+              style={{ backgroundColor: "#f8f9fa", borderRadius: "5px" }}
+            >
+              <Form.Label>
+                <strong>Categorías visibles para:</strong>
+              </Form.Label>
+              <div style={{ display: "flex", gap: "20px", marginBottom: 10 }}>
+                <Form.Check
+                  type="checkbox"
+                  label="Categoría A"
+                  checked={newProductCategorias.includes("A")}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setNewProductCategorias((prev) => {
+                      if (checked && !prev.includes("A")) {
+                        return [...prev, "A"];
+                      } else if (!checked) {
+                        return prev.filter((c) => c !== "A");
+                      }
+                      return prev;
+                    });
+                  }}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="Categoría B"
+                  checked={newProductCategorias.includes("B")}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setNewProductCategorias((prev) => {
+                      if (checked && !prev.includes("B")) {
+                        return [...prev, "B"];
+                      } else if (!checked) {
+                        return prev.filter((c) => c !== "B");
+                      }
+                      return prev;
+                    });
+                  }}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="Categoría C"
+                  checked={newProductCategorias.includes("C")}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setNewProductCategorias((prev) => {
+                      if (checked && !prev.includes("C")) {
+                        return [...prev, "C"];
+                      } else if (!checked) {
+                        return prev.filter((c) => c !== "C");
+                      }
+                      return prev;
+                    });
+                  }}
+                />
+              </div>
+              <Form.Check
+                type="checkbox"
+                label="No mostrar este producto"
+                checked={newProductCategorias.length === 0}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setNewProductCategorias([]);
+                  } else {
+                    setNewProductCategorias(["A", "B", "C"]);
+                  }
+                }}
+              />
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -835,15 +1264,6 @@ function Cotizar() {
   return <Cotizador />;
 }
 
-function Operaciones() {
-  return (
-    <div className="content">
-      <h1>Operaciones</h1>
-      <p>Página en construcción...</p>
-    </div>
-  );
-}
-
 function Instructivos() {
   return (
     <div className="content">
@@ -857,26 +1277,26 @@ function Dashboard() {
   const [usuario, setUsuario] = useState(
     sessionStorage.getItem("usuario") || "Usuario"
   );
-   const [rol, setRol] = useState(sessionStorage.getItem("rol") || "empleado");
-   useEffect(() => {
-     axios
-       .get(`${API_URL}/api/check-session-admin`, { withCredentials: true })
-       .then((response) => {
-         if (response.data.success && response.data.user) {
-           setUsuario(response.data.user.username);
-           setRol(response.data.user.rol);
-           sessionStorage.setItem("usuario", response.data.user.username);
-           sessionStorage.setItem("rol", response.data.user.rol);
-         } else {
-           setUsuario("Usuario");
-           setRol("empleado");
-         }
-       })
-       .catch(() => {
-         setUsuario("Usuario");
-         setRol("empleado");
-       });
-   }, []);
+  const [rol, setRol] = useState(sessionStorage.getItem("rol") || "empleado");
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/api/check-session-admin`, { withCredentials: true })
+      .then((response) => {
+        if (response.data.success && response.data.user) {
+          setUsuario(response.data.user.username);
+          setRol(response.data.user.rol);
+          sessionStorage.setItem("usuario", response.data.user.username);
+          sessionStorage.setItem("rol", response.data.user.rol);
+        } else {
+          setUsuario("Usuario");
+          setRol("empleado");
+        }
+      })
+      .catch(() => {
+        setUsuario("Usuario");
+        setRol("empleado");
+      });
+  }, []);
   const handleLogout = async () => {
     try {
       await axios.post(`${API_URL}/api/logout`, {}, { withCredentials: true });
@@ -1063,6 +1483,7 @@ function Dashboard() {
           <Route path="cotizador" element={<Cotizador />} />{" "}
           <Route path="cotizar" element={<Cotizador />} />
           <Route path="operaciones" element={<Operaciones />} />
+          <Route path="operaciones/prenda" element={<Prenda />} />
           <Route path="cotizaciones" element={<Cotizaciones />} />
           <Route path="instructivos" element={<Instructivos />} />
           <Route path="usuarios-agencias" element={<UsuariosAgencias />} />

@@ -25,7 +25,9 @@ function Cotizaciones() {
   const [observacionEditada, setObservacionEditada] = useState("");
   const usuarioActual = sessionStorage.getItem("usuario") || "";
   const rolActual = sessionStorage.getItem("rol") || "";
-
+  const [showGenerarOp, setShowGenerarOp] = useState(false);
+  const [montoOp, setMontoOp] = useState("");
+  const [plazoOp, setPlazoOp] = useState("");
 
   useEffect(() => {
     axios
@@ -54,7 +56,48 @@ function Cotizaciones() {
       alert("No hay cotización seleccionada");
     }
   };
+  // Abrir modal de Generar OP
+  const handleGenerarOp = () => {
+    if (cotizacionSeleccionada) {
+      setMontoOp(cotizacionSeleccionada.monto || "");
+      setPlazoOp("");
+      setShowGenerarOp(true);
+    }
+  };
 
+  // Cerrar modal de Generar OP
+  const handleCloseGenerarOp = () => {
+    setShowGenerarOp(false);
+    setMontoOp("");
+    setPlazoOp("");
+  };
+
+  // Confirmar OP (por ahora solo muestra alert)
+  const handleConfirmarOp = async () => {
+    if (!cotizacionSeleccionada) return;
+
+    try {
+      const res = await axios.post(`${API_URL}/api/operaciones`, {
+        cod_cotizacion: cotizacionSeleccionada.id,
+        nombre: cotizacionSeleccionada.cliente_nombre,
+        apellido: cotizacionSeleccionada.cliente_apellido,
+        dni: cotizacionSeleccionada.cliente_dni,
+        capital: montoOp,
+        plazo: plazoOp,
+      });
+
+      if (res.data.success) {
+        alert("Operación generada correctamente. Cod OP: " + res.data.id);
+        setShowGenerarOp(false);
+      } else {
+        alert("Error al generar la operación");
+      }
+    } catch (err) {
+      alert("Error al generar la operación");
+      console.error(err);
+    }
+  };
+  
   const handleGuardarObservacion = () => {
     if (!cotizacionSeleccionada) return;
     axios
@@ -148,35 +191,35 @@ function Cotizaciones() {
   });
   const exportarExcel = () => {
     // Solo exporta las cotizaciones filtradas
-     const data = cotizacionesFiltradas.map((cot) => {
-       // Formatear fecha a "DD/MM/YYYY HH:mm:ss"
-       let fechaFormateada = "";
-       if (cot.fecha) {
-         const fecha = new Date(cot.fecha);
-         fechaFormateada = fecha.toLocaleString("es-AR", {
-           timeZone: "America/Argentina/Buenos_Aires",
-           year: "numeric",
-           month: "2-digit",
-           day: "2-digit",
-           hour: "2-digit",
-           minute: "2-digit",
-           second: "2-digit",
-         });
-       }
-       return {
-         ID: cot.id,
-         Fecha: fechaFormateada,
-         Nombre: cot.cliente_nombre,
-         Apellido: cot.cliente_apellido,
-         DNI: cot.cliente_dni,
-         Agencia: cot.agencia,
-         Producto: cot.producto,
-         Monto: cot.monto,
-         Usuario: cot.usuario,
-         Recotizado: cot.recotizado ? "Sí" : "No",
-         Observaciones: cot.observaciones,
-       };
-     });
+    const data = cotizacionesFiltradas.map((cot) => {
+      // Formatear fecha a "DD/MM/YYYY HH:mm:ss"
+      let fechaFormateada = "";
+      if (cot.fecha) {
+        const fecha = new Date(cot.fecha);
+        fechaFormateada = fecha.toLocaleString("es-AR", {
+          timeZone: "America/Argentina/Buenos_Aires",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+      }
+      return {
+        ID: cot.id,
+        Fecha: fechaFormateada,
+        Nombre: cot.cliente_nombre,
+        Apellido: cot.cliente_apellido,
+        DNI: cot.cliente_dni,
+        Agencia: cot.agencia,
+        Producto: cot.producto,
+        Monto: cot.monto,
+        Usuario: cot.usuario,
+        Recotizado: cot.recotizado ? "Sí" : "No",
+        Observaciones: cot.observaciones,
+      };
+    });
 
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
@@ -536,15 +579,15 @@ function Cotizaciones() {
               />
               <Button
                 variant="success"
-                size="sm"
+                size="sb"
                 style={{
                   borderRadius: 20,
                   marginBottom: 12,
                   fontWeight: "bold",
-                  background:
-                    "linear-gradient(135deg, #7de2fc 0%, #b9b6e5 100%)",
+                  background: "linear-gradient(135deg, #232342 0%, #232342 100%)",
                   color: "#232342",
                   border: "none",
+                  width: 227,
                 }}
                 onClick={() => {
                   handleGuardarObservacion();
@@ -558,28 +601,21 @@ function Cotizaciones() {
         </Modal.Body>
         <Modal.Footer>
           <div
-            style={{
-              display: "flex",
-              gap: 16,
-              justifyContent: "center",
-              width: "100%",
-            }}
+            className="w-100 d-flex justify-content-start mb-4 ms-5"
+            style={{ gap: "16px" }}
           >
             <Button
               variant="primary"
               onClick={handleRecotizar}
               style={{
                 borderRadius: 30,
-                height: 54,
-                minWidth: 160,
+                height: 44,
+                minWidth: 120,
                 fontSize: "14px",
                 fontWeight: "bold",
                 background: "linear-gradient(135deg, #232342 0%, #232342 100%)",
                 color: "#fff",
                 border: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
                 letterSpacing: "1px",
               }}
@@ -587,27 +623,106 @@ function Cotizaciones() {
               RE COTIZAR
             </Button>
             <Button
+              variant="success"
+              onClick={handleGenerarOp}
+              style={{
+                borderRadius: 30,
+                height: 44,
+                minWidth: 120,
+                fontSize: "14px",
+                fontWeight: "bold",
+                background: "linear-gradient(135deg, #7de2fc 0%, #b9b6e5 100%)",
+                color: "#232342",
+                border: "none",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
+                letterSpacing: "1px",
+              }}
+            >
+              GENERAR OP
+            </Button>
+          </div>
+          {/* <div className="w-100 d-flex justify-content-center pb-4">
+            <Button
               variant="primary"
               onClick={handleClose}
               style={{
                 borderRadius: 30,
-                height: 54,
+                height: 44,
                 minWidth: 160,
-                fontSize: "19px",
+                fontSize: "16px",
                 fontWeight: "bold",
                 background: "linear-gradient(135deg, #232342 0%, #232342 100%)",
                 color: "#fff",
                 border: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
                 letterSpacing: "1px",
               }}
             >
               Cerrar
             </Button>
+          </div> */}
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de Generar OP */}
+      <Modal show={showGenerarOp} onHide={handleCloseGenerarOp} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar operación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div>
+              <label style={{ fontWeight: "bold" }}>Monto:</label>
+              <input
+                type="number"
+                className="form-control"
+                value={montoOp}
+                onChange={(e) => setMontoOp(e.target.value)}
+                style={{ marginTop: 6 }}
+              />
+            </div>
+            <div>
+              <label style={{ fontWeight: "bold" }}>Plazo:</label>
+              <input
+                type="number"
+                className="form-control"
+                value={plazoOp}
+                onChange={(e) => setPlazoOp(e.target.value)}
+                style={{ marginTop: 6 }}
+                placeholder="Ingrese plazo en meses"
+              />
+            </div>
           </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="success"
+            onClick={handleConfirmarOp}
+            style={{
+              borderRadius: 30,
+              minWidth: 140,
+              fontWeight: "bold",
+              background: "linear-gradient(135deg, #7de2fc 0%, #b9b6e5 100%)",
+              color: "#232342",
+              border: "none",
+            }}
+          >
+            Confirmar
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={handleCloseGenerarOp}
+            style={{
+              borderRadius: 30,
+              minWidth: 140,
+              fontWeight: "bold",
+              background: "linear-gradient(135deg, #232342 0%, #232342 100%)",
+              color: "#fff",
+              border: "none",
+            }}
+          >
+            Cancelar
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
