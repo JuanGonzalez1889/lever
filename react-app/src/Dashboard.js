@@ -171,7 +171,12 @@ function Tablero() {
         ? `${newProductName}__${data.productos[selectedProduct].segmento_id}__${data.productos[selectedProduct].banco}`
         : selectedProduct;
 
-    const categoriasToSend = data.productos[selectedProduct]?.categorias ?? "";
+    // ✅ NORMALIZAR CATEGORÍAS
+    let categoriasToSend = (data.productos[selectedProduct]?.categorias ?? "")
+      .split(",")
+      .map((c) => c.trim().replace(/Categoria\s*/gi, ""))
+      .filter((c) => c === "A" || c === "B" || c === "C")
+      .join(",");
 
     const updatedData = {
       minAFinanciar: parseInt((minAFinanciar || "0").replace(/\./g, "")),
@@ -180,7 +185,7 @@ function Tablero() {
           ...data.productos[selectedProduct],
           nombre: newProductName,
           segmento_id: data.productos[selectedProduct].segmento_id,
-          categorias: categoriasToSend, // puede ser ""
+          categorias: categoriasToSend,
         },
       },
       ltv: {
