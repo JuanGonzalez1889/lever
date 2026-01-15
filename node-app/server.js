@@ -290,7 +290,7 @@ app.post("/api/data", (req, res) => {
   const oldName = productos[selectedProductId]?.nombre || null;
   const banco = productos[selectedProductId]?.banco || null;
   const categorias = productos[selectedProductId]?.categorias || "A,B,C";
-  const retorno = productos[selectedProductId]?.retorno || "CR,SR";  // ✅ AGREGAR
+  const retorno = productos[selectedProductId]?.retorno || "CR,SR"; // ✅ AGREGAR
   const productoIds = productos[selectedProductId]?.producto_ids || [];
   const productoIdPrincipal = productoIds[0]; // Usá solo el primero
 
@@ -415,7 +415,7 @@ app.post("/api/data", (req, res) => {
               segmento_id,
               banco,
               categorias,
-              retorno,  // ✅ AGREGAR
+              retorno, // ✅ AGREGAR
             ],
             (err, result) => {
               if (err) return reject(err);
@@ -457,10 +457,14 @@ app.post("/api/data", (req, res) => {
       UPDATE productos SET banco = ?, retorno = ?
       WHERE id = ?
     `;
-      db.query(updateBancoQuery, [banco, retorno, productoIdPrincipal], (err) => {
-        if (err) return reject(err);
-        resolve();
-      });
+      db.query(
+        updateBancoQuery,
+        [banco, retorno, productoIdPrincipal],
+        (err) => {
+          if (err) return reject(err);
+          resolve();
+        }
+      );
     } else {
       resolve();
     }
@@ -595,9 +599,9 @@ app.post("/api/new-product", async (req, res) => {
     const { interest, fee, minfee } = plazos[primerPlazo];
     const productoId = await new Promise((resolve, reject) => {
       const query = `
-       INSERT INTO productos (nombre, plazo, interest, fee, minfee, retorno, segmento_id, banco, categorias)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `;
+ INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
       db.query(
         query,
         [
@@ -608,8 +612,8 @@ app.post("/api/new-product", async (req, res) => {
           minfee,
           segmento_id,
           banco,
-          retorno || "CR,SR",
           categoriasToSave,
+          retorno || "CR,SR",
         ], // <--- agregá banco
         (err, result) => {
           if (err) return reject(err);
