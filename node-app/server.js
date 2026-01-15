@@ -37,7 +37,6 @@ const db = mysql.createPool({
   database: process.env.DB_NAME,
 });
 
-
 const allowedOrigins = [
   process.env.CLIENT_URL,
   "https://www.lever.com.ar",
@@ -227,13 +226,12 @@ app.get("/api/data", (req, res) => {
   console.log(req.session);
 
   const query = `
-    SELECT p.id AS producto_id, p.nombre AS producto, p.plazo, p.interest, p.fee, p.minfee, p.segmento_id, p.banco, p.categorias, l.year, l.value, l.show, c.minAFinanciar
-    FROM productos p
-    LEFT JOIN ltv l
-      ON l.producto_id = p.id
-      OR l.producto = p.nombre
-    LEFT JOIN configuracion c ON 1=1
-  `;
+  SELECT p.id AS producto_id, p.nombre AS producto, p.plazo, p.interest, p.fee, p.minfee, 
+         p.segmento_id, p.banco, p.categorias, p.retorno, l.year, l.value, l.show, c.minAFinanciar
+  FROM productos p
+  LEFT JOIN ltv l ON l.producto_id = p.id OR l.producto = p.nombre
+  LEFT JOIN configuracion c ON 1=1
+`;
 
   db.query(query, (err, results) => {
     if (err) {
@@ -253,9 +251,10 @@ app.get("/api/data", (req, res) => {
           segmento_id: row.segmento_id,
           banco: row.banco,
           categorias: row.categorias,
+          retorno: row.retorno || "CR,SR",
           plazos: {},
           ltv: {},
-          producto_ids: [], 
+          producto_ids: [],
         };
       }
       // Guardar el ID real de cada plazo (para editar/eliminar)
@@ -291,6 +290,7 @@ app.post("/api/data", (req, res) => {
   const oldName = productos[selectedProductId]?.nombre || null;
   const banco = productos[selectedProductId]?.banco || null;
   const categorias = productos[selectedProductId]?.categorias || "A,B,C";
+  const retorno = productos[selectedProductId]?.retorno || "CR,SR";  // ✅ AGREGAR
   const productoIds = productos[selectedProductId]?.producto_ids || [];
   const productoIdPrincipal = productoIds[0]; // Usá solo el primero
 
@@ -335,13 +335,17 @@ app.post("/api/data", (req, res) => {
   const updateSegmento = new Promise((resolve, reject) => {
     if (segmento_id) {
       const updateSegmentoQuery = `
-        UPDATE productos SET segmento_id = ?
+        UPDATE productos SET segmento_id = ?, retorno = ?
         WHERE id = ?
       `;
-      db.query(updateSegmentoQuery, [segmento_id, selectedProductId], (err) => {
-        if (err) return reject(err);
-        resolve();
-      });
+      db.query(
+        updateSegmentoQuery,
+        [segmento_id, retorno, productoIdPrincipal],
+        (err) => {
+          if (err) return reject(err);
+          resolve();
+        }
+      );
     } else {
       resolve();
     }
@@ -376,8 +380,8 @@ app.post("/api/data", (req, res) => {
       Object.entries(plazos).map(([plazo, { interest, fee, minfee }], idx) => {
         return new Promise((resolve, reject) => {
           const query = `
-          INSERT INTO productos (id, nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO productos (id, nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON DUPLICATE KEY UPDATE
             nombre = VALUES(nombre),
             interest = VALUES(interest),
@@ -385,7 +389,8 @@ app.post("/api/data", (req, res) => {
             minfee = VALUES(minfee),
             segmento_id = VALUES(segmento_id),
             banco = VALUES(banco),
-            categorias = VALUES(categorias)
+            categorias = VALUES(categorias),
+            retorno = VALUES(retorno)
         `;
 
           const feeValue = fee
@@ -409,7 +414,8 @@ app.post("/api/data", (req, res) => {
               minfeeValue,
               segmento_id,
               banco,
-              categorias, // <--- AGREGAR
+              categorias,
+              retorno,  // ✅ AGREGAR
             ],
             (err, result) => {
               if (err) return reject(err);
@@ -448,10 +454,10 @@ app.post("/api/data", (req, res) => {
   const updateBanco = new Promise((resolve, reject) => {
     if (banco !== undefined && productoIdPrincipal) {
       const updateBancoQuery = `
-      UPDATE productos SET banco = ?
+      UPDATE productos SET banco = ?, retorno = ?
       WHERE id = ?
     `;
-      db.query(updateBancoQuery, [banco, productoIdPrincipal], (err) => {
+      db.query(updateBancoQuery, [banco, retorno, productoIdPrincipal], (err) => {
         if (err) return reject(err);
         resolve();
       });
@@ -551,8 +557,16 @@ app.get("/api/calculadora", (req, res) => {
 });
 
 app.post("/api/new-product", async (req, res) => {
-  const { nombre, minAFinanciar, ltv, plazos, segmento_id, banco, categorias } =
-    req.body; // <--- agregá banco
+  const {
+    nombre,
+    minAFinanciar,
+    ltv,
+    plazos,
+    segmento_id,
+    banco,
+    categorias,
+    retorno,
+  } = req.body; // <--- agregá banco
 
   if (!segmento_id || isNaN(Number(segmento_id)) || Number(segmento_id) === 0) {
     return res
@@ -581,12 +595,22 @@ app.post("/api/new-product", async (req, res) => {
     const { interest, fee, minfee } = plazos[primerPlazo];
     const productoId = await new Promise((resolve, reject) => {
       const query = `
-       INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias)
+       INSERT INTO productos (nombre, plazo, interest, fee, minfee, retorno, segmento_id, banco, categorias)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
       db.query(
         query,
-        [nombre, primerPlazo, interest, fee, minfee, segmento_id, banco, categoriasToSave], // <--- agregá banco
+        [
+          nombre,
+          primerPlazo,
+          interest,
+          fee,
+          minfee,
+          segmento_id,
+          banco,
+          retorno || "CR,SR",
+          categoriasToSave,
+        ], // <--- agregá banco
         (err, result) => {
           if (err) return reject(err);
           resolve(result.insertId);
@@ -600,12 +624,22 @@ app.post("/api/new-product", async (req, res) => {
       otrosPlazos.map(([plazo, { interest, fee, minfee }]) => {
         return new Promise((resolve, reject) => {
           const query = `
-        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `;
+  INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
           db.query(
             query,
-            [nombre, plazo, interest, fee, minfee, segmento_id, banco, categoriasToSave], // <--- agregá banco
+            [
+              nombre,
+              plazo,
+              interest,
+              fee,
+              minfee,
+              segmento_id,
+              banco,
+              categoriasToSave,
+              retorno || "CR,SR", // ✅ Al final también
+            ],
             (err, result) => {
               if (err) return reject(err);
               resolve(result);
@@ -756,9 +790,8 @@ console.log("📧 EMAIL CONFIG:", {
   port: process.env.EMAIL_PORT,
   secure: process.env.EMAIL_SECURE,
   user: process.env.EMAIL_FROM,
-  pass: process.env.EMAIL_PASS ? "***" : "NO CONFIGURADA"
+  pass: process.env.EMAIL_PASS ? "***" : "NO CONFIGURADA",
 });
-
 
 // Configuración de Nodemailer
 const transporter = nodemailer.createTransport({
@@ -881,7 +914,6 @@ app.post("/api/loginAgencias", async (req, res) => {
   }
 
   console.log("Usuario autenticado:", user.email);
-  // Validación de correo
   if (!user.email_validado) {
     return res.json({
       success: false,
@@ -890,13 +922,16 @@ app.post("/api/loginAgencias", async (req, res) => {
   }
 
   req.session.agencia_email = user.email;
-  req.session.agencia_nombre = user.agencia;
+  req.session.agencia_nombre = user.agencia; // ya se guardaba
   req.session.agencia_categoria = user.categoria;
+
   res.json({
     success: true,
     user: {
       email: user.email,
       categoria: user.categoria,
+      agencia: user.agencia || "Sin agencia", // ⭐ ahora se devuelve
+      nombre: user.nombre_completo || "", // opcional
     },
   });
 });
@@ -1162,7 +1197,9 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
 
   const tryUpdate = (idx = 0) => {
     if (idx >= tables.length) {
-      return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado" });
     }
     const table = tables[idx];
     const sql = `UPDATE ${table} SET agencia = ?, telefono = ? WHERE id = ?`;
@@ -1189,7 +1226,10 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
   const tables = ["agencias_users", "usuarios", "users"];
 
   const tryUpdate = (idx = 0) => {
-    if (idx >= tables.length) return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+    if (idx >= tables.length)
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado" });
     const table = tables[idx];
     const sql = `UPDATE ${table} SET agencia = ?, telefono = ? WHERE id = ?`;
     db.query(sql, [agencia || null, telefono || null, id], (err, result) => {
@@ -1208,7 +1248,10 @@ app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
   const tables = ["agencias_users", "usuarios", "users"];
 
   const tryUpdate = (idx = 0) => {
-    if (idx >= tables.length) return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+    if (idx >= tables.length)
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado" });
     const table = tables[idx];
     const sql = `UPDATE ${table} SET categoria = ? WHERE id = ?`;
     db.query(sql, [categoria || "A", id], (err, result) => {
@@ -1230,27 +1273,34 @@ app.put("/api/admin/usuarios/:id/email", (req, res) => {
 
   const tables = ["agencias_users", "usuarios", "users"];
   const tryUpdate = (idx = 0) => {
-    if (idx >= tables.length) return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+    if (idx >= tables.length)
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado" });
     const table = tables[idx];
 
     // Primero actualiza el email
-    db.query(`UPDATE ${table} SET email = ? WHERE id = ?`, [email, id], (err, result) => {
-      if (err) return tryUpdate(idx + 1);
-      if (result.affectedRows > 0) {
-        // Intentar marcar no verificado (si las columnas existen)
-        const flagsSql = `
+    db.query(
+      `UPDATE ${table} SET email = ? WHERE id = ?`,
+      [email, id],
+      (err, result) => {
+        if (err) return tryUpdate(idx + 1);
+        if (result.affectedRows > 0) {
+          // Intentar marcar no verificado (si las columnas existen)
+          const flagsSql = `
           UPDATE ${table}
           SET email_verificado = 0, verificado = 0, validado_email = 0, emailVerified = 0
           WHERE id = ?
         `;
-        db.query(flagsSql, [id], () => {
-          // Ignorar errores si alguna columna no existe
-          return res.json({ success: true });
-        });
-      } else {
-        return tryUpdate(idx + 1);
+          db.query(flagsSql, [id], () => {
+            // Ignorar errores si alguna columna no existe
+            return res.json({ success: true });
+          });
+        } else {
+          return tryUpdate(idx + 1);
+        }
       }
-    });
+    );
   };
   tryUpdate();
 });
@@ -1313,12 +1363,10 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
               (sendErr) => {
                 if (sendErr) {
                   console.error("Error enviando verificación:", sendErr);
-                  return res
-                    .status(500)
-                    .json({
-                      success: false,
-                      message: "No se pudo enviar el email",
-                    });
+                  return res.status(500).json({
+                    success: false,
+                    message: "No se pudo enviar el email",
+                  });
                 }
                 return res.json({ success: true });
               }
@@ -1331,7 +1379,6 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
   trySelect();
 });
 
-
 const { OAuth2Client } = require("google-auth-library");
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -1341,7 +1388,6 @@ app.post("/api/google-one-tap", async (req, res) => {
     return res.json({ success: false, message: "Token inválido" });
 
   try {
-    // Verifica el token de Google
     const ticket = await googleClient.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
@@ -1351,7 +1397,6 @@ app.post("/api/google-one-tap", async (req, res) => {
     const nombre_completo = payload.name;
     const google_id = payload.sub;
 
-    // Busca o crea el usuario en tu base de datos
     let user = await db.getAgenciaUserByEmail(email);
     console.log("USER EN GOOGLE ONE TAP:", user);
     if (!user) {
@@ -1368,11 +1413,19 @@ app.post("/api/google-one-tap", async (req, res) => {
       user = await db.getAgenciaUserByEmail(email);
     }
 
-    // Guarda la sesión
     req.session.agencia_email = user.email;
-    req.session.agencia_nombre = user.agencia;
+    req.session.agencia_nombre = user.agencia; // ya se guardaba
     console.log("SESSION DESPUÉS DE GOOGLE ONE TAP:", req.session);
-    res.json({ success: true, user: { email: user.email } });
+
+    res.json({
+      success: true,
+      user: {
+        email: user.email,
+        agencia: user.agencia || "Sin agencia", // ⭐ ahora se devuelve
+        nombre: user.nombre_completo || nombre_completo || "",
+        categoria: user.categoria, // opcional
+      },
+    });
   } catch (e) {
     console.error("Error en Google One Tap:", e);
     res.json({
@@ -1380,12 +1433,6 @@ app.post("/api/google-one-tap", async (req, res) => {
       message: "No se pudo validar el token de Google",
     });
   }
-});
-app.use((err, req, res, next) => {
-  console.error("ERROR GLOBAL:", err);
-  res
-    .status(500)
-    .json({ success: false, message: err.message || "Internal Server Error" });
 });
 
 app.get("/api/admin/usuarios", (req, res) => {
@@ -1415,7 +1462,6 @@ app.get("/api/admin/usuarios", (req, res) => {
     res.json(results);
   });
 });
-
 
 // Actualizar categoría de usuario
 app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
@@ -2152,7 +2198,6 @@ app.post("/api/cotizaciones/observacion", (req, res) => {
   );
 });
 
-
 app.listen(PORT, "127.0.0.1", () => {
   console.log(`Server is running on http://127.0.0.1:${PORT}`);
 });
@@ -2203,4 +2248,291 @@ app.put("/api/operaciones/:id", (req, res) => {
   );
 });
 
+function requireAuth(req, res, next) {
+  const email = req.session.agencia_email || req.session.username;
+  if (!email) {
+    return res.status(401).json({ success: false, message: "No autenticado" });
+  }
+  next();
+}
 
+function ensureAuthenticated(req, res, next) {
+  if (req.session && req.session.userId) {
+    return next();
+  }
+  res.status(401).json({ success: false, error: "No autenticado" });
+}
+
+app.post("/api/analytics", async (req, res) => {
+  try {
+    const event = req.body;
+
+    // ⭐ ELIMINAR la conversión de zona horaria, usar NOW() de MySQL
+    if (event.category === "DNI_Consulta") {
+      await db.query(
+        `INSERT INTO analytics_dni_consultas 
+        (session_id, timestamp, dni, tipo_documento, nombre_solicitante, viabilidad, agencia, categoria_usuario) 
+        VALUES (?, NOW(), ?, ?, ?, ?, ?, ?)`,
+        [
+          event.sessionId,
+          event.dni,
+          event.label,
+          event.nombreSolicitante,
+          event.viabilidad,
+          event.agencia,
+          event.categoriaUsuario,
+        ]
+      );
+    } else {
+      await db.query(
+        `INSERT INTO analytics_events 
+        (session_id, timestamp, category, action, label, value, step, url, metodo, agencia) 
+        VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          event.sessionId,
+          event.category,
+          event.action,
+          event.label,
+          event.value,
+          event.step,
+          event.url,
+          event.metodo || null,
+          event.agencia || null,
+        ]
+      );
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error guardando analytics:", error);
+    res.status(500).json({ error: "Error interno" });
+  }
+});
+
+app.get("/api/analytics/summary", (req, res) => {
+  const summarySql = `
+    SELECT 
+      SUM(category = 'Pantalla_1' AND action = 'dni_search') AS total_busquedas,
+      SUM(category = 'Pantalla_1' AND action = 'viabilidad_resultado' AND label = 'VIABLE') AS viables,
+      SUM(category = 'Pantalla_1' AND action = 'viabilidad_resultado' AND label = 'VIABLE CON OBSERVACIONES') AS observados,
+      SUM(category = 'Navegacion' AND action = 'step_advance') AS avances
+    FROM analytics_events
+  `;
+  db.query(summarySql, (err, rows) => {
+    if (err) return res.status(500).json({ success: false, error: err });
+    res.json({ success: true, summary: rows[0] || {} });
+  });
+});
+
+app.get("/api/analytics/dni", (req, res) => {
+  const dniSql = `
+    SELECT 
+      id,
+      dni,
+      nombre_solicitante,
+      tipo_documento,
+      viabilidad,
+      agencia,
+      categoria_usuario,
+      timestamp
+    FROM analytics_dni_consultas
+    ORDER BY timestamp DESC
+    LIMIT 500
+  `;
+  db.query(dniSql, (err, rows) => {
+    if (err) return res.status(500).json({ success: false, error: err });
+    res.json({ success: true, items: rows });
+  });
+});
+
+app.get("/api/analytics/daily", (req, res) => {
+  const sql = `
+    SELECT DATE(timestamp) as dia,
+      SUM(category='Auth' AND action='login_success') AS logins,
+      SUM(category='UI' AND action='click') AS clicks,
+      SUM(category='Pantalla_1' AND action='dni_search') AS busquedas,
+      SUM(category='Navegacion' AND action='step_advance') AS avances
+    FROM analytics_events
+    GROUP BY dia
+    ORDER BY dia DESC
+    LIMIT 30;
+  `;
+  db.query(sql, (err, rows) => {
+    if (err) return res.status(500).json({ success: false, error: err });
+    res.json({ success: true, items: rows });
+  });
+});
+
+app.get("/api/analytics/ui-clicks", (req, res) => {
+  const sql = `
+    SELECT 
+      label AS boton,
+      timestamp,
+      1 AS clicks
+    FROM analytics_events
+    WHERE category='UI' AND action='click' AND label IS NOT NULL
+    ORDER BY timestamp DESC
+    LIMIT 1000;
+  `;
+  db.query(sql, (err, rows) => {
+    if (err) return res.status(500).json({ success: false, error: err });
+    res.json({ success: true, items: rows });
+  });
+});
+
+// Métricas de selects del paso 2
+app.get("/api/analytics/vehiculo-selects", requireAuth, (req, res) => {
+  const sql = `
+    SELECT 
+      action,
+      label,
+      COUNT(*) as total
+    FROM analytics_events
+    WHERE category = 'Paso_2' 
+      AND action IN ('select_categoria', 'select_anio', 'select_marca', 'select_modelo')
+      AND label IS NOT NULL
+    GROUP BY action, label
+    ORDER BY action, total DESC;
+  `;
+  db.query(sql, (err, rows) => {
+    if (err)
+      return res.status(500).json({ success: false, error: err.message });
+
+    // Agrupar por tipo de select
+    const result = {
+      categorias: [],
+      anios: [],
+      marcas: [],
+      modelos: [],
+    };
+
+    rows.forEach((row) => {
+      const item = { label: row.label, total: row.total };
+      if (row.action === "select_categoria") result.categorias.push(item);
+      if (row.action === "select_anio") result.anios.push(item);
+      if (row.action === "select_marca") result.marcas.push(item);
+      if (row.action === "select_modelo") result.modelos.push(item);
+    });
+
+    res.json({ success: true, data: result });
+  });
+});
+
+// ...coloca esto justo debajo del endpoint /api/analytics/vehiculo-selects
+
+app.get("/api/analytics/paso3", requireAuth, (req, res) => {
+  const sqlProductos = `
+    SELECT 
+      label AS producto, 
+      timestamp
+    FROM analytics_events
+    WHERE category='Paso_3' AND action='select_producto' AND label IS NOT NULL
+    ORDER BY timestamp DESC
+    LIMIT 500;
+  `;
+  const sqlMontos = `
+    SELECT label AS monto, timestamp
+    FROM analytics_events
+    WHERE category='Paso_3' AND action='monto_neto_financiar' AND label IS NOT NULL
+    ORDER BY timestamp DESC
+    LIMIT 200;
+  `;
+  db.query(sqlProductos, (err, productos) => {
+    if (err)
+      return res.status(500).json({ success: false, error: err.message });
+    db.query(sqlMontos, (err2, montos) => {
+      if (err2)
+        return res.status(500).json({ success: false, error: err2.message });
+      res.json({ success: true, data: { productos, montos } });
+    });
+  });
+});
+
+// Métricas Paso 4: plazos y botones
+app.get("/api/analytics/paso4", requireAuth, (req, res) => {
+  const sqlPlazos = `
+    SELECT 
+      label, 
+      timestamp
+    FROM analytics_events
+    WHERE category = 'Paso_4' 
+      AND action = 'select_plazo'
+    ORDER BY timestamp DESC
+  `;
+
+  const sqlBotones = `
+    SELECT 
+      label, 
+      timestamp
+    FROM analytics_events
+    WHERE category = 'Paso_4' 
+      AND action = 'click'
+    ORDER BY timestamp DESC
+  `;
+
+  db.query(sqlPlazos, (err1, plazos) => {
+    if (err1)
+      return res.status(500).json({ success: false, error: err1.message });
+
+    // ⭐ LIMPIAR: Extraer solo el número de cuotas del label
+    const plazosLimpios = plazos.map((p) => {
+      const match = (p.label || "").match(/(\d+)\s*CUOTAS?/i);
+      return {
+        plazo: match ? `${match[1]} CUOTAS` : p.label,
+        timestamp: p.timestamp,
+      };
+    });
+
+    db.query(sqlBotones, (err2, botones) => {
+      if (err2)
+        return res.status(500).json({ success: false, error: err2.message });
+      res.json({
+        success: true,
+        data: {
+          plazos: plazosLimpios,
+          botones: botones || [],
+        },
+      });
+    });
+  });
+});
+
+app.get("/api/analytics/avances-paso", requireAuth, (req, res) => {
+  const sql = `
+    SELECT COUNT(*) AS total
+    FROM analytics_events
+    WHERE category = 'UI' 
+      AND action = 'click' 
+      AND label LIKE '%siguiente%';
+  `;
+  db.query(sql, (err, rows) => {
+    if (err)
+      return res.status(500).json({ success: false, error: err.message });
+    res.json({ success: true, total: rows[0]?.total || 0 });
+  });
+});
+
+// Endpoint para logins por usuario/mes
+app.get("/api/analytics/logins-por-usuario", requireAuth, (req, res) => {
+  const sql = `
+    SELECT 
+      label AS email,
+      metodo,
+      agencia,
+      CAST(timestamp AS CHAR) as timestamp
+    FROM analytics_events
+    WHERE category = 'Auth'
+      AND action = 'login_success'
+      AND label IS NOT NULL
+    ORDER BY timestamp DESC;
+  `;
+  db.query(sql, (err, rows) => {
+    if (err)
+      return res.status(500).json({ success: false, error: err.message });
+
+    console.log(`📊 LOGINS ENCONTRADOS EN BD: ${rows.length}`);
+    console.log("Primer registro:", rows[0]);
+
+    res.json({ success: true, logins: rows || [] });
+  });
+});
