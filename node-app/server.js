@@ -570,7 +570,7 @@ app.post("/api/new-product", async (req, res) => {
     banco,
     categorias,
     retorno,
-  } = req.body; // <--- agregá banco
+  } = req.body;
 
   if (!segmento_id || isNaN(Number(segmento_id)) || Number(segmento_id) === 0) {
     return res
@@ -581,7 +581,7 @@ app.post("/api/new-product", async (req, res) => {
   const categoriasToSave = categorias || "A,B,C";
 
   try {
-    // 1. Insertar minAFinanciar en configuracion
+    // 1. Insertar minAFinanciar
     await new Promise((resolve, reject) => {
       const query = `
         INSERT INTO configuracion (id, minAFinanciar)
@@ -594,14 +594,15 @@ app.post("/api/new-product", async (req, res) => {
       });
     });
 
-    // 2. Insertar una fila principal para el producto y obtener su ID
+    // 2. Insertar primera fila del producto
     const primerPlazo = Object.keys(plazos)[0];
     const { interest, fee, minfee } = plazos[primerPlazo];
+
     const productoId = await new Promise((resolve, reject) => {
       const query = `
- INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
- VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-`;
+        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
       db.query(
         query,
         [
@@ -614,7 +615,7 @@ app.post("/api/new-product", async (req, res) => {
           banco,
           categoriasToSave,
           retorno || "CR,SR",
-        ], // <--- agregá banco
+        ],
         (err, result) => {
           if (err) return reject(err);
           resolve(result.insertId);
@@ -622,15 +623,15 @@ app.post("/api/new-product", async (req, res) => {
       );
     });
 
-    // 3. Insertar el resto de los plazos (excepto el primero)
+    // 3. Insertar resto de plazos
     const otrosPlazos = Object.entries(plazos).slice(1);
     await Promise.all(
       otrosPlazos.map(([plazo, { interest, fee, minfee }]) => {
         return new Promise((resolve, reject) => {
           const query = `
-  INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-`;
+            INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `;
           db.query(
             query,
             [
@@ -642,7 +643,7 @@ app.post("/api/new-product", async (req, res) => {
               segmento_id,
               banco,
               categoriasToSave,
-              retorno || "CR,SR", // ✅ Al final también
+              retorno || "CR,SR",
             ],
             (err, result) => {
               if (err) return reject(err);
@@ -653,11 +654,10 @@ app.post("/api/new-product", async (req, res) => {
       })
     );
 
-    // 4. Insertar los LTV usando el productoId principal
+    // 4. Insertar LTV
     await Promise.all(
       Object.entries(ltv).map(([year, { value, show }]) => {
         return new Promise((resolve, reject) => {
-          const ltvShow = show ?? 1; // Valor por defecto 1
           const query = `
             INSERT INTO ltv (producto_id, year, value, \`show\`)
             VALUES (?, ?, ?, ?)
