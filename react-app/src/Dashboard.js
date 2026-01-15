@@ -32,6 +32,7 @@ import Cotizaciones from "./Cotizaciones";
 import Operaciones from "./Operaciones";
 import Prenda from "./Prenda";
 import { FaRegCircleUser } from "react-icons/fa6";
+import Analytics from "./Analytics";
 
 //const API_URL = "https://api.lever.com.ar" // para PRODUCCION
 
@@ -56,6 +57,7 @@ function Tablero() {
     plazos: {},
     segmento_id: "",
     banco: "",
+    retorno: "CR,SR",
   });
   const [newProductName, setNewProductName] = useState(""); // Estado para el nuevo nombre del producto
   const [segmentos, setSegmentos] = useState([]);
@@ -186,6 +188,7 @@ function Tablero() {
           nombre: newProductName,
           segmento_id: data.productos[selectedProduct].segmento_id,
           categorias: categoriasToSend,
+          retorno: data.productos[selectedProduct]?.retorno || "CR,SR",
         },
       },
       ltv: {
@@ -469,6 +472,7 @@ function Tablero() {
         plazos: {},
         segmento_id: "",
         banco: "",
+        retorno: "CR,SR",
       });
       setNewProductCategorias(["A", "B", "C"]);
       setNewProductYears(defaultNewProductYears); // reset años LTV
@@ -733,6 +737,32 @@ function Tablero() {
                 }}
                 required
               />
+            </Form.Group>
+
+            <Form.Group controlId="editProductRetorno" className="mt-3">
+              <Form.Label>
+                <strong>Modificar Retorno (C.R./S.R.):</strong>
+              </Form.Label>
+              <Form.Control
+                as="select"
+                value={data.productos[selectedProduct]?.retorno || "CR,SR"}
+                onChange={(e) => {
+                  setData((prevData) => ({
+                    ...prevData,
+                    productos: {
+                      ...prevData.productos,
+                      [selectedProduct]: {
+                        ...prevData.productos[selectedProduct],
+                        retorno: e.target.value,
+                      },
+                    },
+                  }));
+                }}
+              >
+                <option value="CR,SR">C.R. y S.R.</option>
+                <option value="CR">Solo C.R.</option>
+                <option value="SR">Solo S.R.</option>
+              </Form.Control>
             </Form.Group>
 
             {/* CATEGORÍAS */}
@@ -1119,6 +1149,24 @@ function Tablero() {
               />
             </Form.Group>
 
+            <Form.Group controlId="newProductRetorno">
+              <Form.Label>Retorno (C.R./S.R.):</Form.Label>
+              <Form.Control
+                as="select"
+                value={newProduct.retorno || "CR,SR"}
+                onChange={(e) => {
+                  setNewProduct((prev) => ({
+                    ...prev,
+                    retorno: e.target.value,
+                  }));
+                }}
+              >
+                <option value="CR,SR">C.R. y S.R.</option>
+                <option value="CR">Solo C.R.</option>
+                <option value="SR">Solo S.R.</option>
+              </Form.Control>
+            </Form.Group>
+
             <h5>Plazos</h5>
             <Table striped bordered hover size="sm">
               <thead>
@@ -1461,6 +1509,14 @@ function Dashboard() {
                     <FaWarehouse className="me-2" />
                     Agencias
                   </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/dashboard/analytics"
+                    onClick={handleNavClick}
+                  >
+                    <FaWarehouse className="me-2" />
+                    Metricas
+                  </Nav.Link>
                 </>
               )}
               {/* Botón cerrar sesión dentro del menú */}
@@ -1495,6 +1551,7 @@ function Dashboard() {
           <Route path="config-bancos" element={<ConfiguracionBancos />} />
           <Route path="bancos-tipo-credito" element={<Bancos />} />
           <Route path="agencias" element={<Agencias />} />
+          <Route path="analytics" element={<Analytics />} />
         </Routes>
       </div>
     </div>
