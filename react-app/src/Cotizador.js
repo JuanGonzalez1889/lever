@@ -79,7 +79,6 @@ function Cotizador() {
     clienteSexo,
   ]);
 
-  
   useEffect(() => {
     // Si ya hay un valor neto, lo replica en todos los plazos
     if (capitalSolicitadoNeto) {
@@ -111,13 +110,13 @@ function Cotizador() {
     precio,
     productoSeleccionado,
     year,
-    configLtv
+    configLtv,
   ) {
     if (!precio || !productoSeleccionado || !year || !configLtv) return 0;
     const ltvObj = configLtv.find(
       (l) =>
         String(l.producto_banco_id) === String(productoSeleccionado) &&
-        String(l.anio) === String(year)
+        String(l.anio) === String(year),
     );
     const ltv = ltvObj ? Number(ltvObj.ltv) : 0;
     return ltv ? precio * ltv : 0;
@@ -127,7 +126,7 @@ function Cotizador() {
     return configBancosPlazos.some(
       (c) =>
         String(c.producto_banco_id) === String(productoSeleccionado) &&
-        Number(c.plazo) === plazo
+        Number(c.plazo) === plazo,
     );
   }
   const handleDescargarPDF = async () => {
@@ -136,7 +135,7 @@ function Cotizador() {
     const nombreArchivoPDF = generarNombrePDF();
 
     const productoObj = productos.find(
-      (p) => String(p.id) === String(productoSeleccionado)
+      (p) => String(p.id) === String(productoSeleccionado),
     );
     const marcaObj = marcas.find((m) => String(m.id) === String(marca));
     const modeloObj = modelos.find((m) => String(m.codia) === String(modelo));
@@ -151,7 +150,7 @@ function Cotizador() {
       producto: productoObj ? productoObj.nombre : productoSeleccionado,
       monto: capitalSolicitadoNeto,
       usuario: "usuario_logueado",
-      vehiculo_marca: marcaObj ? marcaObj.name : marca, 
+      vehiculo_marca: marcaObj ? marcaObj.name : marca,
       vehiculo_modelo: modeloObj ? modeloObj.modelo : modelo,
       vehiculo_anio: year,
       vehiculo_precio: precio,
@@ -166,42 +165,42 @@ function Cotizador() {
       }),
     };
 
-   if (
-     !String(clienteNombre).trim() ||
-     !String(clienteApellido).trim() ||
-     !String(clienteDni).trim() ||
-     !String(agencia).trim() ||
-     !String(clienteSexo).trim() ||
-     !String(tipoPersona).trim() ||
-     !String(cobroSellado).trim() ||
-     !bancoSeleccionado ||
-     !productoSeleccionado ||
-     !String(capitalSolicitadoNeto).trim()
-   ) {
-     setModalMsg(
-       "Por favor, complete todos los campos obligatorios antes de descargar el PDF."
-     );
-     setShowModal(true);
-     return;
-   }
+    if (
+      !String(clienteNombre).trim() ||
+      !String(clienteApellido).trim() ||
+      !String(clienteDni).trim() ||
+      !String(agencia).trim() ||
+      !String(clienteSexo).trim() ||
+      !String(tipoPersona).trim() ||
+      !String(cobroSellado).trim() ||
+      !bancoSeleccionado ||
+      !productoSeleccionado ||
+      !String(capitalSolicitadoNeto).trim()
+    ) {
+      setModalMsg(
+        "Por favor, complete todos los campos obligatorios antes de descargar el PDF.",
+      );
+      setShowModal(true);
+      return;
+    }
 
-   try {
-     cotizacion.usuario = sessionStorage.getItem("usuario");
-     const res = await axios.post(
-       `${process.env.REACT_APP_API_URL}/api/cotizaciones`,
-       cotizacion
-     );
-     if (res.data.success) {
-       handleGenerarPDF();
-     } else {
-       setModalMsg("Error al guardar la cotización");
-       setShowModal(true);
-     }
-   } catch (err) {
-     setModalMsg("Error al guardar la cotización");
-     setShowModal(true);
-     console.error(err);
-   }
+    try {
+      cotizacion.usuario = sessionStorage.getItem("usuario");
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/cotizaciones`,
+        cotizacion,
+      );
+      if (res.data.success) {
+        handleGenerarPDF();
+      } else {
+        setModalMsg("Error al guardar la cotización");
+        setShowModal(true);
+      }
+    } catch (err) {
+      setModalMsg("Error al guardar la cotización");
+      setShowModal(true);
+      console.error(err);
+    }
   };
   const cobroSelladoOptions = [
     { value: "", label: "Seleccione una opción", isDisabled: true },
@@ -218,7 +217,7 @@ function Cotizador() {
     const fetchMinAFinanciar = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/files/calculadora.txt"
+          "http://localhost:5000/files/calculadora.txt",
         );
         const data = response.data;
         setMinAFinanciar(data.minAFinanciar.valor);
@@ -258,7 +257,7 @@ function Cotizador() {
       setComisionBanco(configBancos[bancoSeleccionado].comision);
     } else {
       const bancoObj = bancos.find(
-        (b) => String(b.id) === String(productoSeleccionado)
+        (b) => String(b.id) === String(productoSeleccionado),
       );
       setTnaBanco(bancoObj && bancoObj.tna ? bancoObj.tna : "");
       setComisionBanco(bancoObj && bancoObj.comision ? bancoObj.comision : "");
@@ -288,7 +287,7 @@ function Cotizador() {
   useEffect(() => {
     if (productoSeleccionado) {
       const prod = productos.find(
-        (p) => String(p.id) === String(productoSeleccionado)
+        (p) => String(p.id) === String(productoSeleccionado),
       );
       setTipoCredito(prod?.tipo_credito ? prod.tipo_credito.toUpperCase() : "");
     } else {
@@ -299,7 +298,7 @@ function Cotizador() {
   const tnaYComision = configBancosPlazos.find(
     (c) =>
       String(c.producto_banco_id) === String(productoSeleccionado) &&
-      String(c.plazo) === String(plazoSeleccionado)
+      String(c.plazo) === String(plazoSeleccionado),
   );
   const location = useLocation();
 
@@ -309,7 +308,7 @@ function Cotizador() {
     if (cotizacionId) {
       axios
         .get(
-          `${process.env.REACT_APP_API_URL}/api/cotizaciones/${cotizacionId}`
+          `${process.env.REACT_APP_API_URL}/api/cotizaciones/${cotizacionId}`,
         )
         .then((res) => {
           if (res.data.success) {
@@ -521,8 +520,8 @@ function Cotizador() {
     if (Number(capitalSolicitadoNeto) > maximoPermitido) {
       setModalMsg(
         `El capital ingresado excede el máximo a financiar: $${Math.round(
-          maximoPermitido
-        ).toLocaleString("es-AR")}`
+          maximoPermitido,
+        ).toLocaleString("es-AR")}`,
       );
       setShowModal(true);
       return;
@@ -538,7 +537,7 @@ function Cotizador() {
 
     const cuotasCalculadas = calcularCuotas(
       capitalSolicitadoNeto,
-      selectedProduct
+      selectedProduct,
     );
     setCuotas(cuotasCalculadas);
     setMostrarOpciones(true);
@@ -563,7 +562,7 @@ function Cotizador() {
         `Cuota ${plazos[i]} meses: $${cuotaMensual.toLocaleString("es-AR", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
-        })}`
+        })}`,
       );
     }
     return cuotas;
@@ -573,13 +572,13 @@ function Cotizador() {
     const interesMensual = parseFloat((tasaInteresAnual / 100 / 12).toFixed(7));
     const comision = parseFloat((montoPrincipal * fee * 1.21).toFixed(2));
     const saldo = parseFloat(
-      (parseFloat(montoPrincipal) + comision).toFixed(2)
+      (parseFloat(montoPrincipal) + comision).toFixed(2),
     );
     const factor = parseFloat(Math.pow(1 + interesMensual, plazo).toFixed(6));
     const cuotaMensual = parseFloat(
-      ((saldo * interesMensual * factor) / (factor - 1)).toFixed(2)
+      ((saldo * interesMensual * factor) / (factor - 1)).toFixed(2),
     );
-    
+
     return cuotaMensual;
   };
 
@@ -746,17 +745,17 @@ function Cotizador() {
     configLtv.some(
       (l) =>
         String(l.producto_banco_id) === String(producto.id) &&
-        String(l.anio) === String(year)
-    )
+        String(l.anio) === String(year),
+    ),
   );
   useEffect(() => {
     async function fetchTableroInterno() {
       try {
         const productosRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/interno/productos`
+          `${process.env.REACT_APP_API_URL}/api/interno/productos`,
         );
         const ltvRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/interno/ltv`
+          `${process.env.REACT_APP_API_URL}/api/interno/ltv`,
         );
 
         const ltvObj = {};
@@ -851,14 +850,17 @@ function Cotizador() {
 
     // Obtener tipo de crédito del banco seleccionado
     const productoObj = productos.find(
-      (p) => String(p.id) === String(productoSeleccionado)
+      (p) => String(p.id) === String(productoSeleccionado),
     );
     const bancoObj = bancos.find(
-      (b) => String(b.id) === String(productoObj?.banco_id)
+      (b) => String(b.id) === String(productoObj?.banco_id),
     );
     const tipoCredito = productoObj ? productoObj.tipo_credito : "";
     const marcaObj = marcas.find((m) => String(m.id) === String(marca));
     const modeloObj = modelos.find((m) => String(m.codia) === String(modelo));
+
+    // Obtener nombre del producto
+    const nombreProducto = productoObj ? productoObj.nombre : "";
 
     // Texto principal según tipo de crédito
     const textoCredito =
@@ -880,22 +882,28 @@ function Cotizador() {
       SUPERVILLE: "SP",
     };
 
+    // MOVER ESTAS LÍNEAS AQUÍ - ANTES DE USARLAS
     const bancoAbrev =
       bancoObj && bancoObj.nombre
         ? abreviacionesBancos[bancoObj.nombre.trim().toUpperCase()] || ""
         : "";
+
+    // Texto combinado: abreviación del banco + nombre del producto
+    const textoBancoProducto = nombreProducto
+      ? `${bancoAbrev} - ${nombreProducto}`
+      : bancoAbrev;
 
     // 1. Dibuja el fondo blanco primero
     doc.setFillColor(255, 255, 255); // azul claro
     doc.setDrawColor(0, 0, 0); // borde negro
     doc.rect(40, headerY, pageWidth / 2 - 40, headerHeight, "DF"); // "DF" = fill & stroke
 
-    // Mitad izquierda: abreviación del banco
-    if (bancoAbrev) {
+    // Mitad izquierda: abreviación del banco + producto
+    if (textoBancoProducto) {
       doc.setFontSize(11);
       doc.setTextColor(35, 35, 66);
       doc.setFont("helvetica", "bold");
-      doc.text(bancoAbrev, 50, headerY + 17); // Ajusta la posición vertical si lo necesitas
+      doc.text(textoBancoProducto, 50, headerY + 17);
     }
 
     // Mitad izquierda: texto principal
@@ -924,7 +932,7 @@ function Cotizador() {
       "LEVER",
       pageWidth / 2 + (pageWidth / 2 - 40) / 2,
       headerY + headerHeight / 2 + 12,
-      { align: "center" }
+      { align: "center" },
     );
 
     // Si el banco es ICBC, agrega la leyenda debajo del texto principal
@@ -939,7 +947,7 @@ function Cotizador() {
       doc.text(
         "SIMULACIÓN - REQUIERE APROBACIÓN",
         50,
-        headerY + headerHeight / 2 + 25 // 18px debajo del texto principal
+        headerY + headerHeight / 2 + 25, // 18px debajo del texto principal
       );
       doc.setTextColor(35, 35, 66); // Vuelve al color original
       doc.setFontSize(15);
@@ -975,9 +983,9 @@ function Cotizador() {
           capitalPorPlazo[p]
             ? `$${Math.round(Number(capitalPorPlazo[p])).toLocaleString(
                 "es-AR",
-                { maximumFractionDigits: 0 }
+                { maximumFractionDigits: 0 },
               )}`
-            : "-"
+            : "-",
         ),
       ],
 
@@ -987,7 +995,7 @@ function Cotizador() {
           const found = configBancosPlazos.find(
             (c) =>
               String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p
+              Number(c.plazo) === p,
           );
           const tna = found ? Number(found.tna) / 100 : 0;
           let comision = found ? Number(found.comision) : 0;
@@ -1007,7 +1015,7 @@ function Cotizador() {
           return datos.capitalBruto && !isNaN(datos.capitalBruto)
             ? `$${Math.round(Number(datos.capitalBruto)).toLocaleString(
                 "es-AR",
-                { maximumFractionDigits: 0 }
+                { maximumFractionDigits: 0 },
               )}`
             : "-";
         }),
@@ -1018,7 +1026,7 @@ function Cotizador() {
           const found = configBancosPlazos.find(
             (c) =>
               String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p
+              Number(c.plazo) === p,
           );
           const tna = found ? Number(found.tna) / 100 : 0;
           let comision = found ? Number(found.comision) : 0;
@@ -1050,7 +1058,7 @@ function Cotizador() {
           const found = configBancosPlazos.find(
             (c) =>
               String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p
+              Number(c.plazo) === p,
           );
           const tna = found ? Number(found.tna) / 100 : 0;
           let comision = found ? Number(found.comision) : 0;
@@ -1070,7 +1078,7 @@ function Cotizador() {
           return datos.cuotaConIVA && !isNaN(datos.cuotaConIVA)
             ? `$${Math.round(Number(datos.cuotaConIVA)).toLocaleString(
                 "es-AR",
-                { maximumFractionDigits: 0 }
+                { maximumFractionDigits: 0 },
               )}`
             : "-";
         }),
@@ -1081,7 +1089,7 @@ function Cotizador() {
           const found = configBancosPlazos.find(
             (c) =>
               String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p
+              Number(c.plazo) === p,
           );
           const tna = found ? Number(found.tna) / 100 : 0;
           let comision = found ? Number(found.comision) : 0;
@@ -1107,7 +1115,7 @@ function Cotizador() {
           return promedioCuotaConIVA && !isNaN(promedioCuotaConIVA)
             ? `$${Math.round(Number(promedioCuotaConIVA)).toLocaleString(
                 "es-AR",
-                { maximumFractionDigits: 0 }
+                { maximumFractionDigits: 0 },
               )}`
             : "-";
         }),
@@ -1118,7 +1126,7 @@ function Cotizador() {
           const found = configBancosPlazos.find(
             (c) =>
               String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p
+              Number(c.plazo) === p,
           );
           return found && found.tna !== undefined && found.tna !== null
             ? `${Number(found.tna).toLocaleString("es-AR", {
@@ -1282,7 +1290,7 @@ function Cotizador() {
       "Las condiciones de aprobación corresponden a esta fecha,",
       50,
       notaY + 18,
-      { maxWidth: colWidth - 20 }
+      { maxWidth: colWidth - 20 },
     );
     doc.text(
       "pueden sufrir modificaciones luego de la misma.",
@@ -1290,7 +1298,7 @@ function Cotizador() {
       notaY + 32,
       {
         maxWidth: colWidth - 20,
-      }
+      },
     );
 
     // Texto SISTEMA FRANCÉS y web (derecha)
@@ -1368,44 +1376,44 @@ function Cotizador() {
 
     const nombreArchivo = generarNombrePDF().replace(/\s+/g, "_") + ".pdf";
     doc.save(nombreArchivo);
-  };
+  };;;;
 
   const maxAFinanciar = calcularMaxAFinanciarPorLTV(
     precio,
     productoSeleccionado,
     year,
-    configLtv
+    configLtv,
   );
 
   // Calcula el máximo neto según el producto/banco seleccionado
   const productoSeleccionadoObj = productosConLtv.find(
-    (p) => String(p.id) === String(productoSeleccionado)
+    (p) => String(p.id) === String(productoSeleccionado),
   );
 
- let maximoPermitido = 0;
- if (productoSeleccionadoObj) {
-   const montoBruto = calcularMaxAFinanciarPorLTV(
-     precio,
-     productoSeleccionadoObj.id,
-     year,
-     configLtv
-   );
-   const found = configBancosPlazos.find(
-     (c) => String(c.producto_banco_id) === String(productoSeleccionadoObj.id)
-   );
-   let comisionBase = found && found.comision ? Number(found.comision) : 8;
-   if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
-     comisionBase += Number(ajusteComision);
-   }
-   comisionBase = comisionBase / 100;
-   const comisionConIVA = comisionBase * 1.21;
-   maximoPermitido = montoBruto * (1 - comisionConIVA);
- }
+  let maximoPermitido = 0;
+  if (productoSeleccionadoObj) {
+    const montoBruto = calcularMaxAFinanciarPorLTV(
+      precio,
+      productoSeleccionadoObj.id,
+      year,
+      configLtv,
+    );
+    const found = configBancosPlazos.find(
+      (c) => String(c.producto_banco_id) === String(productoSeleccionadoObj.id),
+    );
+    let comisionBase = found && found.comision ? Number(found.comision) : 8;
+    if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
+      comisionBase += Number(ajusteComision);
+    }
+    comisionBase = comisionBase / 100;
+    const comisionConIVA = comisionBase * 1.21;
+    maximoPermitido = montoBruto * (1 - comisionConIVA);
+  }
 
   useEffect(() => {
     if (capitalBruto) {
       const found = configBancosPlazos.find(
-        (c) => String(c.producto_banco_id) === String(productoSeleccionado)
+        (c) => String(c.producto_banco_id) === String(productoSeleccionado),
       );
       const comisionBase =
         found && found.comision ? Number(found.comision) / 100 : 0.08;
@@ -1519,8 +1527,8 @@ function Cotizador() {
                   cobroSellado === "abona"
                     ? "Abona sellado"
                     : cobroSellado === "exento"
-                    ? "Exento"
-                    : ""
+                      ? "Exento"
+                      : ""
                 }
                 readOnly
                 style={{
@@ -1809,7 +1817,7 @@ function Cotizador() {
                 <tr>
                   {productosConLtv.map((producto) => {
                     const bancoObj = bancos.find(
-                      (b) => String(b.id) === String(producto.banco_id)
+                      (b) => String(b.id) === String(producto.banco_id),
                     );
                     return (
                       <th
@@ -1838,11 +1846,12 @@ function Cotizador() {
                       precio,
                       producto.id,
                       year,
-                      configLtv
+                      configLtv,
                     );
                     // Buscar comisión del producto/plazo
                     const found = configBancosPlazos.find(
-                      (c) => String(c.producto_banco_id) === String(producto.id)
+                      (c) =>
+                        String(c.producto_banco_id) === String(producto.id),
                     );
                     // Comisión base en %
                     let comisionBase =
@@ -1913,9 +1922,9 @@ function Cotizador() {
                             (ltv) =>
                               String(ltv.producto_banco_id) ===
                                 String(producto.id) &&
-                              String(ltv.anio) === String(year)
-                          )
-                      )
+                              String(ltv.anio) === String(year),
+                          ),
+                      ),
                     )
                     .map((b) => ({
                       value: b.id,
@@ -1933,9 +1942,9 @@ function Cotizador() {
                             (ltv) =>
                               String(ltv.producto_banco_id) ===
                                 String(producto.id) &&
-                              String(ltv.anio) === String(year)
-                          )
-                      )
+                              String(ltv.anio) === String(year),
+                          ),
+                      ),
                     )
                     .map((b) => ({
                       value: b.id,
@@ -1943,7 +1952,7 @@ function Cotizador() {
                       tipoCredito: b.tipo_credito,
                     }))
                     .find(
-                      (b) => String(b.value) === String(bancoSeleccionado)
+                      (b) => String(b.value) === String(bancoSeleccionado),
                     ) || null
                 }
                 onChange={(option) => {
@@ -1966,7 +1975,7 @@ function Cotizador() {
                   },
                   ...productos
                     .filter(
-                      (p) => String(p.banco_id) === String(bancoSeleccionado)
+                      (p) => String(p.banco_id) === String(bancoSeleccionado),
                     )
                     .map((p) => ({
                       value: p.id,
@@ -1985,7 +1994,7 @@ function Cotizador() {
                         ...productos
                           .filter(
                             (p) =>
-                              String(p.banco_id) === String(bancoSeleccionado)
+                              String(p.banco_id) === String(bancoSeleccionado),
                           )
                           .map((p) => ({
                             value: p.id,
@@ -1994,7 +2003,7 @@ function Cotizador() {
                           })),
                       ].find(
                         (opt) =>
-                          String(opt.value) === String(productoSeleccionado)
+                          String(opt.value) === String(productoSeleccionado),
                       )
                     : {
                         value: "",
@@ -2149,7 +2158,7 @@ function Cotizador() {
                       type="button"
                       onClick={() =>
                         setAjusteComision((prev) =>
-                          String(Number(prev || 0) + 1)
+                          String(Number(prev || 0) + 1),
                         )
                       }
                       style={{
@@ -2178,7 +2187,7 @@ function Cotizador() {
                       type="button"
                       onClick={() =>
                         setAjusteComision((prev) =>
-                          String(Number(prev || 0) - 1)
+                          String(Number(prev || 0) - 1),
                         )
                       }
                       style={{
@@ -2320,7 +2329,7 @@ function Cotizador() {
                             setColumnasSeleccionadas((prev) =>
                               e.target.checked
                                 ? [...prev, op.plazo]
-                                : prev.filter((p) => p !== op.plazo)
+                                : prev.filter((p) => p !== op.plazo),
                             );
                           }}
                         />
@@ -2355,7 +2364,7 @@ function Cotizador() {
                           value={
                             capitalPorPlazo[plazo] !== ""
                               ? Number(capitalPorPlazo[plazo]).toLocaleString(
-                                  "es-AR"
+                                  "es-AR",
                                 )
                               : ""
                           }
@@ -2383,7 +2392,7 @@ function Cotizador() {
                       (c) =>
                         String(c.producto_banco_id) ===
                           String(productoSeleccionado) &&
-                        Number(c.plazo) === plazo
+                        Number(c.plazo) === plazo,
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
                     let comision = found ? Number(found.comision) : 0;
@@ -2421,7 +2430,7 @@ function Cotizador() {
                           ? datos.gastoConIVA
                             ? `$${Number(datos.gastoConIVA).toLocaleString(
                                 "es-AR",
-                                { minimumFractionDigits: 2 }
+                                { minimumFractionDigits: 2 },
                               )}`
                             : "-"
                           : "-"}
@@ -2437,7 +2446,7 @@ function Cotizador() {
                       (c) =>
                         String(c.producto_banco_id) ===
                           String(productoSeleccionado) &&
-                        Number(c.plazo) === plazo
+                        Number(c.plazo) === plazo,
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
                     let comision = found ? Number(found.comision) : 0;
@@ -2475,7 +2484,7 @@ function Cotizador() {
                           ? datos.capitalConGasto
                             ? `$${Number(datos.capitalConGasto).toLocaleString(
                                 "es-AR",
-                                { minimumFractionDigits: 2 }
+                                { minimumFractionDigits: 2 },
                               )}`
                             : "-"
                           : "-"}
@@ -2495,7 +2504,7 @@ function Cotizador() {
                           (c) =>
                             String(c.producto_banco_id) ===
                               String(productoSeleccionado) &&
-                            Number(c.plazo) === plazo
+                            Number(c.plazo) === plazo,
                         );
                         const tna = found ? Number(found.tna) / 100 : 0;
                         let comision = found ? Number(found.comision) : 0;
@@ -2533,7 +2542,7 @@ function Cotizador() {
                               ? datos.cuotaPura
                                 ? `$${Number(datos.cuotaPura).toLocaleString(
                                     "es-AR",
-                                    { minimumFractionDigits: 2 }
+                                    { minimumFractionDigits: 2 },
                                   )}`
                                 : "-"
                               : "-"}
@@ -2557,7 +2566,7 @@ function Cotizador() {
                           (c) =>
                             String(c.producto_banco_id) ===
                               String(productoSeleccionado) &&
-                            Number(c.plazo) === plazo
+                            Number(c.plazo) === plazo,
                         );
                         const tna = found ? Number(found.tna) / 100 : 0;
                         let comision = found ? Number(found.comision) : 0;
@@ -2595,7 +2604,7 @@ function Cotizador() {
                               ? datos.cuotaPura
                                 ? `$${Number(datos.cuotaPura).toLocaleString(
                                     "es-AR",
-                                    { minimumFractionDigits: 2 }
+                                    { minimumFractionDigits: 2 },
                                   )}`
                                 : "-"
                               : "-"}
@@ -2619,7 +2628,7 @@ function Cotizador() {
                           (c) =>
                             String(c.producto_banco_id) ===
                               String(productoSeleccionado) &&
-                            Number(c.plazo) === plazo
+                            Number(c.plazo) === plazo,
                         );
                         const tna = found ? Number(found.tna) / 100 : 0;
                         let comision = found ? Number(found.comision) : 0;
@@ -2657,7 +2666,7 @@ function Cotizador() {
                             {isPlazoDisponible(plazo)
                               ? datos.comisionConIVA
                                 ? `$${Number(
-                                    datos.comisionConIVA
+                                    datos.comisionConIVA,
                                   ).toLocaleString("es-AR", {
                                     minimumFractionDigits: 2,
                                   })}`
@@ -2694,7 +2703,7 @@ function Cotizador() {
                           {isPlazoDisponible(plazo)
                             ? capitalPorPlazo[plazo]
                               ? `$${Number(
-                                  capitalPorPlazo[plazo]
+                                  capitalPorPlazo[plazo],
                                 ).toLocaleString("es-AR", {
                                   minimumFractionDigits: 2,
                                 })}`
@@ -2716,7 +2725,7 @@ function Cotizador() {
                       (c) =>
                         String(c.producto_banco_id) ===
                           String(productoSeleccionado) &&
-                        Number(c.plazo) === plazo
+                        Number(c.plazo) === plazo,
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
                     let comision = found ? Number(found.comision) : 0;
@@ -2754,7 +2763,7 @@ function Cotizador() {
                           ? datos.capitalBruto
                             ? `$${Number(datos.capitalBruto).toLocaleString(
                                 "es-AR",
-                                { minimumFractionDigits: 2 }
+                                { minimumFractionDigits: 2 },
                               )}`
                             : "-"
                           : "-"}
@@ -2791,7 +2800,7 @@ function Cotizador() {
                       (c) =>
                         String(c.producto_banco_id) ===
                           String(productoSeleccionado) &&
-                        Number(c.plazo) === plazo
+                        Number(c.plazo) === plazo,
                     );
                     return (
                       <td
@@ -2834,7 +2843,7 @@ function Cotizador() {
                       (c) =>
                         String(c.producto_banco_id) ===
                           String(productoSeleccionado) &&
-                        Number(c.plazo) === plazo
+                        Number(c.plazo) === plazo,
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
                     let comision = found ? Number(found.comision) : 0;
@@ -2872,7 +2881,7 @@ function Cotizador() {
                           ? datos.cuotaConIVA
                             ? `$${Number(datos.cuotaConIVA).toLocaleString(
                                 "es-AR",
-                                { minimumFractionDigits: 2 }
+                                { minimumFractionDigits: 2 },
                               )}`
                             : "-"
                           : "-"}
@@ -2896,7 +2905,7 @@ function Cotizador() {
                       (c) =>
                         String(c.producto_banco_id) ===
                           String(productoSeleccionado) &&
-                        Number(c.plazo) === plazo
+                        Number(c.plazo) === plazo,
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
                     let comision = found ? Number(found.comision) : 0;
@@ -2945,7 +2954,7 @@ function Cotizador() {
                           ? promedioCuotaConIVA
                             ? `$${Number(promedioCuotaConIVA).toLocaleString(
                                 "es-AR",
-                                { minimumFractionDigits: 2 }
+                                { minimumFractionDigits: 2 },
                               )}`
                             : "-"
                           : "-"}
@@ -2961,7 +2970,7 @@ function Cotizador() {
                       (c) =>
                         String(c.producto_banco_id) ===
                           String(productoSeleccionado) &&
-                        Number(c.plazo) === plazo
+                        Number(c.plazo) === plazo,
                     );
                     const tna = found ? Number(found.tna) / 100 : 0;
                     let comision = found ? Number(found.comision) : 0;
@@ -2999,7 +3008,7 @@ function Cotizador() {
                           ? datos.montoPrenda
                             ? `$${Number(datos.montoPrenda).toLocaleString(
                                 "es-AR",
-                                { minimumFractionDigits: 2 }
+                                { minimumFractionDigits: 2 },
                               )}`
                             : "-"
                           : "-"}
@@ -3015,7 +3024,7 @@ function Cotizador() {
                         (c) =>
                           String(c.producto_banco_id) ===
                             String(productoSeleccionado) &&
-                          Number(c.plazo) === plazo
+                          Number(c.plazo) === plazo,
                       );
                       const tna = found ? Number(found.tna) / 100 : 0;
                       let comision = found ? Number(found.comision) : 0;
@@ -3055,7 +3064,7 @@ function Cotizador() {
                                   "es-AR",
                                   {
                                     minimumFractionDigits: 2,
-                                  }
+                                  },
                                 )}`
                               : "-"
                             : "-"}
@@ -3080,7 +3089,7 @@ function Cotizador() {
                       (c) =>
                         String(c.producto_banco_id) ===
                           String(productoSeleccionado) &&
-                        Number(c.plazo) === plazo
+                        Number(c.plazo) === plazo,
                     );
                     return (
                       <td
@@ -3206,6 +3215,4 @@ function Cotizador() {
   );
 }
 
-
 export default Cotizador;
-
