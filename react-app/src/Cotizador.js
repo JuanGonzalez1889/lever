@@ -748,6 +748,8 @@ function Cotizador() {
         String(l.anio) === String(year),
     ),
   );
+  const primeraFilaProductos = productosConLtv.slice(0, 10);
+  const segundaFilaProductos = productosConLtv.slice(10);
   useEffect(() => {
     async function fetchTableroInterno() {
       try {
@@ -1800,7 +1802,7 @@ function Cotizador() {
           </div>
         </div>
       </div>
-      {precio && year && productos.length > 0 && (
+      {precio && year && productosConLtv.length > 0 && (
         <div
           className="card mb-3"
           style={{ margin: "0 auto", background: "#232342" }}
@@ -1809,13 +1811,14 @@ function Cotizador() {
             <b>MÁXIMO NETO</b>
           </div>
           <div className="card-body p-2" style={{ borderRadius: 16 }}>
+            {/* Primera fila */}
             <table
               className="table table-borderless text-center align-middle table-maximos-netos"
               style={{ marginBottom: 0, fontSize: "0.98rem" }}
             >
               <thead>
                 <tr>
-                  {productosConLtv.map((producto) => {
+                  {primeraFilaProductos.map((producto) => {
                     const bancoObj = bancos.find(
                       (b) => String(b.id) === String(producto.banco_id),
                     );
@@ -1840,34 +1843,27 @@ function Cotizador() {
               </thead>
               <tbody>
                 <tr>
-                  {productosConLtv.map((producto) => {
-                    // Monto bruto por LTV
+                  {primeraFilaProductos.map((producto) => {
                     const montoBruto = calcularMaxAFinanciarPorLTV(
                       precio,
                       producto.id,
                       year,
                       configLtv,
                     );
-                    // Buscar comisión del producto/plazo
                     const found = configBancosPlazos.find(
                       (c) =>
                         String(c.producto_banco_id) === String(producto.id),
                     );
-                    // Comisión base en %
                     let comisionBase =
                       found && found.comision ? Number(found.comision) : 8;
-                    // Aplica el ajuste de comisión si corresponde
                     if (
                       ajusteComision !== "" &&
                       !isNaN(Number(ajusteComision))
                     ) {
                       comisionBase += Number(ajusteComision);
                     }
-                    // Pasa a decimal
                     comisionBase = comisionBase / 100;
-                    // Comisión con IVA
                     const comisionConIVA = comisionBase * 1.21;
-                    // Máximo neto descontando comisión con IVA
                     const maxNeto = montoBruto * (1 - comisionConIVA);
 
                     return (
@@ -1888,9 +1884,7 @@ function Cotizador() {
                         <span style={{ color: "#888", fontSize: "0.9em" }}>
                           TNA:{" "}
                           {found && found.tna
-                            ? `${Number(found.tna).toLocaleString("es-AR", {
-                                minimumFractionDigits: 2,
-                              })}%`
+                            ? `${Number(found.tna).toLocaleString("es-AR", { minimumFractionDigits: 2 })}%`
                             : "-"}
                         </span>
                       </td>
@@ -1899,6 +1893,90 @@ function Cotizador() {
                 </tr>
               </tbody>
             </table>
+            {/* Segunda fila solo si hay más de 10 productos */}
+            {segundaFilaProductos.length > 0 && (
+              <table
+                className="table table-borderless text-center align-middle table-maximos-netos"
+                style={{ marginBottom: 0, fontSize: "0.98rem" }}
+              >
+                <thead>
+                  <tr>
+                    {segundaFilaProductos.map((producto) => {
+                      const bancoObj = bancos.find(
+                        (b) => String(b.id) === String(producto.banco_id),
+                      );
+                      return (
+                        <th
+                          key={producto.id}
+                          style={{
+                            background: "none",
+                            color: "#232342",
+                            fontWeight: 600,
+                            padding: "4px 0",
+                          }}
+                        >
+                          <div>{producto.nombre}</div>
+                          <div style={{ color: "#888", fontSize: "0.9em" }}>
+                            {bancoObj ? bancoObj.nombre : ""}
+                          </div>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {segundaFilaProductos.map((producto) => {
+                      const montoBruto = calcularMaxAFinanciarPorLTV(
+                        precio,
+                        producto.id,
+                        year,
+                        configLtv,
+                      );
+                      const found = configBancosPlazos.find(
+                        (c) =>
+                          String(c.producto_banco_id) === String(producto.id),
+                      );
+                      let comisionBase =
+                        found && found.comision ? Number(found.comision) : 8;
+                      if (
+                        ajusteComision !== "" &&
+                        !isNaN(Number(ajusteComision))
+                      ) {
+                        comisionBase += Number(ajusteComision);
+                      }
+                      comisionBase = comisionBase / 100;
+                      const comisionConIVA = comisionBase * 1.21;
+                      const maxNeto = montoBruto * (1 - comisionConIVA);
+
+                      return (
+                        <td
+                          key={producto.id}
+                          style={{
+                            background: "none",
+                            color: "#22d99e",
+                            fontWeight: 700,
+                            padding: "4px 0",
+                          }}
+                        >
+                          $
+                          {Math.round(maxNeto).toLocaleString("es-AR", {
+                            maximumFractionDigits: 0,
+                          })}
+                          <br />
+                          <span style={{ color: "#888", fontSize: "0.9em" }}>
+                            TNA:{" "}
+                            {found && found.tna
+                              ? `${Number(found.tna).toLocaleString("es-AR", { minimumFractionDigits: 2 })}%`
+                              : "-"}
+                          </span>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       )}
