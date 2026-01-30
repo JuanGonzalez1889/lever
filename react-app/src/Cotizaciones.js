@@ -213,6 +213,7 @@ function Cotizaciones() {
         Apellido: cot.cliente_apellido,
         DNI: cot.cliente_dni,
         Agencia: cot.agencia,
+        Agente: cot.agente,
         Producto: cot.producto,
         Monto: cot.monto,
         Usuario: cot.usuario,
@@ -402,6 +403,7 @@ function Cotizaciones() {
               <th>Apellido</th>
               <th>DNI</th>
               <th>Agencia</th>
+              <th>Agente</th>
               <th>Producto</th>
               <th>Monto</th>
               <th>Usuario</th>
@@ -420,7 +422,7 @@ function Cotizaciones() {
                         {
                           timeZone: "America/Argentina/Buenos_Aires",
                           hour12: false,
-                        }
+                        },
                       )
                     : ""}
                 </td>
@@ -428,6 +430,7 @@ function Cotizaciones() {
                 <td>{cot.cliente_apellido}</td>
                 <td>{cot.cliente_dni}</td>
                 <td>{cot.agencia}</td>
+                <td>{cot.agente}</td>
                 <td>{cot.producto}</td>
                 <td>${cot.monto?.toLocaleString("es-AR")}</td>
                 <td>{cot.usuario}</td>
@@ -507,7 +510,7 @@ function Cotizaciones() {
                     }}
                     onClick={() =>
                       navigate(
-                        `/dashboard/cotizaciones?id=${cotizacionSeleccionada.cotizacion_original_id}`
+                        `/dashboard/cotizaciones?id=${cotizacionSeleccionada.cotizacion_original_id}`,
                       )
                     }
                   >
@@ -541,7 +544,7 @@ function Cotizaciones() {
                 {cotizacionSeleccionada.vehiculo_modelo}{" "}
                 {cotizacionSeleccionada.vehiculo_anio} ($
                 {cotizacionSeleccionada.vehiculo_precio?.toLocaleString(
-                  "es-AR"
+                  "es-AR",
                 )}
                 )
               </p>
@@ -584,7 +587,8 @@ function Cotizaciones() {
                   borderRadius: 20,
                   marginBottom: 12,
                   fontWeight: "bold",
-                  background: "linear-gradient(135deg, #232342 0%, #232342 100%)",
+                  background:
+                    "linear-gradient(135deg, #232342 0%, #232342 100%)",
                   color: "#232342",
                   border: "none",
                   width: 227,
