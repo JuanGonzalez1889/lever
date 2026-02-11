@@ -48,7 +48,7 @@ function Tablero() {
   const [products, setProducts] = useState([]);
   const [minAFinanciar, setMinAFinanciar] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [ltv, setLtv] = useState({}); 
+  const [ltv, setLtv] = useState({});
   const [showNewProductModal, setShowNewProductModal] = useState(false); // Nuevo estado para el modal
   const [newProduct, setNewProduct] = useState({
     nombre: "",
@@ -87,10 +87,10 @@ function Tablero() {
         ...new Set(
           Object.values(data?.productos || {})
             .filter((p) => p.segmento_id == selectedSegmento)
-            .map((p) => p.banco)
+            .map((p) => p.banco),
         ),
       ].sort()
-    : [];     
+    : [];
   // Filtrar productos por banco seleccionado
   const productosFiltradesPorBanco = selectedBanco
     ? Object.entries(data?.productos || {})
@@ -109,7 +109,7 @@ function Tablero() {
 
   const defaultNewProductYears = [2025, 2024, 2023];
   const [newProductYears, setNewProductYears] = useState(
-    defaultNewProductYears
+    defaultNewProductYears,
   );
   console.log("API_URL (Tablero):", API_URL); // Verificar la URL
 
@@ -118,7 +118,7 @@ function Tablero() {
       try {
         const response = await axios.get(
           `${API_URL}/api/data`, // Usar la URL global
-          { withCredentials: true }
+          { withCredentials: true },
         );
         setData(response.data);
         setProducts(Object.keys(response.data.productos)); // Obtener los nombres de los productos
@@ -127,7 +127,7 @@ function Tablero() {
         setLtv(
           firstProductKey
             ? response.data.productos[firstProductKey].ltv || {}
-            : {}
+            : {},
         );
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -207,7 +207,7 @@ function Tablero() {
       await axios.put(
         `${API_URL}/api/productos/${producto_id}/categorias`,
         { categorias: categoriasToSend }, // "" permitido
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       // Actualizar estado local
@@ -325,7 +325,7 @@ function Tablero() {
                   { ...e, target: { ...e.target, value } },
                   producto,
                   plazo,
-                  "fee"
+                  "fee",
                 );
               }
             }}
@@ -359,7 +359,7 @@ function Tablero() {
 
   const confirmarEliminarPlazo = (producto, plazo) => {
     const confirmacion = window.confirm(
-      "¿Está seguro que desea eliminar el plazo seleccionado?"
+      "¿Está seguro que desea eliminar el plazo seleccionado?",
     );
     if (confirmacion) {
       eliminarPlazo(producto, plazo);
@@ -462,7 +462,7 @@ function Tablero() {
             ? newProductCategorias.join(",")
             : "A,B,C",
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setShowNewProductModal(false);
       setNewProduct({
@@ -487,21 +487,18 @@ function Tablero() {
     }
   };
   const agregarAnoLtvNuevoProducto = () => {
-    const nuevoAno = prompt("Ingrese el nuevo año:");
+    const nuevoAno = prompt(
+      "Ingrese el nuevo año (puede ser '2026', '2026 - 0km', etc.):",
+    );
     if (!nuevoAno) return;
-    const yearNum = Number(nuevoAno);
-    if (isNaN(yearNum)) {
-      alert("El año debe ser numérico.");
-      return;
-    }
     setNewProductYears((prev) =>
-      prev.includes(yearNum) ? prev : [...prev, yearNum].sort((a, b) => b - a)
+      prev.includes(nuevoAno) ? prev : [...prev, nuevoAno],
     );
   };
 
   const eliminarProducto = async () => {
     const confirmacion = window.confirm(
-      `¿Está seguro que desea eliminar el producto "${selectedProduct}" y todos sus datos asociados?`
+      `¿Está seguro que desea eliminar el producto "${selectedProduct}" y todos sus datos asociados?`,
     );
     if (!confirmacion) return;
 
@@ -526,7 +523,7 @@ function Tablero() {
       });
 
       setProducts((prevProducts) =>
-        prevProducts.filter((product) => product !== selectedProduct)
+        prevProducts.filter((product) => product !== selectedProduct),
       );
       setSelectedProduct(""); // Limpiar el producto seleccionado
     } catch (error) {
@@ -666,7 +663,7 @@ function Tablero() {
                 value={minAFinanciar}
                 onChange={(e) =>
                   setMinAFinanciar(
-                    formatNumber(e.target.value.replace(/\./g, ""))
+                    formatNumber(e.target.value.replace(/\./g, "")),
                   )
                 }
               />
@@ -793,7 +790,7 @@ function Tablero() {
                         disabled={noMostrar}
                         checked={
                           data.productos[selectedProduct]?.categorias?.includes(
-                            "A"
+                            "A",
                           ) || false
                         }
                         onChange={(e) => {
@@ -810,7 +807,7 @@ function Tablero() {
                               newCategorias.push("A");
                             } else if (!checked) {
                               newCategorias = newCategorias.filter(
-                                (c) => c !== "A"
+                                (c) => c !== "A",
                               );
                             }
 
@@ -834,7 +831,7 @@ function Tablero() {
                         disabled={noMostrar}
                         checked={
                           data.productos[selectedProduct]?.categorias?.includes(
-                            "B"
+                            "B",
                           ) || false
                         }
                         onChange={(e) => {
@@ -851,7 +848,7 @@ function Tablero() {
                               newCategorias.push("B");
                             } else if (!checked) {
                               newCategorias = newCategorias.filter(
-                                (c) => c !== "B"
+                                (c) => c !== "B",
                               );
                             }
 
@@ -875,7 +872,7 @@ function Tablero() {
                         disabled={noMostrar}
                         checked={
                           data.productos[selectedProduct]?.categorias?.includes(
-                            "C"
+                            "C",
                           ) || false
                         }
                         onChange={(e) => {
@@ -892,7 +889,7 @@ function Tablero() {
                               newCategorias.push("C");
                             } else if (!checked) {
                               newCategorias = newCategorias.filter(
-                                (c) => c !== "C"
+                                (c) => c !== "C",
                               );
                             }
 
@@ -953,13 +950,13 @@ function Tablero() {
                 <tbody>
                   {data.productos[selectedProduct]?.plazos &&
                     Object.keys(
-                      data.productos[selectedProduct]?.plazos || {}
+                      data.productos[selectedProduct]?.plazos || {},
                     ).map((plazo) =>
                       generarPlazoHtml(
                         selectedProduct,
                         plazo,
-                        data.productos[selectedProduct].plazos[plazo]
-                      )
+                        data.productos[selectedProduct].plazos[plazo],
+                      ),
                     )}
                 </tbody>
               </Table>
@@ -1079,7 +1076,7 @@ function Tablero() {
                   new Set([
                     ...newProductYears,
                     ...Object.keys(newProduct.ltv || {}).map((y) => Number(y)),
-                  ])
+                  ]),
                 )
                   .sort((a, b) => b - a)
                   .map((year) => (
@@ -1328,7 +1325,7 @@ function Instructivos() {
 
 function Dashboard() {
   const [usuario, setUsuario] = useState(
-    sessionStorage.getItem("usuario") || "Usuario"
+    sessionStorage.getItem("usuario") || "Usuario",
   );
   const [rol, setRol] = useState(sessionStorage.getItem("rol") || "empleado");
   useEffect(() => {
