@@ -48,6 +48,7 @@ function titleize(s = "") {
 const PIE_COLORS = {
   VIABLE: "#26BD10",
   "VIABLE CON OBSERVACIONES": "#FFDF00",
+  "NO VIABLE": "#ff0000",
   OTROS: "#9aa0a6",
 };
 
@@ -129,6 +130,21 @@ export default function Analytics() {
   const [loginsToDate, setLoginsToDate] = useState("");
   const [loginsFilterAgencia, setLoginsFilterAgencia] = useState("");
   const [loginsFilterMetodo, setLoginsFilterMetodo] = useState("");
+  const [exportFromDate, setExportFromDate] = useState("");
+  const [exportToDate, setExportToDate] = useState("");
+
+function exportarMetricasExcel() {
+  console.log("Exportando métricas...", exportFromDate, exportToDate);
+  const params = [];
+  if (exportFromDate) params.push(`from=${exportFromDate}`);
+  if (exportToDate) params.push(`to=${exportToDate}`);
+  params.push("format=excel");
+  const url =
+    window.location.hostname === "localhost"
+      ? `http://localhost:5000/api/export/metricas?${params.join("&")}`
+      : `https://api.lever.com.ar/api/export/metricas?${params.join("&")}`;
+  window.open(url, "_blank");
+}
 
   useEffect(() => {
     let active = true;
@@ -223,22 +239,22 @@ export default function Analytics() {
 
   const maxCat = useMemo(
     () => maxOf(vehiculoSelects.categorias),
-    [vehiculoSelects]
+    [vehiculoSelects],
   );
 
   const maxYear = useMemo(
     () => maxOf(vehiculoSelects.anios),
-    [vehiculoSelects]
+    [vehiculoSelects],
   );
 
   const maxBrand = useMemo(
     () => maxOf(vehiculoSelects.marcas),
-    [vehiculoSelects]
+    [vehiculoSelects],
   );
 
   const maxModel = useMemo(
     () => maxOf(vehiculoSelects.modelos),
-    [vehiculoSelects]
+    [vehiculoSelects],
   );
 
   const paso4PlazosFiltered = useMemo(() => {
@@ -285,7 +301,7 @@ export default function Analytics() {
 
   const maxPlazoFiltered = useMemo(
     () => maxOf(paso4PlazosFiltered),
-    [paso4PlazosFiltered]
+    [paso4PlazosFiltered],
   );
 
   const paso3ProductosFiltered = useMemo(() => {
@@ -324,7 +340,7 @@ export default function Analytics() {
       paso3MontosFiltered
         .map((m) => Number(String(m.monto || "").replace(/\D/g, "")))
         .filter(Number.isFinite),
-    [paso3MontosFiltered]
+    [paso3MontosFiltered],
   );
 
   const montoStats = useMemo(() => {
@@ -478,6 +494,51 @@ export default function Analytics() {
   return (
     <div className="analytics-page">
       <h2>Métricas de web LEVER.COM.AR</h2>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between", // <-- Esto separa los extremos
+          gap: 16,
+          margin: "32px 0 24px 0",
+          padding: 16,
+          background: "#232342",
+          borderRadius: 16,
+          width: "100%",
+          boxSizing: "border-box",
+        }}
+      >
+        <label style={{ fontWeight: 600, color: "#fff" }}>
+          Exportar métricas completas:
+        </label>
+        <label style={{ color: "#fff" }}>Desde:</label>
+        <input
+          type="date"
+          value={exportFromDate}
+          onChange={(e) => setExportFromDate(e.target.value)}
+          style={{ minWidth: 140 }}
+        />
+        <label style={{ color: "#fff" }}>Hasta:</label>
+        <input
+          type="date"
+          value={exportToDate}
+          onChange={(e) => setExportToDate(e.target.value)}
+          style={{ minWidth: 140 }}
+        />
+        <button
+          className="btn btn-primary"
+          onClick={exportarMetricasExcel}
+          style={{
+            minWidth: 180,
+            fontWeight: 700,
+            fontSize: 16,
+            marginLeft: 12,
+            padding: "10px 18px",
+          }}
+        >
+          Exportar métricas a Excel
+        </button>
+      </div>
 
       <div className="cards">
         <MetricCard
@@ -489,7 +550,10 @@ export default function Analytics() {
           title="DNI/CUIT Con observaciones"
           value={summary?.observados || 0}
         />
-        <MetricCard title="Avances de paso" value={avancesPaso} />
+        <MetricCard
+          title="DNI/CUIT No Viables"
+          value={summary?.no_viables || 0}
+        />{" "}
       </div>
 
       {/* GRÁFICO DE TENDENCIA */}
@@ -554,6 +618,18 @@ export default function Analytics() {
             />
           </LineChart>
         </ResponsiveContainer>
+        <div
+          style={{ display: "flex", gap: 18, marginTop: 12, marginBottom: 8 }}
+        >
+          <div style={{ color: "#26BD10", fontWeight: 600 }}>■ VIABLE</div>
+          <div style={{ color: "#FFDF00", fontWeight: 600 }}>
+            ■ VIABLE CON OBSERVACIONES
+          </div>
+          <div style={{ color: "#ff0000", fontWeight: 600 }}>■ NO VIABLE</div>
+          <div style={{ color: "#9aa0a6", fontWeight: 600 }}>
+            ■ OTROS / SIN EVALUAR
+          </div>
+        </div>
       </div>
 
       <div className="grid-2">
@@ -671,6 +747,7 @@ export default function Analytics() {
               onChange={(e) => setViabToDate(e.target.value)}
             />
           </div>
+
           <div className="chart-wrapper">
             <ResponsiveContainer width="100%" height={420}>
               <PieChart>
@@ -781,7 +858,7 @@ export default function Analytics() {
                           <span
                             style={{
                               width: `${Math.round(
-                                (item.total / (maxCat || 1)) * 100
+                                (item.total / (maxCat || 1)) * 100,
                               )}%`,
                             }}
                           />
@@ -814,7 +891,7 @@ export default function Analytics() {
                           <span
                             style={{
                               width: `${Math.round(
-                                (item.total / (maxYear || 1)) * 100
+                                (item.total / (maxYear || 1)) * 100,
                               )}%`,
                             }}
                           />
@@ -849,7 +926,7 @@ export default function Analytics() {
                           <span
                             style={{
                               width: `${Math.round(
-                                (item.total / (maxBrand || 1)) * 100
+                                (item.total / (maxBrand || 1)) * 100,
                               )}%`,
                             }}
                           />
@@ -882,7 +959,7 @@ export default function Analytics() {
                           <span
                             style={{
                               width: `${Math.round(
-                                (item.total / (maxModel || 1)) * 100
+                                (item.total / (maxModel || 1)) * 100,
                               )}%`,
                             }}
                           />
@@ -988,7 +1065,7 @@ export default function Analytics() {
                         <td>
                           $
                           {Number(
-                            String(m.monto).replace(/\D/g, "")
+                            String(m.monto).replace(/\D/g, ""),
                           ).toLocaleString()}
                         </td>
                         <td>
@@ -1054,7 +1131,7 @@ export default function Analytics() {
                           <span
                             style={{
                               width: `${Math.round(
-                                (p.total / (maxPlazoFiltered || 1)) * 100
+                                (p.total / (maxPlazoFiltered || 1)) * 100,
                               )}%`,
                             }}
                           />
@@ -1167,8 +1244,8 @@ export default function Analytics() {
                       {row.metodo === "google_one_tap"
                         ? "Google One Tap"
                         : row.metodo === "email_password"
-                        ? "Email/Contraseña"
-                        : "Desconocido"}
+                          ? "Email/Contraseña"
+                          : "Desconocido"}
                     </td>
                     <td style={{ whiteSpace: "nowrap" }}>
                       {formatTimestampLocal(row.timestamp)}

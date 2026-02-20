@@ -97,7 +97,7 @@ function Cotizaciones() {
       console.error(err);
     }
   };
-  
+
   const handleGuardarObservacion = () => {
     if (!cotizacionSeleccionada) return;
     axios
@@ -112,12 +112,12 @@ function Cotizaciones() {
           prev.map((c) =>
             c.id === cotizacionSeleccionada.id
               ? { ...c, observaciones: observacionEditada }
-              : c
-          )
+              : c,
+          ),
         );
         // Actualiza la cotización seleccionada
         setCotizacionSeleccionada((prev) =>
-          prev ? { ...prev, observaciones: observacionEditada } : prev
+          prev ? { ...prev, observaciones: observacionEditada } : prev,
         );
         // Limpia el campo SOLO después de guardar
         setObservacionEditada("");
@@ -138,47 +138,45 @@ function Cotizaciones() {
   }, [location.search, cotizaciones]);
 
   const [filtro, setFiltro] = useState("");
+  const cotizacionesSinDuplicados = cotizaciones.filter(
+    (cot, idx, arr) => arr.findIndex((c) => c.id === cot.id) === idx,
+  );
 
-  const cotizacionesFiltradas = cotizaciones.filter((cot) => {
+
+  const cotizacionesFiltradas = cotizacionesSinDuplicados.filter((cot) => {
     const texto = filtro.trim().toLowerCase();
+    const nombreCompleto =
+      `${cot.cliente_nombre || ""} ${cot.cliente_apellido || ""}`.toLowerCase();
 
-    // Filtro general por DNI, nombre o apellido
-    if (
-      texto &&
-      !(
+    if (texto) {
+      const coincide =
         cot.cliente_dni?.toString().toLowerCase().includes(texto) ||
         cot.cliente_nombre?.toLowerCase().includes(texto) ||
-        cot.cliente_apellido?.toLowerCase().includes(texto)
-      )
-    ) {
-      return false;
+        cot.cliente_apellido?.toLowerCase().includes(texto) ||
+        nombreCompleto.includes(texto);
+
+      if (!coincide) return false;
     }
 
-    // Filtro por agencia
+    // Filtros avanzados
     if (
       filtroAgencia &&
       !cot.agencia?.toLowerCase().includes(filtroAgencia.trim().toLowerCase())
     ) {
       return false;
     }
-
-    // Filtro por usuario
     if (
       filtroUsuario &&
       !cot.usuario?.toLowerCase().includes(filtroUsuario.trim().toLowerCase())
     ) {
       return false;
     }
-
-    // Filtro por producto
     if (
       filtroProducto &&
       !cot.producto?.toLowerCase().includes(filtroProducto.trim().toLowerCase())
     ) {
       return false;
     }
-
-    // NUEVO: Filtro por rango de fechas
     const fechaCot = cot.fecha?.slice(0, 10); // "YYYY-MM-DD"
     if (filtroFechaDesde && fechaCot < filtroFechaDesde) {
       return false;
@@ -189,6 +187,7 @@ function Cotizaciones() {
 
     return true;
   });
+
   const exportarExcel = () => {
     // Solo exporta las cotizaciones filtradas
     const data = cotizacionesFiltradas.map((cot) => {
