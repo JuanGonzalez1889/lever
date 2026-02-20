@@ -55,7 +55,7 @@ db.getAgenciaUserByEmail = function (email) {
       (err, results) => {
         if (err) return reject(err);
         resolve(results[0]);
-      }
+      },
     );
   });
 };
@@ -72,7 +72,7 @@ app.use(
       }
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(
@@ -86,7 +86,7 @@ app.use(
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 8, // 8 horas
     },
-  })
+  }),
 );
 
 app.use(bodyParser.json());
@@ -166,7 +166,7 @@ app.get("/api/check-session-admin", async (req, res) => {
           rol: user.rol,
         },
       });
-    }
+    },
   );
 });
 
@@ -204,7 +204,7 @@ app.get("/api/productos-con-segmento", (req, res) => {
           .json({ success: false, message: "Error fetching productos" });
       }
       res.json(results);
-    }
+    },
   );
 });
 // NUEVO: Función utilitaria para obtener el id de producto por nombre
@@ -217,7 +217,7 @@ function getLastProductIdByName(nombre) {
         if (err) return reject(err);
         if (!results.length) return reject(new Error("Producto no encontrado"));
         resolve(results[0].id);
-      }
+      },
     );
   });
 }
@@ -307,7 +307,7 @@ app.post("/api/data", (req, res) => {
         (err) => {
           if (err) return reject(err);
           resolve();
-        }
+        },
       );
     } else {
       resolve();
@@ -315,7 +315,7 @@ app.post("/api/data", (req, res) => {
   });
 
   const plazosActuales = Object.keys(productos[selectedProductId].plazos).map(
-    Number
+    Number,
   );
 
   const deletePlazosViejos = new Promise((resolve, reject) => {
@@ -344,7 +344,7 @@ app.post("/api/data", (req, res) => {
         (err) => {
           if (err) return reject(err);
           resolve();
-        }
+        },
       );
     } else {
       resolve();
@@ -420,10 +420,10 @@ app.post("/api/data", (req, res) => {
             (err, result) => {
               if (err) return reject(err);
               resolve(result);
-            }
+            },
           );
         });
-      })
+      }),
   );
 
   const updateLtv = new Promise((resolve, reject) => {
@@ -443,10 +443,10 @@ app.post("/api/data", (req, res) => {
             (err, result) => {
               if (err) return reject(err);
               resolve(result);
-            }
+            },
           );
         });
-      }
+      },
     );
     Promise.all(ltvPromises).then(resolve).catch(reject);
   });
@@ -463,7 +463,7 @@ app.post("/api/data", (req, res) => {
         (err) => {
           if (err) return reject(err);
           resolve();
-        }
+        },
       );
     } else {
       resolve();
@@ -619,7 +619,7 @@ app.post("/api/new-product", async (req, res) => {
         (err, result) => {
           if (err) return reject(err);
           resolve(result.insertId);
-        }
+        },
       );
     });
 
@@ -648,10 +648,10 @@ app.post("/api/new-product", async (req, res) => {
             (err, result) => {
               if (err) return reject(err);
               resolve(result);
-            }
+            },
           );
         });
-      })
+      }),
     );
 
     // 4. Insertar LTV
@@ -667,7 +667,7 @@ app.post("/api/new-product", async (req, res) => {
             resolve(result);
           });
         });
-      })
+      }),
     );
 
     res.json({ success: true, productoId });
@@ -874,8 +874,8 @@ passport.use(
         console.error("ERROR EN GOOGLE CALLBACK:", err);
         return done(err);
       }
-    }
-  )
+    },
+  ),
 );
 
 app.get(
@@ -883,7 +883,7 @@ app.get(
   passport.authenticate("google", {
     scope: ["profile", "email"],
     prompt: "select_account",
-  })
+  }),
 );
 
 app.get(
@@ -900,7 +900,7 @@ app.get(
     req.session.agencia_email = req.user.email;
     req.session.agencia_nombre = req.user.agencia;
     res.redirect(process.env.REDIRECT_URL);
-  }
+  },
 );
 
 app.post("/api/loginAgencias", async (req, res) => {
@@ -967,7 +967,7 @@ app.post("/api/registerAgencias", async (req, res) => {
   // Enviar email de validación
   const link = `${process.env.CLIENT_URL.replace(
     /\/$/,
-    ""
+    "",
   )}/validar-email.html?token=${email_token}`;
   const html = getEmailTemplate({
     titulo: "Valida tu correo",
@@ -1025,7 +1025,7 @@ db.createAgenciaUser = function ({
       (err, result) => {
         if (err) return reject(err);
         resolve(result);
-      }
+      },
     );
   });
 };
@@ -1058,9 +1058,9 @@ app.get("/api/validar-email", async (req, res) => {
             message:
               "Tu cuenta fue activada correctamente. Ya puedes iniciar sesión.",
           });
-        }
+        },
       );
-    }
+    },
   );
 });
 
@@ -1100,7 +1100,7 @@ app.post("/api/completarPerfilGoogle", async (req, res) => {
       if (err)
         return res.json({ success: false, message: "Error al actualizar" });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1129,7 +1129,7 @@ app.post("/api/forgot-password", async (req, res) => {
   // Enviar email con el enlace
   const resetUrl = `${process.env.CLIENT_URL.replace(
     /\/$/,
-    ""
+    "",
   )}/reset-password.html?token=${token}`;
   const html = getEmailTemplate({
     titulo: "Restablece tu contraseña",
@@ -1187,7 +1187,7 @@ app.post("/api/reset-password", async (req, res) => {
         success: true,
         message: "Contraseña actualizada correctamente.",
       });
-    }
+    },
   );
 });
 
@@ -1303,7 +1303,7 @@ app.put("/api/admin/usuarios/:id/email", (req, res) => {
         } else {
           return tryUpdate(idx + 1);
         }
-      }
+      },
     );
   };
   tryUpdate();
@@ -1346,7 +1346,7 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
 
             const verifyLink = `${process.env.CLIENT_URL.replace(
               /\/$/,
-              ""
+              "",
             )}/validar-email.html?token=${email_token}`;
             const html = getEmailTemplate({
               titulo: "Verificación de correo",
@@ -1373,11 +1373,11 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
                   });
                 }
                 return res.json({ success: true });
-              }
+              },
             );
-          }
+          },
         );
-      }
+      },
     );
   };
   trySelect();
@@ -1485,7 +1485,7 @@ app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
         return res.status(500).json({ success: false, error: err });
       }
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1515,7 +1515,7 @@ app.get("/api/productos-por-categoria", (req, res) => {
           .json({ success: false, message: "Error fetching productos" });
       }
       res.json(results);
-    }
+    },
   );
 });
 
@@ -1523,7 +1523,7 @@ app.get("/api/productos-por-categoria", (req, res) => {
 app.put("/api/productos/:id/categorias", (req, res) => {
   let { categorias } = req.body;
   console.log(
-    `📝 Actualizando producto ${req.params.id} con categorías: "${categorias}"`
+    `📝 Actualizando producto ${req.params.id} con categorías: "${categorias}"`,
   ); // <--- AGREGAR
 
   // Normalizar: permitir string vacío "", y A,B,C en cualquier orden
@@ -1566,7 +1566,7 @@ app.put("/api/productos/:id/categorias", (req, res) => {
         return res.status(500).json({ success: false, error: err });
       }
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1603,7 +1603,7 @@ async function enviarReporteUsuariosSemana(req, res) {
         if (err) {
           console.error(
             "Error consultando usuarios para el reporte semanal:",
-            err
+            err,
           );
           if (res) return res.status(500).json({ success: false, error: err });
           return;
@@ -1683,7 +1683,7 @@ async function enviarReporteUsuariosSemana(req, res) {
             } else {
               console.log(
                 "Reporte semanal de usuarios enviado:",
-                info.response
+                info.response,
               );
               if (res)
                 return res.json({
@@ -1692,9 +1692,9 @@ async function enviarReporteUsuariosSemana(req, res) {
                   info: info.response,
                 });
             }
-          }
+          },
         );
-      }
+      },
     );
   } catch (err) {
     console.error("Error en el envío manual:", err);
@@ -1747,7 +1747,7 @@ app.post("/api/agencias", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1783,7 +1783,7 @@ app.put("/api/agencias/:id", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1832,7 +1832,7 @@ app.get("/api/localidades", (req, res) => {
     (err, rows) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true, localidades: rows });
-    }
+    },
   );
 });
 
@@ -1853,7 +1853,7 @@ app.post("/api/bancos", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1866,7 +1866,7 @@ app.put("/api/bancos/:id", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 // Eliminar banco
@@ -1887,7 +1887,7 @@ app.get("/api/productos_bancos", (req, res) => {
       (err, rows) => {
         if (err) return res.json({ success: false, error: err });
         res.json({ success: true, productos: rows });
-      }
+      },
     );
   } else {
     db.query("SELECT * FROM productos_bancos", (err, rows) => {
@@ -1906,7 +1906,7 @@ app.post("/api/productos_bancos", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1919,7 +1919,7 @@ app.put("/api/productos_bancos/:id", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1931,7 +1931,7 @@ app.delete("/api/productos_bancos/:id", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1944,7 +1944,7 @@ app.get("/api/banco_plazos", (req, res) => {
     (err, rows) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true, plazos: rows });
-    }
+    },
   );
 });
 
@@ -1957,7 +1957,7 @@ app.post("/api/banco_plazos", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1970,7 +1970,7 @@ app.put("/api/banco_plazos/:id", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -1990,7 +1990,7 @@ app.delete("/api/banco_plazos/producto/:producto_banco_id", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -2002,7 +2002,7 @@ app.delete("/api/config_ltv/producto/:producto_banco_id", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -2015,7 +2015,7 @@ app.get("/api/config_ltv", (req, res) => {
     (err, rows) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true, ltvs: rows });
-    }
+    },
   );
 });
 
@@ -2028,7 +2028,7 @@ app.post("/api/config_ltv", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -2041,7 +2041,7 @@ app.put("/api/config_ltv/:id", (req, res) => {
     (err) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -2162,13 +2162,19 @@ app.post("/api/cotizaciones", (req, res) => {
           cotizacion_original_id,
         ]);
       }
-    }
+    },
   );
 });
 
 // Listar cotizaciones
 app.get("/api/cotizaciones", (req, res) => {
-  db.query("SELECT * FROM cotizaciones ORDER BY fecha DESC", (err, rows) => {
+  const sql = `
+    SELECT c.*, a.agente
+    FROM cotizaciones c
+    LEFT JOIN agencias a ON c.agencia = a.agencia
+    ORDER BY c.fecha DESC
+  `;
+  db.query(sql, (err, rows) => {
     if (err) return res.status(500).json({ success: false, error: err });
     res.json({ success: true, cotizaciones: rows });
   });
@@ -2186,7 +2192,7 @@ app.get("/api/cotizaciones/:id", (req, res) => {
           .status(404)
           .json({ success: false, message: "No encontrada" });
       res.json({ success: true, cotizacion: rows[0] });
-    }
+    },
   );
 });
 
@@ -2198,7 +2204,7 @@ app.post("/api/cotizaciones/observacion", (req, res) => {
     (err) => {
       if (err) return res.status(500).json({ success: false });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -2219,7 +2225,7 @@ app.post("/api/operaciones", (req, res) => {
     (err, result) => {
       if (err) return res.status(500).json({ success: false, error: err });
       res.json({ success: true, id: result.insertId });
-    }
+    },
   );
 });
 
@@ -2229,7 +2235,7 @@ app.get("/api/operaciones", (req, res) => {
     (err, rows) => {
       if (err) return res.status(500).json({ success: false, error: err });
       res.json({ success: true, operaciones: rows });
-    }
+    },
   );
 });
 
@@ -2248,7 +2254,7 @@ app.put("/api/operaciones/:id", (req, res) => {
     (err, result) => {
       if (err) return res.status(500).json({ success: false, error: err });
       res.json({ success: true });
-    }
+    },
   );
 });
 
@@ -2285,7 +2291,7 @@ app.post("/api/analytics", async (req, res) => {
           event.viabilidad,
           event.agencia,
           event.categoriaUsuario,
-        ]
+        ],
       );
     } else {
       await db.query(
@@ -2302,7 +2308,7 @@ app.post("/api/analytics", async (req, res) => {
           event.url,
           event.metodo || null,
           event.agencia || null,
-        ]
+        ],
       );
     }
 
@@ -2315,13 +2321,14 @@ app.post("/api/analytics", async (req, res) => {
 
 app.get("/api/analytics/summary", (req, res) => {
   const summarySql = `
-    SELECT 
-      SUM(category = 'Pantalla_1' AND action = 'dni_search') AS total_busquedas,
-      SUM(category = 'Pantalla_1' AND action = 'viabilidad_resultado' AND label = 'VIABLE') AS viables,
-      SUM(category = 'Pantalla_1' AND action = 'viabilidad_resultado' AND label = 'VIABLE CON OBSERVACIONES') AS observados,
-      SUM(category = 'Navegacion' AND action = 'step_advance') AS avances
-    FROM analytics_events
-  `;
+  SELECT 
+    SUM(category = 'Pantalla_1' AND action = 'dni_search') AS total_busquedas,
+    SUM(category = 'Pantalla_1' AND action = 'viabilidad_resultado' AND label = 'VIABLE') AS viables,
+    SUM(category = 'Pantalla_1' AND action = 'viabilidad_resultado' AND label = 'VIABLE CON OBSERVACIONES') AS observados,
+    SUM(category = 'Pantalla_1' AND action = 'viabilidad_resultado' AND label = 'NO VIABLE') AS no_viables,
+    SUM(category = 'Navegacion' AND action = 'step_advance') AS avances
+  FROM analytics_events
+`;
   db.query(summarySql, (err, rows) => {
     if (err) return res.status(500).json({ success: false, error: err });
     res.json({ success: true, summary: rows[0] || {} });
@@ -2539,4 +2546,164 @@ app.get("/api/analytics/logins-por-usuario", requireAuth, (req, res) => {
 
     res.json({ success: true, logins: rows || [] });
   });
+});
+
+app.get("/api/export/metricas", async (req, res) => {
+  const { from, to } = req.query;
+  const params = [];
+  let whereFechas = "";
+  if (from) {
+    whereFechas += " AND timestamp >= ?";
+    params.push(from + " 00:00:00");
+  }
+  if (to) {
+    whereFechas += " AND timestamp <= ?";
+    params.push(to + " 23:59:59");
+  }
+
+  // 1. Consultas DNI/CUIT
+  const sqlConsultas = `
+    SELECT id, dni, nombre_solicitante, tipo_documento, viabilidad, agencia, categoria_usuario, timestamp
+    FROM analytics_dni_consultas
+    WHERE 1=1 ${whereFechas}
+    ORDER BY timestamp DESC
+  `;
+
+  // 2. Años consultados
+  const sqlAnios = `
+    SELECT label AS anio, COUNT(*) AS total
+    FROM analytics_events
+    WHERE category='Paso_2' AND action='select_anio' ${whereFechas}
+    GROUP BY label
+    ORDER BY total DESC
+  `;
+
+  // 3. Productos seleccionados
+  const sqlProductos = `
+    SELECT label AS producto, COUNT(*) AS total
+    FROM analytics_events
+    WHERE category='Paso_3' AND action='select_producto' ${whereFechas}
+    GROUP BY label
+    ORDER BY total DESC
+  `;
+
+  // 4. Autos consultados (marca/modelo)
+  const sqlAutos = `
+    SELECT 
+      session_id,
+      MAX(timestamp) as timestamp,
+      GROUP_CONCAT(DISTINCT CASE WHEN action='select_marca' THEN label END) as marca,
+      GROUP_CONCAT(DISTINCT CASE WHEN action='select_modelo' THEN label END) as modelo
+    FROM analytics_events
+    WHERE category='Paso_2' AND action IN ('select_marca', 'select_modelo') ${whereFechas}
+    GROUP BY session_id
+    ORDER BY timestamp DESC
+  `;
+
+  // 5. Logins
+  const sqlLogins = `
+    SELECT label AS email, metodo, agencia, timestamp
+    FROM analytics_events
+    WHERE category = 'Auth'
+      AND action = 'login_success'
+      AND label IS NOT NULL
+      ${whereFechas}
+    ORDER BY timestamp DESC
+  `;
+
+  try {
+    const [consultas, anios, productos, autos, logins] = await Promise.all([
+      new Promise((resolve, reject) =>
+        db.query(sqlConsultas, params, (e, r) => (e ? reject(e) : resolve(r))),
+      ),
+      new Promise((resolve, reject) =>
+        db.query(sqlAnios, params, (e, r) => (e ? reject(e) : resolve(r))),
+      ),
+      new Promise((resolve, reject) =>
+        db.query(sqlProductos, params, (e, r) => (e ? reject(e) : resolve(r))),
+      ),
+      new Promise((resolve, reject) =>
+        db.query(sqlAutos, params, (e, r) => (e ? reject(e) : resolve(r))),
+      ),
+      new Promise((resolve, reject) =>
+        db.query(sqlLogins, params, (e, r) => (e ? reject(e) : resolve(r))),
+      ),
+    ]);
+
+    if (req.query.format === "excel") {
+      const workbook = new ExcelJS.Workbook();
+
+      // Hoja 1: Consultas DNI/CUIT
+      const wsConsultas = workbook.addWorksheet("Consultas DNI");
+      wsConsultas.columns = [
+        { header: "ID", key: "id", width: 8 },
+        { header: "DNI/CUIT", key: "dni", width: 15 },
+        { header: "Nombre", key: "nombre_solicitante", width: 30 },
+        { header: "Tipo Doc", key: "tipo_documento", width: 10 },
+        { header: "Viabilidad", key: "viabilidad", width: 20 },
+        { header: "Agencia", key: "agencia", width: 20 },
+        { header: "Categoría Usuario", key: "categoria_usuario", width: 15 },
+        { header: "Fecha/Hora", key: "timestamp", width: 20 },
+      ];
+      consultas.forEach((row) => wsConsultas.addRow(row));
+
+      // Hoja 2: Años consultados
+      const wsAnios = workbook.addWorksheet("Años consultados");
+      wsAnios.columns = [
+        { header: "Año", key: "anio", width: 10 },
+        { header: "Consultas", key: "total", width: 12 },
+      ];
+      anios.forEach((row) => wsAnios.addRow(row));
+
+      // Hoja 3: Productos seleccionados
+      const wsProductos = workbook.addWorksheet("Productos");
+      wsProductos.columns = [
+        { header: "Producto", key: "producto", width: 20 },
+        { header: "Selecciones", key: "total", width: 12 },
+      ];
+      productos.forEach((row) => wsProductos.addRow(row));
+
+      // Hoja 4: Autos consultados
+      const wsAutos = workbook.addWorksheet("Autos consultados");
+      wsAutos.columns = [
+        { header: "Session ID", key: "session_id", width: 30 },
+        { header: "Fecha/Hora", key: "timestamp", width: 20 },
+        { header: "Marca", key: "marca", width: 20 },
+        { header: "Modelo", key: "modelo", width: 20 },
+      ];
+      autos.forEach((row) => wsAutos.addRow(row));
+
+      // Hoja 5: Logins
+      const wsLogins = workbook.addWorksheet("Logins");
+      wsLogins.columns = [
+        { header: "Email", key: "email", width: 30 },
+        { header: "Método", key: "metodo", width: 15 },
+        { header: "Agencia", key: "agencia", width: 20 },
+        { header: "Fecha/Hora", key: "timestamp", width: 20 },
+      ];
+      logins.forEach((row) => wsLogins.addRow(row));
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      );
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=metricas_completas.xlsx",
+      );
+      await workbook.xlsx.write(res);
+      res.end();
+    } else {
+      res.json({
+        consultas,
+        anios,
+        productos,
+        autos,
+        logins,
+      });
+    }
+  } catch (err) {
+    console.error("Error SQL export/metricas:", err);
+    res.status(500).send("Error al consultar la base de datos");
+  }
 });
