@@ -1354,7 +1354,7 @@ function Cotizador() {
         "CANTIDAD DE UVAs A PAGAR POR CUOTA: CADA CUOTA RESULTARÁ DE MULTIPLICAR LOS UVAs CORRESPONDIENTES\n" +
         "POR EL VALOR DE COTIZACIÓN AL VENCIMIENTO DE CADA UNA";
 
-      const fondoUvaY = notaY + fondoHeight;
+      const fondoUvaY = notaY + fondoHeight; 
       const fondoUvaHeight = 60;
       doc.setFillColor(35, 35, 66);
       doc.rect(40, fondoUvaY, pageWidth - 80, fondoUvaHeight, "F");
