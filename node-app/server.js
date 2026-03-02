@@ -1583,11 +1583,29 @@ app.use((req, res, next) => {
 
 const cron = require("node-cron");
 
-// Ejecutar hoy a las 14:00 (hora del servidor)
-cron.schedule("0 18 * * 5", () => {
-  console.log("Enviando reporte semanal de usuarios (Viernes 18:00)...");
-  enviarReporteUsuariosSemana();
-});
+// Ejecutar viernes 18:00 hora Argentina
+cron.schedule(
+  "0 18 * * 5",
+  () => {
+    console.log(
+      "Enviando reporte semanal de usuarios (Viernes 18:00 AR)...",
+    );
+    enviarReporteUsuariosSemana();
+  },
+  { timezone: "America/Argentina/Buenos_Aires" },
+);
+
+// Ejecutar lunes 11:00 hora Argentina (reporte de cotizaciones de lunes a domingo anterior)
+cron.schedule(
+  "0 11 * * 1",
+  () => {
+    console.log(
+      "Enviando reporte semanal de cotizaciones (Lunes 11:00 AR)...",
+    );
+    enviarReporteCotizacionesSemana();
+  },
+  { timezone: "America/Argentina/Buenos_Aires" },
+);
 
 const ExcelJS = require("exceljs");
 
@@ -1609,12 +1627,92 @@ async function enviarReporteUsuariosSemana(req, res) {
           return;
         }
         if (!rows.length) {
-          console.log("No hay usuarios nuevos esta semana.");
-          if (res)
-            return res.json({
-              success: true,
-              message: "No hay usuarios nuevos esta semana.",
-            });
+          console.log("No hay usuarios nuevos esta semana. Se envía aviso igual.");
+          db.query(
+            `SELECT nombre_completo, email, agencia, created_at
+             FROM agencias_users
+             ORDER BY created_at DESC`,
+            async (errAll, allRows) => {
+              if (errAll) {
+                console.error("Error consultando todos los usuarios:", errAll);
+                if (res)
+                  return res.status(500).json({ success: false, error: errAll });
+                return;
+              }
+
+              const workbook = new ExcelJS.Workbook();
+              const worksheet = workbook.addWorksheet("Todos los usuarios");
+
+              const imageId = workbook.addImage({
+                filename: logoPath,
+                extension: "png",
+              });
+              worksheet.addImage(imageId, {
+                tl: { col: 0, row: 0 },
+                ext: { width: 200, height: 40 },
+              });
+
+              worksheet.addRow([]);
+              worksheet.addRow([]);
+              worksheet.addRow(["Nombre", "Email", "Agencia", "Fecha"]);
+
+              (allRows || []).forEach((u) => {
+                worksheet.addRow([
+                  u.nombre_completo || "",
+                  u.email || "",
+                  u.agencia || "",
+                  u.created_at
+                    ? u.created_at.toISOString().slice(0, 19).replace("T", " ")
+                    : "",
+                ]);
+              });
+
+              worksheet.getColumn(1).width = 30;
+              worksheet.getColumn(2).width = 30;
+              worksheet.getColumn(3).width = 30;
+              worksheet.getColumn(4).width = 22;
+
+              const bufferAll = await workbook.xlsx.writeBuffer();
+
+              transporter.sendMail(
+                {
+                  from: `"Lever Notificaciones" <${process.env.EMAIL_FROM}>`,
+                  to: "alejandro.amado@lever.com.ar, sandro.pippo@lever.com.ar, juan.gonzalez@lever.com.ar",
+                  subject: "Usuarios registrados esta semana (sin novedades)",
+                  text: "No se registraron usuarios nuevos en los últimos 7 días. Se adjunta listado completo de usuarios actuales.",
+                  attachments: [
+                    {
+                      filename: "usuarios_totales_actuales.xlsx",
+                      content: bufferAll,
+                      contentType:
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    },
+                  ],
+                },
+                (error, info) => {
+                  if (error) {
+                    console.error(
+                      "Error enviando reporte semanal sin novedades:",
+                      error,
+                    );
+                    if (res)
+                      return res.status(500).json({ success: false, error });
+                  } else {
+                    console.log(
+                      "Reporte semanal sin novedades enviado:",
+                      info.response,
+                    );
+                    if (res)
+                      return res.json({
+                        success: true,
+                        message: "Reporte enviado (sin novedades)",
+                        info: info.response,
+                      });
+                  }
+                },
+              );
+            },
+          );
           return;
         }
 
@@ -1702,8 +1800,179 @@ async function enviarReporteUsuariosSemana(req, res) {
   }
 }
 
+// Función para enviar el reporte semanal de cotizaciones (lunes a domingo anterior)
+async function enviarReporteCotizacionesSemana(req, res) {
+  try {
+    db.query(
+      `SELECT
+         c.id,
+         c.fecha,
+         c.cliente_dni,
+         c.cliente_nombre,
+         c.cliente_apellido,
+         c.agencia,
+         a.agente,
+         c.producto,
+         c.monto,
+         c.usuario,
+         c.recotizado,
+         c.observaciones,
+         c.vehiculo_marca,
+         c.vehiculo_modelo,
+         c.vehiculo_anio,
+         c.vehiculo_precio
+       FROM cotizaciones c
+       LEFT JOIN agencias a ON c.agencia = a.agencia
+       WHERE c.fecha >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) + 7 DAY)
+         AND c.fecha < DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+       ORDER BY c.fecha DESC`,
+      async (err, rows) => {
+        if (err) {
+          console.error(
+            "Error consultando cotizaciones para el reporte semanal:",
+            err,
+          );
+          if (res) return res.status(500).json({ success: false, error: err });
+          return;
+        }
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Cotizaciones Semana");
+
+        const imageId = workbook.addImage({
+          filename: logoPath,
+          extension: "png",
+        });
+        worksheet.addImage(imageId, {
+          tl: { col: 0, row: 0 },
+          ext: { width: 200, height: 40 },
+        });
+
+        worksheet.addRow([]);
+        worksheet.addRow([]);
+        worksheet.addRow([
+          "ID",
+          "Fecha",
+          "Nombre",
+          "Apellido",
+          "DNI",
+          "Agencia",
+          "Agente",
+          "Producto",
+          "Monto",
+          "Usuario",
+          "Recotizado",
+          "Observaciones",
+          "Vehículo Marca",
+          "Vehículo Modelo",
+          "Vehículo Año",
+          "Vehículo Precio",
+        ]);
+
+        (rows || []).forEach((c) => {
+          let fechaFormateada = "";
+          if (c.fecha) {
+            fechaFormateada = new Date(c.fecha).toLocaleString("es-AR", {
+              timeZone: "America/Argentina/Buenos_Aires",
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            });
+          }
+
+          worksheet.addRow([
+            c.id || "",
+            fechaFormateada,
+            c.cliente_nombre || "",
+            c.cliente_apellido || "",
+            c.cliente_dni || "",
+            c.agencia || "",
+            c.agente || "",
+            c.producto || "",
+            c.monto || "",
+            c.usuario || "",
+            c.recotizado ? "Sí" : "No",
+            c.observaciones || "",
+            c.vehiculo_marca || "",
+            c.vehiculo_modelo || "",
+            c.vehiculo_anio || "",
+            c.vehiculo_precio || "",
+          ]);
+        });
+
+        worksheet.getColumn(1).width = 8;
+        worksheet.getColumn(2).width = 22;
+        worksheet.getColumn(3).width = 20;
+        worksheet.getColumn(4).width = 20;
+        worksheet.getColumn(5).width = 14;
+        worksheet.getColumn(6).width = 20;
+        worksheet.getColumn(7).width = 14;
+        worksheet.getColumn(8).width = 14;
+        worksheet.getColumn(9).width = 14;
+        worksheet.getColumn(10).width = 14;
+        worksheet.getColumn(11).width = 12;
+        worksheet.getColumn(12).width = 35;
+        worksheet.getColumn(13).width = 18;
+        worksheet.getColumn(14).width = 20;
+        worksheet.getColumn(15).width = 12;
+        worksheet.getColumn(16).width = 35;
+
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        const total = rows?.length || 0;
+        transporter.sendMail(
+          {
+            from: `"Lever Notificaciones" <${process.env.EMAIL_FROM}>`,
+            to: " juan.gonzalez@lever.com.ar",
+            subject: `Cotizaciones semanales (${total})`,
+            text:
+              total > 0
+                ? "Adjunto encontrarás el listado de cotizaciones de la semana (lunes a domingo)."
+                : "No se registraron cotizaciones en la semana (lunes a domingo). Se adjunta planilla vacía con cabeceras.",
+            attachments: [
+              {
+                filename: "cotizaciones_semana.xlsx",
+                content: buffer,
+                contentType:
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              },
+            ],
+          },
+          (error, info) => {
+            if (error) {
+              console.error("Error enviando reporte semanal de cotizaciones:", error);
+              if (res) return res.status(500).json({ success: false, error });
+            } else {
+              console.log(
+                "Reporte semanal de cotizaciones enviado:",
+                info.response,
+              );
+              if (res)
+                return res.json({
+                  success: true,
+                  message: "Reporte de cotizaciones enviado",
+                  total,
+                  info: info.response,
+                });
+            }
+          },
+        );
+      },
+    );
+  } catch (err) {
+    console.error("Error en el envío manual de cotizaciones:", err);
+    if (res) return res.status(500).json({ success: false, error: err });
+  }
+}
+
 // Endpoint temporal para probar manualmente
-//app.get("/api/test-reporte-usuarios", enviarReporteUsuariosSemana);
+if (process.env.NODE_ENV !== "production") {
+  app.get("/api/test-reporte-usuarios", enviarReporteUsuariosSemana);
+  app.get("/api/test-reporte-cotizaciones", enviarReporteCotizacionesSemana);
+}
 
 //////////////////////////
 //AGENCIAS PANEL INTERNO
