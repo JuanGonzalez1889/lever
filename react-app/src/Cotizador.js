@@ -863,6 +863,14 @@ function Cotizador() {
 
     // Obtener nombre del producto
     const nombreProducto = productoObj ? productoObj.nombre : "";
+    const esProductoSeguroLiberado = nombreProducto
+      ? nombreProducto.toUpperCase().includes("SEGURO LIBERADO")
+      : false;
+    const esIcbcSeguroLiberado =
+      bancoObj &&
+      bancoObj.nombre &&
+      bancoObj.nombre.trim().toUpperCase() === "ICBC" &&
+      esProductoSeguroLiberado;
 
     // Texto principal según tipo de crédito
     const textoCredito =
@@ -1318,11 +1326,7 @@ function Cotizador() {
       align: "left",
     });
     // Texto especial ICBC debajo de las condiciones y SISTEMA FRANCÉS
-    if (
-      bancoObj &&
-      bancoObj.nombre &&
-      bancoObj.nombre.trim().toUpperCase() === "ICBC"
-    ) {
+    if (esIcbcSeguroLiberado) {
       const textoICBC =
         "SEGURO LIBERADO - ENDOSAR A FAVOR DE BANCO ICBC\n" +
         "Opciones: La Caja, Federación Patronal, San Cristobal, Mapfre, Provincia Seguros, La Meridional, Zurich, Berkley, Allianz, La Segunda";
