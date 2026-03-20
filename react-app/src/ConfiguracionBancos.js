@@ -318,13 +318,13 @@ function ConfiguracionBancos() {
                   onSubmit={async (e) => {
                     e.preventDefault();
                     // Validación simple
-                    if (
-                      !productoSeleccionado ||
-                      !nuevoPlazo ||
-                      !nuevoTna ||
-                      !nuevoComision
-                    )
-                      return;
+                   if (
+                     !productoSeleccionado ||
+                     nuevoPlazo === "" ||
+                     nuevoTna === "" ||
+                     nuevoComision === ""
+                   )
+                     return;
                     await axios.post(`${API_URL}/api/banco_plazos`, {
                       producto_banco_id: productoSeleccionado,
                       plazo: nuevoPlazo,
