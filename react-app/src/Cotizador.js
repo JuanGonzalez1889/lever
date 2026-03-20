@@ -423,9 +423,14 @@ function Cotizador() {
     const iva =
       tipoPersona === "juridica" || tipoPersona === "JURIDICA" ? 0.105 : 0.21;
     const tasaMensual = tna / 12;
-    const cuotaPura =
-      (tasaMensual / (1 - Math.pow(1 + tasaMensual, -plazoMeses))) *
-      capitalBruto;
+    let cuotaPura;
+    if (tasaMensual === 0) {
+      cuotaPura = capitalBruto / plazoMeses;
+    } else {
+      cuotaPura =
+        (tasaMensual / (1 - Math.pow(1 + tasaMensual, -plazoMeses))) *
+        capitalBruto;
+    }
 
     let saldo = capitalBruto;
     let sumaCuotasConIVA = 0;
@@ -569,19 +574,24 @@ function Cotizador() {
   };
 
   const calcularCuota = (montoPrincipal, tasaInteresAnual, plazo, fee) => {
-    const interesMensual = parseFloat((tasaInteresAnual / 100 / 12).toFixed(7));
-    const comision = parseFloat((montoPrincipal * fee * 1.21).toFixed(2));
-    const saldo = parseFloat(
-      (parseFloat(montoPrincipal) + comision).toFixed(2),
-    );
-    if (interesMensual === 0) {
-      return parseFloat((saldo / plazo).toFixed(2));
+    // Asegurar que todos los valores sean numéricos
+    const principal = Number(montoPrincipal);
+    const tasa = Number(tasaInteresAnual);
+    const meses = Number(plazo);
+    const feeNum = Number(fee);
+    if (isNaN(principal) || isNaN(tasa) || isNaN(meses) || isNaN(feeNum) || meses <= 0) {
+      return 0;
     }
-    const factor = parseFloat(Math.pow(1 + interesMensual, plazo).toFixed(6));
+    const interesMensual = parseFloat((tasa / 100 / 12).toFixed(7));
+    const comision = parseFloat((principal * feeNum * 1.21).toFixed(2));
+    const saldo = parseFloat((principal + comision).toFixed(2));
+    if (interesMensual === 0) {
+      return parseFloat((saldo / meses).toFixed(2));
+    }
+    const factor = parseFloat(Math.pow(1 + interesMensual, meses).toFixed(6));
     const cuotaMensual = parseFloat(
       ((saldo * interesMensual * factor) / (factor - 1)).toFixed(2),
     );
-
     return cuotaMensual;
   };
 
@@ -611,9 +621,14 @@ function Cotizador() {
 
     const tasaMensual = tna / 12;
 
-    const cuotaPuraTemp =
-      (tasaMensual / (1 - Math.pow(1 + tasaMensual, -plazoMeses))) *
-      conGastoRedondeado;
+    let cuotaPuraTemp;
+    if (tasaMensual === 0) {
+      cuotaPuraTemp = conGastoRedondeado / plazoMeses;
+    } else {
+      cuotaPuraTemp =
+        (tasaMensual / (1 - Math.pow(1 + tasaMensual, -plazoMeses))) *
+        conGastoRedondeado;
+    }
 
     let sellado = 0;
     if (exento) {
@@ -627,9 +642,14 @@ function Cotizador() {
       ? conGastoRedondeado
       : conGastoRedondeado + sellado;
 
-    const cuotaPura =
-      (tasaMensual / (1 - Math.pow(1 + tasaMensual, -plazoMeses))) *
-      capitalBruto;
+    let cuotaPura;
+    if (tasaMensual === 0) {
+      cuotaPura = capitalBruto / plazoMeses;
+    } else {
+      cuotaPura =
+        (tasaMensual / (1 - Math.pow(1 + tasaMensual, -plazoMeses))) *
+        capitalBruto;
+    }
 
     const interesPrimerMes = capitalBruto * tasaMensual;
     const ivaSobreInteres = interesPrimerMes * iva;
