@@ -574,6 +574,9 @@ function Cotizador() {
     const saldo = parseFloat(
       (parseFloat(montoPrincipal) + comision).toFixed(2),
     );
+    if (interesMensual === 0) {
+      return parseFloat((saldo / plazo).toFixed(2));
+    }
     const factor = parseFloat(Math.pow(1 + interesMensual, plazo).toFixed(6));
     const cuotaMensual = parseFloat(
       ((saldo * interesMensual * factor) / (factor - 1)).toFixed(2),
