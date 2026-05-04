@@ -10,6 +10,8 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function Cotizador() {
+    // Estado para checkboxes de comisión (por defecto: sin comisión)
+    const [conComision, setConComision] = useState(false);
   const [year, setYear] = useState("");
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
@@ -764,13 +766,25 @@ function Cotizador() {
 
   const [ltvsPorBanco, setLtvsPorBanco] = useState({});
   const [tasasPorBanco, setTasasPorBanco] = useState({});
-  const productosConLtv = productos.filter((producto) =>
-    configLtv.some(
+  // Filtrado de productos según checkboxes de comisión (mejorado para detectar variantes)
+  const regexComision = /(c[.,]?c[.,]?|con[\s,\.]?comision)/i;
+  const productosConLtv = productos.filter((producto) => {
+    const tieneLtv = configLtv.some(
       (l) =>
         String(l.producto_banco_id) === String(producto.id) &&
-        String(l.anio) === String(year),
-    ),
-  );
+        String(l.anio) === String(year)
+    );
+    if (!tieneLtv) return false;
+    const nombre = (producto.nombre || "").toLowerCase();
+    const esConComision = regexComision.test(nombre);
+    if (conComision) {
+      // Solo productos con variantes de "con comisión" en el nombre
+      return esConComision;
+    } else {
+      // Solo productos sin esas variantes
+      return !esConComision;
+    }
+  });
   const primeraFilaProductos = productosConLtv.slice(0, 10);
   const segundaFilaProductos = productosConLtv.slice(10);
   useEffect(() => {
@@ -1813,7 +1827,7 @@ function Cotizador() {
               />
             </div>
           </div>
-          <div className="row">
+          <div className="row align-items-end">
             <div className="col-md-4">
               <label className="form-label">
                 Valor del vehículo en Infoauto
@@ -1825,6 +1839,80 @@ function Cotizador() {
                 value={precio ? `$${precio.toLocaleString("es-AR")}` : ""}
                 readOnly
               />
+            </div>
+            <div className="col-md-4 d-flex flex-column" style={{marginTop: 24}}>
+              <div style={{display: "flex", gap: 24, alignItems: "center"}}>
+                <label style={{fontWeight: 500, marginRight: 8, marginBottom: 0}}>Filtrar productos:</label>
+                {/* Checkbox SIN COMISIÓN */}
+                <label style={{display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8, fontWeight: 500, fontSize: '1.08em'}}>
+                  <span style={{position: 'relative', display: 'inline-block', width: 28, height: 28}}>
+                    <input
+                      type="radio"
+                      name="comision-filter"
+                      checked={!conComision}
+                      onChange={() => setConComision(false)}
+                      style={{opacity: 0, width: 28, height: 28, margin: 0, position: 'absolute', left: 0, top: 0, cursor: 'pointer'}}
+                    />
+                    <span style={{
+                      display: 'inline-block',
+                      width: 28,
+                      height: 28,
+                      border: '2.5px solid #00de9f',
+                      borderRadius: 6,
+                      background: !conComision ? '#00de9f' : '#fff',
+                      transition: 'background 0.2s, box-shadow 0.2s',
+                      boxShadow: !conComision ? '0 0 8px #00de9f88' : 'none',
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                    }}>
+                      {!conComision && (
+                        <svg width="18" height="18" viewBox="0 0 18 18" style={{position: 'absolute', left: 4, top: 4}}>
+                          <rect x="2" y="2" width="14" height="14" rx="3" fill="#fff"/>
+                          <rect x="5" y="5" width="8" height="8" rx="2" fill="#00de9f"/>
+                        </svg>
+                      )}
+                    </span>
+                  </span>
+                  SIN COMISIÓN
+                </label>
+                {/* Checkbox CON COMISIÓN */}
+                <label style={{display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8, fontWeight: 500, fontSize: '1.08em'}}>
+                  <span style={{position: 'relative', display: 'inline-block', width: 28, height: 28}}>
+                    <input
+                      type="radio"
+                      name="comision-filter"
+                      checked={conComision}
+                      onChange={() => setConComision(true)}
+                      style={{opacity: 0, width: 28, height: 28, margin: 0, position: 'absolute', left: 0, top: 0, cursor: 'pointer'}}
+                    />
+                    <span style={{
+                      display: 'inline-block',
+                      width: 28,
+                      height: 28,
+                      border: '2.5px solid #00de9f',
+                      borderRadius: 6,
+                      background: conComision ? '#00de9f' : '#fff',
+                      transition: 'background 0.2s, box-shadow 0.2s',
+                      boxShadow: conComision ? '0 0 8px #00de9f88' : 'none',
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                    }}>
+                      {conComision && (
+                        <svg width="18" height="18" viewBox="0 0 18 18" style={{position: 'absolute', left: 4, top: 4}}>
+                          <rect x="2" y="2" width="14" height="14" rx="3" fill="#fff"/>
+                          <rect x="5" y="5" width="8" height="8" rx="2" fill="#00de9f"/>
+                        </svg>
+                      )}
+                    </span>
+                  </span>
+                  CON COMISIÓN
+                </label>
+              </div>
+              <small style={{color: "#888", marginTop: 2}}>
+                Mostrando productos {conComision ? 'CON' : 'SIN'} comisión (C.C.)
+              </small>
             </div>
           </div>
         </div>
