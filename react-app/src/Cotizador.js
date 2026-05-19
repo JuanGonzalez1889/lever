@@ -859,11 +859,25 @@ function Cotizador() {
     "COLUMBIA",
     "SUPERVIELLE",
   ];
-  const maximosNetos = bancosLista.map((banco, idx) => ({
-    banco,
-    maxNeto: calcularMaxNetoBanco({ banco, precio, year }),
-    prioridad: idx + 1,
-  }));
+
+  // Agrupar productosConLtv por banco
+  const productosPorBanco = bancosLista.reduce((acc, banco) => {
+    acc[banco] = productosConLtv.filter(
+      (prod) => (prod.banco || '').toUpperCase() === banco
+    );
+    return acc;
+  }, {});
+
+  // Estado para controlar qué bancos están abiertos en el acordeón
+  const [bancosAcordeonAbiertos, setBancosAcordeonAbiertos] = useState([bancosLista[0]]);
+
+  const toggleBancoAcordeon = (banco) => {
+    setBancosAcordeonAbiertos((prev) =>
+      prev.includes(banco)
+        ? prev.filter((b) => b !== banco)
+        : [...prev, banco]
+    );
+  };
 
   const thStyle = {
     background: "#232342",
@@ -885,541 +899,313 @@ function Cotizador() {
   };
 
   const handleGenerarPDF = () => {
-    const doc = new jsPDF("l", "pt", "a4");
-
-    // Obtener tipo de crédito del banco seleccionado
-    const productoObj = productos.find(
-      (p) => String(p.id) === String(productoSeleccionado),
-    );
-    const bancoObj = bancos.find(
-      (b) => String(b.id) === String(productoObj?.banco_id),
-    );
-    const tipoCredito = productoObj ? productoObj.tipo_credito : "";
-    const marcaObj = marcas.find((m) => String(m.id) === String(marca));
-    const modeloObj = modelos.find((m) => String(m.codia) === String(modelo));
-
-    // Obtener nombre del producto
-    const nombreProducto = productoObj ? productoObj.nombre : "";
-    const esProductoSeguroLiberado = nombreProducto
-      ? nombreProducto.toUpperCase().includes("SEGURO LIBERADO")
-      : false;
-    const esIcbcSeguroLiberado =
-      bancoObj &&
-      bancoObj.nombre &&
-      bancoObj.nombre.trim().toUpperCase() === "ICBC" &&
-      esProductoSeguroLiberado;
-
-    // Texto principal según tipo de crédito
-    const textoCredito =
-      tipoCredito === "UVA"
-        ? "TASA FIJA AJUSTABLE POR CER - UVA"
-        : "TASA FIJA EN PESOS - SISTEMA FRANCÉS";
-
-    // Encabezado dividido en dos mitades
+    // PDF más largo que A4 estándar (A4: 595.28 x 841.89 pt)
+    const doc = new jsPDF({
+      orientation: "p",
+      unit: "pt",
+      format: [595.28, 1000] // ancho A4, alto extendido
+    });
     const pageWidth = doc.internal.pageSize.getWidth();
-    const headerHeight = 60;
-    const headerY = 40;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let y = 40;
 
-    const abreviacionesBancos = {
-      ICBC: "IC",
-      COLUMBIA: "CO",
-      GALICIA: "GA",
-      SANTANDER: "SA",
-      SUPERVIELLE: "SP",
-      SUPERVILLE: "SP",
-    };
-
-    // MOVER ESTAS LÍNEAS AQUÍ - ANTES DE USARLAS
-    const bancoAbrev =
-      bancoObj && bancoObj.nombre
-        ? abreviacionesBancos[bancoObj.nombre.trim().toUpperCase()] || ""
-        : "";
-
-    // Texto combinado: abreviación del banco + nombre del producto
-    const textoBancoProducto = nombreProducto
-      ? `${bancoAbrev} - ${nombreProducto}`
-      : bancoAbrev;
-
-    // 1. Dibuja el fondo blanco primero
-    doc.setFillColor(255, 255, 255); // azul claro
-    doc.setDrawColor(0, 0, 0); // borde negro
-    doc.rect(40, headerY, pageWidth / 2 - 40, headerHeight, "DF"); // "DF" = fill & stroke
-
-    // Mitad izquierda: abreviación del banco + producto
-    if (textoBancoProducto) {
-      doc.setFontSize(11);
-      doc.setTextColor(35, 35, 66);
-      doc.setFont("helvetica", "bold");
-      doc.text(textoBancoProducto, 50, headerY + 17);
-    }
-
-    // Mitad izquierda: texto principal
-    doc.setFontSize(15);
+    // Header mejorado: agencia arriba a la izquierda, fecha a la derecha
+    doc.setFontSize(12);
     doc.setTextColor(35, 35, 66);
     doc.setFont("helvetica", "bold");
-    doc.text(textoCredito, 50, headerY + headerHeight / 2 + 7);
+    doc.text(agencia ? agencia : "LEVER", 40, y);
+    doc.setFontSize(11);
+    doc.setTextColor(120, 120, 120);
+    doc.setFont("helvetica", "normal");
+    doc.text(new Date().toLocaleDateString(), pageWidth - 40, y, { align: "right" });
+    y += 30;
 
-    // Mitad izquierda: texto
-    doc.setFillColor(255, 255, 255); // azul claro
-    doc.setDrawColor(0, 0, 0); // borde negro
-
-    doc.setFontSize(15);
-    doc.setTextColor(35, 35, 66);
-    doc.setFont("helvetica", "bold");
-    doc.text(textoCredito, 50, headerY + headerHeight / 2 + 7);
-
-    // Mitad derecha: logo
-    doc.setFillColor(35, 35, 66); // azul oscuro
-    doc.setDrawColor(0, 0, 0); // borde negro
-    doc.rect(pageWidth / 2, headerY, pageWidth / 2 - 40, headerHeight, "DF");
-    doc.setFontSize(38);
+    // Logo y título
+    doc.setFontSize(36);
     doc.setTextColor(0, 222, 159);
     doc.setFont("helvetica", "bold");
+    doc.text("LEVER", pageWidth / 2, y, { align: "center" });
+    y += 38;
+    // Título: COTIZACIÓN (negrita) ESTIMADA (gris)
+    const titleY = y;
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(35, 35, 66);
+    const cotizacionWidth = doc.getTextWidth("COTIZACIÓN ");
+    const estimadaWidth = doc.getTextWidth("ESTIMADA");
+    const totalWidth = cotizacionWidth + estimadaWidth;
+    const startX = pageWidth / 2 - totalWidth / 3.50;
+    // APROBACIÓN
+    doc.text("APROBACIÓN* ", startX, titleY, { baseline: "top" });
+    // ESTIMADA
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(120, 120, 120);
+    doc.text("", startX + cotizacionWidth, titleY, { baseline: "top" });
+    y += 34;
+
+    // Solicitante
+    // Nuevo ancho reducido y centrado
+    const bloqueAnchoDatos = 340;
+    const bloqueXDatos = (pageWidth - bloqueAnchoDatos) / 2;
+    // Usar el mismo ancho para los bloques de cuotas
+    const bloqueAnchoCuotas = bloqueAnchoDatos;
+    const bloqueXCuotas = bloqueXDatos;
+    doc.setFontSize(10);
+    doc.setTextColor(0, 222, 159);
+    doc.setFont("helvetica", "bold");
+    doc.setFillColor(230, 255, 247);
+    doc.roundedRect(bloqueXDatos, y, bloqueAnchoDatos, 48, 12, 12, "F");
+    doc.text("Solicitante", bloqueXDatos + 15, y + 16);
+    doc.setTextColor(35, 35, 66);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${clienteNombre} ${clienteApellido}`, bloqueXDatos + 15, y + 32);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text(`DNI/CUIT: ${clienteDni}`, bloqueXDatos + 15, y + 44);
+    y += 62;
+
+    // Vehículo
+    const marcaObj = marcas.find((m) => String(m.id) === String(marca));
+    const modeloObj = modelos.find((m) => String(m.codia) === String(modelo));
+    doc.setFontSize(10);
+    doc.setTextColor(0, 222, 159);
+    doc.setFont("helvetica", "bold");
+    doc.setFillColor(230, 255, 247);
+    doc.roundedRect(bloqueXDatos, y, bloqueAnchoDatos, 48, 12, 12, "F");
+    doc.text(marcaObj ? marcaObj.name : "", bloqueXDatos + 15, y + 16);
+    doc.setTextColor(35, 35, 66);
+    doc.setFont("helvetica", "bold");
+    doc.text(modeloObj ? modeloObj.modelo : "", bloqueXDatos + 15, y + 32);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text(`${year}`, bloqueXDatos + 15, y + 44);
+    y += 80;
+
+    // Producto seleccionado
+    const productoObj = productos.find((p) => String(p.id) === String(productoSeleccionado));
+    const nombreProducto = productoObj ? productoObj.nombre : "";
+
+    // Detectar si todos los capitales son iguales
+    const columnasPlazos = columnasSeleccionadas.filter(isPlazoDisponible).sort((a, b) => a - b);
+    const capitales = columnasPlazos.map((p) => capitalPorPlazo[p]);
+    const hayVariacion = capitales.some((v, i, arr) => v !== arr[0]);
+
+    // Si todos los capitales son iguales, mostrar bloque grande de "Monto neto a financiar"
+    if (!hayVariacion && capitales.length > 0) {
+      doc.setFontSize(12);
+      doc.setTextColor(35, 35, 66);
+      doc.setFont("helvetica", "bold");
+      doc.text("Monto neto a financiar", pageWidth / 2, y, { align: "center" });
+      y += 7;
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(0, 222, 159);
+      doc.setLineWidth(2);
+      doc.roundedRect(pageWidth / 2 - 110, y, 220, 38, 12, 12, "FD");
+      doc.setFontSize(20);
+      doc.setTextColor(0, 222, 159);
+      doc.setFont("helvetica", "bold");
+      doc.text(`$ ${Math.round(Number(capitales[0])).toLocaleString("es-AR", { maximumFractionDigits: 0 })}`, pageWidth / 2, y + 27, { align: "center" });
+      y += 55; // Más espacio para evitar superposición
+    }
+
+    // Producto seleccionado
+    doc.setFontSize(12);
+    doc.setTextColor(35, 35, 66);
+    doc.setFont("helvetica", "bold");
+    doc.text("Producto seleccionado", pageWidth / 2, y, { align: "center" });
+    y += 7;
+    doc.setFillColor(230, 255, 247);
+    doc.setDrawColor(0, 222, 159);
+    doc.setLineWidth(1.2);
+    doc.roundedRect(pageWidth / 2 - 110, y, 220, 38, 12, 12, "FD");
+    doc.setFontSize(14);
+    doc.setTextColor(0, 222, 159);
+    doc.setFont("helvetica", "bold");
+    doc.text(nombreProducto, pageWidth / 2, y + 27, { align: "center" });
+    y += 45;
+
+    // Más espacio antes de opciones de financiación para centrar verticalmente
+    y += 32;
+    doc.setFontSize(14);
+    doc.setTextColor(35, 35, 66);
+    doc.setFont("helvetica", "bold");
+    doc.text("Cuota Promedio sin seguro", pageWidth / 2, y, { align: "center" });
+    y += 15;
+
+    // Bloques de cuotas estilo web
+    let cuotaMasElegida = null;
+    if (typeof plazoMasElegido !== "undefined" && plazoMasElegido !== null) {
+      cuotaMasElegida = plazoMasElegido;
+    }
+    columnasPlazos.forEach((p) => {
+      // Calcular cuota
+      const found = configBancosPlazos.find(
+        (c) => String(c.producto_banco_id) === String(productoSeleccionado) && Number(c.plazo) === p
+      );
+      const tna = found ? Number(found.tna) / 100 : 0;
+      let comision = found ? Number(found.comision) : 0;
+      if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
+        comision += Number(ajusteComision);
+      }
+      comision = comision / 100;
+      const datos = calcularCreditoPrendario({
+        capitalNeto: Number(capitalPorPlazo[p]),
+        comision: comision,
+        tna: tna,
+        plazoMeses: p,
+        tipoPersona: tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
+        abonaSellado: cobroSellado === "abona",
+        exento: cobroSellado === "exento",
+      });
+      const cuota = datos.cuotaConIVA && !isNaN(datos.cuotaConIVA)
+        ? `$${Math.round(Number(datos.cuotaConIVA)).toLocaleString("es-AR", { maximumFractionDigits: 0 })}`
+        : "-";
+
+      // Bloque visual estilo web (sin monto neto a financiar)
+      let blockX = bloqueXCuotas;
+      let blockW = bloqueAnchoCuotas;
+      let blockH = 48;
+      let blockR = 12;
+      if (cuotaMasElegida && Number(p) === Number(cuotaMasElegida)) {
+        doc.setFillColor(0, 222, 159);
+        doc.roundedRect(blockX, y, blockW, blockH, blockR, blockR, "F");
+        doc.setDrawColor(35, 35, 66);
+        doc.setLineWidth(2);
+        doc.roundedRect(blockX, y, blockW, blockH, blockR, blockR, "S");
+        doc.setTextColor(255, 255, 255);
+      } else {
+        doc.setFillColor(245, 255, 252);
+        doc.roundedRect(blockX, y, blockW, blockH, blockR, blockR, "F");
+        doc.setDrawColor(0, 222, 159);
+        doc.setLineWidth(1.5);
+        doc.roundedRect(blockX, y, blockW, blockH, blockR, blockR, "S");
+        doc.setTextColor(35, 35, 66);
+      }
+      // Centrado vertical: bloque de 48px, fuente 14-15px, centrado a la mitad
+      const centerY = y + blockH / 2 + 5; // +5 para compensar baseline visual
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      let label = `${p} CUOTAS`;
+      if (cuotaMasElegida && Number(p) === Number(cuotaMasElegida)) label = `* MÁS ELEGIDA ${p} CUOTAS`;
+      doc.text(label, blockX + 18, centerY);
+      doc.setFontSize(15);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(cuotaMasElegida && Number(p) === Number(cuotaMasElegida) ? 255 : 0, 222, 159);
+      doc.text(cuota, blockX + blockW - 18, centerY, { align: "right" });
+      y += blockH + 16;
+    });
+
+    // Mostrar el monto BRUTO debajo de las cuotas (usando el primer plazo disponible)
+    if (columnasPlazos.length > 0) {
+      const p = columnasPlazos[0];
+      const found = configBancosPlazos.find(
+        (c) => String(c.producto_banco_id) === String(productoSeleccionado) && Number(c.plazo) === p
+      );
+      const tna = found ? Number(found.tna) / 100 : 0;
+      let comision = found ? Number(found.comision) : 0;
+      if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
+        comision += Number(ajusteComision);
+      }
+      comision = comision / 100;
+      const datos = calcularCreditoPrendario({
+        capitalNeto: Number(capitalPorPlazo[p]),
+        comision: comision,
+        tna: tna,
+        plazoMeses: p,
+        tipoPersona: tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
+        abonaSellado: cobroSellado === "abona",
+        exento: cobroSellado === "exento",
+      });
+      // Mostrar el monto bruto
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(35, 35, 66);
+      // Determinar texto de sellado según la pantalla
+      let textoSellado = "Sellado: No Incluido";
+      if (cobroSellado === "abona") textoSellado = "Sellado: Incluido";
+      // Construir línea completa
+      const textoMonto = `MONTO BRUTO: $ ${Number(datos.capitalBruto).toLocaleString("es-AR", { maximumFractionDigits: 2 })}`;
+      const textoCompleto = `${textoMonto}  |  ${textoSellado}`;
+      doc.text(
+        textoCompleto,
+        pageWidth / 2,
+        y + 2,
+        { align: "center" }
+      );
+      y += 18;
+    }
+
+    // Leyenda aclaratoria si hay variación de capitales
+    if (hayVariacion) {
+      doc.setFontSize(11);
+      doc.setTextColor(120, 120, 120);
+      doc.setFont("helvetica", "normal");
+      doc.text("El monto neto a financiar varía según el plazo seleccionado.", pageWidth / 2, y + 10, { align: "center" });
+    }
+
+    // --- LEYENDA VISUAL AL PIE DEL PDF (COLORES ORIGINALES, UNO DEBAJO DEL OTRO, TEXTO EN 2 LÍNEAS, MÁS MARGEN) ---
+    // Centrar la leyenda alineada con las cuotas
+    const bloqueAncho = 800; // igual que los bloques de cuotas
+    const bloqueMargen = (pageWidth - bloqueAncho) / 2;
+    // Posición independiente para la leyenda de condiciones
+    const leyendaCondicionesY = pageHeight - 200;
+    doc.setFontSize(9);
+    doc.setTextColor(35,35,66);
+    doc.setFont('helvetica','bold');
+    doc.text('(*)Las condiciones de aprobación corresponden a esta', bloqueMargen + bloqueAncho/2, leyendaCondicionesY, {align: 'center'});
     doc.text(
-      "LEVER",
-      pageWidth / 2 + (pageWidth / 2 - 40) / 2,
-      headerY + headerHeight / 2 + 12,
+      " fecha, pueden sufrir modificaciones luego de la misma.",
+      bloqueMargen + bloqueAncho / 2,
+      leyendaCondicionesY + 14,
       { align: "center" },
     );
 
-    // Si el banco es ICBC, agrega la leyenda debajo del texto principal
-    if (
-      bancoObj &&
-      bancoObj.nombre &&
-      bancoObj.nombre.trim().toUpperCase() === "ICBC"
-    ) {
-      doc.setFontSize(12);
-      doc.setTextColor(255, 0, 0); // Rojo para destacar
-      doc.setFont("helvetica", "bold");
-      doc.text(
-        "SIMULACIÓN - REQUIERE APROBACIÓN",
-        50,
-        headerY + headerHeight / 2 + 25, // 18px debajo del texto principal
-      );
-      doc.setTextColor(35, 35, 66); // Vuelve al color original
-      doc.setFontSize(15);
-      doc.setFont("helvetica", "bold");
-    }
-
-    // Datos principales
-    const datosPrincipales = [
-      ["FECHA DE COTIZACIÓN", new Date().toLocaleDateString()],
-      ["AGENCIA", agencia],
-      ["NOMBRE Y APELLIDO", `${clienteNombre} ${clienteApellido}`],
-      ["DNI/CUIT", clienteDni],
-      [
-        "VEHÍCULO",
-        `${marcaObj ? marcaObj.name : ""} ${modeloObj ? modeloObj.modelo : ""}`,
-      ],
-      ["AÑO DE VEHÍCULO", year],
-      [
-        "PERSONA",
-        tipoPersona === "juridica" ? "Persona Jurídica" : "Persona Física",
-      ],
-      ["SELLADO DE PRENDA", cobroSellado === "abona" ? "INCLUIDO" : "EXENTO"],
-    ];
-
-    // Opciones de crédito
-    const columnasPlazos = columnasSeleccionadas
-      .filter(isPlazoDisponible)
-      .sort((a, b) => a - b);
-    const filas = [
-      [
-        "CAPITAL NETO A PAGAR",
-        ...columnasPlazos.map((p) =>
-          capitalPorPlazo[p]
-            ? `$${Math.round(Number(capitalPorPlazo[p])).toLocaleString(
-                "es-AR",
-                { maximumFractionDigits: 0 },
-              )}`
-            : "-",
-        ),
-      ],
-
-      [
-        "CAPITAL SOLICITADO CON GASTOS",
-        ...columnasPlazos.map((p) => {
-          const found = configBancosPlazos.find(
-            (c) =>
-              String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p,
-          );
-          const tna = found ? Number(found.tna) / 100 : 0;
-          let comision = found ? Number(found.comision) : 0;
-          if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
-            comision += Number(ajusteComision);
-          }
-          comision = comision / 100;
-          const datos = calcularCreditoPrendario({
-            capitalNeto: Number(capitalPorPlazo[p]),
-            comision: comision,
-            tna: tna,
-            plazoMeses: p,
-            tipoPersona: tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
-            abonaSellado: cobroSellado === "abona",
-            exento: cobroSellado === "exento",
-          });
-          return datos.capitalBruto && !isNaN(datos.capitalBruto)
-            ? `$${Math.round(Number(datos.capitalBruto)).toLocaleString(
-                "es-AR",
-                { maximumFractionDigits: 0 },
-              )}`
-            : "-";
-        }),
-      ],
-      [
-        "SELLADO PROVINCIAL",
-        ...columnasPlazos.map((p) => {
-          const found = configBancosPlazos.find(
-            (c) =>
-              String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p,
-          );
-          const tna = found ? Number(found.tna) / 100 : 0;
-          let comision = found ? Number(found.comision) : 0;
-          if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
-            comision += Number(ajusteComision);
-          }
-          comision = comision / 100;
-          const datos = calcularCreditoPrendario({
-            capitalNeto: Number(capitalPorPlazo[p]),
-            comision: comision,
-            tna: tna,
-            plazoMeses: p,
-            tipoPersona: tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
-            abonaSellado: cobroSellado === "abona",
-            exento: cobroSellado === "exento",
-          });
-          return datos.sellado && !isNaN(datos.sellado)
-            ? `$${Math.round(Number(datos.sellado)).toLocaleString("es-AR", {
-                maximumFractionDigits: 0,
-              })}`
-            : "-";
-        }),
-      ],
-      ["PLAZO", ...columnasPlazos.map((p) => (p ? p : "-"))],
-
-      [
-        "CUOTA INICIAL APROXIMADA SIN SEGURO",
-        ...columnasPlazos.map((p) => {
-          const found = configBancosPlazos.find(
-            (c) =>
-              String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p,
-          );
-          const tna = found ? Number(found.tna) / 100 : 0;
-          let comision = found ? Number(found.comision) : 0;
-          if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
-            comision += Number(ajusteComision);
-          }
-          comision = comision / 100;
-          const datos = calcularCreditoPrendario({
-            capitalNeto: Number(capitalPorPlazo[p]),
-            comision: comision,
-            tna: tna,
-            plazoMeses: p,
-            tipoPersona: tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
-            abonaSellado: cobroSellado === "abona",
-            exento: cobroSellado === "exento",
-          });
-          return datos.cuotaConIVA && !isNaN(datos.cuotaConIVA)
-            ? `$${Math.round(Number(datos.cuotaConIVA)).toLocaleString(
-                "es-AR",
-                { maximumFractionDigits: 0 },
-              )}`
-            : "-";
-        }),
-      ],
-      [
-        "CUOTA PROMEDIO SIN SEGURO",
-        ...columnasPlazos.map((p) => {
-          const found = configBancosPlazos.find(
-            (c) =>
-              String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p,
-          );
-          const tna = found ? Number(found.tna) / 100 : 0;
-          let comision = found ? Number(found.comision) : 0;
-          if (ajusteComision !== "" && !isNaN(Number(ajusteComision))) {
-            comision += Number(ajusteComision);
-          }
-          comision = comision / 100;
-          const datos = calcularCreditoPrendario({
-            capitalNeto: Number(capitalPorPlazo[p]),
-            comision: comision,
-            tna: tna,
-            plazoMeses: p,
-            tipoPersona: tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
-            abonaSellado: cobroSellado === "abona",
-            exento: cobroSellado === "exento",
-          });
-          const promedioCuotaConIVA = calcularPromedioCuotaConIVA({
-            capitalBruto: Number(datos.capitalBruto),
-            plazoMeses: p,
-            tna: tna,
-            tipoPersona: tipoPersona,
-          });
-          return promedioCuotaConIVA && !isNaN(promedioCuotaConIVA)
-            ? `$${Math.round(Number(promedioCuotaConIVA)).toLocaleString(
-                "es-AR",
-                { maximumFractionDigits: 0 },
-              )}`
-            : "-";
-        }),
-      ],
-      [
-        "TNA",
-        ...columnasPlazos.map((p) => {
-          const found = configBancosPlazos.find(
-            (c) =>
-              String(c.producto_banco_id) === String(productoSeleccionado) &&
-              Number(c.plazo) === p,
-          );
-          return found && found.tna !== undefined && found.tna !== null
-            ? `${Number(found.tna).toLocaleString("es-AR", {
-                minimumFractionDigits: 2,
-              })}%`
-            : "-";
-        }),
-      ],
-      // [
-      //   "MONTO DE LA PRENDA",
-      //   ...columnasPlazos.map((p) => {
-      //     const found = configBancosPlazos.find(
-      //       (c) =>
-      //         String(c.producto_banco_id) === String(productoSeleccionado) &&
-      //         Number(c.plazo) === p
-      //     );
-      //     const tna = found ? Number(found.tna) / 100 : 0;
-      //     const comision = found ? Number(found.comision) / 100 : 0;
-      //     const datos = calcularCreditoPrendario({
-      //       capitalNeto: Number(capitalPorPlazo[p]),
-      //       comision: comision,
-      //       tna: tna,
-      //       plazoMeses: p,
-      //       tipoPersona: tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
-      //       abonaSellado: cobroSellado === "abona",
-      //       exento: cobroSellado === "exento",
-      //     });
-      //     return datos.montoPrenda && !isNaN(datos.montoPrenda)
-      //       ? `$${Math.round(Number(datos.montoPrenda)).toLocaleString(
-      //           "es-AR",
-      //           { maximumFractionDigits: 0 }
-      //         )}`
-      //       : "-";
-      //   }),
-      // ],
-      // [
-      //   "% COMISIÓN OTORGAMIENTO",
-      //   ...columnasPlazos.map((p) => {
-      //     const found = configBancosPlazos.find(
-      //       (c) =>
-      //         String(c.producto_banco_id) === String(productoSeleccionado) &&
-      //         Number(c.plazo) === p
-      //     );
-      //     return found &&
-      //       found.comision !== undefined &&
-      //       found.comision !== null
-      //       ? `${Number(found.comision).toLocaleString("es-AR", {
-      //           minimumFractionDigits: 2,
-      //         })}%`
-      //       : "-";
-      //   }),
-      // ],
-    ];
-
-    // Tabla de datos principales
-    autoTable(doc, {
-      startY: 110, // antes era 120
-      head: [["", ""]],
-      body: datosPrincipales,
-      theme: "grid",
-      styles: {
-        fontSize: 9, // antes era 11
-        cellPadding: 3, // antes era 4
-        halign: "center",
-        valign: "middle",
-      },
-      headStyles: {
-        fillColor: [35, 35, 66],
-        textColor: [0, 222, 159],
-        fontSize: 11, // antes era 13
-      },
-      bodyStyles: {
-        fillColor: [255, 255, 255],
-        textColor: [35, 35, 66],
-      },
-      columnStyles: {
-        0: {
-          halign: "left",
-          fontStyle: "bold",
-          cellWidth: (pageWidth - 80) / 2,
-        },
-        1: { halign: "center", cellWidth: (pageWidth - 80) / 2 },
-      },
-      margin: { left: 40, right: 40 },
-    });
-
-    // Tabla de opciones de crédito
-    autoTable(doc, {
-      startY: doc.lastAutoTable.finalY + 2,
-      body: filas,
-      theme: "grid",
-      styles: {
-        fontSize: 11,
-        cellPadding: 4,
-        halign: "center",
-        valign: "middle",
-      },
-      headStyles: {
-        fillColor: [35, 35, 66],
-        textColor: [0, 222, 159],
-        fontSize: 13,
-      },
-      bodyStyles: {
-        fillColor: [255, 255, 255],
-        textColor: [35, 35, 66],
-      },
-      columnStyles: {
-        0: { halign: "left", fontStyle: "bold" },
-      },
-      margin: { left: 40, right: 40 },
-
-      didParseCell: function (data) {
-        const darkColor = [35, 35, 66];
-        const greenColor = [0, 222, 159];
-        // CAPITAL NETO A PAGAR (primera fila)
-        if (data.section === "body" && data.row.index === 0) {
-          data.cell.styles.fillColor = darkColor;
-          data.cell.styles.textColor = greenColor;
-          data.cell.styles.fontStyle = "bold";
-        }
-
-        // PLANO (fila cuyo primer valor es "PLAZO")
-        if (data.section === "body" && data.row.cells[0].raw === "PLAZO") {
-          data.cell.styles.fillColor = darkColor;
-          data.cell.styles.textColor = greenColor;
-          data.cell.styles.fontStyle = "bold";
-        }
-
-        // TNA (última fila)
-        if (
-          data.section === "body" &&
-          data.row.index === data.table.body.length - 1
-        ) {
-          data.cell.styles.fillColor = darkColor;
-          data.cell.styles.textColor = greenColor;
-          data.cell.styles.fontStyle = "bold";
-        }
-        // CUOTA PROMEDIO (IVA INCLUIDO) SIN SEGURO queda sin color especial (fondo blanco, letras negras)
-      },
-    });
-
-    const notaY = doc.lastAutoTable.finalY + 10;
-    const fondoHeight = 40;
-    const colWidth = (pageWidth - 80) / 2;
-
-    // Fondo blanco para condiciones
-    doc.setFillColor(255, 255, 255);
-    doc.setDrawColor(0, 0, 0); // borde negro
-    doc.rect(40, notaY, colWidth, fondoHeight, "DF"); // "DF" = fill & stroke
-
-    // Fondo azul para SISTEMA FRANCÉS y web
-    doc.setFillColor(35, 35, 66);
-    doc.setDrawColor(0, 0, 0); // borde negro
-    doc.rect(40 + colWidth, notaY, colWidth, fondoHeight, "DF");
-
-    // Texto de condiciones (izquierda, dos líneas)
-    doc.setFontSize(12);
-    doc.setTextColor(35, 35, 66);
-    doc.setFont("helvetica", "bold");
-    doc.text(
-      "Las condiciones de aprobación corresponden a esta fecha,",
-      50,
-      notaY + 18,
-      { maxWidth: colWidth - 20 },
-    );
-    doc.text(
-      "pueden sufrir modificaciones luego de la misma.",
-      50,
-      notaY + 32,
-      {
-        maxWidth: colWidth - 20,
-      },
-    );
-
-    // Texto SISTEMA FRANCÉS y web (derecha)
-    doc.setFontSize(12);
-    doc.setTextColor(0, 222, 159);
-    doc.setFont("helvetica", "bold");
-    doc.text("SISTEMA FRANCÉS", 40 + colWidth + 10, notaY + 18, {
-      align: "left",
-    });
-
-    doc.setFontSize(10);
-    doc.setTextColor(0, 222, 159);
-    doc.setFont("helvetica", "normal");
-    doc.text("www.lever.com.ar", 40 + colWidth + 10, notaY + 32, {
-      align: "left",
-    });
-    // Texto especial ICBC debajo de las condiciones y SISTEMA FRANCÉS
-    if (esIcbcSeguroLiberado) {
-      const textoICBC =
-        "SEGURO LIBERADO - ENDOSAR A FAVOR DE BANCO ICBC\n" +
-        "Opciones: La Caja, Federación Patronal, San Cristobal, Mapfre, Provincia Seguros, La Meridional, Zurich, Berkley, Allianz, La Segunda";
-
-      // Calcula la posición debajo del bloque de condiciones
-      const extraY = notaY + fondoHeight + 10;
-      const extraHeight = 40;
-
-      doc.setFillColor(35, 35, 66); // fondo azul oscuro
-      doc.rect(40, extraY, pageWidth - 80, extraHeight, "F");
-
-      doc.setFontSize(11);
-      doc.setTextColor(0, 222, 159); // verde
-      doc.setFont("helvetica", "bold");
-      doc.text(textoICBC, pageWidth / 2, extraY + 18, {
-        align: "center",
-        maxWidth: pageWidth - 100,
-      });
-    }
-
-    // Texto UVA con fondo azul oscuro (solo si corresponde)
-    if (tipoCredito && tipoCredito.trim().toUpperCase() === "UVA") {
-      const textoUVA =
-        "EL CAPITAL OTORGADO EN $ SE CONVERTIRÁ A SU EQUIVALENTE EN UVAs A LA FECHA DE LIQUIDACIÓN Y QUEDARÁ DEFINIDO\n" +
-        "CANTIDAD DE UVAs A PAGAR POR CUOTA: CADA CUOTA RESULTARÁ DE MULTIPLICAR LOS UVAs CORRESPONDIENTES\n" +
-        "POR EL VALOR DE COTIZACIÓN AL VENCIMIENTO DE CADA UNA";
-
-      const fondoUvaY = notaY + fondoHeight; 
-      const fondoUvaHeight = 60;
+    // --- SISTEMA FRANCÉS EN UN DIV COLOR ---
+    let leyendaUvaH = 24;
+    if (tipoCredito && tipoCredito.toUpperCase() === "UVA") {
+      // Leyenda UVA: bloque azul oscuro, mismo ancho y posición que los bloques de cuotas y pie
+      leyendaUvaH = 62;
+      // Posición independiente para la leyenda UVA
+      const leyendaUvaY = pageHeight - 100;
       doc.setFillColor(35, 35, 66);
-      doc.rect(40, fondoUvaY, pageWidth - 80, fondoUvaHeight, "F");
-
-      doc.setFontSize(10);
-      doc.setTextColor(255, 255, 255);
-      doc.setFont("helvetica", "bold");
-      doc.text(textoUVA, pageWidth / 2, fondoUvaY + 25, {
-        align: "center",
-        maxWidth: pageWidth - 100,
+      doc.roundedRect(bloqueMargen, leyendaUvaY, bloqueAncho, leyendaUvaH, 8, 8, "F");
+      doc.setFontSize(8);
+      doc.setFont('helvetica','bold');
+      doc.setTextColor(255,255,255);
+      const textoUva = [
+        "EL CAPITAL OTORGADO EN $ SE CONVERTIRÁ A SU EQUIVALENTE EN UVAs A LA FECHA DE LIQUIDACIÓN Y QUEDARÁ DEFINIDO",
+        "CANTIDAD DE UVAs A PAGAR POR CUOTA: CADA CUOTA RESULTARÁ DE MULTIPLICAR LOS UVAs CORRESPONDIENTES",
+        "POR EL VALOR DE COTIZACIÓN AL VENCIMIENTO DE CADA UNA"
+      ];
+      let offset = 0;
+      textoUva.forEach(linea => {
+        doc.text(linea, bloqueMargen + bloqueAncho / 2, leyendaUvaY + offset + 20, { align: 'center' });
+        offset += 16;
       });
     }
-
-    // Agregar leyenda de fiador si corresponde
-    if (usarFiador && fiadorNombre && fiadorApellido && fiadorDni) {
-      const leyendaFiador = `Sumando como fiador a: ${fiadorNombre} ${fiadorApellido} (DNI:${fiadorDni})`;
-      // Ubica la leyenda debajo del último bloque (ajusta la posición si es necesario)
-      doc.setFontSize(13);
-      doc.setTextColor(35, 35, 66);
-      doc.setFont("helvetica", "bold");
-      // Calcula la posición Y final del PDF
-      const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 70 : 550;
-      doc.text(leyendaFiador, 40, finalY);
-    }
+    // Ubicar el div más abajo si hay espacio extra
+    const extraBottom = 42;
+    const divY = pageHeight - extraBottom;
+    const divH = 44;
+    // Aumentar margen inferior del div
+    const margenInferior = 0;
+    doc.setFillColor(35, 35, 66); // fondo azul oscuro
+    doc.roundedRect(bloqueMargen, divY, bloqueAncho, divH, 8, 8, "F");
+    // Texto centrado vertical y horizontalmente
+    doc.setFontSize(15);
+    doc.setFont('helvetica','bold');
+    doc.setTextColor(0, 222, 159);
+    doc.text('SISTEMA FRANCÉS', bloqueMargen + bloqueAncho / 2, divY + 19, { align: 'center' });
+    doc.setFontSize(13);
+    doc.setFont('helvetica','normal');
+    doc.setTextColor(29,233,182);
+    doc.text('www.lever.com.ar', bloqueMargen + bloqueAncho / 2, divY + 34, { align: 'center' });
+    // Ajustar y para el margen inferior
+    y = divY + divH + margenInferior;
 
     const nombreArchivo = generarNombrePDF().replace(/\s+/g, "_") + ".pdf";
     doc.save(nombreArchivo);
-  };;;;
+  };
 
   const maxAFinanciar = calcularMaxAFinanciarPorLTV(
     precio,
@@ -3406,6 +3192,45 @@ function Cotizador() {
       )}
     </div>
   );
+      {/* Bloque informativo debajo de la tabla de cuotas */}
+      {mostrarOpciones && (
+        <div style={{
+          display: 'flex',
+          marginTop: 24,
+          border: '1px solid #ccc',
+          fontFamily: 'inherit',
+          fontSize: 22,
+          fontWeight: 500,
+          minHeight: 70
+        }}>
+          <div style={{
+            flex: 2,
+            padding: '18px 24px',
+            color: '#232343',
+            background: '#fff',
+            borderRight: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            fontWeight: 700
+          }}>
+            Las condiciones de aprobación corresponden a esta fecha, pueden sufrir modificaciones luego de la misma.
+          </div>
+          <div style={{
+            flex: 1,
+            background: '#232343',
+            color: '#1de9b6',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            padding: '18px 24px',
+            fontWeight: 700
+          }}>
+            <div style={{fontSize: 26, fontWeight: 700, marginBottom: 2}}>SISTEMA FRANCÉS</div>
+            <div style={{fontSize: 20, color: '#1de9b6'}}>www.lever.com.ar</div>
+          </div>
+        </div>
+      )}
 }
 
 export default Cotizador;
