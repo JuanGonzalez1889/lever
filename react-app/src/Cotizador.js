@@ -61,6 +61,18 @@ function Cotizador() {
   const [mostrarAjusteComision, setMostrarAjusteComision] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMsg, setModalMsg] = useState("");
+  const [tituloPdfSeleccionado, setTituloPdfSeleccionado] = useState("APROBACIÓN*");
+
+  const tituloPdfOptions = [
+    { value: "APROBACIÓN*", label: "APROBACIÓN*" },
+    { value: "SIMULACION-NO APROBADO*", label: "SIMULACION-NO APROBADO*" },
+  ];
+
+  const bancoSeleccionadoObj = bancos.find(
+    (b) => String(b.id) === String(bancoSeleccionado),
+  );
+  const esBancoICBC =
+    bancoSeleccionadoObj?.nombre?.toUpperCase() === "ICBC";
 
   useEffect(() => {
     setMostrarOpciones(false);
@@ -80,6 +92,12 @@ function Cotizador() {
     agencia,
     clienteSexo,
   ]);
+
+  useEffect(() => {
+    if (!esBancoICBC && tituloPdfSeleccionado !== "APROBACIÓN*") {
+      setTituloPdfSeleccionado("APROBACIÓN*");
+    }
+  }, [esBancoICBC, tituloPdfSeleccionado]);
 
   useEffect(() => {
     // Si ya hay un valor neto, lo replica en todos los plazos
@@ -899,6 +917,10 @@ function Cotizador() {
   };
 
   const handleGenerarPDF = () => {
+    const tituloPdf = esBancoICBC
+      ? tituloPdfSeleccionado
+      : "APROBACIÓN*";
+
     // PDF más largo que A4 estándar (A4: 595.28 x 841.89 pt)
     const doc = new jsPDF({
       orientation: "p",
@@ -926,21 +948,15 @@ function Cotizador() {
     doc.setFont("helvetica", "bold");
     doc.text("LEVER", pageWidth / 2, y, { align: "center" });
     y += 38;
-    // Título: COTIZACIÓN (negrita) ESTIMADA (gris)
+    // Título del PDF configurable para ICBC
     const titleY = y;
     doc.setFontSize(22);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(35, 35, 66);
-    const cotizacionWidth = doc.getTextWidth("COTIZACIÓN ");
-    const estimadaWidth = doc.getTextWidth("ESTIMADA");
-    const totalWidth = cotizacionWidth + estimadaWidth;
-    const startX = pageWidth / 2 - totalWidth / 3.50;
-    // APROBACIÓN
-    doc.text("APROBACIÓN* ", startX, titleY, { baseline: "top" });
-    // ESTIMADA
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(120, 120, 120);
-    doc.text("", startX + cotizacionWidth, titleY, { baseline: "top" });
+    doc.text(tituloPdf, pageWidth / 2, titleY, {
+      align: "center",
+      baseline: "top",
+    });
     y += 34;
 
     // Solicitante
@@ -1095,9 +1111,9 @@ function Cotizador() {
       y += blockH + 16;
     });
 
-    // Mostrar el monto BRUTO debajo de las cuotas (usando el primer plazo disponible)
+    // Mostrar el monto BRUTO debajo de las cuotas usando el plazo máximo disponible
     if (columnasPlazos.length > 0) {
-      const p = columnasPlazos[0];
+      const p = columnasPlazos[columnasPlazos.length - 1];
       const found = configBancosPlazos.find(
         (c) => String(c.producto_banco_id) === String(productoSeleccionado) && Number(c.plazo) === p
       );
@@ -1124,7 +1140,7 @@ function Cotizador() {
       let textoSellado = "Sellado: No Incluido";
       if (cobroSellado === "abona") textoSellado = "Sellado: Incluido";
       // Construir línea completa
-      const textoMonto = `MONTO BRUTO: $ ${Number(datos.capitalBruto).toLocaleString("es-AR", { maximumFractionDigits: 2 })}`;
+      const textoMonto = `MONTO BRUTO: $ ${Math.round(Number(datos.capitalBruto)).toLocaleString("es-AR", { maximumFractionDigits: 0 })}`;
       const textoCompleto = `${textoMonto}  |  ${textoSellado}`;
       doc.text(
         textoCompleto,
@@ -2008,6 +2024,26 @@ function Cotizador() {
               />
             </div>
             <div className="col-md-4">
+              <label className="form-label">Título PDF</label>
+              <Select
+                classNamePrefix="react-select"
+                styles={customSelectStyles}
+                options={tituloPdfOptions}
+                value={
+                  tituloPdfOptions.find(
+                    (opt) => opt.value === tituloPdfSeleccionado,
+                  ) || tituloPdfOptions[0]
+                }
+                onChange={(option) => {
+                  setTituloPdfSeleccionado(
+                    option ? option.value : "APROBACIÓN*",
+                  );
+                }}
+                isDisabled={!esBancoICBC}
+                placeholder="Seleccione un título"
+              />
+            </div>
+            <div className="col-md-4">
               <label className="form-label">Persona</label>
               <Select
                 classNamePrefix="react-select"
@@ -2022,6 +2058,29 @@ function Cotizador() {
                   setMostrarOpciones(false);
                 }}
               />
+            </div>
+            <div className="col-md-4">
+              <label className="form-label">Capital solicitado NETO</label>
+              <input
+                type="text"
+                className="form-control"
+                value={
+                  capitalSolicitadoNeto
+                    ? Number(capitalSolicitadoNeto).toLocaleString("es-AR")
+                    : ""
+                }
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, "");
+                  setCapitalSolicitadoNeto(raw);
+                }}
+                style={{ borderRadius: 30, height: 59 }}
+              />
+              {maxAFinanciar > 0 && (
+                <div className="form-text text-danger">
+                  Valor MÁXIMO PERMITIDO: $
+                  {Math.round(maximoPermitido).toLocaleString("es-AR")}
+                </div>
+              )}
             </div>
             <div className="col-md-4">
               <label className="form-label">Capital Bruto</label>
@@ -2046,29 +2105,6 @@ function Cotizador() {
                   {Number(capitalNetoCalculado).toLocaleString("es-AR", {
                     maximumFractionDigits: 2,
                   })}
-                </div>
-              )}
-            </div>
-            <div className="col-md-4">
-              <label className="form-label">Capital solicitado NETO</label>
-              <input
-                type="text"
-                className="form-control"
-                value={
-                  capitalSolicitadoNeto
-                    ? Number(capitalSolicitadoNeto).toLocaleString("es-AR")
-                    : ""
-                }
-                onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, "");
-                  setCapitalSolicitadoNeto(raw);
-                }}
-                style={{ borderRadius: 30, height: 59 }}
-              />
-              {maxAFinanciar > 0 && (
-                <div className="form-text text-danger">
-                  Valor MÁXIMO PERMITIDO: $
-                  {Math.round(maximoPermitido).toLocaleString("es-AR")}
                 </div>
               )}
             </div>
