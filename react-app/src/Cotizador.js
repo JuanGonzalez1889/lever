@@ -980,6 +980,18 @@ function Cotizador() {
     doc.text(`DNI/CUIT: ${clienteDni}`, bloqueXDatos + 15, y + 44);
     y += 62;
 
+    const nombreFiadorCompleto = `${String(fiadorNombre || "").trim()} ${String(fiadorApellido || "").trim()}`.trim().toUpperCase();
+    const textoFiador = fiadorDni
+      ? `FIADOR: ${nombreFiadorCompleto} (${String(fiadorDni).trim()})`
+      : `FIADOR: ${nombreFiadorCompleto}`;
+    if (usarFiador && nombreFiadorCompleto) {
+      doc.setFontSize(7);
+      doc.setTextColor(35, 35, 66);
+      doc.setFont("helvetica", "bold");
+      doc.text(textoFiador, bloqueXDatos + 15, y - 4);
+      y += 10;
+    }
+
     // Vehículo
     const marcaObj = marcas.find((m) => String(m.id) === String(marca));
     const modeloObj = modelos.find((m) => String(m.codia) === String(modelo));
