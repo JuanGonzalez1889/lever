@@ -1073,8 +1073,14 @@ function Cotizador() {
         abonaSellado: cobroSellado === "abona",
         exento: cobroSellado === "exento",
       });
-      const cuota = datos.cuotaConIVA && !isNaN(datos.cuotaConIVA)
-        ? `$${Math.round(Number(datos.cuotaConIVA)).toLocaleString("es-AR", { maximumFractionDigits: 0 })}`
+      const promedioCuotaConIVA = calcularPromedioCuotaConIVA({
+        capitalBruto: Number(datos.capitalBruto),
+        plazoMeses: p,
+        tna: tna,
+        tipoPersona: tipoPersona,
+      });
+      const cuota = promedioCuotaConIVA && !isNaN(promedioCuotaConIVA)
+        ? `$${Math.round(Number(promedioCuotaConIVA)).toLocaleString("es-AR", { maximumFractionDigits: 0 })}`
         : "-";
 
       // Bloque visual estilo web (sin monto neto a financiar)
