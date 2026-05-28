@@ -632,9 +632,8 @@ function Cotizador() {
     const ivaComision = 0.21;
 
     const capitalNetoRedondeado = Number(capitalNeto.toFixed(2));
-    const minimoConIVA = 200000 * (1 + ivaComision);
     const comisionConIVA = capitalNetoRedondeado * comision * (1 + ivaComision);
-    const gastoConIVA = Math.max(comisionConIVA, minimoConIVA);
+    const gastoConIVA = comisionConIVA;
     const gastoConIVARedondeado = Number(gastoConIVA.toFixed(2));
     const conGasto = capitalNetoRedondeado + gastoConIVARedondeado;
     const conGastoRedondeado = Number(conGasto.toFixed(2));

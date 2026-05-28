@@ -47,9 +47,8 @@ export default function FrancesSimulador() {
         const tipoPersona = 'fisica';
         const abonaSellado = false;
         const exento = false;
-        const minimoConIVA = 200000 * 1.21;
         const comisionConIVA = capitalNeto * (comisionPorc / 100) * 1.21;
-        const gastoConIVA = Math.max(comisionConIVA, minimoConIVA);
+        const gastoConIVA = comisionConIVA;
         const conGasto = capitalNeto + gastoConIVA;
         const tasaMensual = tnaDecimal / 12;
         const cuotaPura = ((tasaMensual) / (1 - Math.pow(1 + tasaMensual, -plazoNum))) * conGasto;

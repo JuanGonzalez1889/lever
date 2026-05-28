@@ -10,7 +10,6 @@ function calcularCuadroExcel({
   abonaSellado,
   exento
 }) {
-  const minimoConIVA = 200000 * 1.21;
   // --- CAMBIO CLAVE AQUÍ ---
   // Si comisionPorc es 7.00, debe usarse 0.07 para el cálculo
   // Si ya es 0.07, no dividir de nuevo
@@ -22,7 +21,7 @@ function calcularCuadroExcel({
   // El cálculo correcto es capitalNeto * comisionPorcDecimal * 1.21
   const montoComisionConIVA = capitalNeto * comisionPorcDecimal * 1.21;
   const comisionConIVA = montoComisionConIVA;
-  const gastoConIVA = Math.max(comisionConIVA, minimoConIVA);
+  const gastoConIVA = comisionConIVA;
   const conGasto = capitalNeto + gastoConIVA;
 
   // Cuota pura (sin IVA, sin seguro)
@@ -67,7 +66,7 @@ function calcularCuadroExcel({
   const montoPrenda = cuotaPuraSinIVA * plazo;
   // Elimina cualquier cálculo anterior de montoComisionConIVA que use 0.07775 o 7.775
   // El valor correcto es el calculado arriba con comisionPorcDecimal
-  const montoPercibir = capitalBruto - Math.max(montoComisionConIVA, minimoConIVA) - sellado;
+  const montoPercibir = capitalBruto - montoComisionConIVA - sellado;
 
   return {
     capitalNeto,
@@ -84,7 +83,6 @@ function calcularCuadroExcel({
     sellado,
     comisionPorc,
     montoComisionConIVA,
-    minimoConIVA,
     montoPercibir
   };
 }
@@ -219,7 +217,6 @@ export default function CuadroCredito({
                   key: "montoComisionConIVA",
                   format: (v) => `$${Number(v).toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2})}`
                 },
-                { label: "MÍNIMO", key: "minimoConIVA", format: v => `$${Number(v).toLocaleString('es-AR', {minimumFractionDigits:2})}` },
                 { label: "MONTO A PERCIBIR", key: "montoPercibir", format: v => `$${Number(v).toLocaleString('es-AR', {minimumFractionDigits:2})}` }
               ].map(row => (
                 <tr key={row.key}>
