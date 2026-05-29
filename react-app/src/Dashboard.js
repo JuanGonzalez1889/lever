@@ -45,6 +45,7 @@ function Tablero() {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedBanco, setSelectedBanco] = useState("");
   const [selectedSegmento, setSelectedSegmento] = useState("");
+  const [selectedRetorno, setSelectedRetorno] = useState("");
   const [products, setProducts] = useState([]);
   const [minAFinanciar, setMinAFinanciar] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -91,12 +92,31 @@ function Tablero() {
         ),
       ].sort()
     : [];
-  // Filtrar productos por banco seleccionado
-  const productosFiltradesPorBanco = selectedBanco
+  // Filtrar productos por segmento y banco seleccionados
+  const productosFiltradesPorBanco = selectedBanco && selectedSegmento
     ? Object.entries(data?.productos || {})
-        .filter(([_, prod]) => prod.banco === selectedBanco)
-        .map(([key, prod]) => ({ key, nombre: prod.nombre, banco: prod.banco }))
+        .filter(
+          ([_, prod]) =>
+            prod.banco === selectedBanco &&
+            String(prod.segmento_id) === String(selectedSegmento) &&
+            (!selectedRetorno ||
+              String(prod.retorno || "CR,SR")
+                .split(",")
+                .map((ret) => ret.trim().toUpperCase())
+                .includes(selectedRetorno)),
+        )
+        .map(([key, prod]) => ({
+          key,
+          nombre: prod.nombre,
+          banco: prod.banco,
+        }))
     : [];
+  const selectedProductData = selectedProduct
+    ? data?.productos?.[selectedProduct]
+    : null;
+  const selectedProductSegmento = segmentos.find(
+    (seg) => String(seg.id) === String(selectedProductData?.segmento_id),
+  );
 
   const handleSelectProduct = (productKey) => {
     setSelectedProduct(productKey);
@@ -568,453 +588,520 @@ function Tablero() {
   return (
     <div className="content">
       <h1>Tablero de Configuración</h1>
-      <Button variant="primary" onClick={() => setShowNewProductModal(true)}>
-        Nuevo Producto
-      </Button>
-      {selectedProduct && (
-        <Button
-          variant="danger"
-          onClick={eliminarProducto}
-          style={{ marginLeft: "10px" }}
-        >
-          Eliminar Producto
+      <div className="dashboard-toolbar">
+        <Button variant="primary" onClick={() => setShowNewProductModal(true)}>
+          Nuevo Producto
         </Button>
-      )}
-
-      <Form id="configForm">
-        {/* SELECT SEGMENTO */}
-        <Form.Group controlId="selectedSegmento" className="mt-3">
-          <Form.Label>
-            <strong>Seleccionar Segmento:</strong>
-          </Form.Label>
-          <Form.Control
-            as="select"
-            value={selectedSegmento}
-            onChange={(e) => {
-              setSelectedSegmento(e.target.value);
-              setSelectedBanco("");
-              setSelectedProduct("");
-            }}
-          >
-            <option value="">-- Selecciona un segmento --</option>
-            {segmentosUnicos.map((seg) => (
-              <option key={seg.id} value={seg.id}>
-                {seg.nombre}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
-
-        {/* SELECT BANCO (solo si hay segmento seleccionado) */}
-        {selectedSegmento && (
-          <Form.Group controlId="selectedBanco" className="mt-3">
-            <Form.Label>
-              <strong>Seleccionar Banco:</strong>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              value={selectedBanco}
-              onChange={(e) => {
-                setSelectedBanco(e.target.value);
-                setSelectedProduct("");
-              }}
-            >
-              <option value="">-- Selecciona un banco --</option>
-              {bancosPorSegmento.map((banco) => (
-                <option key={banco} value={banco}>
-                  {banco}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-        )}
-
-        {/* SELECT PRODUCTO (solo si hay banco seleccionado) */}
-        {selectedBanco && selectedSegmento && (
-          <Form.Group controlId="selectedProduct">
-            <Form.Label>
-              <strong>Seleccionar Producto:</strong>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              value={selectedProduct}
-              onChange={(e) => handleSelectProduct(e.target.value)}
-            >
-              <option value="">-- Selecciona un producto --</option>
-              {productosFiltradesPorBanco.map((prod) => (
-                <option key={prod.key} value={prod.key}>
-                  {prod.nombre}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-        )}
-
-        {/* DETALLES DEL PRODUCTO (solo si hay producto seleccionado) */}
         {selectedProduct && (
-          <>
-            {/* Mínimo a Financiar - SOLO AQUÍ */}
-            <Form.Group controlId="minAFinanciar" className="mt-3">
-              <Form.Label>
-                <strong>Mínimo a Financiar:</strong>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                value={minAFinanciar}
-                onChange={(e) =>
-                  setMinAFinanciar(
-                    formatNumber(e.target.value.replace(/\./g, "")),
-                  )
-                }
-              />
-            </Form.Group>
+          <Button variant="danger" onClick={eliminarProducto}>
+            Eliminar Producto
+          </Button>
+        )}
+      </div>
 
-            <Form.Group controlId="newProductName" className="mt-3">
+      <Form id="configForm" className="dashboard-config-form">
+        <section className="dashboard-section dashboard-section--filters">
+          <div className="dashboard-section-header">
+            <div className="dashboard-section-kicker">
+              <span className="dashboard-kicker dashboard-kicker--teal">Explorar</span>
+            </div>
+            <h2>Busqueda del Producto</h2>
+            <p>Filtra por segmento, banco y retorno antes de editar la configuracion.</p>
+            <div className="dashboard-badges">
+              <span className="dashboard-badge">Segmento</span>
+              <span className="dashboard-badge">Banco</span>
+              <span className="dashboard-badge">Retorno</span>
+            </div>
+          </div>
+          <div className="dashboard-grid dashboard-grid--filters">
+            <Form.Group controlId="selectedSegmento" className="dashboard-field">
               <Form.Label>
-                <strong>Modificar Nombre del Producto:</strong>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                value={newProductName}
-                onChange={(e) => setNewProductName(e.target.value)}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group controlId="editProductSegmento">
-              <Form.Label>
-                <strong>Modificar Segmento:</strong>
+                <strong>Seleccionar Segmento:</strong>
               </Form.Label>
               <Form.Control
                 as="select"
-                value={
-                  data.productos[selectedProduct]?.segmento_id?.toString() || ""
-                }
+                value={selectedSegmento}
                 onChange={(e) => {
-                  setData((prevData) => ({
-                    ...prevData,
-                    productos: {
-                      ...prevData.productos,
-                      [selectedProduct]: {
-                        ...prevData.productos[selectedProduct],
-                        segmento_id: e.target.value,
-                      },
-                    },
-                  }));
+                  setSelectedSegmento(e.target.value);
+                  setSelectedBanco("");
+                  setSelectedRetorno("");
+                  setSelectedProduct("");
                 }}
-                required
               >
-                <option value="">Seleccionar segmento</option>
-                {segmentos.map((seg) => (
-                  <option key={seg.id} value={seg.id.toString()}>
+                <option value="">-- Selecciona un segmento --</option>
+                {segmentosUnicos.map((seg) => (
+                  <option key={seg.id} value={seg.id}>
                     {seg.nombre}
                   </option>
                 ))}
               </Form.Control>
             </Form.Group>
 
-            <Form.Group controlId="editProductBanco">
-              <Form.Label>
-                <strong>Modificar Banco:</strong>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                value={data.productos[selectedProduct]?.banco || ""}
-                onChange={(e) => {
-                  setData((prevData) => ({
-                    ...prevData,
-                    productos: {
-                      ...prevData.productos,
-                      [selectedProduct]: {
-                        ...prevData.productos[selectedProduct],
-                        banco: e.target.value,
-                      },
-                    },
-                  }));
-                }}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group controlId="editProductRetorno" className="mt-3">
-              <Form.Label>
-                <strong>Modificar Retorno (C.R./S.R.):</strong>
-              </Form.Label>
-              <Form.Control
-                as="select"
-                value={data.productos[selectedProduct]?.retorno || "CR,SR"}
-                onChange={(e) => {
-                  setData((prevData) => ({
-                    ...prevData,
-                    productos: {
-                      ...prevData.productos,
-                      [selectedProduct]: {
-                        ...prevData.productos[selectedProduct],
-                        retorno: e.target.value,
-                      },
-                    },
-                  }));
-                }}
-              >
-                <option value="CR,SR">C.R. y S.R.</option>
-                <option value="CR">Solo C.R.</option>
-                <option value="SR">Solo S.R.</option>
-              </Form.Control>
-            </Form.Group>
-
-            {/* CATEGORÍAS */}
-            <Form.Group controlId="editProductCategorias" className="mt-3">
-              <Form.Label>
-                <strong>Categorías visibles para:</strong>
-              </Form.Label>
-
-              {(() => {
-                const cats = (data.productos[selectedProduct]?.categorias || "")
-                  .split(",")
-                  .filter(Boolean);
-                const noMostrar = cats.length === 0;
-
-                return (
-                  <>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "20px",
-                        alignItems: "center",
-                        marginBottom: 8,
-                      }}
-                    >
-                      <Form.Check
-                        type="checkbox"
-                        label="Categoría A"
-                        disabled={noMostrar}
-                        checked={
-                          data.productos[selectedProduct]?.categorias?.includes(
-                            "A",
-                          ) || false
-                        }
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setData((prevData) => {
-                            const currentCategorias =
-                              prevData.productos[selectedProduct]?.categorias ||
-                              "";
-                            let newCategorias = currentCategorias
-                              .split(",")
-                              .filter(Boolean);
-
-                            if (checked && !newCategorias.includes("A")) {
-                              newCategorias.push("A");
-                            } else if (!checked) {
-                              newCategorias = newCategorias.filter(
-                                (c) => c !== "A",
-                              );
-                            }
-
-                            return {
-                              ...prevData,
-                              productos: {
-                                ...prevData.productos,
-                                [selectedProduct]: {
-                                  ...prevData.productos[selectedProduct],
-                                  categorias: newCategorias.join(","),
-                                },
-                              },
-                            };
-                          });
-                        }}
-                      />
-
-                      <Form.Check
-                        type="checkbox"
-                        label="Categoría B"
-                        disabled={noMostrar}
-                        checked={
-                          data.productos[selectedProduct]?.categorias?.includes(
-                            "B",
-                          ) || false
-                        }
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setData((prevData) => {
-                            const currentCategorias =
-                              prevData.productos[selectedProduct]?.categorias ||
-                              "";
-                            let newCategorias = currentCategorias
-                              .split(",")
-                              .filter(Boolean);
-
-                            if (checked && !newCategorias.includes("B")) {
-                              newCategorias.push("B");
-                            } else if (!checked) {
-                              newCategorias = newCategorias.filter(
-                                (c) => c !== "B",
-                              );
-                            }
-
-                            return {
-                              ...prevData,
-                              productos: {
-                                ...prevData.productos,
-                                [selectedProduct]: {
-                                  ...prevData.productos[selectedProduct],
-                                  categorias: newCategorias.join(","),
-                                },
-                              },
-                            };
-                          });
-                        }}
-                      />
-
-                      <Form.Check
-                        type="checkbox"
-                        label="Categoría C"
-                        disabled={noMostrar}
-                        checked={
-                          data.productos[selectedProduct]?.categorias?.includes(
-                            "C",
-                          ) || false
-                        }
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setData((prevData) => {
-                            const currentCategorias =
-                              prevData.productos[selectedProduct]?.categorias ||
-                              "";
-                            let newCategorias = currentCategorias
-                              .split(",")
-                              .filter(Boolean);
-
-                            if (checked && !newCategorias.includes("C")) {
-                              newCategorias.push("C");
-                            } else if (!checked) {
-                              newCategorias = newCategorias.filter(
-                                (c) => c !== "C",
-                              );
-                            }
-
-                            return {
-                              ...prevData,
-                              productos: {
-                                ...prevData.productos,
-                                [selectedProduct]: {
-                                  ...prevData.productos[selectedProduct],
-                                  categorias: newCategorias.join(","),
-                                },
-                              },
-                            };
-                          });
-                        }}
-                      />
-                    </div>
-
-                    <Form.Check
-                      type="checkbox"
-                      label="No mostrar este producto"
-                      checked={noMostrar}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        setData((prevData) => ({
-                          ...prevData,
-                          productos: {
-                            ...prevData.productos,
-                            [selectedProduct]: {
-                              ...prevData.productos[selectedProduct],
-                              categorias: checked ? "" : "A,B,C",
-                            },
-                          },
-                        }));
-                      }}
-                    />
-                  </>
-                );
-              })()}
-            </Form.Group>
-
-            {/* PLAZOS */}
-            <div id="productoForm" className="mt-4">
-              <h2>
-                Producto{" "}
-                {data.productos[selectedProduct]?.nombre?.toUpperCase()}
-              </h2>
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Plazo</th>
-                    <th>Interés</th>
-                    <th>Fee</th>
-                    <th>Min Fee</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.productos[selectedProduct]?.plazos &&
-                    Object.keys(
-                      data.productos[selectedProduct]?.plazos || {},
-                    ).map((plazo) =>
-                      generarPlazoHtml(
-                        selectedProduct,
-                        plazo,
-                        data.productos[selectedProduct].plazos[plazo],
-                      ),
-                    )}
-                </tbody>
-              </Table>
-              <Button variant="primary" onClick={agregarPlazo}>
-                Agregar Plazo
-              </Button>
-            </div>
-
-            {/* LTV */}
-            <div id="ltvForm" className="mt-4">
-              <h2>LTV por Año para Producto {selectedProduct.toUpperCase()}</h2>
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Año</th>
-                    <th>LTV</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(ltv).map((year) => (
-                    <tr key={`${selectedProduct}${year}Ltv`}>
-                      <td>{year}</td>
-                      <td>
-                        <Form.Control
-                          type="number"
-                          value={ltv[year]?.value || ""}
-                          onChange={(e) => handleLtvChange(e, year, "value")}
-                          required
-                        />
-                      </td>
-                      <td
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <FaTimes
-                          color="red"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => eliminarLtv(selectedProduct, year)}
-                        />
-                      </td>
-                    </tr>
+            {selectedSegmento && (
+              <Form.Group controlId="selectedBanco" className="dashboard-field">
+                <Form.Label>
+                  <strong>Seleccionar Banco:</strong>
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  value={selectedBanco}
+                  onChange={(e) => {
+                    setSelectedBanco(e.target.value);
+                    setSelectedRetorno("");
+                    setSelectedProduct("");
+                  }}
+                >
+                  <option value="">-- Selecciona un banco --</option>
+                  {bancosPorSegmento.map((banco) => (
+                    <option key={banco} value={banco}>
+                      {banco}
+                    </option>
                   ))}
-                </tbody>
-              </Table>
-              <Button variant="secondary" onClick={agregarAnoLtv}>
-                Agregar Año
-              </Button>
-            </div>
+                </Form.Control>
+              </Form.Group>
+            )}
+
+            {selectedBanco && selectedSegmento && (
+              <Form.Group controlId="selectedRetorno" className="dashboard-field">
+                <Form.Label>
+                  <strong>Seleccionar Retorno:</strong>
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  value={selectedRetorno}
+                  onChange={(e) => {
+                    setSelectedRetorno(e.target.value);
+                    setSelectedProduct("");
+                  }}
+                >
+                  <option value="">-- Todos los retornos --</option>
+                  <option value="CR">C.R.</option>
+                  <option value="SR">S.R.</option>
+                </Form.Control>
+              </Form.Group>
+            )}
+
+            {selectedBanco && selectedSegmento && (
+              <Form.Group controlId="selectedProduct" className="dashboard-field dashboard-field--full">
+                <Form.Label>
+                  <strong>Seleccionar Producto:</strong>
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  value={selectedProduct}
+                  onChange={(e) => handleSelectProduct(e.target.value)}
+                >
+                  <option value="">-- Selecciona un producto --</option>
+                  {productosFiltradesPorBanco.map((prod) => (
+                    <option key={prod.key} value={prod.key}>
+                      {prod.nombre}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            )}
+          </div>
+        </section>
+
+        {/* DETALLES DEL PRODUCTO (solo si hay producto seleccionado) */}
+        {selectedProduct && (
+          <>
+            <section className="dashboard-section dashboard-section--details">
+              <div className="dashboard-section-header">
+                <div className="dashboard-section-kicker">
+                  <span className="dashboard-kicker dashboard-kicker--blue">Edicion</span>
+                </div>
+                <h2>Datos Generales</h2>
+                <p>Edita la identidad comercial del producto y su visibilidad.</p>
+                <div className="dashboard-badges">
+                  {selectedProductData?.banco && (
+                    <span className="dashboard-badge">Banco: {selectedProductData.banco}</span>
+                  )}
+                  {selectedProductSegmento?.nombre && (
+                    <span className="dashboard-badge">
+                      Segmento: {selectedProductSegmento.nombre}
+                    </span>
+                  )}
+                  {selectedProductData?.retorno && (
+                    <span className="dashboard-badge">Retorno: {selectedProductData.retorno}</span>
+                  )}
+                </div>
+              </div>
+              <div className="dashboard-grid dashboard-grid--details">
+                <Form.Group controlId="newProductName" className="dashboard-field dashboard-field--full">
+                  <Form.Label>
+                    <strong>Modificar Nombre del Producto:</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={newProductName}
+                    onChange={(e) => setNewProductName(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="minAFinanciar" className="dashboard-field">
+                  <Form.Label>
+                    <strong>Mínimo a Financiar:</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={minAFinanciar}
+                    onChange={(e) =>
+                      setMinAFinanciar(
+                        formatNumber(e.target.value.replace(/\./g, "")),
+                      )
+                    }
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="editProductSegmento" className="dashboard-field">
+                  <Form.Label>
+                    <strong>Modificar Segmento:</strong>
+                  </Form.Label>
+                  <Form.Control
+                    as="select"
+                    value={
+                      data.productos[selectedProduct]?.segmento_id?.toString() || ""
+                    }
+                    onChange={(e) => {
+                      setData((prevData) => ({
+                        ...prevData,
+                        productos: {
+                          ...prevData.productos,
+                          [selectedProduct]: {
+                            ...prevData.productos[selectedProduct],
+                            segmento_id: e.target.value,
+                          },
+                        },
+                      }));
+                    }}
+                    required
+                  >
+                    <option value="">Seleccionar segmento</option>
+                    {segmentos.map((seg) => (
+                      <option key={seg.id} value={seg.id.toString()}>
+                        {seg.nombre}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+
+                <Form.Group controlId="editProductBanco" className="dashboard-field">
+                  <Form.Label>
+                    <strong>Modificar Banco:</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={data.productos[selectedProduct]?.banco || ""}
+                    onChange={(e) => {
+                      setData((prevData) => ({
+                        ...prevData,
+                        productos: {
+                          ...prevData.productos,
+                          [selectedProduct]: {
+                            ...prevData.productos[selectedProduct],
+                            banco: e.target.value,
+                          },
+                        },
+                      }));
+                    }}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="editProductRetorno" className="dashboard-field">
+                  <Form.Label>
+                    <strong>Modificar Retorno (C.R./S.R.):</strong>
+                  </Form.Label>
+                  <Form.Control
+                    as="select"
+                    value={data.productos[selectedProduct]?.retorno || "CR,SR"}
+                    onChange={(e) => {
+                      setData((prevData) => ({
+                        ...prevData,
+                        productos: {
+                          ...prevData.productos,
+                          [selectedProduct]: {
+                            ...prevData.productos[selectedProduct],
+                            retorno: e.target.value,
+                          },
+                        },
+                      }));
+                    }}
+                  >
+                    <option value="CR,SR">C.R. y S.R.</option>
+                    <option value="CR">Solo C.R.</option>
+                    <option value="SR">Solo S.R.</option>
+                  </Form.Control>
+                </Form.Group>
+
+                <Form.Group controlId="editProductCategorias" className="dashboard-field dashboard-field--full">
+                  <Form.Label>
+                    <strong>Categorías visibles para:</strong>
+                  </Form.Label>
+
+                  {(() => {
+                    const cats = (data.productos[selectedProduct]?.categorias || "")
+                      .split(",")
+                      .filter(Boolean);
+                    const noMostrar = cats.length === 0;
+
+                    return (
+                      <>
+                        <div className="dashboard-checkbox-row">
+                          <Form.Check
+                            type="checkbox"
+                            label="Categoría A"
+                            disabled={noMostrar}
+                            checked={
+                              data.productos[selectedProduct]?.categorias?.includes(
+                                "A",
+                              ) || false
+                            }
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setData((prevData) => {
+                                const currentCategorias =
+                                  prevData.productos[selectedProduct]?.categorias ||
+                                  "";
+                                let newCategorias = currentCategorias
+                                  .split(",")
+                                  .filter(Boolean);
+
+                                if (checked && !newCategorias.includes("A")) {
+                                  newCategorias.push("A");
+                                } else if (!checked) {
+                                  newCategorias = newCategorias.filter(
+                                    (c) => c !== "A",
+                                  );
+                                }
+
+                                return {
+                                  ...prevData,
+                                  productos: {
+                                    ...prevData.productos,
+                                    [selectedProduct]: {
+                                      ...prevData.productos[selectedProduct],
+                                      categorias: newCategorias.join(","),
+                                    },
+                                  },
+                                };
+                              });
+                            }}
+                          />
+
+                          <Form.Check
+                            type="checkbox"
+                            label="Categoría B"
+                            disabled={noMostrar}
+                            checked={
+                              data.productos[selectedProduct]?.categorias?.includes(
+                                "B",
+                              ) || false
+                            }
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setData((prevData) => {
+                                const currentCategorias =
+                                  prevData.productos[selectedProduct]?.categorias ||
+                                  "";
+                                let newCategorias = currentCategorias
+                                  .split(",")
+                                  .filter(Boolean);
+
+                                if (checked && !newCategorias.includes("B")) {
+                                  newCategorias.push("B");
+                                } else if (!checked) {
+                                  newCategorias = newCategorias.filter(
+                                    (c) => c !== "B",
+                                  );
+                                }
+
+                                return {
+                                  ...prevData,
+                                  productos: {
+                                    ...prevData.productos,
+                                    [selectedProduct]: {
+                                      ...prevData.productos[selectedProduct],
+                                      categorias: newCategorias.join(","),
+                                    },
+                                  },
+                                };
+                              });
+                            }}
+                          />
+
+                          <Form.Check
+                            type="checkbox"
+                            label="Categoría C"
+                            disabled={noMostrar}
+                            checked={
+                              data.productos[selectedProduct]?.categorias?.includes(
+                                "C",
+                              ) || false
+                            }
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setData((prevData) => {
+                                const currentCategorias =
+                                  prevData.productos[selectedProduct]?.categorias ||
+                                  "";
+                                let newCategorias = currentCategorias
+                                  .split(",")
+                                  .filter(Boolean);
+
+                                if (checked && !newCategorias.includes("C")) {
+                                  newCategorias.push("C");
+                                } else if (!checked) {
+                                  newCategorias = newCategorias.filter(
+                                    (c) => c !== "C",
+                                  );
+                                }
+
+                                return {
+                                  ...prevData,
+                                  productos: {
+                                    ...prevData.productos,
+                                    [selectedProduct]: {
+                                      ...prevData.productos[selectedProduct],
+                                      categorias: newCategorias.join(","),
+                                    },
+                                  },
+                                };
+                              });
+                            }}
+                          />
+                        </div>
+
+                        <Form.Check
+                          type="checkbox"
+                          label="No mostrar este producto"
+                          checked={noMostrar}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setData((prevData) => ({
+                              ...prevData,
+                              productos: {
+                                ...prevData.productos,
+                                [selectedProduct]: {
+                                  ...prevData.productos[selectedProduct],
+                                  categorias: checked ? "" : "A,B,C",
+                                },
+                              },
+                            }));
+                          }}
+                        />
+                      </>
+                    );
+                  })()}
+                </Form.Group>
+              </div>
+            </section>
+
+            <section className="dashboard-section dashboard-section--finance">
+              <div className="dashboard-section-header">
+                <div className="dashboard-section-kicker">
+                  <span className="dashboard-kicker dashboard-kicker--gold">Finanzas</span>
+                </div>
+                <h2>Configuracion Financiera</h2>
+                <p>Administra plazos y LTV del producto seleccionado desde un mismo bloque.</p>
+                <div className="dashboard-badges">
+                  <span className="dashboard-badge">Plazos</span>
+                  <span className="dashboard-badge">LTV</span>
+                  <span className="dashboard-badge">Producto activo</span>
+                </div>
+              </div>
+              <div className="dashboard-panels">
+                <div id="productoForm" className="dashboard-panel dashboard-panel--plazos">
+                  <div className="dashboard-panel-header">
+                    <h3>
+                      Plazos de {data.productos[selectedProduct]?.nombre?.toUpperCase()}
+                    </h3>
+                    <span>Interes, fee y minimo por plazo</span>
+                  </div>
+                  <Table striped bordered hover responsive>
+                    <thead>
+                      <tr>
+                        <th>Plazo</th>
+                        <th>Interés</th>
+                        <th>Fee</th>
+                        <th>Min Fee</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.productos[selectedProduct]?.plazos &&
+                        Object.keys(
+                          data.productos[selectedProduct]?.plazos || {},
+                        ).map((plazo) =>
+                          generarPlazoHtml(
+                            selectedProduct,
+                            plazo,
+                            data.productos[selectedProduct].plazos[plazo],
+                          ),
+                        )}
+                    </tbody>
+                  </Table>
+                  <div className="dashboard-panel-actions">
+                    <Button variant="primary" onClick={agregarPlazo}>
+                      Agregar Plazo
+                    </Button>
+                  </div>
+                </div>
+
+                <div id="ltvForm" className="dashboard-panel dashboard-panel--ltv">
+                  <div className="dashboard-panel-header">
+                    <h3>LTV por Año</h3>
+                    <span>{data.productos[selectedProduct]?.nombre?.toUpperCase()}</span>
+                  </div>
+                  <Table striped bordered hover responsive>
+                    <thead>
+                      <tr>
+                        <th>Año</th>
+                        <th>LTV</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.keys(ltv).map((year) => (
+                        <tr key={`${selectedProduct}${year}Ltv`}>
+                          <td>{year}</td>
+                          <td>
+                            <Form.Control
+                              type="number"
+                              value={ltv[year]?.value || ""}
+                              onChange={(e) => handleLtvChange(e, year, "value")}
+                              required
+                            />
+                          </td>
+                          <td className="dashboard-action-cell">
+                            <FaTimes
+                              color="red"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => eliminarLtv(selectedProduct, year)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                  <div className="dashboard-panel-actions">
+                    <Button variant="secondary" onClick={agregarAnoLtv}>
+                      Agregar Año
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </section>
           </>
         )}
 
-        <Button variant="success" onClick={handleSave} className="mt-4">
-          Guardar
-        </Button>
+        <div className="dashboard-form-actions">
+          <Button variant="success" onClick={handleSave} className="mt-4">
+            Guardar
+          </Button>
+        </div>
       </Form>
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
