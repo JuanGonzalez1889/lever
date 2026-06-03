@@ -30,6 +30,9 @@ const COLORS = {
   noData: "#9aa0a6",
 };
 const PALETTE = ["#25bd10", "#ffc107", "#ef5350", "#42a5f5", "#ab47bc"];
+const DNI_ROWS_PAGE_SIZE = 10;
+const PASO2_ROWS_PAGE_SIZE = 6;
+const DETAIL_ROWS_PAGE_SIZE = 6;
 
 function toNumber(x) {
   const n = Number(x);
@@ -43,6 +46,23 @@ function titleize(s = "") {
     .trim()
     .toLowerCase()
     .replace(/(^|\s)\S/g, (t) => t.toUpperCase());
+}
+
+function normalizeMetricValue(value = "") {
+  return String(value || "").trim().toLowerCase();
+}
+
+function formatLoginMethod(method = "") {
+  switch (normalizeMetricValue(method)) {
+    case "google_one_tap":
+      return "Google One Tap";
+    case "email_password":
+      return "Email/Contraseña";
+    case "particular_directo":
+      return "Soy Particular";
+    default:
+      return "Desconocido";
+  }
 }
 
 const PIE_COLORS = {
@@ -121,15 +141,38 @@ export default function Analytics() {
   const [viabToDate, setViabToDate] = useState("");
   const [dniFromDate, setDniFromDate] = useState("");
   const [dniToDate, setDniToDate] = useState("");
+  const [dniVisibleCount, setDniVisibleCount] = useState(DNI_ROWS_PAGE_SIZE);
+  const [paso2FromDate, setPaso2FromDate] = useState("");
+  const [paso2ToDate, setPaso2ToDate] = useState("");
+  const [paso2CategoriasVisibleCount, setPaso2CategoriasVisibleCount] =
+    useState(PASO2_ROWS_PAGE_SIZE);
+  const [paso2AniosVisibleCount, setPaso2AniosVisibleCount] = useState(
+    PASO2_ROWS_PAGE_SIZE,
+  );
+  const [paso2MarcasVisibleCount, setPaso2MarcasVisibleCount] = useState(
+    PASO2_ROWS_PAGE_SIZE,
+  );
+  const [paso2ModelosVisibleCount, setPaso2ModelosVisibleCount] = useState(
+    PASO2_ROWS_PAGE_SIZE,
+  );
   const [avancesPaso, setAvancesPaso] = useState(0);
   const [paso3FromDate, setPaso3FromDate] = useState("");
   const [paso3ToDate, setPaso3ToDate] = useState("");
+  const [paso3ProductosVisibleCount, setPaso3ProductosVisibleCount] = useState(
+    DETAIL_ROWS_PAGE_SIZE,
+  );
+  const [paso3MontosVisibleCount, setPaso3MontosVisibleCount] = useState(
+    DETAIL_ROWS_PAGE_SIZE,
+  );
   const [paso4FromDate, setPaso4FromDate] = useState("");
   const [paso4ToDate, setPaso4ToDate] = useState("");
   const [loginsFromDate, setLoginsFromDate] = useState("");
   const [loginsToDate, setLoginsToDate] = useState("");
   const [loginsFilterAgencia, setLoginsFilterAgencia] = useState("");
   const [loginsFilterMetodo, setLoginsFilterMetodo] = useState("");
+  const [loginsVisibleCount, setLoginsVisibleCount] = useState(
+    DETAIL_ROWS_PAGE_SIZE,
+  );
   const [exportFromDate, setExportFromDate] = useState("");
   const [exportToDate, setExportToDate] = useState("");
 
@@ -237,24 +280,95 @@ function exportarMetricasExcel() {
   const maxOf = (arr) =>
     arr.reduce((m, i) => Math.max(m, toNumber(i.total)), 0);
 
+  const groupPaso2ByLabel = (rows) => {
+    const grouped = {};
+    rows.forEach((row) => {
+      const key = row.label;
+      if (!key) return;
+      if (!grouped[key]) {
+        grouped[key] = { label: key, total: 0 };
+      }
+      grouped[key].total +=
+        row.total !== undefined && row.total !== null ? toNumber(row.total) : 1;
+    });
+    return Object.values(grouped).sort((a, b) => b.total - a.total);
+  };
+
+  const filterPaso2RowsByDate = (rows) => {
+    return rows.filter((row) => {
+      if (!row.timestamp) return true;
+      const timestamp = row.timestamp.slice(0, 10);
+      if (paso2FromDate && timestamp < paso2FromDate) return false;
+      if (paso2ToDate && timestamp > paso2ToDate) return false;
+      return true;
+    });
+  };
+
+  const paso2CategoriasFiltered = useMemo(
+    () => groupPaso2ByLabel(filterPaso2RowsByDate(vehiculoSelects.categorias)),
+    [vehiculoSelects.categorias, paso2FromDate, paso2ToDate],
+  );
+
+  const paso2AniosFiltered = useMemo(
+    () => groupPaso2ByLabel(filterPaso2RowsByDate(vehiculoSelects.anios)),
+    [vehiculoSelects.anios, paso2FromDate, paso2ToDate],
+  );
+
+  const paso2MarcasFiltered = useMemo(
+    () => groupPaso2ByLabel(filterPaso2RowsByDate(vehiculoSelects.marcas)),
+    [vehiculoSelects.marcas, paso2FromDate, paso2ToDate],
+  );
+
+  const paso2ModelosFiltered = useMemo(
+    () => groupPaso2ByLabel(filterPaso2RowsByDate(vehiculoSelects.modelos)),
+    [vehiculoSelects.modelos, paso2FromDate, paso2ToDate],
+  );
+
+  const paso2CategoriasVisible = useMemo(
+    () => paso2CategoriasFiltered.slice(0, paso2CategoriasVisibleCount),
+    [paso2CategoriasFiltered, paso2CategoriasVisibleCount],
+  );
+
+  const paso2AniosVisible = useMemo(
+    () => paso2AniosFiltered.slice(0, paso2AniosVisibleCount),
+    [paso2AniosFiltered, paso2AniosVisibleCount],
+  );
+
+  const paso2MarcasVisible = useMemo(
+    () => paso2MarcasFiltered.slice(0, paso2MarcasVisibleCount),
+    [paso2MarcasFiltered, paso2MarcasVisibleCount],
+  );
+
+  const paso2ModelosVisible = useMemo(
+    () => paso2ModelosFiltered.slice(0, paso2ModelosVisibleCount),
+    [paso2ModelosFiltered, paso2ModelosVisibleCount],
+  );
+
+  useEffect(() => {
+    setPaso2CategoriasVisibleCount(PASO2_ROWS_PAGE_SIZE);
+    setPaso2AniosVisibleCount(PASO2_ROWS_PAGE_SIZE);
+    setPaso2MarcasVisibleCount(PASO2_ROWS_PAGE_SIZE);
+    setPaso2ModelosVisibleCount(PASO2_ROWS_PAGE_SIZE);
+  }, [vehiculoSelects, paso2FromDate, paso2ToDate]);
+
   const maxCat = useMemo(
-    () => maxOf(vehiculoSelects.categorias),
-    [vehiculoSelects],
+    () => maxOf(paso2CategoriasFiltered),
+    [paso2CategoriasFiltered],
   );
 
   const maxYear = useMemo(
-    () => maxOf(vehiculoSelects.anios),
-    [vehiculoSelects],
+    () => maxOf(paso2AniosFiltered),
+    [paso2AniosFiltered],
   );
 
   const maxBrand = useMemo(
-    () => maxOf(vehiculoSelects.marcas),
-    [vehiculoSelects],
+    () => maxOf(paso2MarcasFiltered),
+    [paso2MarcasFiltered],
   );
 
   const maxModel = useMemo(
-    () => maxOf(vehiculoSelects.modelos),
-    [vehiculoSelects],
+    () => maxOf(paso2ModelosFiltered),
+    [paso2ModelosFiltered],
   );
 
   const paso4PlazosFiltered = useMemo(() => {
@@ -334,6 +448,21 @@ function exportarMetricasExcel() {
       return true;
     });
   }, [paso3.montos, paso3FromDate, paso3ToDate]);
+
+  const paso3ProductosVisible = useMemo(
+    () => paso3ProductosFiltered.slice(0, paso3ProductosVisibleCount),
+    [paso3ProductosFiltered, paso3ProductosVisibleCount],
+  );
+
+  const paso3MontosVisible = useMemo(
+    () => paso3MontosFiltered.slice(0, paso3MontosVisibleCount),
+    [paso3MontosFiltered, paso3MontosVisibleCount],
+  );
+
+  useEffect(() => {
+    setPaso3ProductosVisibleCount(DETAIL_ROWS_PAGE_SIZE);
+    setPaso3MontosVisibleCount(DETAIL_ROWS_PAGE_SIZE);
+  }, [paso3.productos, paso3.montos, paso3FromDate, paso3ToDate]);
 
   const montosNumFiltered = useMemo(
     () =>
@@ -431,6 +560,26 @@ function exportarMetricasExcel() {
     });
   }, [dniRows, dniFromDate, dniToDate]);
 
+  const dniTipoCounts = useMemo(() => {
+    return dniRowsFiltered.reduce(
+      (acc, row) => {
+        const tipo = normalizeMetricValue(row.tipo_documento);
+        if (tipo === "dni") acc.dni += 1;
+        if (tipo === "cuit") acc.cuit += 1;
+        return acc;
+      },
+      { dni: 0, cuit: 0 },
+    );
+  }, [dniRowsFiltered]);
+
+  const dniRowsVisible = useMemo(() => {
+    return dniRowsFiltered.slice(0, dniVisibleCount);
+  }, [dniRowsFiltered, dniVisibleCount]);
+
+  useEffect(() => {
+    setDniVisibleCount(DNI_ROWS_PAGE_SIZE);
+  }, [dniRows, dniFromDate, dniToDate]);
+
   const loginsFiltered = useMemo(() => {
     return loginsPorUsuario.filter((row) => {
       if (row.timestamp) {
@@ -439,11 +588,19 @@ function exportarMetricasExcel() {
         if (loginsToDate && timestamp > loginsToDate) return false;
       }
 
-      if (loginsFilterAgencia && row.agencia !== loginsFilterAgencia) {
+      if (
+        loginsFilterAgencia &&
+        normalizeMetricValue(row.agencia) !==
+          normalizeMetricValue(loginsFilterAgencia)
+      ) {
         return false;
       }
 
-      if (loginsFilterMetodo && row.metodo !== loginsFilterMetodo) {
+      if (
+        loginsFilterMetodo &&
+        normalizeMetricValue(row.metodo) !==
+          normalizeMetricValue(loginsFilterMetodo)
+      ) {
         return false;
       }
 
@@ -457,10 +614,26 @@ function exportarMetricasExcel() {
     loginsFilterMetodo,
   ]);
 
+  const loginsVisible = useMemo(
+    () => loginsFiltered.slice(0, loginsVisibleCount),
+    [loginsFiltered, loginsVisibleCount],
+  );
+
+  useEffect(() => {
+    setLoginsVisibleCount(DETAIL_ROWS_PAGE_SIZE);
+  }, [
+    loginsPorUsuario,
+    loginsFromDate,
+    loginsToDate,
+    loginsFilterAgencia,
+    loginsFilterMetodo,
+  ]);
+
   const agenciasUnicas = useMemo(() => {
     const set = new Set();
     loginsPorUsuario.forEach((row) => {
-      if (row.agencia) set.add(row.agencia);
+      const agencia = String(row.agencia || "").trim();
+      if (agencia) set.add(agencia);
     });
     return Array.from(set).sort();
   }, [loginsPorUsuario]);
@@ -800,6 +973,16 @@ function exportarMetricasExcel() {
           value={dniToDate}
           onChange={(e) => setDniToDate(e.target.value)}
         />
+        <div className="mini-metrics-inline">
+          <div className="mini-metric-card mini-metric-card--blue">
+            <span className="mini-metric-card__label">DNI</span>
+            <strong className="mini-metric-card__value">{dniTipoCounts.dni}</strong>
+          </div>
+          <div className="mini-metric-card mini-metric-card--green">
+            <span className="mini-metric-card__label">CUIT</span>
+            <strong className="mini-metric-card__value">{dniTipoCounts.cuit}</strong>
+          </div>
+        </div>
       </div>
       <div className="table-wrapper">
         <table>
@@ -815,7 +998,7 @@ function exportarMetricasExcel() {
             </tr>
           </thead>
           <tbody>
-            {dniRowsFiltered.map((r, i) => (
+            {dniRowsVisible.map((r, i) => (
               <tr key={r.id || i}>
                 <td>{r.dni}</td>
                 <td>{r.nombre_solicitante}</td>
@@ -826,8 +1009,51 @@ function exportarMetricasExcel() {
                 <td>{new Date(r.timestamp).toLocaleString()}</td>
               </tr>
             ))}
+            {dniRowsFiltered.length === 0 && (
+              <tr>
+                <td colSpan={7}>Sin datos para el rango seleccionado</td>
+              </tr>
+            )}
           </tbody>
         </table>
+        {dniRowsFiltered.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "12px",
+              marginTop: "16px",
+              flexWrap: "wrap",
+            }}
+          >
+            <span style={{ color: "#495057", fontSize: "14px" }}>
+              Mostrando {dniRowsVisible.length} de {dniRowsFiltered.length} registros
+            </span>
+
+            {dniRowsVisible.length < dniRowsFiltered.length && (
+              <button
+                type="button"
+                onClick={() =>
+                  setDniVisibleCount((current) => current + DNI_ROWS_PAGE_SIZE)
+                }
+                style={{
+                  background: "#15224f",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "999px",
+                  padding: "10px 18px",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  letterSpacing: "0.4px",
+                  cursor: "pointer",
+                }}
+              >
+                CARGAR MAS
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Paso 2: Vehículos */}
@@ -836,6 +1062,21 @@ function exportarMetricasExcel() {
           <h3>PASO 2 - Análisis de búsqueda de vehículos</h3>
         </div>
         <span className="paso-badge">Paso 2</span>
+
+        <div className="chart-controls" style={{ marginBottom: "12px" }}>
+          <label>Desde:</label>
+          <input
+            type="date"
+            value={paso2FromDate}
+            onChange={(e) => setPaso2FromDate(e.target.value)}
+          />
+          <label>Hasta:</label>
+          <input
+            type="date"
+            value={paso2ToDate}
+            onChange={(e) => setPaso2ToDate(e.target.value)}
+          />
+        </div>
 
         <div className="grid-2">
           <div>
@@ -849,7 +1090,7 @@ function exportarMetricasExcel() {
                   </tr>
                 </thead>
                 <tbody>
-                  {vehiculoSelects.categorias.slice(0, 10).map((item, i) => (
+                  {paso2CategoriasVisible.map((item, i) => (
                     <tr key={i}>
                       <td>{item.label}</td>
                       <td className="value-cell">
@@ -866,8 +1107,53 @@ function exportarMetricasExcel() {
                       </td>
                     </tr>
                   ))}
+                  {paso2CategoriasFiltered.length === 0 && (
+                    <tr>
+                      <td colSpan={2}>Sin datos aún</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
+              {paso2CategoriasFiltered.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginTop: "16px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <span style={{ color: "#495057", fontSize: "14px" }}>
+                    Mostrando {paso2CategoriasVisible.length} de {paso2CategoriasFiltered.length}
+                  </span>
+
+                  {paso2CategoriasVisible.length < paso2CategoriasFiltered.length && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPaso2CategoriasVisibleCount(
+                          (current) => current + PASO2_ROWS_PAGE_SIZE,
+                        )
+                      }
+                      style={{
+                        background: "#15224f",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "999px",
+                        padding: "10px 18px",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        letterSpacing: "0.4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      CARGAR MAS
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -882,7 +1168,7 @@ function exportarMetricasExcel() {
                   </tr>
                 </thead>
                 <tbody>
-                  {vehiculoSelects.anios.slice(0, 10).map((item, i) => (
+                  {paso2AniosVisible.map((item, i) => (
                     <tr key={i}>
                       <td>{item.label}</td>
                       <td className="value-cell">
@@ -899,8 +1185,53 @@ function exportarMetricasExcel() {
                       </td>
                     </tr>
                   ))}
+                  {paso2AniosFiltered.length === 0 && (
+                    <tr>
+                      <td colSpan={2}>Sin datos aún</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
+              {paso2AniosFiltered.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginTop: "16px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <span style={{ color: "#495057", fontSize: "14px" }}>
+                    Mostrando {paso2AniosVisible.length} de {paso2AniosFiltered.length}
+                  </span>
+
+                  {paso2AniosVisible.length < paso2AniosFiltered.length && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPaso2AniosVisibleCount(
+                          (current) => current + PASO2_ROWS_PAGE_SIZE,
+                        )
+                      }
+                      style={{
+                        background: "#15224f",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "999px",
+                        padding: "10px 18px",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        letterSpacing: "0.4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      CARGAR MAS
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -917,7 +1248,7 @@ function exportarMetricasExcel() {
                   </tr>
                 </thead>
                 <tbody>
-                  {vehiculoSelects.marcas.slice(0, 15).map((item, i) => (
+                  {paso2MarcasVisible.map((item, i) => (
                     <tr key={i}>
                       <td>{item.label}</td>
                       <td className="value-cell">
@@ -934,8 +1265,53 @@ function exportarMetricasExcel() {
                       </td>
                     </tr>
                   ))}
+                  {paso2MarcasFiltered.length === 0 && (
+                    <tr>
+                      <td colSpan={2}>Sin datos aún</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
+              {paso2MarcasFiltered.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginTop: "16px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <span style={{ color: "#495057", fontSize: "14px" }}>
+                    Mostrando {paso2MarcasVisible.length} de {paso2MarcasFiltered.length}
+                  </span>
+
+                  {paso2MarcasVisible.length < paso2MarcasFiltered.length && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPaso2MarcasVisibleCount(
+                          (current) => current + PASO2_ROWS_PAGE_SIZE,
+                        )
+                      }
+                      style={{
+                        background: "#15224f",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "999px",
+                        padding: "10px 18px",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        letterSpacing: "0.4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      CARGAR MAS
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -950,7 +1326,7 @@ function exportarMetricasExcel() {
                   </tr>
                 </thead>
                 <tbody>
-                  {vehiculoSelects.modelos.slice(0, 15).map((item, i) => (
+                  {paso2ModelosVisible.map((item, i) => (
                     <tr key={i}>
                       <td>{item.label}</td>
                       <td className="value-cell">
@@ -967,8 +1343,53 @@ function exportarMetricasExcel() {
                       </td>
                     </tr>
                   ))}
+                  {paso2ModelosFiltered.length === 0 && (
+                    <tr>
+                      <td colSpan={2}>Sin datos aún</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
+              {paso2ModelosFiltered.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginTop: "16px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <span style={{ color: "#495057", fontSize: "14px" }}>
+                    Mostrando {paso2ModelosVisible.length} de {paso2ModelosFiltered.length}
+                  </span>
+
+                  {paso2ModelosVisible.length < paso2ModelosFiltered.length && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPaso2ModelosVisibleCount(
+                          (current) => current + PASO2_ROWS_PAGE_SIZE,
+                        )
+                      }
+                      style={{
+                        background: "#15224f",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "999px",
+                        padding: "10px 18px",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        letterSpacing: "0.4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      CARGAR MAS
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1008,7 +1429,7 @@ function exportarMetricasExcel() {
                   </tr>
                 </thead>
                 <tbody>
-                  {paso3ProductosFiltered.map((p, i) => (
+                  {paso3ProductosVisible.map((p, i) => (
                     <tr key={i}>
                       <td>{p.producto}</td>
                       <td className="value-cell">
@@ -1023,6 +1444,46 @@ function exportarMetricasExcel() {
                   )}
                 </tbody>
               </table>
+              {paso3ProductosFiltered.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginTop: "16px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <span style={{ color: "#495057", fontSize: "14px" }}>
+                    Mostrando {paso3ProductosVisible.length} de {paso3ProductosFiltered.length}
+                  </span>
+
+                  {paso3ProductosVisible.length < paso3ProductosFiltered.length && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPaso3ProductosVisibleCount(
+                          (current) => current + DETAIL_ROWS_PAGE_SIZE,
+                        )
+                      }
+                      style={{
+                        background: "#15224f",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "999px",
+                        padding: "10px 18px",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        letterSpacing: "0.4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      CARGAR MAS
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -1049,9 +1510,7 @@ function exportarMetricasExcel() {
               ) : (
                 <div className="empty">Sin montos cargados aún.</div>
               )}
-              <div
-                style={{ marginTop: "14px", maxHeight: 240, overflowY: "auto" }}
-              >
+              <div style={{ marginTop: "14px" }}>
                 <table className="stat-table">
                   <thead>
                     <tr>
@@ -1060,7 +1519,7 @@ function exportarMetricasExcel() {
                     </tr>
                   </thead>
                   <tbody>
-                    {paso3MontosFiltered.map((m, i) => (
+                    {paso3MontosVisible.map((m, i) => (
                       <tr key={i}>
                         <td>
                           $
@@ -1083,6 +1542,46 @@ function exportarMetricasExcel() {
                   </tbody>
                 </table>
               </div>
+              {paso3MontosFiltered.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginTop: "16px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <span style={{ color: "#495057", fontSize: "14px" }}>
+                    Mostrando {paso3MontosVisible.length} de {paso3MontosFiltered.length}
+                  </span>
+
+                  {paso3MontosVisible.length < paso3MontosFiltered.length && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPaso3MontosVisibleCount(
+                          (current) => current + DETAIL_ROWS_PAGE_SIZE,
+                        )
+                      }
+                      style={{
+                        background: "#15224f",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "999px",
+                        padding: "10px 18px",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        letterSpacing: "0.4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      CARGAR MAS
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1221,6 +1720,7 @@ function exportarMetricasExcel() {
             <option value="">Todos</option>
             <option value="google_one_tap">Google One Tap</option>
             <option value="email_password">Email/Contraseña</option>
+            <option value="particular_directo">Soy Particular</option>
           </select>
         </div>
 
@@ -1236,17 +1736,11 @@ function exportarMetricasExcel() {
             </thead>
             <tbody>
               {loginsFiltered.length > 0 ? (
-                loginsFiltered.map((row, i) => (
+                loginsVisible.map((row, i) => (
                   <tr key={`${row.email}-${row.timestamp}-${i}`}>
                     <td>{row.email || "(sin email)"}</td>
                     <td>{row.agencia || "Sin agencia"}</td>
-                    <td>
-                      {row.metodo === "google_one_tap"
-                        ? "Google One Tap"
-                        : row.metodo === "email_password"
-                          ? "Email/Contraseña"
-                          : "Desconocido"}
-                    </td>
+                    <td>{formatLoginMethod(row.metodo)}</td>
                     <td style={{ whiteSpace: "nowrap" }}>
                       {formatTimestampLocal(row.timestamp)}
                     </td>
@@ -1261,6 +1755,46 @@ function exportarMetricasExcel() {
               )}
             </tbody>
           </table>
+          {loginsFiltered.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "12px",
+                marginTop: "16px",
+                flexWrap: "wrap",
+              }}
+            >
+              <span style={{ color: "#495057", fontSize: "14px" }}>
+                Mostrando {loginsVisible.length} de {loginsFiltered.length} registros
+              </span>
+
+              {loginsVisible.length < loginsFiltered.length && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setLoginsVisibleCount(
+                      (current) => current + DETAIL_ROWS_PAGE_SIZE,
+                    )
+                  }
+                  style={{
+                    background: "#15224f",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "999px",
+                    padding: "10px 18px",
+                    fontSize: "13px",
+                    fontWeight: 700,
+                    letterSpacing: "0.4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  CARGAR MAS
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
