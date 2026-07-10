@@ -60,6 +60,14 @@ function Tablero() {
     banco: "",
     retorno: "CR,SR",
   });
+  // Asegurar campos para tipo de crédito y highlights (checks)
+  useEffect(() => {
+    setNewProduct((prev) => ({
+      ...prev,
+      tipoCredito: prev.tipoCredito || "",
+      highlights: prev.highlights || ["", "", ""],
+    }));
+  }, [showNewProductModal]);
   const [newProductName, setNewProductName] = useState(""); // Estado para el nuevo nombre del producto
   const [segmentos, setSegmentos] = useState([]);
   const [newProductCategorias, setNewProductCategorias] = useState([
@@ -209,6 +217,8 @@ function Tablero() {
           segmento_id: data.productos[selectedProduct].segmento_id,
           categorias: categoriasToSend,
           retorno: data.productos[selectedProduct]?.retorno || "CR,SR",
+          tipo_credito: data.productos[selectedProduct]?.tipo_credito || data.productos[selectedProduct]?.tipoCredito || "",
+          highlights: data.productos[selectedProduct]?.highlights || data.productos[selectedProduct]?.highlights || [],
         },
       },
       ltv: {
@@ -836,6 +846,107 @@ function Tablero() {
                   </Form.Control>
                 </Form.Group>
 
+                <Form.Group controlId="editProductTipoCredito" className="dashboard-field">
+                  <Form.Label>
+                    <strong>Tipo de crédito (ej. UVA, FIJA):</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={data.productos[selectedProduct]?.tipo_credito || data.productos[selectedProduct]?.tipoCredito || ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setData((prevData) => ({
+                        ...prevData,
+                        productos: {
+                          ...prevData.productos,
+                          [selectedProduct]: {
+                            ...prevData.productos[selectedProduct],
+                            tipo_credito: val,
+                            tipoCredito: val,
+                          },
+                        },
+                      }));
+                    }}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="editProductHighlights" className="dashboard-field dashboard-field--full">
+                  <Form.Label>
+                    <strong>Highlights / Checks (máx 5)</strong>
+                  </Form.Label>
+                  <div>
+                    {((data.productos[selectedProduct]?.highlights && Array.isArray(data.productos[selectedProduct].highlights)) ? data.productos[selectedProduct].highlights : (data.productos[selectedProduct]?.highlights ? JSON.parse(data.productos[selectedProduct].highlights || '[]') : []) ).map((h, idx) => (
+                      <div key={idx} style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                        <Form.Control
+                          type="text"
+                          value={h || ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setData((prevData) => {
+                              const current = prevData.productos[selectedProduct];
+                              let highlights = current.highlights && Array.isArray(current.highlights)
+                                ? [...current.highlights]
+                                : (current.highlights ? JSON.parse(current.highlights || '[]') : []);
+                              highlights[idx] = val;
+                              return {
+                                ...prevData,
+                                productos: {
+                                  ...prevData.productos,
+                                  [selectedProduct]: {
+                                    ...current,
+                                    highlights,
+                                  },
+                                },
+                              };
+                            });
+                          }}
+                        />
+                        <Button variant="danger" onClick={() => {
+                          setData((prevData) => {
+                            const current = prevData.productos[selectedProduct];
+                            let highlights = current.highlights && Array.isArray(current.highlights)
+                              ? [...current.highlights]
+                              : (current.highlights ? JSON.parse(current.highlights || '[]') : []);
+                            highlights.splice(idx,1);
+                            return {
+                              ...prevData,
+                              productos: {
+                                ...prevData.productos,
+                                [selectedProduct]: {
+                                  ...current,
+                                  highlights,
+                                },
+                              },
+                            };
+                          });
+                        }}>Quitar</Button>
+                      </div>
+                    ))}
+                    <div>
+                      <Button variant="secondary" onClick={() => {
+                        setData((prevData) => {
+                          const current = prevData.productos[selectedProduct];
+                          let highlights = current.highlights && Array.isArray(current.highlights)
+                            ? [...current.highlights]
+                            : (current.highlights ? JSON.parse(current.highlights || '[]') : []);
+                          if (highlights.length >=5) return prevData;
+                          highlights.push('');
+                          return {
+                            ...prevData,
+                            productos: {
+                              ...prevData.productos,
+                              [selectedProduct]: {
+                                ...current,
+                                highlights,
+                              },
+                            },
+                          };
+                        });
+                      }}>Agregar highlight</Button>
+                    </div>
+                  </div>
+                </Form.Group>
+
                 <Form.Group controlId="editProductCategorias" className="dashboard-field dashboard-field--full">
                   <Form.Label>
                     <strong>Categorías visibles para:</strong>
@@ -1249,6 +1360,65 @@ function Tablero() {
                 <option value="CR">Solo C.R.</option>
                 <option value="SR">Solo S.R.</option>
               </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="newProductTipoCredito" className="mt-3">
+              <Form.Label>Tipo de crédito (ej. UVA, FIJA):</Form.Label>
+              <Form.Control
+                type="text"
+                value={newProduct.tipoCredito || ""}
+                onChange={(e) =>
+                  setNewProduct((prev) => ({ ...prev, tipoCredito: e.target.value }))
+                }
+              />
+            </Form.Group>
+
+            <Form.Group controlId="newProductHighlights" className="mt-3">
+              <Form.Label>Highlights / Checks (máx 5, mínimo 1)</Form.Label>
+              {((newProduct.highlights && newProduct.highlights.length) || 3) > 0 &&
+                (newProduct.highlights || ["", "", ""]).map((h, idx) => (
+                  <Form.Control
+                    key={`highlight-${idx}`}
+                    type="text"
+                    placeholder={`Cualidad ${idx + 1}`}
+                    value={newProduct.highlights?.[idx] || ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setNewProduct((prev) => {
+                        const hh = prev.highlights ? [...prev.highlights] : ["", "", ""];
+                        hh[idx] = val;
+                        return { ...prev, highlights: hh };
+                      });
+                    }}
+                    className="mb-2"
+                  />
+                ))}
+              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => {
+                    setNewProduct((prev) => ({
+                      ...prev,
+                      highlights: [...(prev.highlights || []), ""].slice(0, 5),
+                    }));
+                  }}
+                >
+                  Agregar highlight
+                </Button>
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => {
+                    setNewProduct((prev) => ({
+                      ...prev,
+                      highlights: (prev.highlights || []).slice(0, Math.max(1, (prev.highlights || []).length - 1)),
+                    }));
+                  }}
+                >
+                  Quitar highlight
+                </Button>
+              </div>
             </Form.Group>
 
             <h5>Plazos</h5>
