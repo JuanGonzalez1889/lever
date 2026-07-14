@@ -1165,7 +1165,16 @@ function Cotizador() {
         y + 2,
         { align: "center" }
       );
-      y += 18;
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(120, 120, 120);
+        doc.text(
+          `(*) este monto corresponde al plazo ${p}`,
+          pageWidth / 2,
+          y + 14,
+          { align: "center" }
+        );
+        y += 28;
     }
 
     // Leyenda aclaratoria si hay variación de capitales
