@@ -6,6 +6,7 @@ const API_URL = process.env.REACT_APP_API_URL || "https://api.lever.com.ar";
 
 export default function UsuariosAgencias() {
   const [usuarios, setUsuarios] = useState([]);
+  const [agentes, setAgentes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
@@ -14,6 +15,7 @@ export default function UsuariosAgencias() {
   const [editedAgencia, setEditedAgencia] = useState("");
   const [editedTelefono, setEditedTelefono] = useState("");
   const [saving, setSaving] = useState(false);
+  const [savingAgenteId, setSavingAgenteId] = useState(null);
 
   // Modal para editar/re-enviar verificación de email
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -35,16 +37,37 @@ export default function UsuariosAgencias() {
   };
 
   useEffect(() => {
-    cargarUsuarios();
-  }, []);
+    let active = true;
 
-  const cargarUsuarios = () => {
-    axios
-      .get(`${API_URL}/api/admin/usuarios`, { withCredentials: true })
-      .then((res) => setUsuarios(res.data))
-      .catch(() => setUsuarios([]))
-      .finally(() => setLoading(false));
-  };
+    Promise.allSettled([
+      axios.get(`${API_URL}/api/admin/usuarios`, { withCredentials: true }),
+      axios.get(`${API_URL}/api/agentes`, { withCredentials: true }),
+    ])
+      .then(([usuariosResult, agentesResult]) => {
+        if (!active) return;
+
+        if (usuariosResult.status === "fulfilled") {
+          setUsuarios(usuariosResult.value.data || []);
+        } else {
+          setUsuarios([]);
+        }
+
+        if (agentesResult.status === "fulfilled") {
+          setAgentes(agentesResult.value.data?.agentes || []);
+        } else {
+          setAgentes([]);
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleVerMas = (usuario) => {
     setUsuarioSeleccionado(usuario);
@@ -59,6 +82,49 @@ export default function UsuariosAgencias() {
     setShowModal(false);
     setUsuarioSeleccionado(null);
     setShowEmailModal(false);
+  };
+
+  const handleActualizarAgente = async (usuarioId, agenteId) => {
+    setSavingAgenteId(usuarioId);
+
+    try {
+      const agenteSeleccionado = agentes.find(
+        (agente) => String(agente.id) === String(agenteId),
+      );
+
+      await axios.put(
+        `${API_URL}/api/admin/usuarios/${usuarioId}`,
+        { agente: agenteId || null },
+        { withCredentials: true },
+      );
+
+      setUsuarios((prev) =>
+        prev.map((usuario) =>
+          usuario.id === usuarioId
+            ? {
+                ...usuario,
+                agente: agenteId ? Number(agenteId) : null,
+                agente_nombre: agenteSeleccionado?.nombre || "",
+              }
+            : usuario,
+        ),
+      );
+
+      setUsuarioSeleccionado((prev) =>
+        prev && prev.id === usuarioId
+          ? {
+              ...prev,
+              agente: agenteId ? Number(agenteId) : null,
+              agente_nombre: agenteSeleccionado?.nombre || "",
+            }
+          : prev,
+      );
+    } catch (err) {
+      console.error("Error al actualizar agente:", err);
+      alert("Error al actualizar el agente");
+    } finally {
+      setSavingAgenteId(null);
+    }
   };
 
   const isTrueFlag = (v) =>
@@ -232,6 +298,13 @@ export default function UsuariosAgencias() {
       (u.agencia && u.agencia.toLowerCase().includes(busqueda.toLowerCase()))
   );
 
+  const formatearFechaRegistro = (createdAt) => {
+    if (!createdAt) return { fecha: "-", hora: "" };
+
+    const [fecha, hora = ""] = createdAt.slice(0, 19).replace("T", " ").split(" ");
+    return { fecha, hora };
+  };
+
   if (loading)
     return <div style={{ color: "white", padding: 24 }}>Cargando...</div>;
 
@@ -242,58 +315,382 @@ export default function UsuariosAgencias() {
     >
       <style>
         {`
+          .usuarios-agencias-view {
+            color: #f5f7ff;
+          }
+          .usuarios-agencias-view .usuarios-panel {
+            position: relative;
+            overflow: hidden;
+            padding: 20px 22px 14px;
+            border-radius: 22px;
+            border: 1px solid rgba(196, 206, 255, 0.1);
+            background:
+              radial-gradient(circle at top right, rgba(126, 160, 255, 0.08), transparent 24%),
+              linear-gradient(180deg, rgba(89, 92, 122, 0.2) 0%, rgba(63, 66, 96, 0.22) 100%);
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.04),
+              0 18px 34px rgba(12, 16, 35, 0.12);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+          }
+          .usuarios-agencias-view .usuarios-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 34%);
+          }
           .usuarios-agencias-view .btn,
           .usuarios-agencias-view button {
             font-size: 0.8rem !important;
           }
+          .usuarios-agencias-view .table-title {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 14px;
+          }
+          .usuarios-agencias-view .table-title h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+          }
+          .usuarios-agencias-view .table-title p {
+            margin: 4px 0 0;
+            color: rgba(226, 231, 255, 0.62);
+            font-size: 0.88rem;
+          }
+          .usuarios-agencias-view .search-shell {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 14px;
+          }
+          .usuarios-agencias-view .search-shell svg {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            stroke: rgba(235, 239, 255, 0.45);
+            pointer-events: none;
+          }
+          .usuarios-agencias-view .search-input {
+            width: 100%;
+            padding: 12px 18px 12px 46px;
+            border-radius: 999px;
+            border: 1px solid rgba(214, 223, 255, 0.18);
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            outline: none;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+          }
+          .usuarios-agencias-view .search-input:focus {
+            border-color: rgba(129, 177, 255, 0.7);
+            box-shadow: 0 0 0 4px rgba(101, 151, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+          }
+          .usuarios-agencias-view .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.54);
+          }
+          .usuarios-agencias-view .usuarios-table {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+          }
+          .usuarios-agencias-view .usuarios-table th {
+            padding: 0 12px 10px;
+            text-align: left;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: rgba(230, 235, 255, 0.68);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          }
+          .usuarios-agencias-view .usuarios-table td {
+            padding: 14px 12px;
+            vertical-align: middle;
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          }
+          .usuarios-agencias-view .name-cell-td {
+            padding-left: 22px !important;
+          }
+          .usuarios-agencias-view .usuarios-table tbody tr {
+            transition: background 0.18s ease;
+          }
+          .usuarios-agencias-view .usuarios-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.025);
+          }
+          .usuarios-agencias-view .cell-truncate {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .usuarios-agencias-view .cell-id {
+            display: inline-flex;
+            min-width: 40px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            justify-content: center;
+            background: rgba(17, 26, 61, 0.26);
+            font-weight: 800;
+            color: #ffffff;
+          }
+          .usuarios-agencias-view .name-cell {
+            display: block;
+            min-width: 0;
+          }
+          .usuarios-agencias-view .name-copy {
+            min-width: 0;
+            width: 100%;
+          }
+          .usuarios-agencias-view .name-title {
+            display: block;
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            white-space: normal;
+            overflow: visible;
+            text-overflow: unset;
+          }
+          .usuarios-agencias-view .email-text {
+            color: #eef2ff;
+            font-weight: 500;
+          }
+          .usuarios-agencias-view .agency-text,
+          .usuarios-agencias-view .phone-text {
+            color: rgba(246, 248, 255, 0.86);
+          }
+          .usuarios-agencias-view .phone-text {
+            display: block;
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: clip;
+            font-variant-numeric: tabular-nums;
+          }
+          .usuarios-agencias-view .cell-date {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            line-height: 1.1;
+            white-space: nowrap;
+            font-weight: 700;
+            color: #ffffff;
+          }
+          .usuarios-agencias-view .cell-date-hour {
+            font-size: 0.8rem;
+            color: rgba(227, 233, 255, 0.62);
+          }
           .usuarios-agencias-view .form-select-custom {
-            height: 35px !important;
-            border-radius: 30px !important;
+            height: 38px !important;
+            border-radius: 999px !important;
+            border: 0 !important;
+            background-color: transparent !important;
+            color: #243157 !important;
+            font-size: 0.88rem !important;
+            font-weight: 700;
+            padding-left: 24px !important;
+            padding-right: 34px !important;
+            box-shadow: none !important;
+          }
+          .usuarios-agencias-view .form-select-custom:focus {
+            box-shadow: none !important;
+          }
+          .usuarios-agencias-view .agente-select-cell {
+            min-width: 0;
+          }
+          .usuarios-agencias-view .agente-select-shell {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            border-radius: 14px;
+            border: 1px solid rgba(210, 218, 243, 0.55);
+            background: rgba(250, 251, 255, 0.96);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+          }
+          .usuarios-agencias-view .agente-select-shell:hover {
+            border-color: rgba(169, 183, 232, 0.95);
+            box-shadow: 0 0 0 3px rgba(103, 129, 203, 0.08);
+          }
+          .usuarios-agencias-view .agente-select-shell.is-empty {
+            background: rgba(246, 248, 252, 0.96);
+          }
+          .usuarios-agencias-view .agente-select {
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+          }
+          .usuarios-agencias-view .agente-select-cell .form-select-custom {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+          .usuarios-agencias-view .categoria-badge {
+            display: inline-flex;
+            min-width: 36px;
+            justify-content: center;
+            padding: 7px 10px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 800;
+            box-shadow: 0 8px 14px rgba(10, 16, 36, 0.12);
+          }
+          .usuarios-agencias-view .actions-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+          }
+          .usuarios-agencias-view .action-icon-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #7fd8ff 0%, #7f8df8 100%);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.28),
+              0 10px 20px rgba(72, 94, 188, 0.22);
+            transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+            margin: 0 auto;
+          }
+          .usuarios-agencias-view .action-icon-btn:hover {
+            background: linear-gradient(135deg, #8ee0ff 0%, #8b96ff 100%);
+            transform: translateY(-1px);
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.32),
+              0 14px 24px rgba(72, 94, 188, 0.28);
+          }
+          .usuarios-agencias-view .action-dot {
+            width: 5px;
+            height: 5px;
+            display: block;
+            border-radius: 999px;
+            background: #ffffff;
+            opacity: 0.95;
+          }
+          .usuarios-agencias-view .col-id { width: 4%; }
+          .usuarios-agencias-view .col-nombre { width: 20%; }
+          .usuarios-agencias-view .col-email { width: 20%; }
+          .usuarios-agencias-view .col-agencia { width: 11%; }
+          .usuarios-agencias-view .col-telefono { width: 11%; }
+          .usuarios-agencias-view .col-categoria { width: 7%; }
+          .usuarios-agencias-view .col-fecha { width: 9%; }
+          .usuarios-agencias-view .col-agente { width: 13%; }
+          .usuarios-agencias-view .col-acciones { width: 5%; }
+          @media (max-width: 1400px) {
+            .usuarios-agencias-view .usuarios-panel {
+              padding-left: 18px;
+              padding-right: 18px;
+            }
+            .usuarios-agencias-view .usuarios-table th,
+            .usuarios-agencias-view .usuarios-table td {
+              padding-left: 10px;
+              padding-right: 10px;
+              font-size: 0.92rem;
+            }
+            .usuarios-agencias-view .agente-select-shell {
+              max-width: 100%;
+            }
+            .usuarios-agencias-view .name-cell-td {
+              padding-left: 18px !important;
+            }
           }
         `}
       </style>
-      <h2>Usuarios registrados</h2>
+      <div className="usuarios-panel">
+        <div className="table-title">
+          <h2>Usuarios registrados</h2>
+          <p>Asigná agentes y administrá cada alta sin perder contexto.</p>
+        </div>
 
-      <input
-        type="text"
-        placeholder="Buscar por nombre, email o agencia..."
-        value={busqueda}
-        onChange={(e) => setBusqueda(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "8px 12px",
-          marginBottom: 16,
-          borderRadius: 4,
-          border: "1px solid #ccc",
-        }}
-      />
+        <div className="search-shell">
+          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-3.5-3.5"></path>
+          </svg>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Buscar por nombre, email o agencia..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+        </div>
 
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table className="usuarios-table">
+        <colgroup>
+          <col className="col-id" />
+          <col className="col-nombre" />
+          <col className="col-email" />
+          <col className="col-agencia" />
+          <col className="col-telefono" />
+          <col className="col-categoria" />
+          <col className="col-fecha" />
+          <col className="col-agente" />
+          <col className="col-acciones" />
+        </colgroup>
         <thead>
-          <tr style={{ borderBottom: "2px solid #555" }}>
-            <th style={{ padding: 8, textAlign: "left" }}>ID</th>
-            <th style={{ padding: 8, textAlign: "left" }}>Nombre</th>
-            <th style={{ padding: 8, textAlign: "left" }}>Email</th>
-            <th style={{ padding: 8, textAlign: "left" }}>Agencia</th>
-            <th style={{ padding: 8, textAlign: "left" }}>Teléfono</th>
-            <th style={{ padding: 8, textAlign: "left" }}>Categoría</th>
-            <th style={{ padding: 8, textAlign: "left" }}>Fecha registro</th>
-            <th style={{ padding: 8, textAlign: "left" }}>Acciones</th>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Agencia</th>
+            <th>Teléfono</th>
+            <th>Categoría</th>
+            <th>Fecha registro</th>
+            <th>Agente</th>
+            <th style={{ textAlign: "center" }}>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {usuariosFiltrados.map((u) => (
-            <tr key={u.id} style={{ borderBottom: "1px solid #444" }}>
-              <td style={{ padding: 8 }}>{u.id}</td>
-              <td style={{ padding: 8 }}>{u.nombre_completo}</td>
-              <td style={{ padding: 8 }}>{u.email}</td>
-              <td style={{ padding: 8 }}>{u.agencia || "-"}</td>
-              <td style={{ padding: 8 }}>{u.telefono || "-"}</td>
-              <td style={{ padding: 8 }}>
+          {usuariosFiltrados.map((u) => {
+            const { fecha, hora } = formatearFechaRegistro(u.created_at);
+
+            return (
+            <tr key={u.id}>
+              <td>
+                <span className="cell-id">{u.id}</span>
+              </td>
+              <td className="name-cell-td" title={u.nombre_completo || "-"}>
+                <div className="name-cell">
+                  <span className="name-copy">
+                    <span className="name-title">{u.nombre_completo || "-"}</span>
+                  </span>
+                </div>
+              </td>
+              <td title={u.email || "-"}>
+                <span className="cell-truncate email-text">{u.email || "-"}</span>
+              </td>
+              <td title={u.agencia || "-"}>
+                <span className="cell-truncate agency-text">{u.agencia || "-"}</span>
+              </td>
+              <td title={u.telefono || "-"}>
+                <span className="phone-text">{u.telefono || "-"}</span>
+              </td>
+              <td>
                 <span
+                  className="categoria-badge"
                   style={{
-                    padding: "2px 8px",
-                    borderRadius: 4,
                     backgroundColor:
                       u.categoria === "A"
                         ? "#28a745"
@@ -307,28 +704,48 @@ export default function UsuariosAgencias() {
                   {u.categoria || "A"}
                 </span>
               </td>
-              <td style={{ padding: 8 }}>
-                {u.created_at && u.created_at.slice(0, 19).replace("T", " ")}
+              <td>
+                <div className="cell-date">
+                  <span>{fecha}</span>
+                  {hora ? <span className="cell-date-hour">{hora}</span> : null}
+                </div>
               </td>
-              <td style={{ padding: 8 }}>
+              <td className="agente-select-cell">
+                <div className={`agente-select-shell ${u.agente ? "is-assigned" : "is-empty"}`}>
+                  <Form.Select
+                    title={u.agente_nombre || "Sin asignar"}
+                    value={u.agente ?? ""}
+                    onChange={(e) => handleActualizarAgente(u.id, e.target.value)}
+                    disabled={savingAgenteId === u.id}
+                    className="form-select-custom agente-select"
+                  >
+                    <option value="">Sin asignar</option>
+                    {agentes.map((agente) => (
+                      <option key={agente.id} value={agente.id}>
+                        {agente.nombre}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </div>
+              </td>
+              <td className="actions-cell">
                 <button
+                  type="button"
+                  aria-label={`Ver detalle de ${u.nombre_completo || "usuario"}`}
+                  title="Ver más"
+                  className="action-icon-btn"
                   onClick={() => handleVerMas(u)}
-                  style={{
-                    padding: "4px 12px",
-                    backgroundColor: "#007bff",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 4,
-                    cursor: "pointer",
-                  }}
                 >
-                  Ver más
+                  <span className="action-dot"></span>
+                  <span className="action-dot"></span>
+                  <span className="action-dot"></span>
                 </button>
               </td>
             </tr>
-          ))}
+          );})}
         </tbody>
       </table>
+      </div>
 
       <Modal show={showModal} onHide={handleClose} size="lg">
         <Modal.Header closeButton>

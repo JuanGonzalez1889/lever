@@ -1713,12 +1713,16 @@ function Dashboard() {
                 Cotizar
               </Nav.Link>
               <Nav.Link
-                as={Link}
-                to="/dashboard/operaciones"
-                onClick={handleNavClick}
+                href="#"
+                onClick={(event) => {
+                  event.preventDefault();
+                }}
+                className="nav-link-disabled"
+                aria-disabled="true"
               >
                 <Briefcase className="me-2" />
                 Operaciones
+                <span className="nav-link-soon">Proximamente</span>
               </Nav.Link>
               <Nav.Link
                 as={Link}
