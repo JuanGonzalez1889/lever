@@ -1,0 +1,471 @@
+diff --git "a/node-app\\server.remote.utf8.js" "b/node-app\\server.local.utf8.js"
+index fbbee26f..21b23cf0 100644
+--- "a/node-app\\server.remote.utf8.js"
++++ "b/node-app\\server.local.utf8.js"
+@@ -29,3 +29,3 @@ passport.deserializeUser((obj, done) => {
+-console.log("NODE_ENV:", process.env.NODE_ENV); // Verificar que se est├í utilizando el .env
+-console.log("DB_HOST:", process.env.DB_HOST); // Verificar que se est├í utilizando el .env
+-console.log("CLIENT_URL:", process.env.CLIENT_URL); // Verificar que se est├í utilizando el .env
++console.log("NODE_ENV:", process.env.NODE_ENV); // Verificar que se estÃ¡ utilizando el .env
++console.log("DB_HOST:", process.env.DB_HOST); // Verificar que se estÃ¡ utilizando el .env
++console.log("CLIENT_URL:", process.env.CLIENT_URL); // Verificar que se estÃ¡ utilizando el .env
+@@ -44 +43,0 @@ const allowedOrigins = [
+-  "http://www.lever.com.ar",
+@@ -67 +66 @@ app.use(
+-      // Permitir solicitudes desde los or├¡genes especificados o solicitudes sin origen (como Postman)
++      // Permitir solicitudes desde los orÃ­genes especificados o solicitudes sin origen (como Postman)
+@@ -85 +84 @@ app.use(
+-      secure: false, // true en producci├│n con HTTPS
++      secure: false, // true en producciÃ³n con HTTPS
+@@ -100 +99 @@ app.use(bodyParser.json());
+-//     console.log("No hay sesi├│n activa");
++//     console.log("No hay sesiÃ³n activa");
+@@ -111 +110 @@ if (process.env.NODE_ENV !== "production") {
+-    req.session.rol = "admin"; // o busca el rol en la base si quer├®s
++    req.session.rol = "admin"; // o busca el rol en la base si querÃ©s
+@@ -133 +132 @@ if (process.env.NODE_ENV !== "production") {
+-      // Verifica la contrase├▒a con bcrypt
++      // Verifica la contraseÃ±a con bcrypt
+@@ -136 +135 @@ if (process.env.NODE_ENV !== "production") {
+-          return res.json({ success: false, message: "Contrase├▒a incorrecta" });
++          return res.json({ success: false, message: "ContraseÃ±a incorrecta" });
+@@ -150 +149 @@ if (process.env.NODE_ENV !== "production") {
+-// Validar sesi├│n para el panel admin
++// Validar sesiÃ³n para el panel admin
+@@ -179,6 +177,0 @@ app.post("/api/logout", (req, res) => {
+-app.all("/api/logout/", (req, res) => {
+-  req.session.destroy(() => {
+-    res.json({ success: true });
+-  });
+-});
+-
+@@ -194,0 +188,5 @@ app.post("/api/logoutAgencia", (req, res) => {
++app.all("/api/logout/", (req, res) => {
++  req.session.destroy(() => {
++    res.json({ success: true });
++  });
++});
+@@ -210 +208 @@ app.get("/api/productos-con-segmento", (req, res) => {
+-    "SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco FROM productos p LEFT JOIN segmentos s ON p.segmento_id = s.id",
++    "SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco, p.tipo_credito, p.highlights FROM productos p LEFT JOIN segmentos s ON p.segmento_id = s.id",
+@@ -222 +220 @@ app.get("/api/productos-con-segmento", (req, res) => {
+-// NUEVO: Funci├│n utilitaria para obtener el id de producto por nombre
++// NUEVO: FunciÃ³n utilitaria para obtener el id de producto por nombre
+@@ -242 +240 @@ app.get("/api/data", (req, res) => {
+-         p.segmento_id, p.banco, p.categorias, p.retorno, l.year, l.value, l.show, c.minAFinanciar
++      p.segmento_id, p.banco, p.categorias, p.retorno, p.tipo_credito, p.highlights, l.year, l.value, l.show, c.minAFinanciar
+@@ -258 +256 @@ app.get("/api/data", (req, res) => {
+-      // Clave ├║nica por producto
++      // Clave Ãºnica por producto
+@@ -266,0 +265,2 @@ app.get("/api/data", (req, res) => {
++          tipoCredito: row.tipo_credito || null,
++          highlights: row.highlights ? (() => { try { return JSON.parse(row.highlights); } catch(e){ return []; } })() : [],
+@@ -305 +305 @@ app.post("/api/data", (req, res) => {
+-  const retorno = productos[selectedProductId]?.retorno || "CR,SR"; // Ô£à AGREGAR
++  const retorno = productos[selectedProductId]?.retorno || "CR,SR"; // âœ… AGREGAR
+@@ -307 +307 @@ app.post("/api/data", (req, res) => {
+-  const productoIdPrincipal = productoIds[0]; // Us├í solo el primero
++  const productoIdPrincipal = productoIds[0]; // UsÃ¡ solo el primero
+@@ -418,19 +418,36 @@ app.post("/api/data", (req, res) => {
+-          db.query(
+-            query,
+-            [
+-              productoIds[idx],
+-              newProductName || productos[productoId].nombre,
+-              plazo,
+-              interestValue,
+-              feeValue,
+-              minfeeValue,
+-              segmento_id,
+-              banco,
+-              categorias,
+-              retorno, // Ô£à AGREGAR
+-            ],
+-            (err, result) => {
+-              if (err) return reject(err);
+-              resolve(result);
+-            },
+-          );
++          // Construir la query completa incluyendo tipo_credito y highlights
++          const fullQuery = `
++          INSERT INTO productos (id, nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
++          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
++          ON DUPLICATE KEY UPDATE
++            nombre = VALUES(nombre),
++            interest = VALUES(interest),
++            fee = VALUES(fee),
++            minfee = VALUES(minfee),
++            segmento_id = VALUES(segmento_id),
++            banco = VALUES(banco),
++            categorias = VALUES(categorias),
++            retorno = VALUES(retorno),
++            tipo_credito = VALUES(tipo_credito),
++            highlights = VALUES(highlights)
++        `;
++
++          const params = [
++            productoIds[idx],
++            newProductName || productos[productoId].nombre,
++            plazo,
++            interestValue,
++            feeValue,
++            minfeeValue,
++            segmento_id,
++            banco,
++            categorias,
++            retorno || 'CR,SR',
++            productos[productoId]?.tipoCredito || null,
++            JSON.stringify(productos[productoId]?.highlights || []),
++          ];
++
++          db.query(fullQuery, params, (err, result) => {
++            if (err) return reject(err);
++            resolve(result);
++          });
+@@ -485 +502 @@ app.post("/api/data", (req, res) => {
+-  // Ejecutar primero el delete y despu├®s el resto
++  // Ejecutar primero el delete y despuÃ©s el resto
+@@ -500 +517 @@ app.post("/api/data", (req, res) => {
+-        .json({ success: false, message: err.message || "Datos inv├ílidos" });
++        .json({ success: false, message: err.message || "Datos invÃ¡lidos" });
+@@ -584,0 +602,2 @@ app.post("/api/new-product", async (req, res) => {
++    tipoCredito,
++    highlights,
+@@ -590 +609 @@ app.post("/api/new-product", async (req, res) => {
+-      .json({ success: false, message: "segmento_id inv├ílido" });
++      .json({ success: false, message: "segmento_id invÃ¡lido" });
+@@ -615,2 +634,2 @@ app.post("/api/new-product", async (req, res) => {
+-        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
++        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
++        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+@@ -629,0 +649,2 @@ app.post("/api/new-product", async (req, res) => {
++          tipoCredito || null,
++          JSON.stringify(highlights || []),
+@@ -644,2 +665,2 @@ app.post("/api/new-product", async (req, res) => {
+-            INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
++            INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
++            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+@@ -658,0 +680,2 @@ app.post("/api/new-product", async (req, res) => {
++              tipoCredito || null,
++              JSON.stringify(highlights || []),
+@@ -773 +796 @@ app.post("/api/featuresCategoria", (req, res) => {
+-        .json({ features: [], error: "Categor├¡a requerida" });
++        .json({ features: [], error: "CategorÃ­a requerida" });
+@@ -792 +815 @@ app.post("/api/featuresCategoria", (req, res) => {
+-      // Siempre responder JSON, aunque est├® vac├¡o
++      // Siempre responder JSON, aunque estÃ© vacÃ­o
+@@ -804 +827 @@ app.post("/api/featuresCategoria", (req, res) => {
+-console.log("­ƒôº EMAIL CONFIG:", {
++console.log("ðŸ“§ EMAIL CONFIG:", {
+@@ -812 +835 @@ console.log("­ƒôº EMAIL CONFIG:", {
+-// Configuraci├│n de Nodemailer
++// ConfiguraciÃ³n de Nodemailer
+@@ -826 +849 @@ const transporter = nodemailer.createTransport({
+-// VERIFICA LA CONEXI├ôN AL INICIAR
++// VERIFICA LA CONEXIÃ“N AL INICIAR
+@@ -829 +852 @@ transporter.verify((error, success) => {
+-    console.error("ÔØî Error conectando al servidor SMTP:", error);
++    console.error("âŒ Error conectando al servidor SMTP:", error);
+@@ -831 +854 @@ transporter.verify((error, success) => {
+-    console.log("Ô£à Servidor SMTP listo para enviar emails");
++    console.log("âœ… Servidor SMTP listo para enviar emails");
+@@ -839 +862 @@ app.post("/api/contact", (req, res) => {
+-  // Configuraci├│n del correo
++  // ConfiguraciÃ³n del correo
+@@ -844 +867 @@ app.post("/api/contact", (req, res) => {
+-    text: `Nombre: ${name}\nCorreo: ${email}\nTel├®fono: ${phone}\n\nMensaje:\n${message}`,
++    text: `Nombre: ${name}\nCorreo: ${email}\nTelÃ©fono: ${phone}\n\nMensaje:\n${message}`,
+@@ -923 +946 @@ app.post("/api/loginAgencias", async (req, res) => {
+-    console.log("Usuario no encontrado o sin contrase├▒a");
++    console.log("Usuario no encontrado o sin contraseÃ±a");
+@@ -949 +972 @@ app.post("/api/loginAgencias", async (req, res) => {
+-      agencia: user.agencia || "Sin agencia", // Ô¡É ahora se devuelve
++      agencia: user.agencia || "Sin agencia", // â­ ahora se devuelve
+@@ -1010 +1033 @@ app.post("/api/loginParticular", async (req, res) => {
+-      message: "No se pudo iniciar la sesi├│n de Particular",
++      message: "No se pudo iniciar la sesiÃ³n de Particular",
+@@ -1024 +1047 @@ app.post("/api/registerAgencias", async (req, res) => {
+-      message: "El correo ya est├í registrado",
++      message: "El correo ya estÃ¡ registrado",
+@@ -1039 +1062 @@ app.post("/api/registerAgencias", async (req, res) => {
+-  // Enviar email de validaci├│n
++  // Enviar email de validaciÃ³n
+@@ -1046 +1069 @@ app.post("/api/registerAgencias", async (req, res) => {
+-    mensaje: `Hola ${nombre_completo},<br>Por favor valida tu correo haciendo clic en el bot├│n de abajo.`,
++    mensaje: `Hola ${nombre_completo},<br>Por favor valida tu correo haciendo clic en el botÃ³n de abajo.`,
+@@ -1058 +1081 @@ app.post("/api/registerAgencias", async (req, res) => {
+-      console.error("Error enviando email de validaci├│n:", error);
++      console.error("Error enviando email de validaciÃ³n:", error);
+@@ -1061 +1084 @@ app.post("/api/registerAgencias", async (req, res) => {
+-        message: "No se pudo enviar el correo de validaci├│n.",
++        message: "No se pudo enviar el correo de validaciÃ³n.",
+@@ -1071 +1094 @@ app.post("/api/registerAgencias", async (req, res) => {
+-// Actualiza la funci├│n:
++// Actualiza la funciÃ³n:
+@@ -1109 +1132 @@ app.get("/api/validar-email", async (req, res) => {
+-  if (!token) return res.json({ success: false, message: "Token inv├ílido" });
++  if (!token) return res.json({ success: false, message: "Token invÃ¡lido" });
+@@ -1117 +1140 @@ app.get("/api/validar-email", async (req, res) => {
+-          message: "Token inv├ílido o expirado",
++          message: "Token invÃ¡lido o expirado",
+@@ -1131 +1154 @@ app.get("/api/validar-email", async (req, res) => {
+-              "Tu cuenta fue activada correctamente. Ya puedes iniciar sesi├│n.",
++              "Tu cuenta fue activada correctamente. Ya puedes iniciar sesiÃ³n.",
+@@ -1183 +1206 @@ const crypto = require("crypto");
+-// Guardar los tokens en memoria (para demo, en producci├│n usa una tabla)
++// Guardar los tokens en memoria (para demo, en producciÃ³n usa una tabla)
+@@ -1193 +1216 @@ app.post("/api/forgot-password", async (req, res) => {
+-      message: "Si el correo existe, recibir├ís instrucciones.",
++      message: "Si el correo existe, recibirÃ¡s instrucciones.",
+@@ -1196 +1219 @@ app.post("/api/forgot-password", async (req, res) => {
+-  // Generar token ├║nico
++  // Generar token Ãºnico
+@@ -1198 +1221 @@ app.post("/api/forgot-password", async (req, res) => {
+-  // Guardar token y expiraci├│n (1 hora)
++  // Guardar token y expiraciÃ³n (1 hora)
+@@ -1207,3 +1230,3 @@ app.post("/api/forgot-password", async (req, res) => {
+-    titulo: "Restablece tu contrase├▒a",
+-    mensaje: `Hola,<br>Haz clic en el bot├│n para crear una nueva contrase├▒a para tu cuenta.`,
+-    texto_boton: "Restablecer contrase├▒a",
++    titulo: "Restablece tu contraseÃ±a",
++    mensaje: `Hola,<br>Haz clic en el botÃ³n para crear una nueva contraseÃ±a para tu cuenta.`,
++    texto_boton: "Restablecer contraseÃ±a",
+@@ -1215 +1238 @@ app.post("/api/forgot-password", async (req, res) => {
+-    subject: "Recuperaci├│n de contrase├▒a - Lever",
++    subject: "RecuperaciÃ³n de contraseÃ±a - Lever",
+@@ -1220 +1243 @@ app.post("/api/forgot-password", async (req, res) => {
+-      console.error("Error enviando email de recuperaci├│n:", error);
++      console.error("Error enviando email de recuperaciÃ³n:", error);
+@@ -1228 +1251 @@ app.post("/api/forgot-password", async (req, res) => {
+-      message: "Si el correo existe, recibir├ís instrucciones.",
++      message: "Si el correo existe, recibirÃ¡s instrucciones.",
+@@ -1239 +1262 @@ app.post("/api/reset-password", async (req, res) => {
+-      message: "El enlace es inv├ílido o expir├│.",
++      message: "El enlace es invÃ¡lido o expirÃ³.",
+@@ -1244 +1267 @@ app.post("/api/reset-password", async (req, res) => {
+-  // Actualizar contrase├▒a en agencias_users
++  // Actualizar contraseÃ±a en agencias_users
+@@ -1250 +1273 @@ app.post("/api/reset-password", async (req, res) => {
+-        console.error("Error actualizando contrase├▒a:", err);
++        console.error("Error actualizando contraseÃ±a:", err);
+@@ -1253 +1276 @@ app.post("/api/reset-password", async (req, res) => {
+-          message: "No se pudo actualizar la contrase├▒a.",
++          message: "No se pudo actualizar la contraseÃ±a.",
+@@ -1260 +1283 @@ app.post("/api/reset-password", async (req, res) => {
+-        message: "Contrase├▒a actualizada correctamente.",
++        message: "ContraseÃ±a actualizada correctamente.",
+@@ -1266 +1289 @@ app.post("/api/reset-password", async (req, res) => {
+-// Actualizar agencia y tel├®fono de un usuario (panel admin)
++// Actualizar agencia y telÃ©fono de un usuario (panel admin)
+@@ -1271 +1294 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
+-  // Intentamos en las posibles tablas seg├║n c├│mo est├® tu esquema
++  // Intentamos en las posibles tablas segÃºn cÃ³mo estÃ© tu esquema
+@@ -1290 +1313 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
+-      // Si no afect├│ filas, probamos la siguiente tabla
++      // Si no afectÃ³ filas, probamos la siguiente tabla
+@@ -1298 +1321 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
+-// Actualizar agencia y tel├®fono (ya lo tienes, lo dejo de referencia)
++// Actualizar agencia y telÃ©fono (ya lo tienes, lo dejo de referencia)
+@@ -1320 +1343 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
+-// Actualizar categor├¡a del usuario
++// Actualizar categorÃ­a del usuario
+@@ -1347 +1370 @@ app.put("/api/admin/usuarios/:id/email", (req, res) => {
+-    return res.status(400).json({ success: false, message: "Email inv├ílido" });
++    return res.status(400).json({ success: false, message: "Email invÃ¡lido" });
+@@ -1384 +1407 @@ app.put("/api/admin/usuarios/:id/email", (req, res) => {
+-// Reenviar email de verificaci├│n
++// Reenviar email de verificaciÃ³n
+@@ -1404 +1427 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
+-        // Ô£à GENERAR TOKEN ├ÜNICO
++        // âœ… GENERAR TOKEN ÃšNICO
+@@ -1407 +1430 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
+-        // Ô£à ACTUALIZAR TOKEN EN LA BD
++        // âœ… ACTUALIZAR TOKEN EN LA BD
+@@ -1424 +1447 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
+-              titulo: "Verificaci├│n de correo",
++              titulo: "VerificaciÃ³n de correo",
+@@ -1427 +1450 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
+-              }, por favor verifica tu correo haciendo clic en el bot├│n de abajo.`,
++              }, por favor verifica tu correo haciendo clic en el botÃ³n de abajo.`,
+@@ -1436 +1459 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
+-                subject: "Verificaci├│n de correo - Lever",
++                subject: "VerificaciÃ³n de correo - Lever",
+@@ -1441 +1464 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
+-                  console.error("Error enviando verificaci├│n:", sendErr);
++                  console.error("Error enviando verificaciÃ³n:", sendErr);
+@@ -1464 +1487 @@ app.post("/api/google-one-tap", async (req, res) => {
+-    return res.json({ success: false, message: "Token inv├ílido" });
++    return res.json({ success: false, message: "Token invÃ¡lido" });
+@@ -1494 +1517 @@ app.post("/api/google-one-tap", async (req, res) => {
+-    console.log("SESSION DESPU├ëS DE GOOGLE ONE TAP:", req.session);
++    console.log("SESSION DESPUÃ‰S DE GOOGLE ONE TAP:", req.session);
+@@ -1500 +1523 @@ app.post("/api/google-one-tap", async (req, res) => {
+-        agencia: user.agencia || "Sin agencia", // Ô¡É ahora se devuelve
++        agencia: user.agencia || "Sin agencia", // â­ ahora se devuelve
+@@ -1542 +1565 @@ app.get("/api/admin/usuarios", (req, res) => {
+-// Actualizar categor├¡a de usuario
++// Actualizar categorÃ­a de usuario
+@@ -1548 +1571 @@ app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
+-      .json({ success: false, message: "Categor├¡a inv├ílida" });
++      .json({ success: false, message: "CategorÃ­a invÃ¡lida" });
+@@ -1556 +1579 @@ app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
+-        console.error("Error actualizando categor├¡a:", err);
++        console.error("Error actualizando categorÃ­a:", err);
+@@ -1564 +1587 @@ app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
+-// Obtener productos filtrados por categor├¡a del usuario
++// Obtener productos filtrados por categorÃ­a del usuario
+@@ -1571 +1594 @@ app.get("/api/productos-por-categoria", (req, res) => {
+-      message: "Categor├¡a requerida",
++      message: "CategorÃ­a requerida",
+@@ -1575 +1598 @@ app.get("/api/productos-por-categoria", (req, res) => {
+-  // Buscar productos que contengan la categor├¡a del usuario
++  // Buscar productos que contengan la categorÃ­a del usuario
+@@ -1584 +1607 @@ app.get("/api/productos-por-categoria", (req, res) => {
+-        console.error("Error fetching productos por categor├¡a:", err);
++        console.error("Error fetching productos por categorÃ­a:", err);
+@@ -1594 +1617 @@ app.get("/api/productos-por-categoria", (req, res) => {
+-// Actualizar categor├¡as de un producto
++// Actualizar categorÃ­as de un producto
+@@ -1598 +1621 @@ app.put("/api/productos/:id/categorias", (req, res) => {
+-    `­ƒôØ Actualizando producto ${req.params.id} con categor├¡as: "${categorias}"`,
++    `ðŸ“ Actualizando producto ${req.params.id} con categorÃ­as: "${categorias}"`,
+@@ -1601 +1624 @@ app.put("/api/productos/:id/categorias", (req, res) => {
+-  // Normalizar: permitir string vac├¡o "", y A,B,C en cualquier orden
++  // Normalizar: permitir string vacÃ­o "", y A,B,C en cualquier orden
+@@ -1605 +1628 @@ app.put("/api/productos/:id/categorias", (req, res) => {
+-      .json({ success: false, message: "Categor├¡as requeridas" });
++      .json({ success: false, message: "CategorÃ­as requeridas" });
+@@ -1610 +1633 @@ app.put("/api/productos/:id/categorias", (req, res) => {
+-      .json({ success: false, message: "Formato inv├ílido" });
++      .json({ success: false, message: "Formato invÃ¡lido" });
+@@ -1613 +1636 @@ app.put("/api/productos/:id/categorias", (req, res) => {
+-  categorias = categorias.trim(); // puede quedar "" v├ílido
++  categorias = categorias.trim(); // puede quedar "" vÃ¡lido
+@@ -1615 +1638 @@ app.put("/api/productos/:id/categorias", (req, res) => {
+-  // Validar contenido si no est├í vac├¡o
++  // Validar contenido si no estÃ¡ vacÃ­o
+@@ -1622 +1645 @@ app.put("/api/productos/:id/categorias", (req, res) => {
+-    // Si hay algo no v├ílido, 400
++    // Si hay algo no vÃ¡lido, 400
+@@ -1626 +1649 @@ app.put("/api/productos/:id/categorias", (req, res) => {
+-        .json({ success: false, message: "Categor├¡as inv├ílidas" });
++        .json({ success: false, message: "CategorÃ­as invÃ¡lidas" });
+@@ -1637 +1660 @@ app.put("/api/productos/:id/categorias", (req, res) => {
+-        console.error("Error actualizando categor├¡as:", err);
++        console.error("Error actualizando categorÃ­as:", err);
+@@ -1651 +1674 @@ app.use((req, res, next) => {
+-  console.log("COOKIE DE SESI├ôN:", req.headers.cookie);
++  console.log("COOKIE DE SESIÃ“N:", req.headers.cookie);
+@@ -1684 +1707 @@ const ExcelJS = require("exceljs");
+-// Funci├│n para enviar el reporte semanal
++// FunciÃ³n para enviar el reporte semanal
+@@ -1702 +1725 @@ async function enviarReporteUsuariosSemana(req, res) {
+-          console.log("No hay usuarios nuevos esta semana. Se env├¡a aviso igual.");
++          console.log("No hay usuarios nuevos esta semana. Se envÃ­a aviso igual.");
+@@ -1754 +1777 @@ async function enviarReporteUsuariosSemana(req, res) {
+-                  text: "No se registraron usuarios nuevos en los ├║ltimos 7 d├¡as. Se adjunta listado completo de usuarios actuales.",
++                  text: "No se registraron usuarios nuevos en los Ãºltimos 7 dÃ­as. Se adjunta listado completo de usuarios actuales.",
+@@ -1798 +1821 @@ async function enviarReporteUsuariosSemana(req, res) {
+-          extension: "png", // o 'jpeg' seg├║n tu archivo
++          extension: "png", // o 'jpeg' segÃºn tu archivo
+@@ -1805 +1828 @@ async function enviarReporteUsuariosSemana(req, res) {
+-        // Agregar 2 filas vac├¡as antes del header (header en la fila 3)
++        // Agregar 2 filas vacÃ­as antes del header (header en la fila 3)
+@@ -1839 +1862 @@ async function enviarReporteUsuariosSemana(req, res) {
+-            text: "Adjunto encontrar├ís el listado de usuarios registrados esta semana.",
++            text: "Adjunto encontrarÃ¡s el listado de usuarios registrados esta semana.",
+@@ -1870 +1893 @@ async function enviarReporteUsuariosSemana(req, res) {
+-    console.error("Error en el env├¡o manual:", err);
++    console.error("Error en el envÃ­o manual:", err);
+@@ -1875 +1898 @@ async function enviarReporteUsuariosSemana(req, res) {
+-// Funci├│n para enviar el reporte semanal de cotizaciones (lunes a domingo anterior)
++// FunciÃ³n para enviar el reporte semanal de cotizaciones (lunes a domingo anterior)
+@@ -1938,4 +1961,4 @@ async function enviarReporteCotizacionesSemana(req, res) {
+-          "Veh├¡culo Marca",
+-          "Veh├¡culo Modelo",
+-          "Veh├¡culo A├▒o",
+-          "Veh├¡culo Precio",
++          "VehÃ­culo Marca",
++          "VehÃ­culo Modelo",
++          "VehÃ­culo AÃ±o",
++          "VehÃ­culo Precio",
+@@ -1969 +1992 @@ async function enviarReporteCotizacionesSemana(req, res) {
+-            c.recotizado ? "S├¡" : "No",
++            c.recotizado ? "SÃ­" : "No",
+@@ -2005,2 +2028,2 @@ async function enviarReporteCotizacionesSemana(req, res) {
+-                ? "Adjunto encontrar├ís el listado de cotizaciones de la semana (lunes a domingo)."
+-                : "No se registraron cotizaciones en la semana (lunes a domingo). Se adjunta planilla vac├¡a con cabeceras.",
++                ? "Adjunto encontrarÃ¡s el listado de cotizaciones de la semana (lunes a domingo)."
++                : "No se registraron cotizaciones en la semana (lunes a domingo). Se adjunta planilla vacÃ­a con cabeceras.",
+@@ -2018 +2041,4 @@ async function enviarReporteCotizacionesSemana(req, res) {
+-              console.error("Error enviando reporte semanal de cotizaciones:", error);
++              console.error(
++                "Error enviando reporte semanal de cotizaciones:",
++                error,
++              );
+@@ -2038 +2064 @@ async function enviarReporteCotizacionesSemana(req, res) {
+-    console.error("Error en el env├¡o manual de cotizaciones:", err);
++    console.error("Error en el envÃ­o manual de cotizaciones:", err);
+@@ -2441 +2467 @@ app.get("/api/interno/ltv", (req, res) => {
+-// Registrar una cotizaci├│n
++// Registrar una cotizaciÃ³n
+@@ -2524 +2550 @@ app.get("/api/cotizaciones", (req, res) => {
+-// Obtener cotizaci├│n por ID
++// Obtener cotizaciÃ³n por ID
+@@ -2621 +2647 @@ app.post("/api/analytics", async (req, res) => {
+-    // Ô¡É ELIMINAR la conversi├│n de zona horaria, usar NOW() de MySQL
++    // â­ ELIMINAR la conversiÃ³n de zona horaria, usar NOW() de MySQL
+@@ -2735 +2761 @@ app.get("/api/analytics/ui-clicks", (req, res) => {
+-// M├®tricas de selects del paso 2
++// MÃ©tricas de selects del paso 2
+@@ -2801 +2827 @@ app.get("/api/analytics/paso3", requireAuth, (req, res) => {
+-// M├®tricas Paso 4: plazos y botones
++// MÃ©tricas Paso 4: plazos y botones
+@@ -2827 +2853 @@ app.get("/api/analytics/paso4", requireAuth, (req, res) => {
+-    // Ô¡É LIMPIAR: Extraer solo el n├║mero de cuotas del label
++    // â­ LIMPIAR: Extraer solo el nÃºmero de cuotas del label
+@@ -2884 +2910 @@ app.get("/api/analytics/logins-por-usuario", requireAuth, (req, res) => {
+-    console.log(`­ƒôè LOGINS ENCONTRADOS EN BD: ${rows.length}`);
++    console.log(`ðŸ“Š LOGINS ENCONTRADOS EN BD: ${rows.length}`);
+@@ -2891 +2916,0 @@ app.get("/api/analytics/logins-por-usuario", requireAuth, (req, res) => {
+-
+@@ -2913 +2938 @@ app.get("/api/export/metricas", async (req, res) => {
+-  // 2. A├▒os consultados
++  // 2. AÃ±os consultados
+@@ -2946,9 +2971,9 @@ app.get("/api/export/metricas", async (req, res) => {
+-  SELECT label AS email, metodo, agencia, timestamp
+-  FROM analytics_events
+-  WHERE category = 'Auth'
+-    AND action = 'login_success'
+-    AND label IS NOT NULL
+-    AND label <> 'web_public'
+-    ${whereFechas}
+-  ORDER BY timestamp DESC
+-`;
++    SELECT label AS email, metodo, agencia, timestamp
++    FROM analytics_events
++    WHERE category = 'Auth'
++      AND action = 'login_success'
++      AND label IS NOT NULL
++      AND label <> 'web_public'
++      ${whereFechas}
++    ORDER BY timestamp DESC
++  `;
+@@ -2987 +3012 @@ app.get("/api/export/metricas", async (req, res) => {
+-        { header: "Categor├¡a Usuario", key: "categoria_usuario", width: 15 },
++        { header: "CategorÃ­a Usuario", key: "categoria_usuario", width: 15 },
+@@ -2992,2 +3017,2 @@ app.get("/api/export/metricas", async (req, res) => {
+-      // Hoja 2: A├▒os consultados
+-      const wsAnios = workbook.addWorksheet("A├▒os consultados");
++      // Hoja 2: AÃ±os consultados
++      const wsAnios = workbook.addWorksheet("AÃ±os consultados");
+@@ -2995 +3020 @@ app.get("/api/export/metricas", async (req, res) => {
+-        { header: "A├▒o", key: "anio", width: 10 },
++        { header: "AÃ±o", key: "anio", width: 10 },
+@@ -3022 +3047 @@ app.get("/api/export/metricas", async (req, res) => {
+-        { header: "M├®todo", key: "metodo", width: 15 },
++        { header: "MÃ©todo", key: "metodo", width: 15 },
+@@ -3052 +3076,0 @@ app.get("/api/export/metricas", async (req, res) => {
+-

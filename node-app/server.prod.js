@@ -41,6 +41,7 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
   "https://www.lever.com.ar",
   "https://lever.com.ar",
+  "http://www.lever.com.ar",
   "http://localhost:3000",
   "http://localhost:5000",
   "http://localhost",
@@ -175,16 +176,6 @@ app.post("/api/logout", (req, res) => {
   res.json({ success: true });
 });
 
-app.post("/api/logoutAgencia", (req, res) => {
-  delete req.session.agencia_email;
-  delete req.session.agencia_nombre;
-  delete req.session.agencia_categoria;
-  if (req.session.passport) {
-    delete req.session.passport;
-  }
-  res.json({ success: true });
-});
-
 app.all("/api/logout/", (req, res) => {
   req.session.destroy(() => {
     res.json({ success: true });
@@ -205,7 +196,7 @@ app.get("/api/segmentos", (req, res) => {
 
 app.get("/api/productos-con-segmento", (req, res) => {
   db.query(
-    "SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco, p.tipo_credito, p.highlights FROM productos p LEFT JOIN segmentos s ON p.segmento_id = s.id",
+    "SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco FROM productos p LEFT JOIN segmentos s ON p.segmento_id = s.id",
     (err, results) => {
       if (err) {
         console.error("Error fetching productos:", err);
@@ -237,7 +228,7 @@ app.get("/api/data", (req, res) => {
 
   const query = `
   SELECT p.id AS producto_id, p.nombre AS producto, p.plazo, p.interest, p.fee, p.minfee, 
-      p.segmento_id, p.banco, p.categorias, p.retorno, p.tipo_credito, p.highlights, l.year, l.value, l.show, c.minAFinanciar
+         p.segmento_id, p.banco, p.categorias, p.retorno, l.year, l.value, l.show, c.minAFinanciar
   FROM productos p
   LEFT JOIN ltv l ON l.producto_id = p.id OR l.producto = p.nombre
   LEFT JOIN configuracion c ON 1=1
@@ -262,8 +253,6 @@ app.get("/api/data", (req, res) => {
           banco: row.banco,
           categorias: row.categorias,
           retorno: row.retorno || "CR,SR",
-          tipoCredito: row.tipo_credito || null,
-          highlights: row.highlights ? (() => { try { return JSON.parse(row.highlights); } catch(e){ return []; } })() : [],
           plazos: {},
           ltv: {},
           producto_ids: [],
@@ -415,42 +404,25 @@ app.post("/api/data", (req, res) => {
             ? parseFloat(minfee.toString().replace(",", "."))
             : 0;
 
-          // Construir la query completa incluyendo tipo_credito y highlights
-          const fullQuery = `
-          INSERT INTO productos (id, nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          ON DUPLICATE KEY UPDATE
-            nombre = VALUES(nombre),
-            interest = VALUES(interest),
-            fee = VALUES(fee),
-            minfee = VALUES(minfee),
-            segmento_id = VALUES(segmento_id),
-            banco = VALUES(banco),
-            categorias = VALUES(categorias),
-            retorno = VALUES(retorno),
-            tipo_credito = VALUES(tipo_credito),
-            highlights = VALUES(highlights)
-        `;
-
-          const params = [
-            productoIds[idx],
-            newProductName || productos[productoId].nombre,
-            plazo,
-            interestValue,
-            feeValue,
-            minfeeValue,
-            segmento_id,
-            banco,
-            categorias,
-            retorno || 'CR,SR',
-            productos[productoId]?.tipoCredito || null,
-            JSON.stringify(productos[productoId]?.highlights || []),
-          ];
-
-          db.query(fullQuery, params, (err, result) => {
-            if (err) return reject(err);
-            resolve(result);
-          });
+          db.query(
+            query,
+            [
+              productoIds[idx],
+              newProductName || productos[productoId].nombre,
+              plazo,
+              interestValue,
+              feeValue,
+              minfeeValue,
+              segmento_id,
+              banco,
+              categorias,
+              retorno, // ✅ AGREGAR
+            ],
+            (err, result) => {
+              if (err) return reject(err);
+              resolve(result);
+            },
+          );
         });
       }),
   );
@@ -599,8 +571,6 @@ app.post("/api/new-product", async (req, res) => {
     banco,
     categorias,
     retorno,
-    tipoCredito,
-    highlights,
   } = req.body;
 
   if (!segmento_id || isNaN(Number(segmento_id)) || Number(segmento_id) === 0) {
@@ -631,8 +601,8 @@ app.post("/api/new-product", async (req, res) => {
 
     const productoId = await new Promise((resolve, reject) => {
       const query = `
-        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       db.query(
         query,
@@ -646,8 +616,6 @@ app.post("/api/new-product", async (req, res) => {
           banco,
           categoriasToSave,
           retorno || "CR,SR",
-          tipoCredito || null,
-          JSON.stringify(highlights || []),
         ],
         (err, result) => {
           if (err) return reject(err);
@@ -662,8 +630,8 @@ app.post("/api/new-product", async (req, res) => {
       otrosPlazos.map(([plazo, { interest, fee, minfee }]) => {
         return new Promise((resolve, reject) => {
           const query = `
-            INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
           `;
           db.query(
             query,
@@ -677,8 +645,6 @@ app.post("/api/new-product", async (req, res) => {
               banco,
               categoriasToSave,
               retorno || "CR,SR",
-              tipoCredito || null,
-              JSON.stringify(highlights || []),
             ],
             (err, result) => {
               if (err) return reject(err);
@@ -975,66 +941,6 @@ app.post("/api/loginAgencias", async (req, res) => {
   });
 });
 
-app.post("/api/loginParticular", async (req, res) => {
-  const email = "particular@lever.local";
-
-  try {
-    let user = await db.getAgenciaUserByEmail(email);
-
-    if (!user) {
-      await db.createAgenciaUser({
-        nombre_completo: "Particular",
-        email,
-        password: null,
-        agencia: "PARTICULAR",
-        telefono: "",
-        google_id: null,
-        email_validado: 1,
-        email_token: null,
-        categoria: "A",
-      });
-      user = await db.getAgenciaUserByEmail(email);
-    }
-
-    req.session.agencia_email = user.email;
-    req.session.agencia_nombre = user.agencia || "PARTICULAR";
-    req.session.agencia_categoria = user.categoria || "A";
-
-    await db.query(
-      `INSERT INTO analytics_events
-       (session_id, timestamp, category, action, label, value, step, url, metodo, agencia)
-       VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        req.sessionID || null,
-        "Auth",
-        "login_success",
-        user.email,
-        null,
-        0,
-        "/loginParticular",
-        "particular_directo",
-        user.agencia || "PARTICULAR",
-      ],
-    );
-
-    res.json({
-      success: true,
-      user: {
-        email: user.email,
-        categoria: user.categoria || "A",
-        agencia: user.agencia || "PARTICULAR",
-        nombre: user.nombre_completo || "Particular",
-      },
-    });
-  } catch (error) {
-    console.error("Error en /api/loginParticular:", error);
-    res.status(500).json({
-      success: false,
-      message: "No se pudo iniciar la sesión de Particular",
-    });
-  }
-});
-
 const bcrypt = require("bcrypt"); // Instala con npm install bcrypt
 
 app.post("/api/registerAgencias", async (req, res) => {
@@ -1289,29 +1195,7 @@ app.post("/api/reset-password", async (req, res) => {
 // Actualizar agencia y teléfono de un usuario (panel admin)
 app.put("/api/admin/usuarios/:id", (req, res) => {
   const { id } = req.params;
-  const { agencia, telefono, agente } = req.body;
-  const updates = [];
-  const values = [];
-
-  if (Object.prototype.hasOwnProperty.call(req.body, "agencia")) {
-    updates.push("agencia = ?");
-    values.push(agencia || null);
-  }
-  if (Object.prototype.hasOwnProperty.call(req.body, "telefono")) {
-    updates.push("telefono = ?");
-    values.push(telefono || null);
-  }
-  if (Object.prototype.hasOwnProperty.call(req.body, "agente")) {
-    updates.push("agente = ?");
-    values.push(agente || null);
-  }
-
-  if (updates.length === 0) {
-    return res.status(400).json({
-      success: false,
-      message: "No hay campos para actualizar",
-    });
-  }
+  const { agencia, telefono } = req.body;
 
   // Intentamos en las posibles tablas según cómo esté tu esquema
   const tables = ["agencias_users", "usuarios", "users"];
@@ -1323,11 +1207,8 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
         .json({ success: false, message: "Usuario no encontrado" });
     }
     const table = tables[idx];
-    const sql = `UPDATE ${table} SET ${updates.join(", ")} WHERE id = ?`;
-    db.query(
-      sql,
-      [...values, id],
-      (err, result) => {
+    const sql = `UPDATE ${table} SET agencia = ?, telefono = ? WHERE id = ?`;
+    db.query(sql, [agencia || null, telefono || null, id], (err, result) => {
       if (err) {
         // Si la tabla no existe o hay error de SQL, probamos la siguiente
         return tryUpdate(idx + 1);
@@ -1337,8 +1218,7 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
       }
       // Si no afectó filas, probamos la siguiente tabla
       return tryUpdate(idx + 1);
-      },
-    );
+    });
   };
 
   tryUpdate();
@@ -1347,30 +1227,7 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
 // Actualizar agencia y teléfono (ya lo tienes, lo dejo de referencia)
 app.put("/api/admin/usuarios/:id", (req, res) => {
   const { id } = req.params;
-  const { agencia, telefono, agente } = req.body;
-  const updates = [];
-  const values = [];
-
-  if (Object.prototype.hasOwnProperty.call(req.body, "agencia")) {
-    updates.push("agencia = ?");
-    values.push(agencia || null);
-  }
-  if (Object.prototype.hasOwnProperty.call(req.body, "telefono")) {
-    updates.push("telefono = ?");
-    values.push(telefono || null);
-  }
-  if (Object.prototype.hasOwnProperty.call(req.body, "agente")) {
-    updates.push("agente = ?");
-    values.push(agente || null);
-  }
-
-  if (updates.length === 0) {
-    return res.status(400).json({
-      success: false,
-      message: "No hay campos para actualizar",
-    });
-  }
-
+  const { agencia, telefono } = req.body;
   const tables = ["agencias_users", "usuarios", "users"];
 
   const tryUpdate = (idx = 0) => {
@@ -1379,16 +1236,12 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
         .status(404)
         .json({ success: false, message: "Usuario no encontrado" });
     const table = tables[idx];
-    const sql = `UPDATE ${table} SET ${updates.join(", ")} WHERE id = ?`;
-    db.query(
-      sql,
-      [...values, id],
-      (err, result) => {
-        if (err) return tryUpdate(idx + 1);
-        if (result.affectedRows > 0) return res.json({ success: true });
-        return tryUpdate(idx + 1);
-      },
-    );
+    const sql = `UPDATE ${table} SET agencia = ?, telefono = ? WHERE id = ?`;
+    db.query(sql, [agencia || null, telefono || null, id], (err, result) => {
+      if (err) return tryUpdate(idx + 1);
+      if (result.affectedRows > 0) return res.json({ success: true });
+      return tryUpdate(idx + 1);
+    });
   };
   tryUpdate();
 });
@@ -1590,22 +1443,19 @@ app.post("/api/google-one-tap", async (req, res) => {
 app.get("/api/admin/usuarios", (req, res) => {
   const sql = `
     SELECT
-      au.id,
-      au.nombre_completo,
-      au.email,
-      au.agencia,
-      au.telefono,
-      au.agente,
-      ag.nombre                    AS agente_nombre,
-      au.categoria,
-      au.created_at,
+      id,
+      nombre_completo,
+      email,
+      agencia,
+      telefono,
+      categoria,
+      created_at,
       email_validado              AS email_verificado,  -- flag para el front
       email_validado              AS email_validado,
       0                           AS verificado,
       0                           AS validado_email
-    FROM agencias_users au
-    LEFT JOIN agentes ag ON ag.id = au.agente
-    ORDER BY au.created_at DESC
+    FROM agencias_users
+    ORDER BY created_at DESC
   `;
   db.query(sql, (err, results) => {
     if (err) {
@@ -2094,10 +1944,7 @@ async function enviarReporteCotizacionesSemana(req, res) {
           },
           (error, info) => {
             if (error) {
-              console.error(
-                "Error enviando reporte semanal de cotizaciones:",
-                error,
-              );
+              console.error("Error enviando reporte semanal de cotizaciones:", error);
               if (res) return res.status(500).json({ success: false, error });
             } else {
               console.log(
@@ -2220,7 +2067,7 @@ app.delete("/api/agencias/:id", (req, res) => {
 
 // Listar agentes
 app.get("/api/agentes", (req, res) => {
-  db.query("SELECT id, nombre FROM agentes ORDER BY nombre ASC", (err, rows) => {
+  db.query("SELECT * FROM agentes", (err, rows) => {
     if (err) return res.json({ success: false, error: err });
     res.json({ success: true, agentes: rows });
   });
@@ -2782,7 +2629,7 @@ app.get("/api/analytics/dni", (req, res) => {
 app.get("/api/analytics/daily", (req, res) => {
   const sql = `
     SELECT DATE(timestamp) as dia,
-      SUM(category='Auth' AND action='login_success' AND label IS NOT NULL AND label <> 'web_public') AS logins,
+      SUM(category='Auth' AND action='login_success') AS logins,
       SUM(category='UI' AND action='click') AS clicks,
       SUM(category='Pantalla_1' AND action='dni_search') AS busquedas,
       SUM(category='Navegacion' AND action='step_advance') AS avances
@@ -2820,17 +2667,19 @@ app.get("/api/analytics/vehiculo-selects", requireAuth, (req, res) => {
     SELECT 
       action,
       label,
-      timestamp
+      COUNT(*) as total
     FROM analytics_events
     WHERE category = 'Paso_2' 
       AND action IN ('select_categoria', 'select_anio', 'select_marca', 'select_modelo')
       AND label IS NOT NULL
-    ORDER BY timestamp DESC;
+    GROUP BY action, label
+    ORDER BY action, total DESC;
   `;
   db.query(sql, (err, rows) => {
     if (err)
       return res.status(500).json({ success: false, error: err.message });
 
+    // Agrupar por tipo de select
     const result = {
       categorias: [],
       anios: [],
@@ -2839,7 +2688,7 @@ app.get("/api/analytics/vehiculo-selects", requireAuth, (req, res) => {
     };
 
     rows.forEach((row) => {
-      const item = { label: row.label, timestamp: row.timestamp };
+      const item = { label: row.label, total: row.total };
       if (row.action === "select_categoria") result.categorias.push(item);
       if (row.action === "select_anio") result.anios.push(item);
       if (row.action === "select_marca") result.marcas.push(item);
@@ -2949,14 +2798,13 @@ app.get("/api/analytics/logins-por-usuario", requireAuth, (req, res) => {
   const sql = `
     SELECT 
       label AS email,
-      NULLIF(TRIM(metodo), '') AS metodo,
-      NULLIF(TRIM(agencia), '') AS agencia,
+      metodo,
+      agencia,
       CAST(timestamp AS CHAR) as timestamp
     FROM analytics_events
     WHERE category = 'Auth'
       AND action = 'login_success'
       AND label IS NOT NULL
-      AND label <> 'web_public'
     ORDER BY timestamp DESC;
   `;
   db.query(sql, (err, rows) => {
@@ -3029,7 +2877,6 @@ app.get("/api/export/metricas", async (req, res) => {
     WHERE category = 'Auth'
       AND action = 'login_success'
       AND label IS NOT NULL
-      AND label <> 'web_public'
       ${whereFechas}
     ORDER BY timestamp DESC
   `;

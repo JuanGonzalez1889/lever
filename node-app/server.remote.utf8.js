@@ -1,4 +1,4 @@
-require("dotenv").config(); // Cargar variables de entorno desde .env
+﻿require("dotenv").config(); // Cargar variables de entorno desde .env
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -26,9 +26,9 @@ passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
 
-console.log("NODE_ENV:", process.env.NODE_ENV); // Verificar que se está utilizando el .env
-console.log("DB_HOST:", process.env.DB_HOST); // Verificar que se está utilizando el .env
-console.log("CLIENT_URL:", process.env.CLIENT_URL); // Verificar que se está utilizando el .env
+console.log("NODE_ENV:", process.env.NODE_ENV); // Verificar que se est├í utilizando el .env
+console.log("DB_HOST:", process.env.DB_HOST); // Verificar que se est├í utilizando el .env
+console.log("CLIENT_URL:", process.env.CLIENT_URL); // Verificar que se est├í utilizando el .env
 
 const db = mysql.createPool({
   host: process.env.DB_HOST,
@@ -41,6 +41,7 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
   "https://www.lever.com.ar",
   "https://lever.com.ar",
+  "http://www.lever.com.ar",
   "http://localhost:3000",
   "http://localhost:5000",
   "http://localhost",
@@ -63,7 +64,7 @@ db.getAgenciaUserByEmail = function (email) {
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Permitir solicitudes desde los orígenes especificados o solicitudes sin origen (como Postman)
+      // Permitir solicitudes desde los or├¡genes especificados o solicitudes sin origen (como Postman)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -81,7 +82,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false, // true en producción con HTTPS
+      secure: false, // true en producci├│n con HTTPS
       httpOnly: true,
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 8, // 8 horas
@@ -96,7 +97,7 @@ app.use(bodyParser.json());
 //   if (req.session && req.session.agencia_email) {
 //     return res.json({ success: true, email: req.session.agencia_email });
 //   } else {
-//     console.log("No hay sesión activa");
+//     console.log("No hay sesi├│n activa");
 //     console.log("SESSION DATA:", req.session.agencia_email);
 //   }
 //   res.json({ success: false });
@@ -107,7 +108,7 @@ if (process.env.NODE_ENV !== "production") {
   app.post("/api/login", (req, res) => {
     const { username } = req.body;
     req.session.username = username;
-    req.session.rol = "admin"; // o busca el rol en la base si querés
+    req.session.rol = "admin"; // o busca el rol en la base si quer├®s
     console.log("LOGIN SESSION:", req.session);
     return res.json({ success: true, username, rol: "admin" });
   });
@@ -129,10 +130,10 @@ if (process.env.NODE_ENV !== "production") {
         return res.json({ success: false, message: "Usuario no encontrado" });
       }
       const user = results[0];
-      // Verifica la contraseña con bcrypt
+      // Verifica la contrase├▒a con bcrypt
       require("bcryptjs").compare(password, user.password, (err, isMatch) => {
         if (err || !isMatch) {
-          return res.json({ success: false, message: "Contraseña incorrecta" });
+          return res.json({ success: false, message: "Contrase├▒a incorrecta" });
         }
         req.session.username = user.username;
         req.session.rol = user.rol;
@@ -146,7 +147,7 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-// Validar sesión para el panel admin
+// Validar sesi├│n para el panel admin
 app.get("/api/check-session-admin", async (req, res) => {
   const username = req.session.username;
   if (!username) return res.status(401).json({ success: false });
@@ -175,6 +176,12 @@ app.post("/api/logout", (req, res) => {
   res.json({ success: true });
 });
 
+app.all("/api/logout/", (req, res) => {
+  req.session.destroy(() => {
+    res.json({ success: true });
+  });
+});
+
 app.post("/api/logoutAgencia", (req, res) => {
   delete req.session.agencia_email;
   delete req.session.agencia_nombre;
@@ -185,11 +192,6 @@ app.post("/api/logoutAgencia", (req, res) => {
   res.json({ success: true });
 });
 
-app.all("/api/logout/", (req, res) => {
-  req.session.destroy(() => {
-    res.json({ success: true });
-  });
-});
 
 app.get("/api/segmentos", (req, res) => {
   db.query("SELECT id, nombre FROM segmentos", (err, results) => {
@@ -205,7 +207,7 @@ app.get("/api/segmentos", (req, res) => {
 
 app.get("/api/productos-con-segmento", (req, res) => {
   db.query(
-    "SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco, p.tipo_credito, p.highlights FROM productos p LEFT JOIN segmentos s ON p.segmento_id = s.id",
+    "SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco FROM productos p LEFT JOIN segmentos s ON p.segmento_id = s.id",
     (err, results) => {
       if (err) {
         console.error("Error fetching productos:", err);
@@ -217,7 +219,7 @@ app.get("/api/productos-con-segmento", (req, res) => {
     },
   );
 });
-// NUEVO: Función utilitaria para obtener el id de producto por nombre
+// NUEVO: Funci├│n utilitaria para obtener el id de producto por nombre
 function getLastProductIdByName(nombre) {
   return new Promise((resolve, reject) => {
     db.query(
@@ -237,7 +239,7 @@ app.get("/api/data", (req, res) => {
 
   const query = `
   SELECT p.id AS producto_id, p.nombre AS producto, p.plazo, p.interest, p.fee, p.minfee, 
-      p.segmento_id, p.banco, p.categorias, p.retorno, p.tipo_credito, p.highlights, l.year, l.value, l.show, c.minAFinanciar
+         p.segmento_id, p.banco, p.categorias, p.retorno, l.year, l.value, l.show, c.minAFinanciar
   FROM productos p
   LEFT JOIN ltv l ON l.producto_id = p.id OR l.producto = p.nombre
   LEFT JOIN configuracion c ON 1=1
@@ -253,7 +255,7 @@ app.get("/api/data", (req, res) => {
 
     const data = { productos: {}, minAFinanciar: null };
     results.forEach((row) => {
-      // Clave única por producto
+      // Clave ├║nica por producto
       const productoKey = `${row.producto}__${row.segmento_id}__${row.banco}`;
       if (!data.productos[productoKey]) {
         data.productos[productoKey] = {
@@ -262,8 +264,6 @@ app.get("/api/data", (req, res) => {
           banco: row.banco,
           categorias: row.categorias,
           retorno: row.retorno || "CR,SR",
-          tipoCredito: row.tipo_credito || null,
-          highlights: row.highlights ? (() => { try { return JSON.parse(row.highlights); } catch(e){ return []; } })() : [],
           plazos: {},
           ltv: {},
           producto_ids: [],
@@ -302,9 +302,9 @@ app.post("/api/data", (req, res) => {
   const oldName = productos[selectedProductId]?.nombre || null;
   const banco = productos[selectedProductId]?.banco || null;
   const categorias = productos[selectedProductId]?.categorias || "A,B,C";
-  const retorno = productos[selectedProductId]?.retorno || "CR,SR"; // ✅ AGREGAR
+  const retorno = productos[selectedProductId]?.retorno || "CR,SR"; // Ô£à AGREGAR
   const productoIds = productos[selectedProductId]?.producto_ids || [];
-  const productoIdPrincipal = productoIds[0]; // Usá solo el primero
+  const productoIdPrincipal = productoIds[0]; // Us├í solo el primero
 
   // Actualizar nombre del producto por ID
   const updateProductName = new Promise((resolve, reject) => {
@@ -415,42 +415,25 @@ app.post("/api/data", (req, res) => {
             ? parseFloat(minfee.toString().replace(",", "."))
             : 0;
 
-          // Construir la query completa incluyendo tipo_credito y highlights
-          const fullQuery = `
-          INSERT INTO productos (id, nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          ON DUPLICATE KEY UPDATE
-            nombre = VALUES(nombre),
-            interest = VALUES(interest),
-            fee = VALUES(fee),
-            minfee = VALUES(minfee),
-            segmento_id = VALUES(segmento_id),
-            banco = VALUES(banco),
-            categorias = VALUES(categorias),
-            retorno = VALUES(retorno),
-            tipo_credito = VALUES(tipo_credito),
-            highlights = VALUES(highlights)
-        `;
-
-          const params = [
-            productoIds[idx],
-            newProductName || productos[productoId].nombre,
-            plazo,
-            interestValue,
-            feeValue,
-            minfeeValue,
-            segmento_id,
-            banco,
-            categorias,
-            retorno || 'CR,SR',
-            productos[productoId]?.tipoCredito || null,
-            JSON.stringify(productos[productoId]?.highlights || []),
-          ];
-
-          db.query(fullQuery, params, (err, result) => {
-            if (err) return reject(err);
-            resolve(result);
-          });
+          db.query(
+            query,
+            [
+              productoIds[idx],
+              newProductName || productos[productoId].nombre,
+              plazo,
+              interestValue,
+              feeValue,
+              minfeeValue,
+              segmento_id,
+              banco,
+              categorias,
+              retorno, // Ô£à AGREGAR
+            ],
+            (err, result) => {
+              if (err) return reject(err);
+              resolve(result);
+            },
+          );
         });
       }),
   );
@@ -499,7 +482,7 @@ app.post("/api/data", (req, res) => {
     }
   });
 
-  // Ejecutar primero el delete y después el resto
+  // Ejecutar primero el delete y despu├®s el resto
   Promise.all([
     updateProductName,
     deletePlazosViejos,
@@ -514,7 +497,7 @@ app.post("/api/data", (req, res) => {
       console.error("Error saving data:", err);
       res
         .status(400)
-        .json({ success: false, message: err.message || "Datos inválidos" });
+        .json({ success: false, message: err.message || "Datos inv├ílidos" });
     });
 });
 
@@ -599,14 +582,12 @@ app.post("/api/new-product", async (req, res) => {
     banco,
     categorias,
     retorno,
-    tipoCredito,
-    highlights,
   } = req.body;
 
   if (!segmento_id || isNaN(Number(segmento_id)) || Number(segmento_id) === 0) {
     return res
       .status(400)
-      .json({ success: false, message: "segmento_id inválido" });
+      .json({ success: false, message: "segmento_id inv├ílido" });
   }
 
   const categoriasToSave = categorias || "A,B,C";
@@ -631,8 +612,8 @@ app.post("/api/new-product", async (req, res) => {
 
     const productoId = await new Promise((resolve, reject) => {
       const query = `
-        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       db.query(
         query,
@@ -646,8 +627,6 @@ app.post("/api/new-product", async (req, res) => {
           banco,
           categoriasToSave,
           retorno || "CR,SR",
-          tipoCredito || null,
-          JSON.stringify(highlights || []),
         ],
         (err, result) => {
           if (err) return reject(err);
@@ -662,8 +641,8 @@ app.post("/api/new-product", async (req, res) => {
       otrosPlazos.map(([plazo, { interest, fee, minfee }]) => {
         return new Promise((resolve, reject) => {
           const query = `
-            INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO productos (nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
           `;
           db.query(
             query,
@@ -677,8 +656,6 @@ app.post("/api/new-product", async (req, res) => {
               banco,
               categoriasToSave,
               retorno || "CR,SR",
-              tipoCredito || null,
-              JSON.stringify(highlights || []),
             ],
             (err, result) => {
               if (err) return reject(err);
@@ -793,7 +770,7 @@ app.post("/api/featuresCategoria", (req, res) => {
     if (!categoria) {
       return res
         .status(400)
-        .json({ features: [], error: "Categoría requerida" });
+        .json({ features: [], error: "Categor├¡a requerida" });
     }
 
     const query = `
@@ -812,7 +789,7 @@ app.post("/api/featuresCategoria", (req, res) => {
           .json({ features: [], error: "Error en la base de datos" });
       }
       const features = results.map((row) => row.valor);
-      // Siempre responder JSON, aunque esté vacío
+      // Siempre responder JSON, aunque est├® vac├¡o
       res.json({ features });
     });
   } catch (e) {
@@ -824,7 +801,7 @@ app.post("/api/featuresCategoria", (req, res) => {
 });
 
 // AGREGA ESTE LOG TEMPORAL para verificar que se carguen:
-console.log("📧 EMAIL CONFIG:", {
+console.log("­ƒôº EMAIL CONFIG:", {
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
   secure: process.env.EMAIL_SECURE,
@@ -832,7 +809,7 @@ console.log("📧 EMAIL CONFIG:", {
   pass: process.env.EMAIL_PASS ? "***" : "NO CONFIGURADA",
 });
 
-// Configuración de Nodemailer
+// Configuraci├│n de Nodemailer
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: parseInt(process.env.EMAIL_PORT, 10),
@@ -846,12 +823,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// VERIFICA LA CONEXIÓN AL INICIAR
+// VERIFICA LA CONEXI├ôN AL INICIAR
 transporter.verify((error, success) => {
   if (error) {
-    console.error("❌ Error conectando al servidor SMTP:", error);
+    console.error("ÔØî Error conectando al servidor SMTP:", error);
   } else {
-    console.log("✅ Servidor SMTP listo para enviar emails");
+    console.log("Ô£à Servidor SMTP listo para enviar emails");
   }
 });
 
@@ -859,12 +836,12 @@ transporter.verify((error, success) => {
 app.post("/api/contact", (req, res) => {
   const { name, email, phone, message } = req.body;
 
-  // Configuración del correo
+  // Configuraci├│n del correo
   const mailOptions = {
     from: process.env.EMAIL_FROM,
     to: email, // Cambia esto al correo donde quieres recibir los mensajes
     subject: `Nuevo mensaje de contacto de ${name}`,
-    text: `Nombre: ${name}\nCorreo: ${email}\nTeléfono: ${phone}\n\nMensaje:\n${message}`,
+    text: `Nombre: ${name}\nCorreo: ${email}\nTel├®fono: ${phone}\n\nMensaje:\n${message}`,
   };
 
   // Enviar el correo
@@ -943,7 +920,7 @@ app.post("/api/loginAgencias", async (req, res) => {
   const user = await db.getAgenciaUserByEmail(email);
   console.log("USER EN LOGIN AGENCIAS:", user);
   if (!user || !user.password) {
-    console.log("Usuario no encontrado o sin contraseña");
+    console.log("Usuario no encontrado o sin contrase├▒a");
     return res.json({ success: false, message: "Credenciales incorrectas" });
   }
   console.log("Comparando password");
@@ -969,7 +946,7 @@ app.post("/api/loginAgencias", async (req, res) => {
     user: {
       email: user.email,
       categoria: user.categoria,
-      agencia: user.agencia || "Sin agencia", // ⭐ ahora se devuelve
+      agencia: user.agencia || "Sin agencia", // Ô¡É ahora se devuelve
       nombre: user.nombre_completo || "", // opcional
     },
   });
@@ -1030,7 +1007,7 @@ app.post("/api/loginParticular", async (req, res) => {
     console.error("Error en /api/loginParticular:", error);
     res.status(500).json({
       success: false,
-      message: "No se pudo iniciar la sesión de Particular",
+      message: "No se pudo iniciar la sesi├│n de Particular",
     });
   }
 });
@@ -1044,7 +1021,7 @@ app.post("/api/registerAgencias", async (req, res) => {
   if (user) {
     return res.json({
       success: false,
-      message: "El correo ya está registrado",
+      message: "El correo ya est├í registrado",
     });
   }
   const hash = await bcrypt.hash(password, 10);
@@ -1059,14 +1036,14 @@ app.post("/api/registerAgencias", async (req, res) => {
     email_token,
   });
 
-  // Enviar email de validación
+  // Enviar email de validaci├│n
   const link = `${process.env.CLIENT_URL.replace(
     /\/$/,
     "",
   )}/validar-email.html?token=${email_token}`;
   const html = getEmailTemplate({
     titulo: "Valida tu correo",
-    mensaje: `Hola ${nombre_completo},<br>Por favor valida tu correo haciendo clic en el botón de abajo.`,
+    mensaje: `Hola ${nombre_completo},<br>Por favor valida tu correo haciendo clic en el bot├│n de abajo.`,
     texto_boton: "Validar mi correo",
     link,
   });
@@ -1078,10 +1055,10 @@ app.post("/api/registerAgencias", async (req, res) => {
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.error("Error enviando email de validación:", error);
+      console.error("Error enviando email de validaci├│n:", error);
       return res.json({
         success: false,
-        message: "No se pudo enviar el correo de validación.",
+        message: "No se pudo enviar el correo de validaci├│n.",
       });
     }
     res.json({
@@ -1091,7 +1068,7 @@ app.post("/api/registerAgencias", async (req, res) => {
   });
 });
 
-// Actualiza la función:
+// Actualiza la funci├│n:
 db.createAgenciaUser = function ({
   nombre_completo,
   email,
@@ -1129,7 +1106,7 @@ db.createAgenciaUser = function ({
 //al validar el mail, asignar categoria 'A' si no tiene ya una asignada
 app.get("/api/validar-email", async (req, res) => {
   const { token } = req.query;
-  if (!token) return res.json({ success: false, message: "Token inválido" });
+  if (!token) return res.json({ success: false, message: "Token inv├ílido" });
   db.query(
     "SELECT * FROM agencias_users WHERE email_token = ?",
     [token],
@@ -1137,7 +1114,7 @@ app.get("/api/validar-email", async (req, res) => {
       if (err || !results.length)
         return res.json({
           success: false,
-          message: "Token inválido o expirado",
+          message: "Token inv├ílido o expirado",
         });
       db.query(
         "UPDATE agencias_users SET email_validado = 1, email_token = NULL, categoria = COALESCE(categoria, 'A') WHERE email_token = ?", // <--- AGREGAR
@@ -1151,7 +1128,7 @@ app.get("/api/validar-email", async (req, res) => {
           res.json({
             success: true,
             message:
-              "Tu cuenta fue activada correctamente. Ya puedes iniciar sesión.",
+              "Tu cuenta fue activada correctamente. Ya puedes iniciar sesi├│n.",
           });
         },
       );
@@ -1203,7 +1180,7 @@ const crypto = require("crypto");
 
 // Debes tener nodemailer configurado como ya lo tienes
 
-// Guardar los tokens en memoria (para demo, en producción usa una tabla)
+// Guardar los tokens en memoria (para demo, en producci├│n usa una tabla)
 const resetTokens = {};
 
 app.post("/api/forgot-password", async (req, res) => {
@@ -1213,12 +1190,12 @@ app.post("/api/forgot-password", async (req, res) => {
   if (!user) {
     return res.json({
       success: false,
-      message: "Si el correo existe, recibirás instrucciones.",
+      message: "Si el correo existe, recibir├ís instrucciones.",
     });
   }
-  // Generar token único
+  // Generar token ├║nico
   const token = crypto.randomBytes(32).toString("hex");
-  // Guardar token y expiración (1 hora)
+  // Guardar token y expiraci├│n (1 hora)
   resetTokens[token] = { email, expires: Date.now() + 3600 * 1000 };
 
   // Enviar email con el enlace
@@ -1227,20 +1204,20 @@ app.post("/api/forgot-password", async (req, res) => {
     "",
   )}/reset-password.html?token=${token}`;
   const html = getEmailTemplate({
-    titulo: "Restablece tu contraseña",
-    mensaje: `Hola,<br>Haz clic en el botón para crear una nueva contraseña para tu cuenta.`,
-    texto_boton: "Restablecer contraseña",
+    titulo: "Restablece tu contrase├▒a",
+    mensaje: `Hola,<br>Haz clic en el bot├│n para crear una nueva contrase├▒a para tu cuenta.`,
+    texto_boton: "Restablecer contrase├▒a",
     link: resetUrl,
   });
   const mailOptions = {
     from: process.env.EMAIL_FROM,
     to: email,
-    subject: "Recuperación de contraseña - Lever",
+    subject: "Recuperaci├│n de contrase├▒a - Lever",
     html,
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.error("Error enviando email de recuperación:", error);
+      console.error("Error enviando email de recuperaci├│n:", error);
       return res.json({
         success: false,
         message: "No se pudo enviar el correo.",
@@ -1248,7 +1225,7 @@ app.post("/api/forgot-password", async (req, res) => {
     }
     res.json({
       success: true,
-      message: "Si el correo existe, recibirás instrucciones.",
+      message: "Si el correo existe, recibir├ís instrucciones.",
     });
   });
 });
@@ -1259,61 +1236,39 @@ app.post("/api/reset-password", async (req, res) => {
   if (!data || data.expires < Date.now()) {
     return res.json({
       success: false,
-      message: "El enlace es inválido o expiró.",
+      message: "El enlace es inv├ílido o expir├│.",
     });
   }
   const email = data.email;
   const hash = await bcrypt.hash(password, 10);
-  // Actualizar contraseña en agencias_users
+  // Actualizar contrase├▒a en agencias_users
   db.query(
     "UPDATE agencias_users SET password = ? WHERE email = ?",
     [hash, email],
     (err, result) => {
       if (err) {
-        console.error("Error actualizando contraseña:", err);
+        console.error("Error actualizando contrase├▒a:", err);
         return res.json({
           success: false,
-          message: "No se pudo actualizar la contraseña.",
+          message: "No se pudo actualizar la contrase├▒a.",
         });
       }
       // Eliminar el token usado
       delete resetTokens[token];
       res.json({
         success: true,
-        message: "Contraseña actualizada correctamente.",
+        message: "Contrase├▒a actualizada correctamente.",
       });
     },
   );
 });
 
-// Actualizar agencia y teléfono de un usuario (panel admin)
+// Actualizar agencia y tel├®fono de un usuario (panel admin)
 app.put("/api/admin/usuarios/:id", (req, res) => {
   const { id } = req.params;
-  const { agencia, telefono, agente } = req.body;
-  const updates = [];
-  const values = [];
+  const { agencia, telefono } = req.body;
 
-  if (Object.prototype.hasOwnProperty.call(req.body, "agencia")) {
-    updates.push("agencia = ?");
-    values.push(agencia || null);
-  }
-  if (Object.prototype.hasOwnProperty.call(req.body, "telefono")) {
-    updates.push("telefono = ?");
-    values.push(telefono || null);
-  }
-  if (Object.prototype.hasOwnProperty.call(req.body, "agente")) {
-    updates.push("agente = ?");
-    values.push(agente || null);
-  }
-
-  if (updates.length === 0) {
-    return res.status(400).json({
-      success: false,
-      message: "No hay campos para actualizar",
-    });
-  }
-
-  // Intentamos en las posibles tablas según cómo esté tu esquema
+  // Intentamos en las posibles tablas seg├║n c├│mo est├® tu esquema
   const tables = ["agencias_users", "usuarios", "users"];
 
   const tryUpdate = (idx = 0) => {
@@ -1323,11 +1278,8 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
         .json({ success: false, message: "Usuario no encontrado" });
     }
     const table = tables[idx];
-    const sql = `UPDATE ${table} SET ${updates.join(", ")} WHERE id = ?`;
-    db.query(
-      sql,
-      [...values, id],
-      (err, result) => {
+    const sql = `UPDATE ${table} SET agencia = ?, telefono = ? WHERE id = ?`;
+    db.query(sql, [agencia || null, telefono || null, id], (err, result) => {
       if (err) {
         // Si la tabla no existe o hay error de SQL, probamos la siguiente
         return tryUpdate(idx + 1);
@@ -1335,42 +1287,18 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
       if (result.affectedRows > 0) {
         return res.json({ success: true });
       }
-      // Si no afectó filas, probamos la siguiente tabla
+      // Si no afect├│ filas, probamos la siguiente tabla
       return tryUpdate(idx + 1);
-      },
-    );
+    });
   };
 
   tryUpdate();
 });
 
-// Actualizar agencia y teléfono (ya lo tienes, lo dejo de referencia)
+// Actualizar agencia y tel├®fono (ya lo tienes, lo dejo de referencia)
 app.put("/api/admin/usuarios/:id", (req, res) => {
   const { id } = req.params;
-  const { agencia, telefono, agente } = req.body;
-  const updates = [];
-  const values = [];
-
-  if (Object.prototype.hasOwnProperty.call(req.body, "agencia")) {
-    updates.push("agencia = ?");
-    values.push(agencia || null);
-  }
-  if (Object.prototype.hasOwnProperty.call(req.body, "telefono")) {
-    updates.push("telefono = ?");
-    values.push(telefono || null);
-  }
-  if (Object.prototype.hasOwnProperty.call(req.body, "agente")) {
-    updates.push("agente = ?");
-    values.push(agente || null);
-  }
-
-  if (updates.length === 0) {
-    return res.status(400).json({
-      success: false,
-      message: "No hay campos para actualizar",
-    });
-  }
-
+  const { agencia, telefono } = req.body;
   const tables = ["agencias_users", "usuarios", "users"];
 
   const tryUpdate = (idx = 0) => {
@@ -1379,21 +1307,17 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
         .status(404)
         .json({ success: false, message: "Usuario no encontrado" });
     const table = tables[idx];
-    const sql = `UPDATE ${table} SET ${updates.join(", ")} WHERE id = ?`;
-    db.query(
-      sql,
-      [...values, id],
-      (err, result) => {
-        if (err) return tryUpdate(idx + 1);
-        if (result.affectedRows > 0) return res.json({ success: true });
-        return tryUpdate(idx + 1);
-      },
-    );
+    const sql = `UPDATE ${table} SET agencia = ?, telefono = ? WHERE id = ?`;
+    db.query(sql, [agencia || null, telefono || null, id], (err, result) => {
+      if (err) return tryUpdate(idx + 1);
+      if (result.affectedRows > 0) return res.json({ success: true });
+      return tryUpdate(idx + 1);
+    });
   };
   tryUpdate();
 });
 
-// Actualizar categoría del usuario
+// Actualizar categor├¡a del usuario
 app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
   const { id } = req.params;
   const { categoria } = req.body;
@@ -1420,7 +1344,7 @@ app.put("/api/admin/usuarios/:id/email", (req, res) => {
   const { id } = req.params;
   const { email } = req.body;
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ success: false, message: "Email inválido" });
+    return res.status(400).json({ success: false, message: "Email inv├ílido" });
   }
 
   const tables = ["agencias_users", "usuarios", "users"];
@@ -1457,7 +1381,7 @@ app.put("/api/admin/usuarios/:id/email", (req, res) => {
   tryUpdate();
 });
 
-// Reenviar email de verificación
+// Reenviar email de verificaci├│n
 app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
   const { id } = req.params;
   const tables = ["agencias_users", "usuarios", "users"];
@@ -1477,10 +1401,10 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
 
         const user = rows[0];
 
-        // ✅ GENERAR TOKEN ÚNICO
+        // Ô£à GENERAR TOKEN ├ÜNICO
         const email_token = crypto.randomBytes(32).toString("hex");
 
-        // ✅ ACTUALIZAR TOKEN EN LA BD
+        // Ô£à ACTUALIZAR TOKEN EN LA BD
         db.query(
           `UPDATE ${table} SET email_token = ? WHERE id = ?`,
           [email_token, id],
@@ -1497,10 +1421,10 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
               "",
             )}/validar-email.html?token=${email_token}`;
             const html = getEmailTemplate({
-              titulo: "Verificación de correo",
+              titulo: "Verificaci├│n de correo",
               mensaje: `Hola ${
                 user.nombre || ""
-              }, por favor verifica tu correo haciendo clic en el botón de abajo.`,
+              }, por favor verifica tu correo haciendo clic en el bot├│n de abajo.`,
               texto_boton: "Validar mi correo",
               link: verifyLink,
             });
@@ -1509,12 +1433,12 @@ app.post("/api/admin/usuarios/:id/resend-verification", (req, res) => {
               {
                 from: process.env.EMAIL_FROM,
                 to: user.email,
-                subject: "Verificación de correo - Lever",
+                subject: "Verificaci├│n de correo - Lever",
                 html,
               },
               (sendErr) => {
                 if (sendErr) {
-                  console.error("Error enviando verificación:", sendErr);
+                  console.error("Error enviando verificaci├│n:", sendErr);
                   return res.status(500).json({
                     success: false,
                     message: "No se pudo enviar el email",
@@ -1537,7 +1461,7 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 app.post("/api/google-one-tap", async (req, res) => {
   const { credential } = req.body;
   if (!credential)
-    return res.json({ success: false, message: "Token inválido" });
+    return res.json({ success: false, message: "Token inv├ílido" });
 
   try {
     const ticket = await googleClient.verifyIdToken({
@@ -1567,13 +1491,13 @@ app.post("/api/google-one-tap", async (req, res) => {
 
     req.session.agencia_email = user.email;
     req.session.agencia_nombre = user.agencia; // ya se guardaba
-    console.log("SESSION DESPUÉS DE GOOGLE ONE TAP:", req.session);
+    console.log("SESSION DESPU├ëS DE GOOGLE ONE TAP:", req.session);
 
     res.json({
       success: true,
       user: {
         email: user.email,
-        agencia: user.agencia || "Sin agencia", // ⭐ ahora se devuelve
+        agencia: user.agencia || "Sin agencia", // Ô¡É ahora se devuelve
         nombre: user.nombre_completo || nombre_completo || "",
         categoria: user.categoria, // opcional
       },
@@ -1590,22 +1514,19 @@ app.post("/api/google-one-tap", async (req, res) => {
 app.get("/api/admin/usuarios", (req, res) => {
   const sql = `
     SELECT
-      au.id,
-      au.nombre_completo,
-      au.email,
-      au.agencia,
-      au.telefono,
-      au.agente,
-      ag.nombre                    AS agente_nombre,
-      au.categoria,
-      au.created_at,
+      id,
+      nombre_completo,
+      email,
+      agencia,
+      telefono,
+      categoria,
+      created_at,
       email_validado              AS email_verificado,  -- flag para el front
       email_validado              AS email_validado,
       0                           AS verificado,
       0                           AS validado_email
-    FROM agencias_users au
-    LEFT JOIN agentes ag ON ag.id = au.agente
-    ORDER BY au.created_at DESC
+    FROM agencias_users
+    ORDER BY created_at DESC
   `;
   db.query(sql, (err, results) => {
     if (err) {
@@ -1618,13 +1539,13 @@ app.get("/api/admin/usuarios", (req, res) => {
   });
 });
 
-// Actualizar categoría de usuario
+// Actualizar categor├¡a de usuario
 app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
   const { categoria } = req.body;
   if (!["A", "B", "C"].includes(categoria)) {
     return res
       .status(400)
-      .json({ success: false, message: "Categoría inválida" });
+      .json({ success: false, message: "Categor├¡a inv├ílida" });
   }
 
   db.query(
@@ -1632,7 +1553,7 @@ app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
     [categoria, req.params.id],
     (err, result) => {
       if (err) {
-        console.error("Error actualizando categoría:", err);
+        console.error("Error actualizando categor├¡a:", err);
         return res.status(500).json({ success: false, error: err });
       }
       res.json({ success: true });
@@ -1640,18 +1561,18 @@ app.put("/api/admin/usuarios/:id/categoria", (req, res) => {
   );
 });
 
-// Obtener productos filtrados por categoría del usuario
+// Obtener productos filtrados por categor├¡a del usuario
 app.get("/api/productos-por-categoria", (req, res) => {
   const { categoria } = req.query;
 
   if (!categoria) {
     return res.status(400).json({
       success: false,
-      message: "Categoría requerida",
+      message: "Categor├¡a requerida",
     });
   }
 
-  // Buscar productos que contengan la categoría del usuario
+  // Buscar productos que contengan la categor├¡a del usuario
   db.query(
     `SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco, p.categorias 
      FROM productos p 
@@ -1660,7 +1581,7 @@ app.get("/api/productos-por-categoria", (req, res) => {
     [categoria],
     (err, results) => {
       if (err) {
-        console.error("Error fetching productos por categoría:", err);
+        console.error("Error fetching productos por categor├¡a:", err);
         return res
           .status(500)
           .json({ success: false, message: "Error fetching productos" });
@@ -1670,39 +1591,39 @@ app.get("/api/productos-por-categoria", (req, res) => {
   );
 });
 
-// Actualizar categorías de un producto
+// Actualizar categor├¡as de un producto
 app.put("/api/productos/:id/categorias", (req, res) => {
   let { categorias } = req.body;
   console.log(
-    `📝 Actualizando producto ${req.params.id} con categorías: "${categorias}"`,
+    `­ƒôØ Actualizando producto ${req.params.id} con categor├¡as: "${categorias}"`,
   ); // <--- AGREGAR
 
-  // Normalizar: permitir string vacío "", y A,B,C en cualquier orden
+  // Normalizar: permitir string vac├¡o "", y A,B,C en cualquier orden
   if (categorias === undefined) {
     return res
       .status(400)
-      .json({ success: false, message: "Categorías requeridas" });
+      .json({ success: false, message: "Categor├¡as requeridas" });
   }
   if (typeof categorias !== "string") {
     return res
       .status(400)
-      .json({ success: false, message: "Formato inválido" });
+      .json({ success: false, message: "Formato inv├ílido" });
   }
 
-  categorias = categorias.trim(); // puede quedar "" válido
+  categorias = categorias.trim(); // puede quedar "" v├ílido
 
-  // Validar contenido si no está vacío
+  // Validar contenido si no est├í vac├¡o
   if (categorias.length > 0) {
     const parts = categorias
       .split(",")
       .map((c) => c.trim())
       .filter(Boolean);
     const valid = ["A", "B", "C"];
-    // Si hay algo no válido, 400
+    // Si hay algo no v├ílido, 400
     if (parts.some((c) => !valid.includes(c))) {
       return res
         .status(400)
-        .json({ success: false, message: "Categorías inválidas" });
+        .json({ success: false, message: "Categor├¡as inv├ílidas" });
     }
     // Eliminar duplicados y ordenar opcionalmente
     categorias = Array.from(new Set(parts)).join(",");
@@ -1713,7 +1634,7 @@ app.put("/api/productos/:id/categorias", (req, res) => {
     [categorias, req.params.id],
     (err, result) => {
       if (err) {
-        console.error("Error actualizando categorías:", err);
+        console.error("Error actualizando categor├¡as:", err);
         return res.status(500).json({ success: false, error: err });
       }
       res.json({ success: true });
@@ -1727,7 +1648,7 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, ".."))); // Sirve todo lo de /lever
 
 app.use((req, res, next) => {
-  console.log("COOKIE DE SESIÓN:", req.headers.cookie);
+  console.log("COOKIE DE SESI├ôN:", req.headers.cookie);
   console.log("SESSION DATA:", req.session);
   next();
 });
@@ -1760,7 +1681,7 @@ cron.schedule(
 
 const ExcelJS = require("exceljs");
 
-// Función para enviar el reporte semanal
+// Funci├│n para enviar el reporte semanal
 async function enviarReporteUsuariosSemana(req, res) {
   try {
     db.query(
@@ -1778,7 +1699,7 @@ async function enviarReporteUsuariosSemana(req, res) {
           return;
         }
         if (!rows.length) {
-          console.log("No hay usuarios nuevos esta semana. Se envía aviso igual.");
+          console.log("No hay usuarios nuevos esta semana. Se env├¡a aviso igual.");
           db.query(
             `SELECT nombre_completo, email, agencia, created_at
              FROM agencias_users
@@ -1830,7 +1751,7 @@ async function enviarReporteUsuariosSemana(req, res) {
                   from: `"Lever Notificaciones" <${process.env.EMAIL_FROM}>`,
                   to: "alejandro.amado@lever.com.ar, sandro.pippo@lever.com.ar, juan.gonzalez@lever.com.ar",
                   subject: "Usuarios registrados esta semana (sin novedades)",
-                  text: "No se registraron usuarios nuevos en los últimos 7 días. Se adjunta listado completo de usuarios actuales.",
+                  text: "No se registraron usuarios nuevos en los ├║ltimos 7 d├¡as. Se adjunta listado completo de usuarios actuales.",
                   attachments: [
                     {
                       filename: "usuarios_totales_actuales.xlsx",
@@ -1874,14 +1795,14 @@ async function enviarReporteUsuariosSemana(req, res) {
         // Agregar imagen al workbook
         const imageId = workbook.addImage({
           filename: logoPath,
-          extension: "png", // o 'jpeg' según tu archivo
+          extension: "png", // o 'jpeg' seg├║n tu archivo
         });
         worksheet.addImage(imageId, {
           tl: { col: 0, row: 0 },
           ext: { width: 200, height: 40 },
         });
 
-        // Agregar 2 filas vacías antes del header (header en la fila 3)
+        // Agregar 2 filas vac├¡as antes del header (header en la fila 3)
         worksheet.addRow([]);
         worksheet.addRow([]);
 
@@ -1915,7 +1836,7 @@ async function enviarReporteUsuariosSemana(req, res) {
             from: `"Lever Notificaciones" <${process.env.EMAIL_FROM}>`,
             to: "alejandro.amado@lever.com.ar, sandro.pippo@lever.com.ar, juan.gonzalez@lever.com.ar",
             subject: "Usuarios registrados esta semana",
-            text: "Adjunto encontrarás el listado de usuarios registrados esta semana.",
+            text: "Adjunto encontrar├ís el listado de usuarios registrados esta semana.",
             attachments: [
               {
                 filename: "usuarios_semana.xlsx",
@@ -1946,12 +1867,12 @@ async function enviarReporteUsuariosSemana(req, res) {
       },
     );
   } catch (err) {
-    console.error("Error en el envío manual:", err);
+    console.error("Error en el env├¡o manual:", err);
     if (res) return res.status(500).json({ success: false, error: err });
   }
 }
 
-// Función para enviar el reporte semanal de cotizaciones (lunes a domingo anterior)
+// Funci├│n para enviar el reporte semanal de cotizaciones (lunes a domingo anterior)
 async function enviarReporteCotizacionesSemana(req, res) {
   try {
     db.query(
@@ -2014,10 +1935,10 @@ async function enviarReporteCotizacionesSemana(req, res) {
           "Usuario",
           "Recotizado",
           "Observaciones",
-          "Vehículo Marca",
-          "Vehículo Modelo",
-          "Vehículo Año",
-          "Vehículo Precio",
+          "Veh├¡culo Marca",
+          "Veh├¡culo Modelo",
+          "Veh├¡culo A├▒o",
+          "Veh├¡culo Precio",
         ]);
 
         (rows || []).forEach((c) => {
@@ -2045,7 +1966,7 @@ async function enviarReporteCotizacionesSemana(req, res) {
             c.producto || "",
             c.monto || "",
             c.usuario || "",
-            c.recotizado ? "Sí" : "No",
+            c.recotizado ? "S├¡" : "No",
             c.observaciones || "",
             c.vehiculo_marca || "",
             c.vehiculo_modelo || "",
@@ -2081,8 +2002,8 @@ async function enviarReporteCotizacionesSemana(req, res) {
             subject: `Cotizaciones semanales (${total})`,
             text:
               total > 0
-                ? "Adjunto encontrarás el listado de cotizaciones de la semana (lunes a domingo)."
-                : "No se registraron cotizaciones en la semana (lunes a domingo). Se adjunta planilla vacía con cabeceras.",
+                ? "Adjunto encontrar├ís el listado de cotizaciones de la semana (lunes a domingo)."
+                : "No se registraron cotizaciones en la semana (lunes a domingo). Se adjunta planilla vac├¡a con cabeceras.",
             attachments: [
               {
                 filename: "cotizaciones_semana.xlsx",
@@ -2094,10 +2015,7 @@ async function enviarReporteCotizacionesSemana(req, res) {
           },
           (error, info) => {
             if (error) {
-              console.error(
-                "Error enviando reporte semanal de cotizaciones:",
-                error,
-              );
+              console.error("Error enviando reporte semanal de cotizaciones:", error);
               if (res) return res.status(500).json({ success: false, error });
             } else {
               console.log(
@@ -2117,7 +2035,7 @@ async function enviarReporteCotizacionesSemana(req, res) {
       },
     );
   } catch (err) {
-    console.error("Error en el envío manual de cotizaciones:", err);
+    console.error("Error en el env├¡o manual de cotizaciones:", err);
     if (res) return res.status(500).json({ success: false, error: err });
   }
 }
@@ -2220,7 +2138,7 @@ app.delete("/api/agencias/:id", (req, res) => {
 
 // Listar agentes
 app.get("/api/agentes", (req, res) => {
-  db.query("SELECT id, nombre FROM agentes ORDER BY nombre ASC", (err, rows) => {
+  db.query("SELECT * FROM agentes", (err, rows) => {
     if (err) return res.json({ success: false, error: err });
     res.json({ success: true, agentes: rows });
   });
@@ -2520,7 +2438,7 @@ app.get("/api/interno/ltv", (req, res) => {
   });
 });
 
-// Registrar una cotización
+// Registrar una cotizaci├│n
 app.post("/api/cotizaciones", (req, res) => {
   const {
     cliente_dni,
@@ -2603,7 +2521,7 @@ app.get("/api/cotizaciones", (req, res) => {
   });
 });
 
-// Obtener cotización por ID
+// Obtener cotizaci├│n por ID
 app.get("/api/cotizaciones/:id", (req, res) => {
   db.query(
     "SELECT * FROM cotizaciones WHERE id = ?",
@@ -2700,7 +2618,7 @@ app.post("/api/analytics", async (req, res) => {
   try {
     const event = req.body;
 
-    // ⭐ ELIMINAR la conversión de zona horaria, usar NOW() de MySQL
+    // Ô¡É ELIMINAR la conversi├│n de zona horaria, usar NOW() de MySQL
     if (event.category === "DNI_Consulta") {
       await db.query(
         `INSERT INTO analytics_dni_consultas 
@@ -2814,7 +2732,7 @@ app.get("/api/analytics/ui-clicks", (req, res) => {
   });
 });
 
-// Métricas de selects del paso 2
+// M├®tricas de selects del paso 2
 app.get("/api/analytics/vehiculo-selects", requireAuth, (req, res) => {
   const sql = `
     SELECT 
@@ -2880,7 +2798,7 @@ app.get("/api/analytics/paso3", requireAuth, (req, res) => {
   });
 });
 
-// Métricas Paso 4: plazos y botones
+// M├®tricas Paso 4: plazos y botones
 app.get("/api/analytics/paso4", requireAuth, (req, res) => {
   const sqlPlazos = `
     SELECT 
@@ -2906,7 +2824,7 @@ app.get("/api/analytics/paso4", requireAuth, (req, res) => {
     if (err1)
       return res.status(500).json({ success: false, error: err1.message });
 
-    // ⭐ LIMPIAR: Extraer solo el número de cuotas del label
+    // Ô¡É LIMPIAR: Extraer solo el n├║mero de cuotas del label
     const plazosLimpios = plazos.map((p) => {
       const match = (p.label || "").match(/(\d+)\s*CUOTAS?/i);
       return {
@@ -2963,12 +2881,13 @@ app.get("/api/analytics/logins-por-usuario", requireAuth, (req, res) => {
     if (err)
       return res.status(500).json({ success: false, error: err.message });
 
-    console.log(`📊 LOGINS ENCONTRADOS EN BD: ${rows.length}`);
+    console.log(`­ƒôè LOGINS ENCONTRADOS EN BD: ${rows.length}`);
     console.log("Primer registro:", rows[0]);
 
     res.json({ success: true, logins: rows || [] });
   });
 });
+
 
 app.get("/api/export/metricas", async (req, res) => {
   const { from, to } = req.query;
@@ -2991,7 +2910,7 @@ app.get("/api/export/metricas", async (req, res) => {
     ORDER BY timestamp DESC
   `;
 
-  // 2. Años consultados
+  // 2. A├▒os consultados
   const sqlAnios = `
     SELECT label AS anio, COUNT(*) AS total
     FROM analytics_events
@@ -3024,15 +2943,15 @@ app.get("/api/export/metricas", async (req, res) => {
 
   // 5. Logins
   const sqlLogins = `
-    SELECT label AS email, metodo, agencia, timestamp
-    FROM analytics_events
-    WHERE category = 'Auth'
-      AND action = 'login_success'
-      AND label IS NOT NULL
-      AND label <> 'web_public'
-      ${whereFechas}
-    ORDER BY timestamp DESC
-  `;
+  SELECT label AS email, metodo, agencia, timestamp
+  FROM analytics_events
+  WHERE category = 'Auth'
+    AND action = 'login_success'
+    AND label IS NOT NULL
+    AND label <> 'web_public'
+    ${whereFechas}
+  ORDER BY timestamp DESC
+`;
 
   try {
     const [consultas, anios, productos, autos, logins] = await Promise.all([
@@ -3065,15 +2984,15 @@ app.get("/api/export/metricas", async (req, res) => {
         { header: "Tipo Doc", key: "tipo_documento", width: 10 },
         { header: "Viabilidad", key: "viabilidad", width: 20 },
         { header: "Agencia", key: "agencia", width: 20 },
-        { header: "Categoría Usuario", key: "categoria_usuario", width: 15 },
+        { header: "Categor├¡a Usuario", key: "categoria_usuario", width: 15 },
         { header: "Fecha/Hora", key: "timestamp", width: 20 },
       ];
       consultas.forEach((row) => wsConsultas.addRow(row));
 
-      // Hoja 2: Años consultados
-      const wsAnios = workbook.addWorksheet("Años consultados");
+      // Hoja 2: A├▒os consultados
+      const wsAnios = workbook.addWorksheet("A├▒os consultados");
       wsAnios.columns = [
-        { header: "Año", key: "anio", width: 10 },
+        { header: "A├▒o", key: "anio", width: 10 },
         { header: "Consultas", key: "total", width: 12 },
       ];
       anios.forEach((row) => wsAnios.addRow(row));
@@ -3100,7 +3019,7 @@ app.get("/api/export/metricas", async (req, res) => {
       const wsLogins = workbook.addWorksheet("Logins");
       wsLogins.columns = [
         { header: "Email", key: "email", width: 30 },
-        { header: "Método", key: "metodo", width: 15 },
+        { header: "M├®todo", key: "metodo", width: 15 },
         { header: "Agencia", key: "agencia", width: 20 },
         { header: "Fecha/Hora", key: "timestamp", width: 20 },
       ];
@@ -3130,3 +3049,4 @@ app.get("/api/export/metricas", async (req, res) => {
     res.status(500).send("Error al consultar la base de datos");
   }
 });
+
