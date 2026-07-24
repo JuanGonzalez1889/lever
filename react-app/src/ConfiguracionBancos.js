@@ -10,6 +10,7 @@ function ConfiguracionBancos() {
   const [productoSeleccionado, setProductoSeleccionado] = useState("");
   const [plazos, setPlazos] = useState([]);
   const [ltvs, setLtvs] = useState([]);
+  const [nombreProducto, setNombreProducto] = useState("");
   const [tipoCredito, setTipoCredito] = useState("");
   const [prioridad, setPrioridad] = useState(0);
   const [mensaje, setMensaje] = useState("");
@@ -57,20 +58,24 @@ function ConfiguracionBancos() {
           if (res.data.success) setLtvs(res.data.ltvs);
         });
       const prod = productos.find((p) => p.id === Number(productoSeleccionado));
+      setNombreProducto(prod?.nombre || "");
       setTipoCredito(prod?.tipo_credito || "");
       setPrioridad(prod?.prioridad || 0);
     } else {
       setPlazos([]);
       setLtvs([]);
+      setNombreProducto("");
       setTipoCredito("");
       setPrioridad(0);
     }
   }, [productoSeleccionado, productos]);
 
   const guardarProducto = async () => {
-    const prod = productos.find((p) => p.id === Number(productoSeleccionado));
+    const nombreNormalizado = nombreProducto.trim().toUpperCase();
+    if (!nombreNormalizado) return;
+
     await axios.put(`${API_URL}/api/productos_bancos/${productoSeleccionado}`, {
-      nombre: prod?.nombre, // <-- Agregá esto
+      nombre: nombreNormalizado,
       tipo_credito: tipoCredito,
       prioridad,
     });
@@ -83,6 +88,7 @@ function ConfiguracionBancos() {
           const existe = res.data.productos.find(
             (p) => p.id === Number(productoSeleccionado)
           );
+          setNombreProducto(existe?.nombre || "");
           if (!existe) setProductoSeleccionado("");
         }
       });
@@ -293,6 +299,16 @@ function ConfiguracionBancos() {
           {productoSeleccionado && (
             <>
               <div className="row g-3 mb-3">
+                <div className="col-12">
+                  <label className="form-label">Nombre de producto</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={nombreProducto}
+                    onChange={(e) => setNombreProducto(e.target.value)}
+                    placeholder="Nombre del producto"
+                  />
+                </div>
                 <div className="col-12 col-md-6">
                   <label className="form-label">Tipo de crédito</label>
                   <select
