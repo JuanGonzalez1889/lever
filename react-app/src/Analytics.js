@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import * as XLSX from "xlsx";
 import {
   LineChart,
   Line,
@@ -186,7 +187,75 @@ function exportarMetricasExcel() {
     window.location.hostname === "localhost"
       ? `http://localhost:5000/api/export/metricas?${params.join("&")}`
       : `https://api.lever.com.ar/api/export/metricas?${params.join("&")}`;
-  window.open(url, "_blank");
+
+  // Descargar el Excel generado por el backend, abrirlo en memoria,
+  // deduplicar la hoja de 'Consultas DNI' por DNI+agencia (última consulta)
+  // y forzar descarga con el mismo nombre.
+  fetch(url, { credentials: "include" })
+    .then((res) => {
+      if (!res.ok) throw new Error("Error al descargar el Excel");
+      const cd = res.headers && res.headers.get ? res.headers.get("content-disposition") : null;
+      return res.arrayBuffer().then((ab) => ({ ab, cd }));
+    })
+    .then(({ ab, cd }) => {
+      const workbook = XLSX.read(ab, { type: "array" });
+      const sheetName = workbook.SheetNames.find((n) => /consultas\s*dni|consultas|dni/i.test(n)) || workbook.SheetNames[0];
+      if (!sheetName) {
+        const blob = new Blob([ab], { type: "application/octet-stream" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = cd && cd.includes("=") ? cd.split("=").pop().replace(/['\"]/g, "") : "metricas.xlsx";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        return;
+      }
+
+      const ws = workbook.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json(ws, { defval: "" });
+
+      // deduplicar por DNI+agencia, mantener la última por fecha/timestamp
+      const mapa = {};
+      rows.forEach((r) => {
+        const dniRaw = String(r["DNI/CUIT"] || r["DNI"] || r.dni || "");
+        const dni = dniRaw.replace(/\D/g, "").trim();
+        let agencia = String(r["Agencia"] || r.agencia || "").trim().toLowerCase();
+        if (!agencia) agencia = "sin_agencia";
+        if (!dni) return;
+        // intentar extraer fecha/timestamp de columnas comunes
+        const fechaRaw = r["Fecha/Hour"] || r["Fecha"] || r.timestamp || r["Fecha/Hora"] || r["Fecha/Hora Consulta"] || r["Fecha\Hora"] || "";
+        let fecha = new Date(0);
+        try {
+          if (fechaRaw) fecha = new Date(String(fechaRaw).replace(" ", "T"));
+          if (isNaN(fecha)) fecha = new Date(fechaRaw);
+        } catch (e) {
+          fecha = new Date(0);
+        }
+        const key = `${dni}|${agencia}`;
+        if (!mapa[key]) mapa[key] = { row: r, fecha };
+        else if (fecha > mapa[key].fecha) mapa[key] = { row: r, fecha };
+      });
+
+      const dedupRows = Object.values(mapa).map((v) => v.row);
+
+      // convertir de nuevo a hoja y reemplazar
+      const newWs = XLSX.utils.json_to_sheet(dedupRows);
+      workbook.Sheets[sheetName] = newWs;
+
+      const wbout = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+      const blob = new Blob([wbout], { type: "application/octet-stream" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = cd && cd.includes("=") ? cd.split("=").pop().replace(/['\"]/g, "") : "metricas.xlsx";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    })
+    .catch((err) => {
+      console.error("Error exportando métricas con dedupe:", err);
+      // fallback: abrir la URL en otra pestaña
+      window.open(url, "_blank");
+    });
 }
 
   useEffect(() => {
@@ -529,6 +598,7 @@ function exportarMetricasExcel() {
   }, [uiClicksRaw, clicksFromDate, clicksToDate, topN]);
 
   const viabPieFiltered = useMemo(() => {
+    // Filtrar por rango de fecha primero
     const filtered = dniRows.filter((r) => {
       const timestamp = r.timestamp ? r.timestamp.slice(0, 10) : "";
       if (viabFromDate && timestamp < viabFromDate) return false;
@@ -536,8 +606,25 @@ function exportarMetricasExcel() {
       return true;
     });
 
-    const agg = filtered.reduce((acc, r) => {
-      const key = (r.viabilidad || "SIN DATOS").toUpperCase();
+    // Deduplicar por DNI+agencia tomando la última consulta
+    const mapa = {};
+    filtered.forEach((r) => {
+      const dni = String(r.dni || "").replace(/\D/g, "").trim();
+      const agencia = String(r.agencia || "").trim().toLowerCase() || "sin_agencia";
+      if (!dni) return;
+      const key = `${dni}|${agencia}`;
+      const fecha = r.timestamp ? new Date(r.timestamp) : new Date(0);
+      if (!mapa[key]) mapa[key] = r;
+      else {
+        const fPrev = mapa[key].timestamp ? new Date(mapa[key].timestamp) : new Date(0);
+        if (fecha > fPrev) mapa[key] = r;
+      }
+    });
+
+    const dedup = Object.values(mapa);
+
+    const agg = dedup.reduce((acc, r) => {
+      const key = (r.viabilidad || r.viabilidad || "SIN DATOS").toUpperCase();
       acc[key] = (acc[key] || 0) + 1;
       return acc;
     }, {});
@@ -551,6 +638,30 @@ function exportarMetricasExcel() {
     return entries;
   }, [dniRows, viabFromDate, viabToDate]);
 
+  // Conteo de DNI únicos (DNI+agencia) para mostrar en la mini-métrica
+  const dniUnicosCount = useMemo(() => {
+    const filtered = dniRows.filter((r) => {
+      const timestamp = r.timestamp ? r.timestamp.slice(0, 10) : "";
+      if (dniFromDate && timestamp < dniFromDate) return false;
+      if (dniToDate && timestamp > dniToDate) return false;
+      return true;
+    });
+    const mapa = {};
+    filtered.forEach((r) => {
+      const dni = String(r.dni || "").replace(/\D/g, "").trim();
+      const agencia = String(r.agencia || "").trim().toLowerCase() || "sin_agencia";
+      if (!dni) return;
+      const key = `${dni}|${agencia}`;
+      const fecha = r.timestamp ? new Date(r.timestamp) : new Date(0);
+      if (!mapa[key]) mapa[key] = r;
+      else {
+        const fPrev = mapa[key].timestamp ? new Date(mapa[key].timestamp) : new Date(0);
+        if (fecha > fPrev) mapa[key] = r;
+      }
+    });
+    return Object.keys(mapa).length;
+  }, [dniRows, dniFromDate, dniToDate]);
+
   const dniRowsFiltered = useMemo(() => {
     return dniRows.filter((r) => {
       const timestamp = r.timestamp ? r.timestamp.slice(0, 10) : "";
@@ -559,6 +670,25 @@ function exportarMetricasExcel() {
       return true;
     });
   }, [dniRows, dniFromDate, dniToDate]);
+
+  // Deduplicar filas mostradas en la tabla por DNI+agencia (mantener la última consulta)
+  const dniRowsDedupFiltered = useMemo(() => {
+    const mapa = {};
+    dniRowsFiltered.forEach((r) => {
+      const dni = String(r.dni || "").replace(/\D/g, "").trim();
+      const agencia = String(r.agencia || "").trim().toLowerCase() || "sin_agencia";
+      if (!dni) return;
+      const key = `${dni}|${agencia}`;
+      const fecha = r.timestamp ? new Date(r.timestamp) : new Date(0);
+      if (!mapa[key]) mapa[key] = r;
+      else {
+        const fPrev = mapa[key].timestamp ? new Date(mapa[key].timestamp) : new Date(0);
+        if (fecha > fPrev) mapa[key] = r;
+      }
+    });
+    // ordenar por fecha descendente para mostrar los registros más recientes arriba
+    return Object.values(mapa).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  }, [dniRowsFiltered]);
 
   const dniTipoCounts = useMemo(() => {
     return dniRowsFiltered.reduce(
@@ -573,8 +703,8 @@ function exportarMetricasExcel() {
   }, [dniRowsFiltered]);
 
   const dniRowsVisible = useMemo(() => {
-    return dniRowsFiltered.slice(0, dniVisibleCount);
-  }, [dniRowsFiltered, dniVisibleCount]);
+    return dniRowsDedupFiltered.slice(0, dniVisibleCount);
+  }, [dniRowsDedupFiltered, dniVisibleCount]);
 
   useEffect(() => {
     setDniVisibleCount(DNI_ROWS_PAGE_SIZE);
@@ -976,7 +1106,7 @@ function exportarMetricasExcel() {
         <div className="mini-metrics-inline">
           <div className="mini-metric-card mini-metric-card--blue">
             <span className="mini-metric-card__label">DNI</span>
-            <strong className="mini-metric-card__value">{dniTipoCounts.dni}</strong>
+              <strong className="mini-metric-card__value">{dniUnicosCount}</strong>
           </div>
           <div className="mini-metric-card mini-metric-card--green">
             <span className="mini-metric-card__label">CUIT</span>
@@ -1009,14 +1139,14 @@ function exportarMetricasExcel() {
                 <td>{new Date(r.timestamp).toLocaleString()}</td>
               </tr>
             ))}
-            {dniRowsFiltered.length === 0 && (
+            {dniRowsDedupFiltered.length === 0 && (
               <tr>
                 <td colSpan={7}>Sin datos para el rango seleccionado</td>
               </tr>
             )}
           </tbody>
         </table>
-        {dniRowsFiltered.length > 0 && (
+        {dniRowsDedupFiltered.length > 0 && (
           <div
             style={{
               display: "flex",
@@ -1028,7 +1158,7 @@ function exportarMetricasExcel() {
             }}
           >
             <span style={{ color: "#495057", fontSize: "14px" }}>
-              Mostrando {dniRowsVisible.length} de {dniRowsFiltered.length} registros
+              Mostrando {dniRowsVisible.length} de {dniRowsDedupFiltered.length} registros (únicos por DNI+agencia)
             </span>
 
             {dniRowsVisible.length < dniRowsFiltered.length && (

@@ -188,6 +188,8 @@ function Cotizaciones() {
     return true;
   });
 
+  
+
   const exportarExcel = () => {
     // Solo exporta las cotizaciones filtradas
     const data = cotizacionesFiltradas.map((cot) => {
@@ -465,6 +467,7 @@ function Cotizaciones() {
           </tbody>
         </Table>
       </div>
+      
       <Modal show={showModal} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Detalle de cotización</Modal.Title>
