@@ -73,8 +73,15 @@ function Cotizador() {
   );
   const esBancoICBC =
     bancoSeleccionadoObj?.nombre?.toUpperCase() === "ICBC";
-  const esBancoAginco =
-    bancoSeleccionadoObj?.nombre?.toUpperCase() === "AGINCO";
+  const bancoNombreNormalized = (bancoSeleccionadoObj?.nombre || "")
+    .toUpperCase()
+    .replace(/\s+/g, "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  const esBancoAginco = bancoNombreNormalized === "AGINCO";
+  const esBancoSanCristobal = bancoNombreNormalized === "SANCRISTOBAL";
+  const esBancoSinIva = esBancoAginco || esBancoSanCristobal;
 
   useEffect(() => {
     setMostrarOpciones(false);
@@ -1089,14 +1096,14 @@ function Cotizador() {
         tipoPersona: tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
         abonaSellado: cobroSellado === "abona",
         exento: cobroSellado === "exento",
-        aplicaIVA: !esBancoAginco,
+        aplicaIVA: !esBancoSinIva,
       });
       const promedioCuotaConIVA = calcularPromedioCuotaConIVA({
         capitalBruto: Number(datos.capitalBruto),
         plazoMeses: p,
         tna: tna,
         tipoPersona: tipoPersona,
-        aplicaIVA: !esBancoAginco,
+        aplicaIVA: !esBancoSinIva,
       });
       const cuota = promedioCuotaConIVA && !isNaN(promedioCuotaConIVA)
         ? `$${Math.round(Number(promedioCuotaConIVA)).toLocaleString("es-AR", { maximumFractionDigits: 0 })}`
@@ -1156,7 +1163,7 @@ function Cotizador() {
         tipoPersona: tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
         abonaSellado: cobroSellado === "abona",
         exento: cobroSellado === "exento",
-        aplicaIVA: !esBancoAginco,
+        aplicaIVA: !esBancoSinIva,
       });
       // Mostrar el monto bruto
       doc.setFontSize(11);
@@ -2462,7 +2469,7 @@ function Cotizador() {
                         tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                       abonaSellado: cobroSellado === "abona",
                       exento: cobroSellado === "exento",
-                      aplicaIVA: !esBancoAginco,
+                      aplicaIVA: !esBancoSinIva,
                     });
                     return (
                       <td
@@ -2517,7 +2524,7 @@ function Cotizador() {
                         tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                       abonaSellado: cobroSellado === "abona",
                       exento: cobroSellado === "exento",
-                      aplicaIVA: !esBancoAginco,
+                      aplicaIVA: !esBancoSinIva,
                     });
                     return (
                       <td
@@ -2576,7 +2583,7 @@ function Cotizador() {
                             tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                           abonaSellado: cobroSellado === "abona",
                           exento: cobroSellado === "exento",
-                          aplicaIVA: !esBancoAginco,
+                          aplicaIVA: !esBancoSinIva,
                         });
                         return (
                           <td
@@ -2639,7 +2646,7 @@ function Cotizador() {
                             tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                           abonaSellado: cobroSellado === "abona",
                           exento: cobroSellado === "exento",
-                          aplicaIVA: !esBancoAginco,
+                          aplicaIVA: !esBancoSinIva,
                         });
                         return (
                           <td
@@ -2702,7 +2709,7 @@ function Cotizador() {
                             tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                           abonaSellado: cobroSellado === "abona",
                           exento: cobroSellado === "exento",
-                          aplicaIVA: !esBancoAginco,
+                          aplicaIVA: !esBancoSinIva,
                         });
 
                         return (
@@ -2800,7 +2807,7 @@ function Cotizador() {
                         tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                       abonaSellado: cobroSellado === "abona",
                       exento: cobroSellado === "exento",
-                      aplicaIVA: !esBancoAginco,
+                      aplicaIVA: !esBancoSinIva,
                     });
                     return (
                       <td
@@ -2919,7 +2926,7 @@ function Cotizador() {
                         tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                       abonaSellado: cobroSellado === "abona",
                       exento: cobroSellado === "exento",
-                      aplicaIVA: !esBancoAginco,
+                      aplicaIVA: !esBancoSinIva,
                     });
                     return (
                       <td
@@ -2982,7 +2989,7 @@ function Cotizador() {
                         tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                       abonaSellado: cobroSellado === "abona",
                       exento: cobroSellado === "exento",
-                      aplicaIVA: !esBancoAginco,
+                      aplicaIVA: !esBancoSinIva,
                     });
 
                     // Nuevo cálculo de promedio
@@ -2992,7 +2999,7 @@ function Cotizador() {
                           plazoMeses: plazo,
                           tna: tna,
                           tipoPersona: tipoPersona,
-                          aplicaIVA: !esBancoAginco,
+                          aplicaIVA: !esBancoSinIva,
                         })
                       : null;
 
@@ -3049,7 +3056,7 @@ function Cotizador() {
                         tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                       abonaSellado: cobroSellado === "abona",
                       exento: cobroSellado === "exento",
-                      aplicaIVA: !esBancoAginco,
+                      aplicaIVA: !esBancoSinIva,
                     });
                     return (
                       <td
@@ -3104,7 +3111,7 @@ function Cotizador() {
                           tipoPersona === "juridica" ? "JURIDICA" : "HUMANA",
                         abonaSellado: cobroSellado === "abona",
                         exento: cobroSellado === "exento",
-                        aplicaIVA: !esBancoAginco,
+                        aplicaIVA: !esBancoSinIva,
                       });
                       return (
                         <td
