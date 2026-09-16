@@ -483,7 +483,7 @@ function Cotizador() {
   const PHP_API_URL =
     window.location.hostname === "localhost"
       ? "http://localhost/lever/php/curl.php"
-      : "https://www.lever.com.ar/php/curl.php";
+      : "https://lever.com.ar/php/curl.php";
 
   const fetchMarcas = async (year) => {
     try {

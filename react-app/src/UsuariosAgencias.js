@@ -290,6 +290,55 @@ export default function UsuariosAgencias() {
    }
  };
 
+  // BLOQUEAR / DESBLOQUEAR
+  const [showBlockModal, setShowBlockModal] = useState(false);
+  const [blockReason, setBlockReason] = useState("");
+  const [blockingUserId, setBlockingUserId] = useState(null);
+  const [blockingLoading, setBlockingLoading] = useState(false);
+
+  const openBlockModal = (usuario) => {
+    setBlockingUserId(usuario.id);
+    setBlockReason("");
+    setShowBlockModal(true);
+    setUsuarioSeleccionado(usuario);
+  };
+
+  const handleConfirmBlock = async () => {
+    if (!blockingUserId) return;
+    setBlockingLoading(true);
+    try {
+      const currentlyBlocked = usuarioSeleccionado?.bloqueado === 1 || usuarioSeleccionado?.bloqueado === true;
+      const resp = await axios.put(
+        `${API_URL}/api/admin/agencias_users/${blockingUserId}/bloquear`,
+        { bloqueado: currentlyBlocked ? 0 : 1, motivo: blockReason },
+        { withCredentials: true }
+      );
+
+      if (resp.data?.success) {
+        setUsuarios((prev) =>
+          prev.map((u) =>
+            u.id === blockingUserId
+              ? { ...u, bloqueado: !currentlyBlocked, bloqueo_motivo: currentlyBlocked ? null : blockReason }
+              : u
+          )
+        );
+        alert(`Usuario ${currentlyBlocked ? 'desbloqueado' : 'bloqueado'} correctamente`);
+        // actualizar también el usuario seleccionado para que el modal muestre el motivo
+        setUsuarioSeleccionado((prev) =>
+          prev && prev.id === blockingUserId ? { ...prev, bloqueado: !currentlyBlocked, bloqueo_motivo: currentlyBlocked ? null : blockReason } : prev
+        );
+        setShowBlockModal(false);
+      } else {
+        alert('No se pudo actualizar el estado de bloqueo');
+      }
+    } catch (err) {
+      console.error('Error bloqueando usuario:', err?.response?.data || err);
+      alert('Error bloqueando/desbloqueando usuario');
+    } finally {
+      setBlockingLoading(false);
+    }
+  };
+
   const usuariosFiltrados = usuarios.filter(
     (u) =>
       (u.nombre_completo &&
@@ -297,6 +346,14 @@ export default function UsuariosAgencias() {
       (u.email && u.email.toLowerCase().includes(busqueda.toLowerCase())) ||
       (u.agencia && u.agencia.toLowerCase().includes(busqueda.toLowerCase()))
   );
+
+  const [showBlockInfoModal, setShowBlockInfoModal] = useState(false);
+  const [blockInfoReason, setBlockInfoReason] = useState("");
+
+  const openBlockInfo = (usuario) => {
+    setBlockInfoReason(usuario?.bloqueo_motivo || usuario?.bloqueoMotivo || usuario?.motivo || "Sin motivo especificado");
+    setShowBlockInfoModal(true);
+  };
 
   const formatearFechaRegistro = (createdAt) => {
     if (!createdAt) return { fecha: "-", hora: "" };
@@ -667,7 +724,7 @@ export default function UsuariosAgencias() {
             const { fecha, hora } = formatearFechaRegistro(u.created_at);
 
             return (
-            <tr key={u.id}>
+            <tr key={u.id} style={u.bloqueado ? { opacity: 0.5, filter: 'grayscale(20%)' } : {}}>
               <td>
                 <span className="cell-id">{u.id}</span>
               </td>
@@ -682,7 +739,14 @@ export default function UsuariosAgencias() {
                 <span className="cell-truncate email-text">{u.email || "-"}</span>
               </td>
               <td title={u.agencia || "-"}>
-                <span className="cell-truncate agency-text">{u.agencia || "-"}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span className="cell-truncate agency-text">{u.agencia || "-"}</span>
+                  {u.bloqueado ? (
+                    <span style={{ background: '#dc3545', color: 'white', padding: '4px 8px', borderRadius: 8, fontWeight: 800, fontSize: '0.75rem' }}>
+                      BLOQUEADO
+                    </span>
+                  ) : null}
+                </div>
               </td>
               <td title={u.telefono || "-"}>
                 <span className="phone-text">{u.telefono || "-"}</span>
@@ -729,6 +793,7 @@ export default function UsuariosAgencias() {
                 </div>
               </td>
               <td className="actions-cell">
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
                 <button
                   type="button"
                   aria-label={`Ver detalle de ${u.nombre_completo || "usuario"}`}
@@ -740,6 +805,8 @@ export default function UsuariosAgencias() {
                   <span className="action-dot"></span>
                   <span className="action-dot"></span>
                 </button>
+                {/* El botón de info se muestra dentro del modal de detalle (si corresponde) */}
+                </div>
               </td>
             </tr>
           );})}
@@ -929,6 +996,60 @@ export default function UsuariosAgencias() {
           >
             {saving ? "Guardando..." : "Guardar Cambios"}
           </Button>
+          <Button
+            variant={usuarioSeleccionado?.bloqueado ? "warning" : "danger"}
+            onClick={() => openBlockModal(usuarioSeleccionado)}
+            style={{ fontSize: "0.8rem" }}
+          >
+            {usuarioSeleccionado?.bloqueado ? "Desbloquear" : "Bloquear"}
+          </Button>
+          {usuarioSeleccionado?.bloqueado ? (
+            <Button
+              variant="outline-info"
+              onClick={() => openBlockInfo(usuarioSeleccionado)}
+              style={{ fontSize: "0.8rem", marginLeft: 8 }}
+            >
+              Ver motivo de bloqueo
+            </Button>
+          ) : null}
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Confirmación Bloqueo */}
+      <Modal show={showBlockModal} onHide={() => setShowBlockModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{usuarioSeleccionado?.bloqueado ? 'Desbloquear usuario' : 'Bloquear usuario'}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            {usuarioSeleccionado
+              ? `¿Estás seguro de ${usuarioSeleccionado.bloqueado ? 'desbloquear' : 'bloquear'} a ${usuarioSeleccionado.nombre_completo}?`
+              : '¿Estás seguro?'}
+          </p>
+          <Form.Group>
+            <Form.Label>Motivo (opcional)</Form.Label>
+            <Form.Control as="textarea" rows={3} value={blockReason} onChange={(e) => setBlockReason(e.target.value)} />
+            <small style={{ color: '#777' }}>El motivo quedará como referencia en la auditoría (si existe).</small>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-secondary" onClick={() => setShowBlockModal(false)}>Cancelar</Button>
+          <Button variant="primary" onClick={handleConfirmBlock} disabled={blockingLoading}>
+            {blockingLoading ? 'Procesando...' : usuarioSeleccionado?.bloqueado ? 'Desbloquear' : 'Bloquear'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal que muestra motivo de bloqueo */}
+      <Modal show={showBlockInfoModal} onHide={() => setShowBlockInfoModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Motivo de bloqueo</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p style={{ whiteSpace: 'pre-wrap' }}>{blockInfoReason}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowBlockInfoModal(false)}>Cerrar</Button>
         </Modal.Footer>
       </Modal>
 
