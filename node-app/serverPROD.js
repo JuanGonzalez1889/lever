@@ -41,6 +41,7 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
   "https://www.lever.com.ar",
   "https://lever.com.ar",
+  "http://www.lever.com.ar",
   "http://localhost:3000",
   "http://localhost:5000",
   "http://localhost",
@@ -63,8 +64,8 @@ db.getAgenciaUserByEmail = function (email) {
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Permitir solicitudes desde los orígenes especificados o solicitudes sin origen (como Postman)
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Permitir solicitudes sin origen (Postman, scripts del servidor) o dominios permitidos
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.lever.com.ar') || origin.includes('lever.com.ar')) {
         callback(null, true);
       } else {
         console.error(`CORS error: Origin ${origin} not allowed`);
@@ -90,9 +91,6 @@ app.use(
 );
 
 app.use(bodyParser.json());
-// Montar API externa (esqueleto)
-const apiExternal = require('./api-external');
-app.use('/api-external/v1', apiExternal);
 
 // app.get("/api/check-session", (req, res) => {
 //   console.log("CHECK SESSION:", req.session);
@@ -129,7 +127,7 @@ if (process.env.NODE_ENV !== "production") {
         return res.json({ success: false, message: "Error de base de datos" });
       }
       if (!results.length) {
-        return res.json({ success: false, message: "Usuario no encontrado" });
+      return res.json({ success: false, message: "Usuario no encontrado" });
       }
       const user = results[0];
       // Verifica la contraseña con bcrypt
@@ -178,6 +176,12 @@ app.post("/api/logout", (req, res) => {
   res.json({ success: true });
 });
 
+app.all("/api/logout/", (req, res) => {
+  req.session.destroy(() => {
+    res.json({ success: true });
+  });
+});
+
 app.post("/api/logoutAgencia", (req, res) => {
   delete req.session.agencia_email;
   delete req.session.agencia_nombre;
@@ -188,11 +192,6 @@ app.post("/api/logoutAgencia", (req, res) => {
   res.json({ success: true });
 });
 
-app.all("/api/logout/", (req, res) => {
-  req.session.destroy(() => {
-    res.json({ success: true });
-  });
-});
 
 app.get("/api/segmentos", (req, res) => {
   db.query("SELECT id, nombre FROM segmentos", (err, results) => {
@@ -207,8 +206,8 @@ app.get("/api/segmentos", (req, res) => {
 });
 
 app.get("/api/productos-con-segmento", (req, res) => {
-  db.query(
-    "SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco, p.tipo_credito, p.highlights FROM productos p LEFT JOIN segmentos s ON p.segmento_id = s.id",
+db.query(
+	"SELECT p.nombre, p.segmento_id, s.nombre AS segmento_nombre, p.banco, p.tipo_credito, p.highlights FROM productos p LEFT JOIN segmentos s ON p.segmento_id = s.id",
     (err, results) => {
       if (err) {
         console.error("Error fetching productos:", err);
@@ -238,8 +237,8 @@ function getLastProductIdByName(nombre) {
 app.get("/api/data", (req, res) => {
   console.log(req.session);
 
-  const query = `
-  SELECT p.id AS producto_id, p.nombre AS producto, p.plazo, p.interest, p.fee, p.minfee, 
+	const query = `
+  SELECT p.id AS producto_id, p.nombre AS producto, p.plazo, p.interest, p.fee, p.minfee,
       p.segmento_id, p.banco, p.categorias, p.retorno, p.tipo_credito, p.highlights, l.year, l.value, l.show, c.minAFinanciar
   FROM productos p
   LEFT JOIN ltv l ON l.producto_id = p.id OR l.producto = p.nombre
@@ -256,8 +255,8 @@ app.get("/api/data", (req, res) => {
 
     const data = { productos: {}, minAFinanciar: null };
     results.forEach((row) => {
-      // Clave única por producto (incluye tipo_credito para permitir nombres repetidos entre FIJA/UVA)
-      const productoKey = `${row.producto}__${row.segmento_id}__${row.banco}__${row.tipo_credito || ""}`;
+      // Clave única por producto
+      const productoKey = `${row.producto}__${row.segmento_id}__${row.banco}`;
       if (!data.productos[productoKey]) {
         data.productos[productoKey] = {
           nombre: row.producto,
@@ -265,7 +264,7 @@ app.get("/api/data", (req, res) => {
           banco: row.banco,
           categorias: row.categorias,
           retorno: row.retorno || "CR,SR",
-          tipoCredito: row.tipo_credito || null,
+	  tipoCredito: row.tipo_credito || null,
           highlights: row.highlights ? (() => { try { return JSON.parse(row.highlights); } catch(e){ return []; } })() : [],
           plazos: {},
           ltv: {},
@@ -381,11 +380,7 @@ app.post("/api/data", (req, res) => {
 
   // Limpiar el objeto productos para que solo quede la clave nueva
   if (newProductName && newProductName !== oldName) {
-    const tipoCreditoSeleccionado =
-      productos[selectedProductId]?.tipoCredito ||
-      productos[selectedProductId]?.tipo_credito ||
-      "";
-    const newKey = `${newProductName}__${segmento_id}__${banco}__${tipoCreditoSeleccionado}`;
+    const newKey = `${newProductName}__${segmento_id}__${banco}`;
     Object.keys(productos).forEach((key) => {
       if (key !== newKey) {
         delete productos[key];
@@ -393,36 +388,11 @@ app.post("/api/data", (req, res) => {
     });
   }
 
-  // Actualizar o insertar plazos por producto_id y plazo
+// Actualizar o insertar plazos por producto_id y plazo
   const updateProductos = Object.entries(productos).flatMap(
     ([productoId, { plazos }]) =>
       Object.entries(plazos).map(([plazo, { interest, fee, minfee }], idx) => {
         return new Promise((resolve, reject) => {
-          const query = `
-          INSERT INTO productos (id, nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          ON DUPLICATE KEY UPDATE
-            nombre = VALUES(nombre),
-            interest = VALUES(interest),
-            fee = VALUES(fee),
-            minfee = VALUES(minfee),
-            segmento_id = VALUES(segmento_id),
-            banco = VALUES(banco),
-            categorias = VALUES(categorias),
-            retorno = VALUES(retorno)
-        `;
-
-          const feeValue = fee
-            ? parseFloat(fee.toString().replace(",", "."))
-            : 0;
-          const interestValue = interest
-            ? parseFloat(interest.toString().replace(",", "."))
-            : 0;
-          const minfeeValue = minfee
-            ? parseFloat(minfee.toString().replace(",", "."))
-            : 0;
-
-          // Construir la query completa incluyendo tipo_credito y highlights
           const fullQuery = `
           INSERT INTO productos (id, nombre, plazo, interest, fee, minfee, segmento_id, banco, categorias, retorno, tipo_credito, highlights)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -439,6 +409,16 @@ app.post("/api/data", (req, res) => {
             highlights = VALUES(highlights)
         `;
 
+          const feeValue = fee
+            ? parseFloat(fee.toString().replace(",", "."))
+            : 0;
+          const interestValue = interest
+            ? parseFloat(interest.toString().replace(",", "."))
+            : 0;
+          const minfeeValue = minfee
+            ? parseFloat(minfee.toString().replace(",", "."))
+            : 0;
+
           const params = [
             productoIds[idx],
             newProductName || productos[productoId].nombre,
@@ -449,7 +429,7 @@ app.post("/api/data", (req, res) => {
             segmento_id,
             banco,
             categorias,
-            retorno || 'CR,SR',
+            retorno || "CR,SR",
             productos[productoId]?.tipoCredito || null,
             JSON.stringify(productos[productoId]?.highlights || []),
           ];
@@ -461,6 +441,9 @@ app.post("/api/data", (req, res) => {
         });
       }),
   );
+
+ 
+
 
   const updateLtv = new Promise((resolve, reject) => {
     const ltvPromises = Object.entries(ltv[selectedProductId] || {}).map(
@@ -596,6 +579,7 @@ app.get("/api/calculadora", (req, res) => {
     });
 });
 
+ 
 app.post("/api/new-product", async (req, res) => {
   const {
     nombre,
@@ -718,6 +702,8 @@ app.post("/api/new-product", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
+
 
 app.delete("/api/plazo", (req, res) => {
   const { productoId, plazo } = req.body;
@@ -911,11 +897,6 @@ passport.use(
           });
           user = await db.getAgenciaUserByEmail(email);
         }
-        // Si el usuario está bloqueado, devolvemos un objeto marcado para que
-        // la ruta de callback lo maneje y no cree la sesión.
-        if (user && user.bloqueado) {
-          return done(null, { ...user, _bloqueado: 1 });
-        }
         return done(null, user);
       } catch (err) {
         console.error("ERROR EN GOOGLE CALLBACK:", err);
@@ -969,11 +950,10 @@ app.post("/api/loginAgencias", async (req, res) => {
   }
 
   console.log("Usuario autenticado:", user.email);
-  // Denegar acceso si está bloqueado
+   // Denegar acceso si está bloqueado
   if (user.bloqueado) {
     return res.status(403).json({ success: false, message: "Usuario bloqueado" });
   }
-
   if (!user.email_validado) {
     return res.json({
       success: false,
@@ -1187,7 +1167,6 @@ app.get("/api/check-session", async (req, res) => {
   try {
     const user = await db.getAgenciaUserByEmail(email); // Debe ser una promesa
     if (!user) return res.status(401).json({ success: false });
-
     // Denegar acceso si el usuario está bloqueado
     if (user.bloqueado) {
       return res.status(403).json({ success: false, message: 'Usuario bloqueado', motivo: user.bloqueo_motivo || null });
@@ -1314,7 +1293,7 @@ app.post("/api/reset-password", async (req, res) => {
 
 // Actualizar agencia y teléfono de un usuario (panel admin)
 app.put("/api/admin/usuarios/:id", (req, res) => {
-  const { id } = req.params;
+   const { id } = req.params;
   const { agencia, telefono, agente } = req.body;
   const updates = [];
   const values = [];
@@ -1339,7 +1318,6 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
     });
   }
 
-  // Intentamos en las posibles tablas según cómo esté tu esquema
   const tables = ["agencias_users", "usuarios", "users"];
 
   const tryUpdate = (idx = 0) => {
@@ -1348,23 +1326,15 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
         .status(404)
         .json({ success: false, message: "Usuario no encontrado" });
     }
+
     const table = tables[idx];
     const sql = `UPDATE ${table} SET ${updates.join(", ")} WHERE id = ?`;
-    db.query(
-      sql,
-      [...values, id],
-      (err, result) => {
-      if (err) {
-        // Si la tabla no existe o hay error de SQL, probamos la siguiente
-        return tryUpdate(idx + 1);
-      }
-      if (result.affectedRows > 0) {
-        return res.json({ success: true });
-      }
-      // Si no afectó filas, probamos la siguiente tabla
+
+    db.query(sql, [...values, id], (err, result) => {
+      if (err) return tryUpdate(idx + 1);
+      if (result.affectedRows > 0) return res.json({ success: true });
       return tryUpdate(idx + 1);
-      },
-    );
+    });
   };
 
   tryUpdate();
@@ -1404,18 +1374,17 @@ app.put("/api/admin/usuarios/:id", (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "Usuario no encontrado" });
+
     const table = tables[idx];
     const sql = `UPDATE ${table} SET ${updates.join(", ")} WHERE id = ?`;
-    db.query(
-      sql,
-      [...values, id],
-      (err, result) => {
-        if (err) return tryUpdate(idx + 1);
-        if (result.affectedRows > 0) return res.json({ success: true });
-        return tryUpdate(idx + 1);
-      },
-    );
+
+    db.query(sql, [...values, id], (err, result) => {
+      if (err) return tryUpdate(idx + 1);
+      if (result.affectedRows > 0) return res.json({ success: true });
+      return tryUpdate(idx + 1);
+    });
   };
+
   tryUpdate();
 });
 
@@ -1624,13 +1593,13 @@ app.get("/api/admin/usuarios", (req, res) => {
       au.bloqueado,
       au.bloqueo_motivo,
       au.agente,
-      ag.nombre                    AS agente_nombre,
+      ag.nombre AS agente_nombre,
       au.categoria,
       au.created_at,
-      email_validado              AS email_verificado,  -- flag para el front
-      email_validado              AS email_validado,
-      0                           AS verificado,
-      0                           AS validado_email
+      email_validado AS email_verificado,
+      email_validado AS email_validado,
+      0 AS verificado,
+      0 AS validado_email
     FROM agencias_users au
     LEFT JOIN agentes ag ON ag.id = au.agente
     ORDER BY au.created_at DESC
@@ -2122,10 +2091,7 @@ async function enviarReporteCotizacionesSemana(req, res) {
           },
           (error, info) => {
             if (error) {
-              console.error(
-                "Error enviando reporte semanal de cotizaciones:",
-                error,
-              );
+              console.error("Error enviando reporte semanal de cotizaciones:", error);
               if (res) return res.status(500).json({ success: false, error });
             } else {
               console.log(
@@ -2998,6 +2964,7 @@ app.get("/api/analytics/logins-por-usuario", requireAuth, (req, res) => {
   });
 });
 
+
 app.get("/api/export/metricas", async (req, res) => {
   const { from, to } = req.query;
   const params = [];
@@ -3012,7 +2979,7 @@ app.get("/api/export/metricas", async (req, res) => {
   }
 
   // 1. Consultas DNI/CUIT
-  const sqlConsultas = `
+   const sqlConsultas = `
     SELECT
       adc.id, adc.dni, adc.nombre_solicitante, adc.tipo_documento,
       adc.viabilidad, adc.agencia,
@@ -3024,8 +2991,7 @@ app.get("/api/export/metricas", async (req, res) => {
       (SELECT label FROM analytics_events WHERE session_id = adc.session_id AND action = 'select_anio' LIMIT 1) AS anio_consultado,
       (SELECT label FROM analytics_events WHERE session_id = adc.session_id AND action = 'select_marca' LIMIT 1) AS marca_consultada,
       (SELECT label FROM analytics_events WHERE session_id = adc.session_id AND action = 'select_modelo' LIMIT 1) AS modelo_consultado,
-      -- Fallback: buscar monto en varias posibles acciones (por si el front envía nombres distintos)
-      (SELECT label FROM analytics_events WHERE session_id = adc.session_id AND action IN ('monto_neto_financiar','monto_neto','entered_monto') ORDER BY timestamp DESC LIMIT 1) AS monto_consultado
+      (SELECT label FROM analytics_events WHERE session_id = adc.session_id AND action = 'monto_neto_financiar' LIMIT 1) AS monto_consultado
     FROM analytics_dni_consultas adc
     WHERE 1=1 ${whereFechas}
     ORDER BY adc.timestamp DESC
@@ -3041,11 +3007,10 @@ app.get("/api/export/metricas", async (req, res) => {
   `;
 
   // 3. Productos seleccionados
-  // Productos: permitir match por action incluso si la category no coincide exactamente
   const sqlProductos = `
     SELECT label AS producto, COUNT(*) AS total
     FROM analytics_events
-    WHERE action='select_producto' ${whereFechas}
+    WHERE category='Paso_3' AND action='select_producto' ${whereFechas}
     GROUP BY label
     ORDER BY total DESC
   `;
@@ -3065,15 +3030,15 @@ app.get("/api/export/metricas", async (req, res) => {
 
   // 5. Logins
   const sqlLogins = `
-    SELECT label AS email, metodo, agencia, timestamp
-    FROM analytics_events
-    WHERE category = 'Auth'
-      AND action = 'login_success'
-      AND label IS NOT NULL
-      AND label <> 'web_public'
-      ${whereFechas}
-    ORDER BY timestamp DESC
-  `;
+  SELECT label AS email, metodo, agencia, timestamp
+  FROM analytics_events
+  WHERE category = 'Auth'
+    AND action = 'login_success'
+    AND label IS NOT NULL
+    AND label <> 'web_public'
+    ${whereFechas}
+  ORDER BY timestamp DESC
+`;
 
   try {
     const [consultas, anios, productos, autos, logins] = await Promise.all([
@@ -3096,9 +3061,6 @@ app.get("/api/export/metricas", async (req, res) => {
 
     if (req.query.format === "excel") {
       const workbook = new ExcelJS.Workbook();
-
-      // DEBUG: log counts para facilitar troubleshooting (remover en prod si todo OK)
-      console.log('DEBUG export counts -> consultas:', (consultas || []).length, 'anios:', (anios||[]).length, 'productos:', (productos||[]).length, 'autos:', (autos||[]).length, 'logins:', (logins||[]).length);
 
       // Hoja 1: Consultas DNI/CUIT
       const wsConsultas = workbook.addWorksheet("Consultas DNI");
@@ -3129,10 +3091,11 @@ app.get("/api/export/metricas", async (req, res) => {
           anio: row.anio_consultado || "",
           marca: row.marca_consultada || "",
           modelo: row.modelo_consultado || "",
-          monto: row.monto_consultado || "",
+	  monto: row.monto_consultado || "",
           timestamp: fechaHora,
         });
       });
+
 
       // Hoja 2: Años consultados
       const wsAnios = workbook.addWorksheet("Años consultados");
@@ -3194,6 +3157,7 @@ app.get("/api/export/metricas", async (req, res) => {
     res.status(500).send("Error al consultar la base de datos");
   }
 });
+
 
 // Middleware helper: comprobar que el usuario no esté bloqueado
 async function checkNotBlockedById(userId) {

@@ -1,0 +1,136 @@
+openapi: 3.0.3
+info:
+  title: API Externa Prendarios - Lever
+  version: '1.0.0'
+  description: Contrato minimal para viabilidad, selección de productos y simulación de cuotas.
+servers:
+  - url: /api-external/v1
+paths:
+  /viabilidad:
+    post:
+      summary: Consultar viabilidad por DNI y datos del vehículo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dni:
+                  type: string
+                sexo:
+                  type: string
+                  enum: [M, F, O]
+                anio:
+                  type: integer
+                marca:
+                  type: string
+              required: [dni, anio, marca]
+      responses:
+        '200':
+          description: Resultado de viabilidad
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dni:
+                    type: string
+                  resultado:
+                    type: string
+                    enum: [viable, viable_observaciones, no_viable]
+                  observaciones:
+                    type: array
+                    items:
+                      type: string
+                  traceId:
+                    type: string
+        '4XX':
+          description: Error de cliente
+  /productos:
+    post:
+      summary: Devuelve productos disponibles según viabilidad y vehículo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resultadoViabilidad:
+                  type: string
+                anio:
+                  type: integer
+                marca:
+                  type: string
+              required: [resultadoViabilidad, anio, marca]
+      responses:
+        '200':
+          description: Lista de productos aplicables
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  productos:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productoId:
+                          type: integer
+                        nombre:
+                          type: string
+                        plazos:
+                          type: array
+                          items:
+                            type: integer
+                        condiciones:
+                          type: object
+        '4XX':
+          description: Error de cliente
+  /simulacion:
+    post:
+      summary: Simula cuotas para un producto y monto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productoId:
+                  type: integer
+                monto:
+                  type: number
+                plazo:
+                  type: integer
+              required: [productoId, monto, plazo]
+      responses:
+        '200':
+          description: Simulación de cuotas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  productoId:
+                    type: integer
+                  monto:
+                    type: number
+                  plazo:
+                    type: integer
+                  cuota:
+                    type: number
+                  desglose:
+                    type: object
+        '4XX':
+          description: Error de cliente
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+security:
+  - ApiKeyAuth: []

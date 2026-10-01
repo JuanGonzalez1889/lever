@@ -8,7 +8,7 @@ const path = require("path");
 const nodemailer = require("nodemailer");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const getEmailTemplate = require("./emailTemplate");
+const getEmailTemplate = require("../emailTemplate");
 
 const app = express();
 const PORT = process.env.PORT || 5000;

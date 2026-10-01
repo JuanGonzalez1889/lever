@@ -8,7 +8,7 @@ const path = require("path");
 const nodemailer = require("nodemailer");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const getEmailTemplate = require("./emailTemplate");
+const getEmailTemplate = require("../emailTemplate");
 const logoPath = path.join(__dirname, "logo-lever.png");
 const moment = require("moment-timezone");
 
