@@ -117,6 +117,7 @@ function Tablero() {
           key,
           nombre: prod.nombre,
           banco: prod.banco,
+          tipoCredito: prod.tipoCredito || prod.tipo_credito || "",
         }))
     : [];
   const selectedProductData = selectedProduct
@@ -195,10 +196,14 @@ function Tablero() {
       }
     });
 
-    // Clave destino
+    // Clave destino (incluye tipo_credito para permitir nombres repetidos entre FIJA/UVA)
+    const tipoCreditoActual =
+      data.productos[selectedProduct]?.tipoCredito ||
+      data.productos[selectedProduct]?.tipo_credito ||
+      "";
     const productKeyToSend =
       newProductName && newProductName !== selectedProduct
-        ? `${newProductName}__${data.productos[selectedProduct].segmento_id}__${data.productos[selectedProduct].banco}`
+        ? `${newProductName}__${data.productos[selectedProduct].segmento_id}__${data.productos[selectedProduct].banco}__${tipoCreditoActual}`
         : selectedProduct;
 
     // ✅ NORMALIZAR CATEGORÍAS
@@ -704,7 +709,7 @@ function Tablero() {
                   <option value="">-- Selecciona un producto --</option>
                   {productosFiltradesPorBanco.map((prod) => (
                     <option key={prod.key} value={prod.key}>
-                      {prod.nombre}
+                      {prod.tipoCredito ? `${prod.nombre} - ${prod.tipoCredito}` : prod.nombre}
                     </option>
                   ))}
                 </Form.Control>
